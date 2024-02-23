@@ -98,7 +98,11 @@ namespace Managers
 
         private void RestartLastCheckPointView()
         {
-            FadeInCallback = () => { print("Done"); };
+            FadeInCallback = () =>
+            {
+
+                animator.Play("LCP_View");
+            };
             FadeIn();
         }
     }
