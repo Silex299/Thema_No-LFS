@@ -38,7 +38,7 @@ namespace Player_Scripts
 
         [FoldoutGroup("References"), SerializeField] private CharacterController characterController;
         [FoldoutGroup("References"), SerializeField] private Animator animationController;
-        [FoldoutGroup("References"), SerializeField] private PlayerHealth health;
+        [FoldoutGroup("References"), SerializeField] private PlayerHealth1 health;
         [FoldoutGroup("References"), SerializeField] private PlayerRigController rig;
 
 
@@ -66,7 +66,7 @@ namespace Player_Scripts
         public CharacterController PlayerController => characterController;
         public Animator AnimationController => animationController;
 
-        public PlayerHealth Health => health;
+        public PlayerHealth1 Health => health;
         public PlayerRigController Rig => rig;
         [HideInInspector] public bool canSprint = true;
 

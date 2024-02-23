@@ -194,7 +194,9 @@ public class RotatingSurveillance : MonoBehaviour
 
             //UP is looking at the object
             Vector3 v1 = -transform.up;
+            v1.y = 0;
             Vector3 v2 = itemPosition - transform.position;
+            v2.y = 0;
 
             var focusAngle = Vector3.SignedAngle(v1, v2, Vector3.up);
 

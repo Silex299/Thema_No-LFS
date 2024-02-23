@@ -19,7 +19,7 @@ namespace Player_Scripts
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
-        private void Start()
+        private void Awake()
         {
             if (PlayerMovementController.Instance != null)
             {

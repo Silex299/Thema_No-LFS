@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Player_Scripts
 {
-    public class PlayerHealth : HealthBase
+    public class PlayerHealth1 : HealthBase
     {
 
         [SerializeField, BoxGroup("References")] private PlayerController player;

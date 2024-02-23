@@ -8,16 +8,20 @@ namespace Health
 
     public class PlayerHealth : HealthBaseClass
     {
-       
+
         [SerializeField, BoxGroup("Player Health")] private Material dissolveMaterial;
-        [SerializeField, BoxGroup("Player Health")] private float dissolveSpeed;
+        [SerializeField, BoxGroup("Player Health")] private float dissolveTime = 3;
 
         [SerializeField, FoldoutGroup("Misc")] private Component[] componentsToDestroy;
+
+        private bool _isDead;
         private bool _dissolveDeath;
 
-        private float _dissolveSlider = -1;
+
         private static readonly int Dissolve1 = Shader.PropertyToID("_Dissolve");
 
+        public Action OnDeath;
+        private float _dissolveTimeElapsed = 0;
 
         private void Start()
         {
@@ -28,21 +32,22 @@ namespace Health
         {
             if (_dissolveDeath)
             {
-                if (_dissolveSlider >= 1)
-                {
-                    _dissolveDeath = false;
-                    Death();
-                    return;
-                }
-                _dissolveSlider = Mathf.MoveTowards(_dissolveSlider, 1, Time.deltaTime * dissolveSpeed);
-                dissolveMaterial.SetFloat(Dissolve1, _dissolveSlider);
+                DissolveDeath();
             }
+        }
+
+
+        protected override void Death(string message = "")
+        {
+            base.Death(message);
+            _isDead = true;
+            OnDeath.Invoke();
         }
 
 
         public override void Kill(string message)
         {
-            if(message == "RAY")
+            if (message == "RAY")
             {
                 DisableCompoents();
                 PlayerMovementController.Instance.PlayAnimation("Float Death", 0.5f, 1); //Play Death  Animation
@@ -50,6 +55,7 @@ namespace Health
             else
             {
                 DisableCompoents();
+                Death(message);
                 PlayerMovementController.Instance.PlayAnimation(message, 0.2f, 1); //Play Death  Animation
             }
         }
@@ -57,13 +63,40 @@ namespace Health
 
         public void DissolveDeath()
         {
-            _dissolveDeath = true;
+            if (!_dissolveDeath)
+            {
+                _dissolveDeath = true;
+                _dissolveTimeElapsed = 0;
+            }
+            else
+            {
+
+                _dissolveTimeElapsed += Time.deltaTime;
+                float fraction = _dissolveTimeElapsed / dissolveTime;
+
+
+                float value =  Mathf.Lerp(-1, 1, fraction);
+
+
+                dissolveMaterial.SetFloat(Dissolve1, value);
+
+                if (!_isDead && fraction >= 0.5f)
+                {
+                    Death();
+                }
+
+                if (fraction >= 1)
+                {
+                    _dissolveDeath = false;
+                    return;
+                }
+            }
         }
 
 
         public void DisableCompoents()
         {
-            foreach(var component in componentsToDestroy)
+            foreach (var component in componentsToDestroy)
             {
                 Destroy(component);
             }

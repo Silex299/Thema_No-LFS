@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Player_Scripts.States;
 using Player_Scripts.Interactables;
+using Health;
 
 
 namespace Player_Scripts
@@ -16,6 +17,7 @@ namespace Player_Scripts
 
         [SerializeField, BoxGroup("References")] private Animator animator;
         [SerializeField, BoxGroup("References")] private CharacterController controller;
+        [SerializeField, BoxGroup("References")] internal PlayerHealth health;
 
         [SerializeField, BoxGroup("Player Movement")] private bool useHorizontal = true;
         [SerializeField, BoxGroup("Player Movement")] private float rotationSmoothness = 10f;
