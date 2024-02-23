@@ -1,0 +1,21 @@
+newmtl wires
+Kd 0.6433634 0.6247828 0.6478003
+d 1
+
+newmtl Lit
+Kd 0.5 0.5 0.5
+d 1
+
+newmtl Floor
+map_Kd Floor_Mask.png
+Kd 0.9622641 0.9622641 0.9622641
+d 1
+
+newmtl Cart
+map_Pm cart albedo.png
+bump cart normal_normal.psd
+map_Ke bake_gloss_albedo.psd
+map_Kd bake_gloss_albedo.psd
+Kd 1 1 1
+d 1
+

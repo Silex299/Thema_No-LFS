@@ -1,0 +1,39 @@
+newmtl Switch
+Kd 0.5650027 0.5650027 0.5650027
+d 1
+
+newmtl red
+Kd 0.9063317 0.9063317 0.9063317
+d 1
+
+newmtl wall
+bump Wall_2K_Normal.psd
+map_Kd Wall_2K_Diffuse.psd
+Kd 0.5660378 0.5660378 0.5660378
+d 1
+
+newmtl Lit
+Kd 0.5 0.5 0.5
+d 1
+
+newmtl Floor
+map_Kd Floor_Mask.png
+Kd 0.9622641 0.9622641 0.9622641
+d 1
+
+newmtl Lamp
+Kd 0.9063317 0.9063317 0.9063317
+d 1
+
+newmtl emission
+Kd 0.9063317 0.9063317 0.9063317
+d 1
+
+newmtl Cart
+map_Pm cart albedo.png
+bump cart normal_normal.psd
+map_Ke bake_gloss_albedo.psd
+map_Kd bake_gloss_albedo.psd
+Kd 1 1 1
+d 1
+
