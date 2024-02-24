@@ -24,13 +24,13 @@ namespace Managers
         private void Start()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
-            controller.player.health.OnDeath += RestartLastCheckPointView;
+            controller.player.Health.OnDeath += RestartLastCheckPointView;
         }
 
         private void OnDisable()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
-            controller.player.health.OnDeath -= RestartLastCheckPointView;
+            controller.player.Health.OnDeath -= RestartLastCheckPointView;
         }
 
 

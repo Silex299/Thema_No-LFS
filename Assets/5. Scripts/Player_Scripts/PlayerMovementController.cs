@@ -199,5 +199,12 @@ namespace Player_Scripts
 
         #endregion
 
+
+        public void Reset()
+        {
+            player.AnimationController.Play("Default", 1);
+        }
+
+
     }
 }

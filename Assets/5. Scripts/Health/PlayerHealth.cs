@@ -9,10 +9,11 @@ namespace Health
     public class PlayerHealth : HealthBaseClass
     {
 
+        [SerializeField, FoldoutGroup("Components")] private Player player;
+
         [SerializeField, BoxGroup("Player Health")] private Material dissolveMaterial;
         [SerializeField, BoxGroup("Player Health")] private float dissolveTime = 3;
 
-        [SerializeField, FoldoutGroup("Misc")] private Component[] componentsToDestroy;
 
         private bool _isDead;
         private bool _dissolveDeath;
@@ -26,6 +27,8 @@ namespace Health
         private void Start()
         {
             dissolveMaterial.SetFloat(Dissolve1, -1);
+            _isDead = false;
+            _dissolveDeath = false;
         }
 
         private void Update()
@@ -96,10 +99,20 @@ namespace Health
 
         public void DisableCompoents()
         {
-            foreach (var component in componentsToDestroy)
-            {
-                Destroy(component);
-            }
+            player.CController.enabled = false;
+            player.MovementController.enabled = false;
+            player.EffectsManager.enabled = false;
+        }
+
+
+        public void Reset()
+        {
+            player.CController.enabled = true;
+            player.MovementController.enabled = true;
+            player.EffectsManager.enabled = true;
+            player.AnimationController.enabled = true;
+            
+            Start();
         }
 
     }

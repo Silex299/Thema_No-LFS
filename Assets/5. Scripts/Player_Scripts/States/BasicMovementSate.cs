@@ -87,7 +87,7 @@ namespace Player_Scripts.States
             Gravity(player);
 
             //Move player base on player velocity (Only responsible for gravity and jump)
-            player.Controller.Move(_m_playerVelocity * Time.deltaTime);
+            player.CController.Move(_m_playerVelocity * Time.deltaTime);
 
             #endregion
 

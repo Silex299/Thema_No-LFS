@@ -29,7 +29,7 @@ namespace Player_Scripts.States
 
         public override void EnterState(Player player)
         {
-            player.Controller.enabled = false;
+            player.CController.enabled = false;
             _isJumped = false;
         }
         public override void UpdateState(Player player)
@@ -49,7 +49,7 @@ namespace Player_Scripts.States
         }
         public override void ExitState(Player player)
         {
-            player.Controller.enabled = true;
+            player.CController.enabled = true;
         }
 
         #endregion

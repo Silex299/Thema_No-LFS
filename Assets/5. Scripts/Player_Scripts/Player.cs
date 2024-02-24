@@ -16,8 +16,10 @@ namespace Player_Scripts
         #region Variables
 
         [SerializeField, BoxGroup("References")] private Animator animator;
-        [SerializeField, BoxGroup("References")] private CharacterController controller;
-        [SerializeField, BoxGroup("References")] internal PlayerHealth health;
+        [SerializeField, BoxGroup("References")] private PlayerMovementController movementController;
+        [SerializeField, BoxGroup("References")] private CharacterController characterController;
+        [SerializeField, BoxGroup("References")] private PlayerEffectsManager effectsManager;
+        [SerializeField, BoxGroup("References")] private PlayerHealth health;
 
         [SerializeField, BoxGroup("Player Movement")] private bool useHorizontal = true;
         [SerializeField, BoxGroup("Player Movement")] private float rotationSmoothness = 10f;
@@ -47,8 +49,8 @@ namespace Player_Scripts
         /// NOT AN ENUM. Absract class for current State
         /// </summary>
         internal PlayerBaseStates currentState;
-        [SerializeField, BoxGroup("Player States")] internal BasicMovementSate basicMovementState =  new BasicMovementSate();
-        [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState =  new LadderMovementState();
+        [SerializeField, BoxGroup("Player States")] internal BasicMovementSate basicMovementState = new BasicMovementSate();
+        [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState = new LadderMovementState();
 
 
         /// <summary>
@@ -71,15 +73,11 @@ namespace Player_Scripts
 
         #region Getter And Setters
 
-        public Animator AnimationController
-        {
-            get => animator;
-        }
-
-        public CharacterController Controller
-        {
-            get => controller;
-        }
+        public Animator AnimationController => animator;
+        public PlayerMovementController MovementController => movementController;
+        public CharacterController CController => characterController;
+        public PlayerHealth Health => health;
+        public PlayerEffectsManager EffectsManager => effectsManager;
 
         public bool IsGrounded
         {
