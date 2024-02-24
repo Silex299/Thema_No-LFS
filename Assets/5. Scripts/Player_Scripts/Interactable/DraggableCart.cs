@@ -70,9 +70,16 @@ namespace Player_Scripts.Interactables
             _isInteracting = false;
             _playerIsInTrigger = false;
 
+            if (!cart.gameObject.activeInHierarchy)
+            {
+                cart.gameObject.SetActive(true);
+                cart.Reset();
+            }
+        }
 
-            cart.gameObject.SetActive(true);
-            cart.Reset();
+        public void SetInteractable(bool interactable)
+        {
+            canInteract = interactable;
         }
     }
 

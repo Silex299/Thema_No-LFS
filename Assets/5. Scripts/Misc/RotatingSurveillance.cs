@@ -309,8 +309,9 @@ public class RotatingSurveillance : MonoBehaviour
 
     public void TurnOffMachine(bool turnOff)
     {
-        surveil = !turnOff;
+        if (turnOff == !surveil) return;
 
+        surveil = !turnOff;
         MeshRenderer Renderer;
 
         if (visualRenderer == null)

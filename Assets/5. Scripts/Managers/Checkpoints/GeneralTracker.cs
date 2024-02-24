@@ -1,15 +1,14 @@
 using Sirenix.OdinInspector;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 namespace Managers.Checkpoints
 {
 
-    public class DraggableTracker : Tracker
+    public class GeneralTracker : Tracker
     {
-
-
-        [SerializeField] private Player_Scripts.Interactables.DraggableCart draggableCart;
 
         [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialPosition;
         [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialEualrRotation;
@@ -17,19 +16,15 @@ namespace Managers.Checkpoints
         [SerializeField, TabGroup("States", "FinalState")] private Vector3 finalEularRotation;
 
 
+        [SerializeField, Space(10)] private UnityEvent initialStateAction;
+        [SerializeField] private UnityEvent finalStateAction;
+
 
         public override void InitialSetup(CheckPoint checkPoint)
         {
-            if (CheckpointManager.Instance.CurrentCheckpoint > thresholdCheckpoint)
-            {
-                //SETUP FOR SECOND 
-            }
-            else
-            {
-                this.transform.localPosition = initialPosition;
-                this.transform.localRotation = Quaternion.Euler(initialEualrRotation);
 
-            }
+            ResetItem(checkPoint);
+
         }
 
         public override void ResetItem(CheckPoint checkpoint)
@@ -37,13 +32,15 @@ namespace Managers.Checkpoints
 
             if (CheckpointManager.Instance.CurrentCheckpoint > thresholdCheckpoint)
             {
-                //SETUP FOR SECOND 
+                this.transform.localPosition = finalPosition;
+                this.transform.localRotation = Quaternion.Euler(finalEularRotation);
+                finalStateAction?.Invoke();
             }
             else
             {
                 this.transform.localPosition = initialPosition;
                 this.transform.localRotation = Quaternion.Euler(initialEualrRotation);
-                draggableCart.Reset();
+                initialStateAction?.Invoke();
             }
         }
     }
