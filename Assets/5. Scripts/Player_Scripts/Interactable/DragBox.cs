@@ -157,28 +157,31 @@ namespace Player_Scripts.Interactables
 
         protected virtual void FixedUpdate()
         {
+            if (!canInteract) return;
+
             if (_isInteracting)
             {
                 GetMoving();
 
                 if (_isMoving)
                 {
-                    foreach (var effect in effects)
-                    {
-                        effect.Play();
-                    } 
 
                     if (!soundSource.isPlaying)
                     {
                         soundSource.Play();
+                        foreach (var effect in effects)
+                        {
+                            effect.Play();
+                        }
                     }
+
                 }
                 else
                 {
-                    print("deijdei");
 
                     if (soundSource.isPlaying)
                     {
+                        print("STOP");
                         soundSource.Pause();
 
                         foreach (var effect in effects)

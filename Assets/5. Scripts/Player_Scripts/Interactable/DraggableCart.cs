@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-
 namespace Player_Scripts.Interactables
 {
     public class DraggableCart : DragBox
@@ -10,10 +9,14 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Cart Porperty")] private float wheelSpeed;
         [SerializeField, BoxGroup("Cart Porperty")] private Transform[] wheelTransforms;
 
+        [SerializeField, BoxGroup("Cart Property")] private Health.CartHealth cart;
 
 
         public bool _overrideEffects;
-        private float lastDirection;
+
+        private bool _ifsoundplaying;
+
+
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -36,13 +39,13 @@ namespace Player_Scripts.Interactables
                 {
                     effect.Play();
                 }
-
                 if (!soundSource.isPlaying)
                 {
                     soundSource.Play();
+
                 }
             }
-            else if(!_isMoving)
+            else if (!_isMoving || !_isInteracting)
             {
                 if (soundSource.isPlaying)
                 {
@@ -59,6 +62,17 @@ namespace Player_Scripts.Interactables
         public void OverrideEffects(bool overrideEffects)
         {
             _overrideEffects = overrideEffects;
+        }
+
+        public void Reset()
+        {
+            _overrideEffects = false;
+            _isInteracting = false;
+            _playerIsInTrigger = false;
+
+
+            cart.gameObject.SetActive(true);
+            cart.Reset();
         }
     }
 

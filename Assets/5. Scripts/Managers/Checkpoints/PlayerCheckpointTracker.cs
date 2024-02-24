@@ -4,12 +4,12 @@ using Player_Scripts;
 namespace Managers.Checkpoints
 {
 
-    public class PlayerCheckpointTracker : Tracker
+    public class PlayerCheckpointTracker : MonoBehaviour
     {
 
         [SerializeField] private Player player;
 
-        public override void ResetItem(CheckPoint checkpoint)
+        public void ResetItem(CheckPoint checkpoint)
         {
 
             player.CController.enabled = false;
@@ -20,10 +20,9 @@ namespace Managers.Checkpoints
             player.Health.Reset();
             player.MovementController.Reset();
 
-            print("Done");
         }
 
-        public override void InitialSetup(CheckPoint checkPoint)
+        public void InitialSetup(CheckPoint checkPoint)
         {
             player.CController.enabled = false;
 

@@ -52,9 +52,6 @@ namespace Triggers
 
 
 
-
-
-
         private void Update()
         {
             if (!_playerIsInTrigger) return;
@@ -92,16 +89,13 @@ namespace Triggers
 
         private void PerformAction()
         {
-            if (Time.time < secondActionDelay + _lastTriggerTime) return;
+            if (_isTriggered && Time.time < secondActionDelay + _lastTriggerTime) return;
 
             actions?.Invoke();
 
-            if (oneTime)
-            {
-                _isTriggered = true;
-            }
-
+            _isTriggered = true;
             _lastTriggerTime = Time.time;
+            
         }
 
         public void EnableTrigger(bool status)

@@ -85,7 +85,6 @@ public class RotatingSurveillance : MonoBehaviour
                     Debug.LogWarning(info.collider.tag);
                     if (other.TryGetComponent<HealthBaseClass>(out HealthBaseClass health))
                     {
-                        Debug.LogError("Fuck This :: " + info.collider.name);
                         health.Kill("RAY");
                         ItemDetected(other.transform.position);
                     }
