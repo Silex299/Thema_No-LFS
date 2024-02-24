@@ -203,6 +203,7 @@ namespace Player_Scripts
         public void Reset()
         {
             player.AnimationController.Play("Default", 1);
+            player.DisablePlayerMovement = false;
         }
 
 

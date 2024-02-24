@@ -19,18 +19,22 @@ namespace Managers
         private bool _isFadingIn;
         private bool _isFadingOut;
         private float _fadeTimeElapsed;
+        private bool isLCPViewOpen;
 
 
         private void Start()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
+
             controller.player.Health.OnDeath += RestartLastCheckPointView;
+            controller.player.Health.OnRevive += CloseLastCheckpointView;
         }
 
         private void OnDisable()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
             controller.player.Health.OnDeath -= RestartLastCheckPointView;
+            controller.player.Health.OnRevive -= CloseLastCheckpointView;
         }
 
 
@@ -98,12 +102,24 @@ namespace Managers
 
         private void RestartLastCheckPointView()
         {
+            if (isLCPViewOpen) return;
+
             FadeInCallback = () =>
             {
-
                 animator.Play("LCP_View");
+                isLCPViewOpen = true;
             };
+
             FadeIn();
+        }
+
+        private void CloseLastCheckpointView()
+        {
+            if (!isLCPViewOpen) return;
+
+            isLCPViewOpen = false;
+            animator.Play("LCP_Close");
+            FadeOut();
         }
     }
 

@@ -42,7 +42,7 @@ namespace Thema_Camera
         }
 
 
-        private void Start()
+        private void Awake()
         {
             if (CameraFollow.Instance != null)
             {

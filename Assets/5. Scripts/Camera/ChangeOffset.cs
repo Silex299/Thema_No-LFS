@@ -49,6 +49,11 @@ namespace Thema_Camera
             CameraFollow.Instance.ChangeOffset(info, transitionTime);
         }
 
+        public void ChangeCameraOffsetInstantaneous()
+        {
+            CameraFollow.Instance.ChangeOffset(info, 0);
+        }
+
     }
 
 

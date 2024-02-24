@@ -147,7 +147,6 @@ namespace Thema_Camera
         public void ShakeCamera(Shake shakeParams)
         {
 
-
             if (_shakeInitialPosition == Vector3.zero)
             {
                 _shakeInitialPosition = transform.position;
@@ -173,7 +172,7 @@ namespace Thema_Camera
             if (_shake) { ShakeCamera(defaultShakeParameters); }
         }
 
-
+        
 
         public Transform GetCurrentTarget(out bool canShake)
         {
@@ -181,6 +180,12 @@ namespace Thema_Camera
             return _isMainCameraActive ? mainCamera.followTarget : cinematicCamera.target;
         }
 
+        public void Reset()
+        {
+            _focus = false;
+            _shake = false;
+            SwitchToMainCamera();
+        }
 
 
     }

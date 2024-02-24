@@ -22,6 +22,7 @@ namespace Health
         private static readonly int Dissolve1 = Shader.PropertyToID("_Dissolve");
 
         public Action OnDeath;
+        public Action OnRevive;
         private float _dissolveTimeElapsed = 0;
 
         private void Start()
@@ -107,11 +108,13 @@ namespace Health
 
         public void Reset()
         {
+
             player.CController.enabled = true;
             player.MovementController.enabled = true;
             player.EffectsManager.enabled = true;
             player.AnimationController.enabled = true;
-            
+
+            OnRevive.Invoke();
             Start();
         }
 
