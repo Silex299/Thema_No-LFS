@@ -18,5 +18,10 @@ namespace Misc
             _currentIndex = (_currentIndex + 1) % indecies.Length;
         }
 
+        public void SetCurrentIndex(int index)
+        {
+            _currentIndex = index;
+        }
+
     }
 }

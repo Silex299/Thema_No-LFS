@@ -81,6 +81,8 @@ namespace Player_Scripts.Interactables
         {
             canInteract = interactable;
         }
+
+
     }
 
 

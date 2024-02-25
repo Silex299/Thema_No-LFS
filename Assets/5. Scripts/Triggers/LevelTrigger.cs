@@ -8,6 +8,7 @@ using System.Collections;
 public class LevelTrigger : MonoBehaviour
 {
 
+    [SerializeField, BoxGroup("Trigger Params")] private bool triggerPulled;
     [SerializeField, BoxGroup("Trigger Params")] private bool oneTime;
     [SerializeField, BoxGroup("Trigger Params")] private Animator leverAnimator;
     [SerializeField, BoxGroup("Trigger Params")] private float actionDelay = 0;
@@ -25,22 +26,21 @@ public class LevelTrigger : MonoBehaviour
     [SerializeField, BoxGroup("Sounds")] private AudioSource soundSource;
     [SerializeField, BoxGroup("Sounds")] private AudioClip triggerSound;
 
-    
+
     private bool _playerIsInTrigger;
     private bool _triggerEngaged;
-    private bool _triggerPulled;
     private float _lastTriggerTime;
 
     /// <summary>
     /// If player is facing forward direction
     /// </summary>
-    
+
     private bool _forwardDirection;
     private Coroutine _trigger;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (oneTime && _triggerPulled) return;
+        if (oneTime && triggerPulled) return;
         if (other.CompareTag("Player_Main"))
         {
             _playerIsInTrigger = true;
@@ -55,6 +55,19 @@ public class LevelTrigger : MonoBehaviour
         }
     }
 
+
+    private void Start()
+    {
+        //Set Initial State
+        if (triggerPulled)
+        {
+            leverAnimator.Play("Trigger");
+        }
+        else
+        {
+            leverAnimator.Play("Trigger Inverse");
+        }
+    }
 
     private void Update()
     {
@@ -75,7 +88,7 @@ public class LevelTrigger : MonoBehaviour
 
         if (Input.GetButton("e"))
         {
-            if (oneTime && _triggerPulled) return;
+            if (oneTime && triggerPulled) return;
 
             var player = PlayerMovementController.Instance;
 
@@ -88,7 +101,7 @@ public class LevelTrigger : MonoBehaviour
                 _forwardDirection = CheckPlayerDirection();
                 if (_forwardDirection)
                 {
-                    if (!_triggerPulled)
+                    if (!triggerPulled)
                     {
                         player.PlayAnimation("Trigger_Pull_Enter", 0.2f, 1);
                     }
@@ -100,7 +113,7 @@ public class LevelTrigger : MonoBehaviour
                 }
                 else
                 {
-                    if (!_triggerPulled)
+                    if (!triggerPulled)
                     {
                         player.PlayAnimation("Trigger_Pull_Enter_Inv", 0.2f, 1);
                     }
@@ -116,12 +129,12 @@ public class LevelTrigger : MonoBehaviour
             {
                 if (_lastTriggerTime + 0.5f > Time.time) return;
 
-                var input = Input.GetAxis("Horizontal"); 
-                
-                if(input <0 && !_triggerPulled)
+                var input = Input.GetAxis("Horizontal");
+
+                if (input < 0 && !triggerPulled)
                 {
                     _lastTriggerTime = Time.time;
-                    _triggerPulled = true;
+                    triggerPulled = true;
 
                     player.SetAnimationTrigger("Trigger");
                     leverAnimator.Play("Trigger");
@@ -132,14 +145,14 @@ public class LevelTrigger : MonoBehaviour
                     }
                 }
 
-                if (input > 0 && _triggerPulled)
+                if (input > 0 && triggerPulled)
                 {
                     _lastTriggerTime = Time.time;
-                    _triggerPulled = false;
+                    triggerPulled = false;
                     player.SetAnimationTrigger("Trigger");
                     leverAnimator.Play("Trigger Inverse");
 
-                    if(_trigger == null)
+                    if (_trigger == null)
                     {
                         _trigger = StartCoroutine(Trigger());
                     }
@@ -154,7 +167,7 @@ public class LevelTrigger : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (oneTime && _triggerPulled) return;
+        if (oneTime && triggerPulled) return;
 
         if (_triggerEngaged)
         {
@@ -189,8 +202,8 @@ public class LevelTrigger : MonoBehaviour
         }
 
         yield return new WaitForSeconds(actionDelay);
-        
-        if (_triggerPulled)
+
+        if (triggerPulled)
         {
             triggerPullAction?.Invoke();
         }
@@ -222,6 +235,22 @@ public class LevelTrigger : MonoBehaviour
 
 
         return angle < 90;
+    }
+
+
+    public void ChangeState(bool pulled)
+    {
+        if (triggerPulled == pulled) return;
+
+        triggerPulled = pulled;
+        if (pulled)
+        {
+            leverAnimator.Play("Trigger");
+        }
+        else
+        {
+            leverAnimator.Play("Trigger Inverse");
+        }
     }
 
 }

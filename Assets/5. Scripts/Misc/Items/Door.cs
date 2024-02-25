@@ -6,7 +6,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField, BoxGroup] private Vector3 closedPosition;
     [SerializeField, BoxGroup] private Vector3 openPosition;
-    [SerializeField, BoxGroup] private float speed;
+    [SerializeField, BoxGroup] private float transitionTime = 1;
     [SerializeField, BoxGroup] private float delay;
 
 
@@ -19,13 +19,13 @@ public class Door : MonoBehaviour
     [SerializeField, Button("Set Closed Postion", ButtonSizes.Large)]
     public void SetClosedPosition()
     {
-        closedPosition = transform.position;
+        closedPosition = transform.localPosition;
     }
 
     [SerializeField, Button("Set Open Postion", ButtonSizes.Large)]
     public void SetOpenOpen()
     {
-        openPosition = transform.position;
+        openPosition = transform.localPosition;
     }
 
 #endif
@@ -33,19 +33,24 @@ public class Door : MonoBehaviour
     private bool _isOpen;
     private bool _action;
     private Coroutine _toggleDoor;
+    private float _timeElapsed;
+
+
 
     private void Update()
     {
         if (!_action) return;
 
-        var pos = transform.position;
 
         if (_isOpen)
         {
-            //Move to open position
-            transform.position = Vector3.MoveTowards(pos, openPosition, Time.deltaTime * speed);
+            _timeElapsed += Time.deltaTime;
+            float fraction = _timeElapsed / transitionTime;
 
-            if(Mathf.Abs(Vector3.Distance(pos, openPosition)) < 0.01f)
+            //Move to open position
+            transform.localPosition = Vector3.Lerp(closedPosition, openPosition, fraction);
+
+            if(fraction>=1)
             {
                 _action = false;
             }
@@ -53,9 +58,13 @@ public class Door : MonoBehaviour
 
         else
         {
-            //Move to closed position
-            transform.position = Vector3.MoveTowards(transform.position, closedPosition, Time.deltaTime * speed);
-            if (Mathf.Abs(Vector3.Distance(pos, closedPosition)) < 0.01f)
+            _timeElapsed += Time.deltaTime;
+            float fraction = _timeElapsed / transitionTime;
+
+            //Move to Close position
+            transform.localPosition = Vector3.Lerp(openPosition, closedPosition, fraction);
+
+            if (fraction >= 1)
             {
                 _action = false;
             }
@@ -81,6 +90,7 @@ public class Door : MonoBehaviour
         _toggleDoor = null;
         _action = true;
         _isOpen = open;
+        _timeElapsed = 0;
         PlaySound(open);
     }
 
@@ -92,6 +102,11 @@ public class Door : MonoBehaviour
         }
     }
 
+    public void InstantToggle(bool open)
+    {
+        transform.localPosition = open ? openPosition : closedPosition;
+        _isOpen = open;
+    }
 
 
 }
