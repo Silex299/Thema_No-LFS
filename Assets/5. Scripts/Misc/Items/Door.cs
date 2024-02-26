@@ -50,7 +50,7 @@ public class Door : MonoBehaviour
             //Move to open position
             transform.localPosition = Vector3.Lerp(closedPosition, openPosition, fraction);
 
-            if(fraction>=1)
+            if (fraction >= 1)
             {
                 _action = false;
             }
@@ -85,13 +85,17 @@ public class Door : MonoBehaviour
 
     public IEnumerator DoorToggle(bool open)
     {
+
         yield return new WaitForSeconds(delay);
 
-        _toggleDoor = null;
-        _action = true;
-        _isOpen = open;
-        _timeElapsed = 0;
-        PlaySound(open);
+        if (open != _isOpen)
+        {
+            _toggleDoor = null;
+            _action = true;
+            _isOpen = open;
+            _timeElapsed = 0;
+            PlaySound(open);
+        }
     }
 
     public void PlaySound(bool open)
@@ -104,6 +108,7 @@ public class Door : MonoBehaviour
 
     public void InstantToggle(bool open)
     {
+        print("instant");
         transform.localPosition = open ? openPosition : closedPosition;
         _isOpen = open;
     }

@@ -14,7 +14,7 @@ namespace Managers.Checkpoints
 
 
 #if UNITY_EDITOR
-        [BoxGroup("Checkpoints"), Button("Get Checkpoints", ButtonSizes.Large)]
+        [BoxGroup("Checkpoints"), Button("Get Checkpoints", ButtonSizes.Large), GUIColor(0.1f, 1f, 0.2f)]
         public void GetCheckpoints()
         {
             checkpoints = GetComponentsInChildren<CheckPoint>();
@@ -23,6 +23,7 @@ namespace Managers.Checkpoints
             foreach (var cp in checkpoints)
             {
                 cp.name = "checkpoint_" + i;
+                cp.checkpointIndex = i;
                 i++;
             }
         }
@@ -32,6 +33,17 @@ namespace Managers.Checkpoints
 
         [SerializeField, BoxGroup("Trackers")] private PlayerCheckpointTracker playerTracker;
         [SerializeField, BoxGroup("Trackers")] private Tracker[] trackers;
+
+#if UNITY_EDITOR
+
+        [BoxGroup("Trackers"), Button("Get Trackers", ButtonSizes.Large), GUIColor(0.1f, 1f, 1f)]
+        public void GetTrackers()
+        {
+            playerTracker = FindObjectOfType<PlayerCheckpointTracker>();
+            trackers = FindObjectsOfType<Tracker>();
+        }
+
+#endif
 
 
         public int CurrentCheckpoint => currentCheckpoint;
@@ -84,6 +96,16 @@ namespace Managers.Checkpoints
 
             }
         }
+   
+        public void SaveCheckpoint(int index)
+        {
+            if (currentCheckpoint < index)
+            {
+                currentCheckpoint = index;
+                print("Save Checkpoint");
+            }
+        }
+    
     }
 
 }

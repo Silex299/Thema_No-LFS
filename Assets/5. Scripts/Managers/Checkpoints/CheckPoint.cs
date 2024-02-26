@@ -15,6 +15,16 @@ namespace Managers.Checkpoints
 
         [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
+        public int checkpointIndex;
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.CompareTag("Player") || other.CompareTag("Player_Main"))
+            {
+                CheckpointManager.Instance.SaveCheckpoint(checkpointIndex);
+            }
+        }
 
         public void LoadThisCheckpoint()
         {
