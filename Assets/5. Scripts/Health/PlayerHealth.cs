@@ -59,6 +59,7 @@ namespace Health
             else if(message == "FALL")
             {
                 player.AnimationController.enabled = false;
+                player.EffectsManager.PlayGeneralSoundDefaultRandom("Fall Death");
                 DisableCompoents();
                 Death();
             }

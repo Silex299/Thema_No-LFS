@@ -203,14 +203,11 @@ namespace Player_Scripts
             {
                 if (generalSounds.TryGetValue("Default", out var sounds))
                 {
-                    print(1);
                     if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                     {
-                        print(2);
                         var randomIndex = Random.Range(0, clips.Count);
                         print(clips[randomIndex]);
                         playerSoundSource.PlayOneShot(clips[randomIndex], 0.7f);
-                        print(4);
                     }
                 }
 
