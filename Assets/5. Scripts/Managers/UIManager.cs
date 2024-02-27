@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Player_Scripts;
 using System;
+using Managers.Checkpoints;
 
 namespace Managers
 {
@@ -33,8 +34,12 @@ namespace Managers
         private void OnDisable()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
-            controller.player.Health.OnDeath -= RestartLastCheckPointView;
-            controller.player.Health.OnRevive -= CloseLastCheckpointView;
+
+            if (controller)
+            {
+                controller.player.Health.OnDeath -= RestartLastCheckPointView;
+                controller.player.Health.OnRevive -= CloseLastCheckpointView;
+            }
         }
 
 
@@ -118,9 +123,21 @@ namespace Managers
             if (!isLCPViewOpen) return;
 
             isLCPViewOpen = false;
-            animator.Play("LCP_Close");
+            animator.Play("EXIT_LCP_VIEW");
             FadeOut();
         }
+
+
+        #region Button Methods
+
+
+        public void OnLoadLastCheckpointButtonClicked()
+        {
+            CheckpointManager.Instance?.LoadCheckpoint();
+        }
+
+        #endregion
+
     }
 
 }

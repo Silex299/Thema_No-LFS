@@ -56,6 +56,12 @@ namespace Health
                 DisableCompoents();
                 PlayerMovementController.Instance.PlayAnimation("Float Death", 0.5f, 1); //Play Death  Animation
             }
+            else if(message == "FALL")
+            {
+                player.AnimationController.enabled = false;
+                DisableCompoents();
+                Death();
+            }
             else
             {
                 DisableCompoents();
@@ -97,6 +103,8 @@ namespace Health
             }
         }
 
+
+        
 
         public void DisableCompoents()
         {
