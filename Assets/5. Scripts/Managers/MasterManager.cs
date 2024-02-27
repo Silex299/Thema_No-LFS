@@ -15,7 +15,6 @@ public class MasterManager : MonoBehaviour
         if(MasterManager.Instance == null)
         {
             MasterManager.instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else if (MasterManager.Instance != this)
         {

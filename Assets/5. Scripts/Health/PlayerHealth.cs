@@ -122,8 +122,17 @@ namespace Health
             player.EffectsManager.enabled = true;
             player.AnimationController.enabled = true;
 
+            player.AnimationController.SetFloat("VerticalAcceleration", 0);
             OnRevive.Invoke();
             Start();
+        }
+
+        public void PlayRagdoll()
+        {
+            player.CController.enabled = false;
+            player.AnimationController.enabled = false;
+            player.MovementController.enabled = false;
+            player.EffectsManager.enabled = false;
         }
 
     }

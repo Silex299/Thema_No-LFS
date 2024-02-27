@@ -10,6 +10,7 @@ namespace Managers.Checkpoints
     public class CheckpointManager : MonoBehaviour
     {
 
+
         [SerializeField] private int currentCheckpoint;
         [SerializeField] private int currentLevelIndex;
 

@@ -10,6 +10,7 @@ namespace Managers.Checkpoints
     public class GeneralTracker : Tracker
     {
 
+        [SerializeField] private bool callToInitiate = true;
         [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialPosition;
         [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialEualrRotation;
         [SerializeField, TabGroup("States", "FinalState")] private Vector3 finalPosition;
@@ -22,6 +23,8 @@ namespace Managers.Checkpoints
 
         public override void InitialSetup(CheckPoint checkPoint)
         {
+
+            if (!callToInitiate) return;
 
             ResetItem(checkPoint);
 

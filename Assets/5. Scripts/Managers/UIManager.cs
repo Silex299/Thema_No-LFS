@@ -47,6 +47,7 @@ namespace Managers
         {
             if (_isFadingIn) FadeIn();
             if (_isFadingOut) FadeOut();
+
         }
 
         private Action FadeInCallback;
@@ -74,7 +75,6 @@ namespace Managers
                     FadeInCallback?.Invoke();
                     FadeInCallback = null;
                 }
-
             }
         }
 
