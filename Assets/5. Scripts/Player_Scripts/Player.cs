@@ -51,6 +51,7 @@ namespace Player_Scripts
         internal PlayerBaseStates currentState;
         [SerializeField, BoxGroup("Player States")] internal BasicMovementSate basicMovementState = new BasicMovementSate();
         [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState = new LadderMovementState();
+        [SerializeField, BoxGroup("Player States")] internal WaterMovement waterMovement = new WaterMovement();
 
 
         /// <summary>

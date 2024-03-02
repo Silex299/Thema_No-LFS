@@ -41,6 +41,10 @@ namespace Player_Scripts
                     player.currentState = player.ladderMovementState;
                     break;
 
+                case PlayerMovementState.Water:
+                    player.currentState = player.waterMovement;
+                    break;
+
                 default:
                     player.currentState = player.basicMovementState;
                     break;
@@ -104,6 +108,9 @@ namespace Player_Scripts
                     break;
                 case PlayerMovementState.Ladder:
                     player.currentState = player.ladderMovementState;
+                    break;
+                case PlayerMovementState.Water:
+                    player.currentState = player.waterMovement;
                     break;
             }
 
