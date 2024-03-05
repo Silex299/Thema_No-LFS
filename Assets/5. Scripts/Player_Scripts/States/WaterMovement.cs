@@ -13,6 +13,12 @@ namespace Player_Scripts.States
 
         [SerializeField] private float swimSpeed = 10;
 
+
+
+        //Defines player position if player is at the surface of the water body or at bottom depth
+        private bool _atBottom;
+        private bool _atTop;
+
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Basic Under Water", 0.2f);
@@ -63,6 +69,7 @@ namespace Player_Scripts.States
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness);
 
         }
+
 
     }
 

@@ -178,6 +178,15 @@ namespace Player_Scripts
             }
         }
 
+
+        //WATER MOVEMENT
+
+        public void PlayerAtWaterSurface(bool atSurface)
+        {
+            
+        }
+
+
         #endregion
 
         #region Animations
