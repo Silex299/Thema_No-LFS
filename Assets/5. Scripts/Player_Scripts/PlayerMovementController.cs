@@ -61,6 +61,12 @@ namespace Player_Scripts
             player.currentState.UpdateState(player);
         }
 
+        private void LateUpdate()
+        {
+            if (player.DisablePlayerMovement) return;
+
+            player.currentState.LateUpdateState(player);
+        }
 
         public void DiablePlayerMovement(bool disable)
         {
@@ -181,9 +187,26 @@ namespace Player_Scripts
 
         //WATER MOVEMENT
 
-        public void PlayerAtWaterSurface(bool atSurface)
+        public void WaterSurfaceHit(bool atSurface)
         {
-            
+            if(player.e_currentState == PlayerMovementState.Water)
+            {
+                if (!player.DisablePlayerMovement)
+                {
+                    player.waterMovement.atSurface = atSurface;
+                }
+            }
+        }
+
+        public void WaterBottomHit(bool atBottom)
+        {
+            if (player.e_currentState == PlayerMovementState.Water)
+            {
+                if (!player.DisablePlayerMovement)
+                {
+                    player.waterMovement.atBottom = atBottom;
+                }
+            }
         }
 
 

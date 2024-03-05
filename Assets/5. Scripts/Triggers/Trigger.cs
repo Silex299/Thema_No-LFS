@@ -16,6 +16,7 @@ namespace Triggers
 
 
         [SerializeField, Space(10)] private UnityEvent actions;
+        [SerializeField] private UnityEvent exitActions;
         [SerializeField] private bool isEnabled = true;
 
         private bool _isTriggered;
@@ -46,7 +47,9 @@ namespace Triggers
 
             yield return new WaitForSeconds(0.2f);
 
+
             _playerIsInTrigger = false;
+            exitActions?.Invoke();
             _interactCollider = null;
         }
 
