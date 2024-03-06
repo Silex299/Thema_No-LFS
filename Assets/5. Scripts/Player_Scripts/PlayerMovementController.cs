@@ -193,7 +193,7 @@ namespace Player_Scripts
             {
                 if (!player.DisablePlayerMovement)
                 {
-                    player.waterMovement.atSurface = atSurface;
+                    player.waterMovement.PlayerAtSurfact(player, atSurface);
                 }
             }
         }
@@ -204,7 +204,7 @@ namespace Player_Scripts
             {
                 if (!player.DisablePlayerMovement)
                 {
-                    player.waterMovement.atBottom = atBottom;
+                    player.waterMovement.PlayerAtBottom(player, atBottom);
                 }
             }
         }

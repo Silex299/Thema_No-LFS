@@ -23,10 +23,15 @@ namespace Player_Scripts.States
 
         private float previousCharacterHeight;
 
+        private readonly static int onSurface = Animator.StringToHash("onSurface");
+        private readonly static int StateIndex = Animator.StringToHash("StateIndex");
+
+
         #region Overriden Methods
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Basic Under Water", 0.2f);
+            player.AnimationController.SetInteger(StateIndex, 2);
             previousCharacterHeight = player.CController.height;
             player.CController.height = 0.7f;
         }
@@ -48,6 +53,7 @@ namespace Player_Scripts.States
             {
                 verticalInput = 0;
             }
+
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
             player.CController.Move(movementVector * swimSpeed * Time.deltaTime);
@@ -106,6 +112,16 @@ namespace Player_Scripts.States
 
         }
 
+        public void PlayerAtSurfact(Player player, bool status)
+        {
+            atSurface = status;
+            player.AnimationController.SetBool(onSurface, status);
+        }
+
+        public void PlayerAtBottom(Player player, bool status)
+        {
+            atBottom = status;
+        }
 
         #endregion
 

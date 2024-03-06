@@ -106,7 +106,11 @@ namespace Thema_Camera
 
             _initialCameraInfo = _cameraInfo;
             _cameraInfo = info;
-            m_AudioListener.transform.localPosition = info.audioListenerLocalPosition; 
+
+            if (m_AudioListener)
+            {
+                m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
+            }
             _transitionTime = transitionTime;
 
             _timeElapsed = 0f;

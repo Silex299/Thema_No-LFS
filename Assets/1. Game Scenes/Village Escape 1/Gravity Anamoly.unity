@@ -1065,6 +1065,11 @@ PrefabInstance:
       propertyPath: waterMovement.swimSpeed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7671220246731389422, guid: 455b9f2c248396843a5331d74c35e859,
+        type: 3}
+      propertyPath: waterMovement.restrictedYPosition
+      value: 7.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7926088327022255617, guid: 455b9f2c248396843a5331d74c35e859,
         type: 3}
       propertyPath: m_RootOrder
@@ -2020,6 +2025,7 @@ Transform:
   m_Children:
   - {fileID: 760637425}
   - {fileID: 1427577183}
+  - {fileID: 1805967821}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2465,9 +2471,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907298521}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.03526974, y: 0.72666806, z: -0.044639114, w: 0.68462914}
+  m_LocalPosition: {x: -25.441143, y: 1.1405077, z: 2.3045678}
+  m_LocalScale: {x: -2.612934, y: 2.6129363, z: 2.6129375}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1077000275}
@@ -2613,7 +2619,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -2625,10 +2631,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965935541}
-  m_LocalRotation: {x: 0.000000057741993, y: -0.000000029802319, z: -0.006861086,
-    w: 0.99997646}
-  m_LocalPosition: {x: 0.6211891, y: 3.6649456, z: -0.45949522}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.040254682, y: 0.72640896, z: -0.039940804, w: 0.6849193}
+  m_LocalPosition: {x: -25.458279, y: 10.80667, z: 3.836221}
+  m_LocalScale: {x: -2.6129346, y: 2.6129358, z: 2.612937}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1077000275}
@@ -2854,9 +2859,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1077000274}
-  m_LocalRotation: {x: 0.03526974, y: 0.72666806, z: -0.044639114, w: 0.68462914}
-  m_LocalPosition: {x: -25.441143, y: 1.1405077, z: 2.3045678}
-  m_LocalScale: {x: -2.6129339, y: 2.6129358, z: 2.6129365}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 907298523}
@@ -3533,6 +3538,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 2087878419}
+        m_TargetAssemblyTypeName: Thema_Camera.ChangeOffset, Assembly-CSharp
+        m_MethodName: ChangeCameraOffset
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   exitActions:
     m_PersistentCalls:
       m_Calls:
@@ -3540,6 +3557,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Player_Scripts.PlayerMovementController, Assembly-CSharp
         m_MethodName: WaterSurfaceHit
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1914778498}
+        m_TargetAssemblyTypeName: Thema_Camera.ChangeOffset, Assembly-CSharp
+        m_MethodName: ChangeCameraOffset
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3810,6 +3839,39 @@ Transform:
   m_Father: {fileID: 1380209046}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1805967820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1805967821}
+  m_Layer: 0
+  m_Name: Camera Offsets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1805967821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805967820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2087878418}
+  - {fileID: 1914778497}
+  m_Father: {fileID: 764897913}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1806812641
 GameObject:
   m_ObjectHideFlags: 0
@@ -3948,6 +4010,110 @@ Transform:
   m_Father: {fileID: 1146449069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1914778496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1914778497}
+  - component: {fileID: 1914778498}
+  m_Layer: 0
+  m_Name: Default
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1914778497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914778496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805967821}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1914778498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914778496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6908def7dde515241af3eaa49a3aa069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info:
+    offset: {x: -27.41114, y: 0.5305077, z: -1.345432}
+    rotation: {x: 6.498, y: 93.38, z: -0.569}
+    audioListenerLocalPosition: {x: 0, y: 0, z: 0}
+    FOV: 65.95088
+  transitionTime: 1
+  previewCamera: {fileID: 0}
+  previewTarget: {fileID: 0}
+--- !u!1 &2087878417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2087878418}
+  - component: {fileID: 2087878419}
+  m_Layer: 0
+  m_Name: AtSurface
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2087878418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087878417}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805967821}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2087878419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087878417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6908def7dde515241af3eaa49a3aa069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info:
+    offset: {x: -27.41114, y: 3, z: -1.345432}
+    rotation: {x: 6.498, y: 95.38, z: -0.569}
+    audioListenerLocalPosition: {x: 0, y: 0, z: 0}
+    FOV: 55
+  transitionTime: 1
+  previewCamera: {fileID: 0}
+  previewTarget: {fileID: 0}
 --- !u!43 &2109766309
 Mesh:
   m_ObjectHideFlags: 0
