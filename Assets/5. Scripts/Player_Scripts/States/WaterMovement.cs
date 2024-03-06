@@ -12,6 +12,7 @@ namespace Player_Scripts.States
         private readonly static int Vertical = Animator.StringToHash("Direction");
 
         [SerializeField] private float swimSpeed = 10;
+        [SerializeField] private float lostBreathSpeed = 10;
         public float restrictedYPosition = 7.1f;
         public float restrictedXPosition;
 
@@ -64,7 +65,7 @@ namespace Player_Scripts.States
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.5f : 1) * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.75f : 1) * movementVector * swimSpeed * Time.deltaTime);
 
 
             player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
@@ -90,7 +91,7 @@ namespace Player_Scripts.States
 
         private void LoseBreath(Player player)
         {
-            player.Health.TakeDamage(Time.deltaTime  * 10);
+            player.Health.TakeDamage(Time.deltaTime  * lostBreathSpeed);
         }
 
         #endregion

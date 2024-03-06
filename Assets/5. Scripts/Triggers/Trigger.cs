@@ -27,17 +27,21 @@ namespace Triggers
 
         protected virtual void OnTriggerStay(Collider other)
         {
+
             if (other.CompareTag(triggerTag))
             {
-                _playerIsInTrigger = true;
-                _interactCollider = other;
-
-                if(reset!= null)
+                if (reset != null)
                 {
                     StopCoroutine(reset);
                 }
 
                 reset = StartCoroutine(ResetTrigger());
+
+                if (_isTriggered) return;
+
+                _playerIsInTrigger = true;
+                _interactCollider = other;
+
             }
         }
 
@@ -47,10 +51,12 @@ namespace Triggers
 
             yield return new WaitForSeconds(0.2f);
 
-
+            Debug.LogError("exit");
             _playerIsInTrigger = false;
-            exitActions?.Invoke();
+            _isTriggered = false;
             _interactCollider = null;
+
+            exitActions?.Invoke();
         }
 
 
