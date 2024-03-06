@@ -13,6 +13,7 @@ namespace Player_Scripts.States
 
         [SerializeField] private float swimSpeed = 10;
         public float restrictedYPosition = 7.1f;
+        public float restrictedXPosition;
 
 
 
@@ -56,7 +57,8 @@ namespace Player_Scripts.States
 
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
-            player.CController.Move(movementVector * swimSpeed * Time.deltaTime);
+
+            player.CController.Move((atSurface ? 0.5f : 1) * movementVector * swimSpeed * Time.deltaTime);
 
 
             player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
@@ -71,10 +73,7 @@ namespace Player_Scripts.States
 
         public override void LateUpdateState(Player player)
         {
-            if (atSurface && Input.GetAxis("Vertical") > 0)
-            {
-                AboveWater(player);
-            }
+            RestrictPosition(player);
         }
 
         public override void ExitState(Player player)
@@ -103,14 +102,19 @@ namespace Player_Scripts.States
 
         }
 
-        private void AboveWater(Player player)
+        private void RestrictPosition(Player player)
         {
-            //Restrict Y position;
             Vector3 playerPos = player.transform.position;
-            playerPos.y = restrictedYPosition;
-            player.transform.position = playerPos;
+            playerPos.x = restrictedXPosition;
 
+            if(atSurface && Input.GetAxis("Vertical") >= 0)
+            {
+                playerPos.y = restrictedYPosition;
+            }
+
+            player.transform.position = playerPos;
         }
+
 
         public void PlayerAtSurfact(Player player, bool status)
         {
