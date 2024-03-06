@@ -24,6 +24,7 @@ namespace Player_Scripts.States
 
         private float previousCharacterHeight;
 
+
         private readonly static int onSurface = Animator.StringToHash("onSurface");
         private readonly static int StateIndex = Animator.StringToHash("StateIndex");
 
@@ -35,6 +36,7 @@ namespace Player_Scripts.States
             player.AnimationController.SetInteger(StateIndex, 2);
             previousCharacterHeight = player.CController.height;
             player.CController.height = 0.7f;
+            Physics.gravity = new Vector3(0, -1f, 0);
         }
         public override void UpdateState(Player player)
         {
@@ -55,6 +57,10 @@ namespace Player_Scripts.States
                 verticalInput = 0;
             }
 
+            if (!atSurface)
+            {
+                LoseBreath(player);
+            }
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
@@ -65,7 +71,6 @@ namespace Player_Scripts.States
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);
-
 
 
         }
@@ -79,6 +84,13 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.height = previousCharacterHeight;
+            Physics.gravity = new Vector3(0, -9.8f, 0);
+        }
+
+
+        private void LoseBreath(Player player)
+        {
+            player.Health.TakeDamage(Time.deltaTime  * 10);
         }
 
         #endregion
@@ -119,6 +131,7 @@ namespace Player_Scripts.States
         public void PlayerAtSurfact(Player player, bool status)
         {
             atSurface = status;
+            player.Health.ResetHealth();
             player.AnimationController.SetBool(onSurface, status);
         }
 

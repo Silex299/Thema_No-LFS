@@ -11,8 +11,8 @@ namespace Health
 
         [SerializeField, FoldoutGroup("Components")] private Player player;
 
-        [SerializeField, BoxGroup("Player Health")] private Material dissolveMaterial;
-        [SerializeField, BoxGroup("Player Health")] private float dissolveTime = 3;
+        [SerializeField, TabGroup("Player Health")] private Material dissolveMaterial;
+        [SerializeField, TabGroup("Player Health")] private float dissolveTime = 3;
 
 
         private bool _isDead;
@@ -23,11 +23,13 @@ namespace Health
 
         public Action OnDeath;
         public Action OnRevive;
+        public Action<float> OnTakingDamage;
         private float _dissolveTimeElapsed = 0;
 
         private void Start()
         {
             dissolveMaterial.SetFloat(Dissolve1, -1);
+            _currentHealth = maximumHealth;
             _isDead = false;
             _dissolveDeath = false;
         }
@@ -38,6 +40,27 @@ namespace Health
             {
                 DissolveDeath();
             }
+        }
+
+
+
+        public override void TakeDamage(float damage)
+        {
+            _currentHealth -= damage;
+            print(_currentHealth);
+            OnTakingDamage?.Invoke(_currentHealth / maximumHealth);
+
+            if (_currentHealth <= 0)
+            {
+                Kill("FALL");
+            }
+
+        }
+
+        public override void ResetHealth()
+        {
+            base.ResetHealth();
+            OnTakingDamage?.Invoke(1);
         }
 
 
@@ -104,8 +127,6 @@ namespace Health
             }
         }
 
-
-        
 
         public void DisableCompoents()
         {
