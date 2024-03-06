@@ -18,6 +18,12 @@ namespace Health
             _currentHealth = maximumHealth;
         }
 
+
+        public virtual void ResetHealth()
+        {
+            _currentHealth = maximumHealth;
+        }
+
         public virtual void TakeDamage(float damage)
         {
             _currentHealth -= damage;

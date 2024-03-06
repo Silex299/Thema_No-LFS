@@ -16,6 +16,10 @@ namespace Managers
         [SerializeField, BoxGroup("Params")] private float fadeTransitionTime;
 
 
+        [SerializeField, BoxGroup("Player Health"),Space(10)] private GameObject healthBar;
+        [SerializeField, BoxGroup("Player Health")] private Image healthFill;
+        [SerializeField, BoxGroup("Player Health")] private Image damageImage;
+
 
         private bool _isFadingIn;
         private bool _isFadingOut;
@@ -29,6 +33,7 @@ namespace Managers
 
             controller.player.Health.OnDeath += RestartLastCheckPointView;
             controller.player.Health.OnRevive += CloseLastCheckpointView;
+            controller.player.Health.OnTakingDamage += TakeDamage;
         }
 
         private void OnDisable()
@@ -39,6 +44,7 @@ namespace Managers
             {
                 controller.player.Health.OnDeath -= RestartLastCheckPointView;
                 controller.player.Health.OnRevive -= CloseLastCheckpointView;
+                controller.player.Health.OnTakingDamage -= TakeDamage;
             }
         }
 
@@ -128,11 +134,34 @@ namespace Managers
         }
 
 
+        private void TakeDamage(float fraction)
+        {
+            if (fraction == 1)
+            {
+                healthBar.SetActive(false);
+            }
+            else
+            {
+                if (!healthBar.activeInHierarchy)
+                {
+                    healthBar.SetActive(true);
+                }
+                healthFill.fillAmount = fraction;
+            }
+            
+            Color color = damageImage.color;
+            color.a = 1-fraction;
+
+            damageImage.color = color;
+
+        }
+
         #region Button Methods
 
 
         public void OnLoadLastCheckpointButtonClicked()
         {
+            print("Load Checkpoint");
             CheckpointManager.Instance?.LoadCheckpoint();
         }
 
