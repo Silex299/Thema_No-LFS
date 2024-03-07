@@ -81,6 +81,7 @@ namespace Health
             else if(message == "RAGDOLL DEATH")
             {
                 player.AnimationController.enabled = false;
+                player.EffectsManager.PlayGeneralSoundDefaultRandom("Death");
                 DisableCompoents();
                 Death();
             }

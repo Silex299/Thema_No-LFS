@@ -35,7 +35,7 @@ namespace Player_Scripts.States
         #region Overriden Methods
         public override void EnterState(Player player)
         {
-            player.AnimationController.CrossFade("Basic Under Water", 0.2f);
+            player.AnimationController.CrossFade("Fall in Water", 0.1f);
             player.AnimationController.SetInteger(StateIndex, 2);
             previousCharacterHeight = player.CController.height;
             player.CController.height = 0.7f;
