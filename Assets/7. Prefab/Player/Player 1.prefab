@@ -1,5 +1,133 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1965059393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1965059394}
+  - component: {fileID: 1965059395}
+  m_Layer: 0
+  m_Name: Other Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1965059394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965059393}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7671220246849106285}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1965059395
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965059393}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &91200200353311133
 GameObject:
   m_ObjectHideFlags: 0
@@ -3050,11 +3178,11 @@ MonoBehaviour:
     GroundOffset: 0.04
     defaultStateIndex: 0
   waterMovement:
-    swimSpeed: 10
+    swimSpeed: 3
     lostBreathSpeed: 10
-    restrictedYPosition: 7.1
-    restrictedXPosition: 0
-  e_currentState: 0
+    restrictedYPosition: 7.2
+    restrictedXPosition: -5.76
+  e_currentState: 2
   previousStateIndex: -1
   currentStateIndex: 0
   disablePlayerMovement: 0
@@ -3143,9 +3271,12 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f1ada3506afc83042b4ac8d23e3631a1, type: 3}
     - {fileID: 8300000, guid: 42988255109902d4895d90799423e188, type: 3}
     - {fileID: 8300000, guid: 11c2ec57ad93b9a4bac1a1063da22f3b, type: 3}
+    - {fileID: 8300000, guid: 298b1669f5f56f746833b3f36e2e2d99, type: 3}
+    - {fileID: 8300000, guid: b511f72eb1d4d754cb828d24db388ba5, type: 3}
     - {fileID: 8300000, guid: baf90d315c62c1648ba2901ff92db065, type: 3}
     - {fileID: 8300000, guid: 3e10d68c7f7aa854694549c916e8ba46, type: 3}
     - {fileID: 8300000, guid: 70bfbaaebebfb0d4ba87a5e9947d5ad3, type: 3}
+    - {fileID: 8300000, guid: a6b9f97a365257f48b19c7ae1d409b59, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -3470,7 +3601,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 5
+      Data: 7
     - Name: 
       Entry: 7
       Data: 
@@ -3597,6 +3728,56 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Death
+    - Name: $v
+      Entry: 7
+      Data: 18|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 37
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Fall Water
+    - Name: $v
+      Entry: 7
+      Data: 19|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 38
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -3613,11 +3794,11 @@ MonoBehaviour:
       Data: Gravel
     - Name: $v
       Entry: 7
-      Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
+      Data: 20|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
         UnityEngine.AudioModule]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 19|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      Data: 21|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
@@ -3633,21 +3814,30 @@ MonoBehaviour:
       Data: Land
     - Name: $v
       Entry: 7
-      Data: 20|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+      Data: 22|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
         mscorlib
     - Name: 
       Entry: 12
       Data: 3
     - Name: 
       Entry: 10
-      Data: 37
-    - Name: 
-      Entry: 10
-      Data: 38
-    - Name: 
-      Entry: 10
       Data: 39
     - Name: 
+      Entry: 10
+      Data: 40
+    - Name: 
+      Entry: 10
+      Data: 41
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -3662,6 +3852,29 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: otherSounds
+      Entry: 7
+      Data: 23|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.AudioClip,
+        UnityEngine.AudioModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 24|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: heartbeat
+    - Name: $v
+      Entry: 10
+      Data: 42
     - Name: 
       Entry: 8
       Data: 
@@ -3674,6 +3887,7 @@ MonoBehaviour:
   player: {fileID: 7671220246731389422}
   interactionSource: {fileID: 7671220246286559520}
   playerSoundSource: {fileID: 7859029046457866814}
+  otherSoundSource: {fileID: 1965059395}
   leftFootSocket: {fileID: 4349120311552002238}
   rightFootSocket: {fileID: 1401407627514898806}
   raycastMask:
@@ -4160,6 +4374,7 @@ Transform:
   m_Children:
   - {fileID: 7671220246286559521}
   - {fileID: 7859029046457866815}
+  - {fileID: 1965059394}
   m_Father: {fileID: 7926088327022255617}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

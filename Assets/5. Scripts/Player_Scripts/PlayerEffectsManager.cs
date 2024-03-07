@@ -277,7 +277,6 @@ namespace Player_Scripts
                     if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                     {
                         var randomIndex = Random.Range(0, clips.Count);
-                        print(clips[randomIndex]);
                         playerSoundSource.PlayOneShot(clips[randomIndex], volume);
                     }
                 }
