@@ -14,6 +14,7 @@ namespace Player_Scripts
 
         [SerializeField, TabGroup("References", "Audio Source")] private AudioSource interactionSource;
         [SerializeField, TabGroup("References", "Audio Source", Order = 0)] private AudioSource playerSoundSource;
+        [SerializeField, TabGroup("References", "Audio Source")] private AudioSource otherSoundSource;
 
         [SerializeField, TabGroup("Effects", "Step Sockets"), Space(5f)] private Transform leftFootSocket;
         [SerializeField, TabGroup("Effects", "Step Sockets")] private Transform rightFootSocket;
@@ -24,6 +25,9 @@ namespace Player_Scripts
 
         [SerializeField, TabGroup("Effects", "General Sounds"), Space(5f), InfoBox("This dictionary contains, Ground Layer as key= { Sound Name as key = {List of sounds(that will be chosed at random)} }")]
         private Dictionary<string, Dictionary<string, List<AudioClip>>> generalSounds;
+
+        [SerializeField, TabGroup("Effects", "Other Sounds")]
+        private Dictionary<string, AudioClip> otherSounds;
 
 
 
@@ -65,10 +69,54 @@ namespace Player_Scripts
             {
                 PlayerEffectsManager._instance = this;
             }
+
+
+            player.Health.OnTakingDamage += PlayHeartBeat;
+        }
+
+        private void OnDisable()
+        {
+            player.Health.OnTakingDamage -= PlayHeartBeat;
         }
 
 
-      
+
+        private void PlayHeartBeat(float fraction)
+        {
+            if (otherSoundSource)
+            {
+
+                if (fraction > 0.5f)
+                {
+                    otherSoundSource.Stop();
+                }
+                else
+                {
+                    if (!otherSoundSource.isPlaying)
+                    {
+                        otherSoundSource.Play(); AudioClip clip;
+
+                        if (otherSounds.TryGetValue("heartbeat", out clip))
+                        {
+                            otherSoundSource.clip = clip;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Couldn't find heartbeat track");
+                        }
+                    }
+
+                    //TODO : Check for clip match(if sound source is playing other clips already)
+
+                    otherSoundSource.volume = 1 - fraction;
+
+                    otherSoundSource.pitch = Mathf.Clamp(fraction + 0.5f, 0, 1.2f);
+
+                }
+
+            }
+        }
+
 
         public void PlaySteps(Object footInfo)
         {
@@ -281,7 +329,7 @@ namespace Player_Scripts
                 }
             }
 
-            
+
         }
 
         public GameObject SpawnEffect(string key, Vector3 overridePosition)

@@ -51,7 +51,7 @@ namespace Health
 
             if (_currentHealth <= 0)
             {
-                Kill("FALL");
+                Kill("RAGDOLL DEATH");
             }
 
         }
@@ -77,6 +77,12 @@ namespace Health
             {
                 DisableCompoents();
                 PlayerMovementController.Instance.PlayAnimation("Float Death", 0.5f, 1); //Play Death  Animation
+            }
+            else if(message == "RAGDOLL DEATH")
+            {
+                player.AnimationController.enabled = false;
+                DisableCompoents();
+                Death();
             }
             else if(message == "FALL")
             {
