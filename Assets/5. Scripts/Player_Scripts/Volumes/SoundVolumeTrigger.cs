@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Sounds
 {
-    [RequireComponent(typeof(BoxCollider))]
+    //[RequireComponent(typeof(BoxCollider))]
     public class SoundVolumeTrigger : MonoBehaviour
     {
 
@@ -21,12 +21,16 @@ namespace Sounds
         {
             if (other.CompareTag("Player") || other.CompareTag("Player_Main"))
             {
-
-                var playerEffects = Player_Scripts.PlayerEffectsManager.Instance;
-                playerEffects.CurrentEffectVolume = volumeName;
-                playerEffects.VolumeMultiplier = volumeMultiplier;
-                ApplyAudioVolume();
+                VolumeAction();
             }
+        }
+
+        public void VolumeAction()
+        {
+            var playerEffects = Player_Scripts.PlayerEffectsManager.Instance;
+            playerEffects.CurrentEffectVolume = volumeName;
+            playerEffects.VolumeMultiplier = volumeMultiplier;
+            ApplyAudioVolume();
         }
 
         private void Update()

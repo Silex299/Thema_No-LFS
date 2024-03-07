@@ -148,6 +148,7 @@ namespace Player_Scripts
 
             try
             {
+                print(soundKey);
                 if (stepSounds.TryGetValue(soundKey, out var clips))
                 {
                     interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], _volumeMultiplier);

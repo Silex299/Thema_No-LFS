@@ -98,7 +98,7 @@ namespace Triggers
 
         private void PerformAction()
         {
-            if (_isTriggered && Time.time < secondActionDelay + _lastTriggerTime) return;
+            if (Time.time < secondActionDelay + _lastTriggerTime) return;
 
             actions?.Invoke();
 
