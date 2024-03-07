@@ -218,6 +218,28 @@ namespace Player_Scripts
             }
         }
 
+        public void PlayGeneralSoundDefaultRandom(string soundKey, float volume)
+        {
+            if (player.DisablePlayerMovement) return;
+
+            try
+            {
+                if (generalSounds.TryGetValue("Default", out var sounds))
+                {
+                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
+                    {
+                        var randomIndex = Random.Range(0, clips.Count);
+                        print(clips[randomIndex]);
+                        playerSoundSource.PlayOneShot(clips[randomIndex], 0.7f);
+                    }
+                }
+
+            }
+            catch
+            {
+                Debug.LogWarning("Some Error occured");
+            }
+        }
 
         public void SetInteractionSound(float value)
         {
@@ -233,29 +255,33 @@ namespace Player_Scripts
                 interactionSource.loop = false;
                 interactionSource.Stop();
             }
-
-            try
+            else
             {
-                if (generalSounds.TryGetValue("Default", out var sounds))
+                try
                 {
-                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
+                    if (generalSounds.TryGetValue("Default", out var sounds))
                     {
-                        var randomIndex = Random.Range(0, clips.Count);
-
-                        if (!interactionSource.isPlaying)
+                        if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                         {
-                            interactionSource.loop = true;
-                            interactionSource.clip = clips[randomIndex];
-                            interactionSource.Play();
+                            var randomIndex = Random.Range(0, clips.Count);
+
+                            if (!interactionSource.isPlaying)
+                            {
+                                interactionSource.loop = true;
+                                interactionSource.clip = clips[randomIndex];
+                                interactionSource.Play();
+                            }
                         }
                     }
-                }
 
+                }
+                catch
+                {
+                    Debug.LogWarning("Some Error occured");
+                }
             }
-            catch
-            {
-                Debug.LogWarning("Some Error occured");
-            }
+
+            
         }
 
         public GameObject SpawnEffect(string key, Vector3 overridePosition)

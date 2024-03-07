@@ -38,7 +38,7 @@ namespace Sounds
             if (_changeVolume) { ApplyAudioVolume(); }
         }
 
-        private void ApplyAudioVolume()
+        public void ApplyAudioVolume()
         {
             if (!_changeVolume)
             {
