@@ -52,7 +52,6 @@ namespace Triggers
 
             yield return new WaitForSeconds(0.2f);
 
-            Debug.LogError("exit");
             _playerIsInTrigger = false;
             _isTriggered = false;
             _interactCollider = null;

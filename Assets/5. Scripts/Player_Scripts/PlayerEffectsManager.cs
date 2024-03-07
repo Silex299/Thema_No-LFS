@@ -230,7 +230,7 @@ namespace Player_Scripts
                     {
                         var randomIndex = Random.Range(0, clips.Count);
                         print(clips[randomIndex]);
-                        playerSoundSource.PlayOneShot(clips[randomIndex], 0.7f);
+                        playerSoundSource.PlayOneShot(clips[randomIndex], volume);
                     }
                 }
 

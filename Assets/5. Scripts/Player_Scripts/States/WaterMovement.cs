@@ -161,7 +161,7 @@ namespace Player_Scripts.States
 
             if (status)
             {
-                player.EffectsManager.PlayGeneralSoundDefaultRandom("DiveOut", 0.4f);
+                player.EffectsManager.PlayGeneralSoundDefaultRandom("DiveOut", 0.1f);
             }
 
             //play swim sound

@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 532910662519656908}
   - component: {fileID: 6201406957262220382}
   - component: {fileID: 6201406957262220376}
+  - component: {fileID: 7812671003768467211}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player_Main
@@ -735,11 +736,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 938df53f74d50544b83b2cd1b17069f9, type: 3}
     - {fileID: 8300000, guid: ea53a688169f735458a5fd72032a96eb, type: 3}
     - {fileID: 8300000, guid: f2e9fc39ee7221b4a8e4b9d2f8975eed, type: 3}
-    - {fileID: 8300000, guid: baf90d315c62c1648ba2901ff92db065, type: 3}
-    - {fileID: 8300000, guid: 70bfbaaebebfb0d4ba87a5e9947d5ad3, type: 3}
-    - {fileID: 8300000, guid: 3e10d68c7f7aa854694549c916e8ba46, type: 3}
-    - {fileID: 8300000, guid: 65e79974c4f36b64e9b4fd3a44143b04, type: 3}
-    - {fileID: 8300000, guid: 42988255109902d4895d90799423e188, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -970,164 +966,7 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: generalSounds
-      Entry: 7
-      Data: 8|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
-        mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 9|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 7
-      Data: 10|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 11|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Land
-    - Name: $v
-      Entry: 7
-      Data: 12|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 10
-      Data: 27
-    - Name: 
-      Entry: 10
-      Data: 28
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Default
-    - Name: $v
-      Entry: 7
-      Data: 13|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 14|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Minor pain
-    - Name: $v
-      Entry: 7
-      Data: 15|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 29
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: 'Jump Off '
-    - Name: $v
-      Entry: 7
-      Data: 16|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 30
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
   player: {fileID: 532910662519656908}
   interactionSource: {fileID: 532910663132250370}
@@ -1150,12 +989,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6201406957262220377}
-  controller: {fileID: 532910662519656910}
+  movementController: {fileID: 0}
+  characterController: {fileID: 0}
+  effectsManager: {fileID: 0}
+  health: {fileID: 0}
   useHorizontal: 1
   rotationSmoothness: 10
   jumpVelocity: 6
   jumpingForwardVelocity: 6
+  enabledDirectionInput: 0
   canJump: 0
+  oneWayRotation: 0
+  canBoost: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 128
@@ -1163,6 +1008,12 @@ MonoBehaviour:
     sphereCastOffset: 0.5
     sphereCastRadius: 0.25
     GroundOffset: 0.1
+    defaultStateIndex: 0
+  waterMovement:
+    swimSpeed: 10
+    lostBreathSpeed: 10
+    restrictedYPosition: 7.1
+    restrictedXPosition: 0
   e_currentState: 0
   previousStateIndex: -1
   currentStateIndex: -1
@@ -1310,6 +1161,25 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &7812671003768467211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838846821836893337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656b18a30d055364aa9a784f1a9c8981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maximumHealth: 100
+  deathAction:
+    m_PersistentCalls:
+      m_Calls: []
+  player: {fileID: 532910662519656908}
+  dissolveMaterial: {fileID: 2100000, guid: e5ef6fc578a9b0f4089d09088a5670c0, type: 2}
+  dissolveTime: 3
 --- !u!1 &873445834655618868
 GameObject:
   m_ObjectHideFlags: 0

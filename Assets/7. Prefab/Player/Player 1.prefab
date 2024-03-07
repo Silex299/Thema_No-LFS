@@ -2967,7 +2967,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7400768761604097211}
-  m_LocalRotation: {x: -0, y: -0.70710707, z: -0, w: 0.7071066}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -4.59, y: 1.37, z: -3.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -3049,6 +3049,11 @@ MonoBehaviour:
     sphereCastRadius: 0.3
     GroundOffset: 0.04
     defaultStateIndex: 0
+  waterMovement:
+    swimSpeed: 10
+    lostBreathSpeed: 10
+    restrictedYPosition: 7.1
+    restrictedXPosition: 0
   e_currentState: 0
   previousStateIndex: -1
   currentStateIndex: 0
@@ -3102,6 +3107,8 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 2062570858156317134, guid: 361dcf53c0e43ad40a4bb9113224594e, type: 3}
+    - {fileID: 3395923901204193843, guid: d80b6e85c2b33b34a9dd6d69d32a307e, type: 3}
+    - {fileID: 6960161962951702265, guid: d65d15f183069fd44a06709a9b41313c, type: 3}
     - {fileID: 9048904873178782047, guid: 81d7302ff572bcf44859d4c2507d8f7d, type: 3}
     - {fileID: 8300000, guid: 5461cae585b64f64089805f0d313bc84, type: 3}
     - {fileID: 8300000, guid: 9f96c8d3fef6ab440bdc9bd4ad3d08fe, type: 3}
@@ -3127,16 +3134,18 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 938df53f74d50544b83b2cd1b17069f9, type: 3}
     - {fileID: 8300000, guid: ea53a688169f735458a5fd72032a96eb, type: 3}
     - {fileID: 8300000, guid: f2e9fc39ee7221b4a8e4b9d2f8975eed, type: 3}
-    - {fileID: 8300000, guid: afe5e23d02afb5142bc95bacc1e287c0, type: 3}
-    - {fileID: 8300000, guid: d772d1b334ef5f148bf1308d5fb3e4b0, type: 3}
-    - {fileID: 8300000, guid: 3610d597db7918e44906d575bd074616, type: 3}
-    - {fileID: 8300000, guid: e80de9a8752d20e4d97ab928d318adb3, type: 3}
     - {fileID: 8300000, guid: 5e265270fb85126479eef52d8fce3b08, type: 3}
-    - {fileID: 8300000, guid: baf90d315c62c1648ba2901ff92db065, type: 3}
-    - {fileID: 8300000, guid: 70bfbaaebebfb0d4ba87a5e9947d5ad3, type: 3}
-    - {fileID: 8300000, guid: 3e10d68c7f7aa854694549c916e8ba46, type: 3}
+    - {fileID: 8300000, guid: 3701a5fdf99882f40bc00eb9053eec92, type: 3}
+    - {fileID: 8300000, guid: 2f949b40b7283404099a802630fb2077, type: 3}
+    - {fileID: 8300000, guid: dfff2b3c7dfb43c419592789f0a6ab81, type: 3}
+    - {fileID: 8300000, guid: 812100e3982e56842adb6ba5be867b7a, type: 3}
+    - {fileID: 8300000, guid: c7202e4e9e391e04ebededd990b78619, type: 3}
     - {fileID: 8300000, guid: f1ada3506afc83042b4ac8d23e3631a1, type: 3}
     - {fileID: 8300000, guid: 42988255109902d4895d90799423e188, type: 3}
+    - {fileID: 8300000, guid: 11c2ec57ad93b9a4bac1a1063da22f3b, type: 3}
+    - {fileID: 8300000, guid: baf90d315c62c1648ba2901ff92db065, type: 3}
+    - {fileID: 8300000, guid: 3e10d68c7f7aa854694549c916e8ba46, type: 3}
+    - {fileID: 8300000, guid: 70bfbaaebebfb0d4ba87a5e9947d5ad3, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -3155,7 +3164,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 7
       Data: 
@@ -3173,10 +3182,34 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Gravel
+      Data: UnderWater
     - Name: $v
       Entry: 10
       Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SurfaceWater
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Gravel
+    - Name: $v
+      Entry: 10
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -3215,12 +3248,6 @@ MonoBehaviour:
       Data: 6
     - Name: 
       Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 10
       Data: 4
     - Name: 
       Entry: 10
@@ -3231,6 +3258,12 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 7
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 10
+      Data: 9
     - Name: 
       Entry: 13
       Data: 
@@ -3255,12 +3288,6 @@ MonoBehaviour:
       Data: 8
     - Name: 
       Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 10
       Data: 10
     - Name: 
       Entry: 10
@@ -3277,6 +3304,12 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 15
+    - Name: 
+      Entry: 10
+      Data: 16
+    - Name: 
+      Entry: 10
+      Data: 17
     - Name: 
       Entry: 13
       Data: 
@@ -3301,12 +3334,6 @@ MonoBehaviour:
       Data: 8
     - Name: 
       Entry: 10
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 17
-    - Name: 
-      Entry: 10
       Data: 18
     - Name: 
       Entry: 10
@@ -3323,6 +3350,12 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 23
+    - Name: 
+      Entry: 10
+      Data: 24
+    - Name: 
+      Entry: 10
+      Data: 25
     - Name: 
       Entry: 13
       Data: 
@@ -3347,10 +3380,10 @@ MonoBehaviour:
       Data: 2
     - Name: 
       Entry: 10
-      Data: 24
+      Data: 26
     - Name: 
       Entry: 10
-      Data: 25
+      Data: 27
     - Name: 
       Entry: 13
       Data: 
@@ -3375,12 +3408,6 @@ MonoBehaviour:
       Data: 5
     - Name: 
       Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 10
-      Data: 27
-    - Name: 
-      Entry: 10
       Data: 28
     - Name: 
       Entry: 10
@@ -3388,6 +3415,12 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 30
+    - Name: 
+      Entry: 10
+      Data: 31
+    - Name: 
+      Entry: 10
+      Data: 32
     - Name: 
       Entry: 13
       Data: 
@@ -3423,7 +3456,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Gravel
+      Data: Default
     - Name: $v
       Entry: 7
       Data: 11|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
@@ -3437,26 +3470,20 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: Land
+      Data: DiveOut
     - Name: $v
       Entry: 7
       Data: 13|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
         mscorlib
     - Name: 
       Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 31
-    - Name: 
-      Entry: 10
-      Data: 32
+      Data: 1
     - Name: 
       Entry: 10
       Data: 33
@@ -3470,6 +3497,22 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Fall Death
+    - Name: $v
+      Entry: 7
+      Data: 14|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 34
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -3483,27 +3526,32 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Default
+      Data: Jump Off
     - Name: $v
       Entry: 7
-      Data: 14|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 15|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
+      Data: 15|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 35
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
-      Entry: 12
-      Data: 3
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: Minor pain
+      Data: Minor Pain
     - Name: $v
       Entry: 7
       Data: 16|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
@@ -3528,7 +3576,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: 'Jump Off '
+      Data: Swim
     - Name: $v
       Entry: 7
       Data: 17|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
@@ -3538,7 +3586,16 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 10
-      Data: 35
+      Data: 36
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -3553,17 +3610,43 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Fall Death
+      Data: Gravel
     - Name: $v
       Entry: 7
-      Data: 18|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
+      Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
+        UnityEngine.AudioModule]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 19|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Land
+    - Name: $v
+      Entry: 7
+      Data: 20|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
       Entry: 10
-      Data: 34
+      Data: 37
+    - Name: 
+      Entry: 10
+      Data: 38
+    - Name: 
+      Entry: 10
+      Data: 39
     - Name: 
       Entry: 13
       Data: 
