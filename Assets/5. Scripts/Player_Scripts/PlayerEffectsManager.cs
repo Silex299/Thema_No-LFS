@@ -199,7 +199,6 @@ namespace Player_Scripts
         {
             if (player.DisablePlayerMovement) return;
 
-            print(soundKey);
             try
             {
                 if (generalSounds.TryGetValue("Default", out var sounds))
@@ -209,6 +208,46 @@ namespace Player_Scripts
                         var randomIndex = Random.Range(0, clips.Count);
                         print(clips[randomIndex]);
                         playerSoundSource.PlayOneShot(clips[randomIndex], 0.7f);
+                    }
+                }
+
+            }
+            catch
+            {
+                Debug.LogWarning("Some Error occured");
+            }
+        }
+
+
+        public void SetInteractionSound(float value)
+        {
+            interactionSource.volume = value;
+        }
+
+        public void PlayLoopInteraction(string soundKey, bool play)
+        {
+            if (player.DisablePlayerMovement) return;
+
+            if (!play)
+            {
+                interactionSource.loop = false;
+                interactionSource.Stop();
+            }
+
+            try
+            {
+                if (generalSounds.TryGetValue("Default", out var sounds))
+                {
+                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
+                    {
+                        var randomIndex = Random.Range(0, clips.Count);
+
+                        if (!interactionSource.isPlaying)
+                        {
+                            interactionSource.loop = true;
+                            interactionSource.clip = clips[randomIndex];
+                            interactionSource.Play();
+                        }
                     }
                 }
 

@@ -36,8 +36,9 @@ namespace Triggers
                 }
 
                 reset = StartCoroutine(ResetTrigger());
-
+                
                 if (_isTriggered) return;
+
 
                 _playerIsInTrigger = true;
                 _interactCollider = other;
@@ -98,10 +99,12 @@ namespace Triggers
 
         private void PerformAction()
         {
+            if (_isTriggered) return;
             if (Time.time < secondActionDelay + _lastTriggerTime) return;
 
             actions?.Invoke();
 
+            print(_isTriggered);
             _isTriggered = true;
             _lastTriggerTime = Time.time;
             

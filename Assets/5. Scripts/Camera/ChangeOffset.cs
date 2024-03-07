@@ -45,7 +45,6 @@ namespace Thema_Camera
 
         public void ChangeCameraOffset()
         {
-            print("change");
             CameraFollow.Instance.ChangeOffset(info, transitionTime);
         }
 

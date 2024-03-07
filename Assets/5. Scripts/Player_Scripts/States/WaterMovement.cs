@@ -54,6 +54,7 @@ namespace Player_Scripts.States
             #endregion
 
         }
+
         public override void UpdateState(Player player)
         {
 
@@ -77,13 +78,18 @@ namespace Player_Scripts.States
             {
                 LoseBreath(player);
             }
+            else
+            {
+                player.EffectsManager.SetInteractionSound(Mathf.Abs(horizontalInput));
+            }
+
+            
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
             player.CController.Move((atSurface ? 0.75f : 1) * movementVector * swimSpeed * Time.deltaTime);
 
-
-            player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
+            player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput));
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);
@@ -149,6 +155,7 @@ namespace Player_Scripts.States
             atSurface = status;
             player.Health.ResetHealth();
             player.AnimationController.SetBool(onSurface, status);
+            player.EffectsManager.PlayLoopInteraction("Swim", status);
 
             bubbleEffect.SetActive(!status);
             surfaceEffect.SetActive(status);
