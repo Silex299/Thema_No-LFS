@@ -155,17 +155,6 @@ namespace Player_Scripts.States
             atSurface = status;
             player.Health.ResetHealth();
             player.AnimationController.SetBool(onSurface, status);
-
-
-            //Play single shot of dive out
-
-            if (status)
-            {
-                player.EffectsManager.PlayGeneralSoundDefaultRandom("DiveOut", 0.4f);
-            }
-
-            //play swim sound
-
             player.EffectsManager.PlayLoopInteraction("Swim", status);
 
             bubbleEffect.SetActive(!status);
