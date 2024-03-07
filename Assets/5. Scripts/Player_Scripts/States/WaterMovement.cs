@@ -24,6 +24,8 @@ namespace Player_Scripts.States
 
 
         private float previousCharacterHeight;
+        private GameObject surfaceEffect;
+        private GameObject bubbleEffect;
 
 
         private readonly static int onSurface = Animator.StringToHash("onSurface");
@@ -38,6 +40,19 @@ namespace Player_Scripts.States
             previousCharacterHeight = player.CController.height;
             player.CController.height = 0.7f;
             Physics.gravity = new Vector3(0, -1f, 0);
+
+            #region Spawning Effects
+
+            bubbleEffect = player.EffectsManager.SpawnEffect("UnderWater", new Vector3(0, 1f, 0));
+            Transform transform = player.transform;
+            Vector3 surfaceEffectPosition = transform.forward * 0.606f + transform.up * 1.3f;
+            surfaceEffect = player.EffectsManager.SpawnEffect("SurfaceWater", surfaceEffectPosition);
+
+            bubbleEffect.SetActive(true);
+            surfaceEffect.SetActive(false);
+
+            #endregion
+
         }
         public override void UpdateState(Player player)
         {
@@ -91,7 +106,7 @@ namespace Player_Scripts.States
 
         private void LoseBreath(Player player)
         {
-            player.Health.TakeDamage(Time.deltaTime  * lostBreathSpeed);
+            player.Health.TakeDamage(Time.deltaTime * lostBreathSpeed);
         }
 
         #endregion
@@ -120,7 +135,7 @@ namespace Player_Scripts.States
             Vector3 playerPos = player.transform.position;
             playerPos.x = restrictedXPosition;
 
-            if(atSurface && Input.GetAxis("Vertical") >= 0)
+            if (atSurface && Input.GetAxis("Vertical") >= 0)
             {
                 playerPos.y = restrictedYPosition;
             }
@@ -134,6 +149,10 @@ namespace Player_Scripts.States
             atSurface = status;
             player.Health.ResetHealth();
             player.AnimationController.SetBool(onSurface, status);
+
+            bubbleEffect.SetActive(!status);
+            surfaceEffect.SetActive(status);
+
         }
 
         public void PlayerAtBottom(Player player, bool status)
