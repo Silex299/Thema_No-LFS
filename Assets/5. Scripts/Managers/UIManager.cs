@@ -16,7 +16,7 @@ namespace Managers
         [SerializeField, BoxGroup("Params")] private float fadeTransitionTime;
 
 
-        [SerializeField, BoxGroup("Player Health"),Space(10)] private GameObject healthBar;
+        [SerializeField, BoxGroup("Player Health"), Space(10)] private GameObject healthBar;
         [SerializeField, BoxGroup("Player Health")] private Image healthFill;
         [SerializeField, BoxGroup("Player Health")] private Image damageImage;
 
@@ -25,6 +25,26 @@ namespace Managers
         private bool _isFadingOut;
         private float _fadeTimeElapsed;
         private bool isLCPViewOpen;
+
+
+        private static UIManager instance;
+        public static UIManager Instance => instance;
+
+
+        private void Awake()
+        {
+            if (UIManager.Instance)
+            {
+                if (UIManager.Instance != this)
+                {
+                    Destroy(this);
+                }
+            }
+            else
+            {
+                UIManager.instance = this;
+            }
+        }
 
 
         private void Start()
@@ -57,7 +77,7 @@ namespace Managers
         }
 
         private Action FadeInCallback;
-        private void FadeIn()
+        public void FadeIn()
         {
             if (!_isFadingIn)
             {
@@ -84,7 +104,7 @@ namespace Managers
             }
         }
 
-        private void FadeOut()
+        public void FadeOut()
         {
             if (!_isFadingOut)
             {
@@ -109,7 +129,6 @@ namespace Managers
 
             }
         }
-
 
         private void RestartLastCheckPointView()
         {
@@ -148,9 +167,9 @@ namespace Managers
                 }
                 healthFill.fillAmount = fraction;
             }
-            
+
             Color color = damageImage.color;
-            color.a = 1-fraction;
+            color.a = 1 - fraction;
 
             damageImage.color = color;
 
