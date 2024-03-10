@@ -100,6 +100,21 @@ namespace Thema_Camera
             }
         }
 
+        public void TransitionInstant(CameraFollowInfo info)
+        {
+
+            if (m_AudioListener)
+            {
+                m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
+            }
+
+            m_Offset = info.offset;
+
+            transform.position = followTarget.position + m_Offset;
+            transform.rotation = Quaternion.Euler(info.rotation);
+            myCamera.fieldOfView = info.FOV;
+
+        }
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
@@ -116,6 +131,8 @@ namespace Thema_Camera
             _timeElapsed = 0f;
             _changeOffset = true;
         }
+
+
 
     }
 

@@ -50,7 +50,7 @@ namespace Thema_Camera
 
         public void ChangeCameraOffsetInstantaneous()
         {
-            CameraFollow.Instance.ChangeOffset(info, 0);
+            CameraFollow.Instance.TransitionInstant(info);
         }
 
     }

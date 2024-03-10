@@ -87,9 +87,9 @@ namespace Player_Scripts.States
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.75f : 1) * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.25f : 1) * movementVector * swimSpeed * Time.deltaTime);
 
-            player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput));
+            player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Misc
 {
@@ -12,6 +13,8 @@ namespace Misc
         [SerializeField] private float delay = 1;
         [SerializeField] private float secondActionDelay = 2;
 
+
+        [SerializeField, Space(10)] private UnityEvent teleportAction; 
 
         private bool _isTriggered;
         private bool _trigger;
@@ -36,7 +39,7 @@ namespace Misc
                 controller.player.CController.enabled = false;
 
                 controller.transform.position = destination.position;
-
+                teleportAction?.Invoke();
 
                 controller.player.CController.enabled = true;
                 controller.player.DisablePlayerMovement = false;
