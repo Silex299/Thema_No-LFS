@@ -41,7 +41,7 @@ namespace Misc
         private Coroutine _tiggerExit;
         private bool _playerIsInTrigger;
 
-        private Transform _target;
+        private Player_Scripts.PlayerMovementController _playerController;
 
 
         private void OnTriggerEnter(Collider other)
@@ -49,7 +49,7 @@ namespace Misc
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
-                _target = other.transform;
+                _playerController = Player_Scripts.PlayerMovementController.Instance;
             }
         }
 
@@ -77,21 +77,21 @@ namespace Misc
         {
             if (_playerIsInTrigger)
             {
-                Vector3 targetPosition = _target.position;
+                Vector3 targetPosition = _playerController.transform.position;
                 Vector3 pos = transform.position;
 
                 Vector3 pullDirection = (pos - targetPosition).normalized;
 
-                float distance = Vector3.Distance(_target.position, transform.position);
+                float distance = Vector3.Distance(targetPosition, pos);
                 float fraction = Mathf.Clamp01((maximumSuction - distance) / (maximumSuction - minimumThresoldDistance));
 
                 Vector3 pullVector = fraction * maximumSuction * pullDirection * Time.deltaTime;
 
-                _target.position += pullVector;
+                _playerController.player.CController.Move(pullVector);
 
             }
         }
-
+        
     }
 
 
