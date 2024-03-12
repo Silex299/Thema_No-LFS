@@ -127,7 +127,7 @@ namespace Player_Scripts.States
 
                         if (!player.isInteracting)
                         {
-                            _speedMultiplier = 0.5f;
+                            _speedMultiplier = 0.7f;
                             player.enabledDirectionInput = true;
                             player.isInteracting = true;
                             player.AnimationController.SetBool(Push, true);

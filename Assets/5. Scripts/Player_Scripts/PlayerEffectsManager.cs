@@ -332,7 +332,6 @@ namespace Player_Scripts
 
         public GameObject SpawnEffect(string key, Vector3 overridePosition)
         {
-            print("Spawn");
             return Instantiate(stepEffects[key], transform.position + overridePosition, Quaternion.identity, this.transform);
         }
 

@@ -103,7 +103,6 @@ namespace Triggers
 
             actions?.Invoke();
 
-            print(_isTriggered);
             _isTriggered = true;
             _lastTriggerTime = Time.time;
             
