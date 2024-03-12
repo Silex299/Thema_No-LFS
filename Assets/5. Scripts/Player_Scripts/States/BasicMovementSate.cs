@@ -23,6 +23,7 @@ namespace Player_Scripts.States
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
         private static readonly int VerticalAcceleration = Animator.StringToHash("VerticalAcceleration");
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
+        private static readonly int Push = Animator.StringToHash("Push");
 
 
         private Vector3 _m_playerVelocity;
@@ -108,16 +109,19 @@ namespace Player_Scripts.States
                         if (!player.isInteracting)
                         {
                             player.isInteracting = true;
-                            player.AnimationController.SetInteger(StateIndex, -2);
+                            player.AnimationController.SetBool(Push, true);
                         }
+
                         player.enabledDirectionInput = true;
                         //UPDATE PUSH
                         break;
+
                     case PlayerInteractionType.NONE:
+
                         if (player.isInteracting)
                         {
                             player.isInteracting = false;
-                            player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
+                            player.AnimationController.SetBool(Push, false);
                         }
                         player.enabledDirectionInput = false;
                         break;
@@ -129,7 +133,7 @@ namespace Player_Scripts.States
                 if (player.isInteracting)
                 {
                     player.isInteracting = false;
-                    player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
+                    player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
                 }
 
