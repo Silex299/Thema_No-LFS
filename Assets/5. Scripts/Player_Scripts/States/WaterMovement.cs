@@ -60,6 +60,8 @@ namespace Player_Scripts.States
 
             //Basic movement and animator
 
+            #region Basic Movement
+
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
 
@@ -94,6 +96,12 @@ namespace Player_Scripts.States
 
             Rotate(player, horizontalInput);
 
+            #endregion
+
+
+            #region Interaction
+
+            #endregion
 
         }
 

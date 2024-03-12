@@ -16,20 +16,23 @@ namespace Player_Scripts.Interactables
         protected bool _playerIsInTrigger;
         protected bool _isInteracting;
 
-        protected virtual void OnTriggerStay(Collider other)
+
+        protected virtual void OnTriggerEnter(Collider other)
         {
             if (!canInteract) return;
 
-            if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
+            if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
                 PlayerMovementController.Instance.SetInteractable(this);
             }
         }
 
+        
+
         protected virtual void OnTriggerExit(Collider other)
         {
-            if(other.CompareTag("Player_Main") || other.CompareTag("Player"))
+            if(other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = false;
                 _isInteracting = false;
