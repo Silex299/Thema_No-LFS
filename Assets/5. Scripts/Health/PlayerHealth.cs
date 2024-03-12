@@ -46,7 +46,10 @@ namespace Health
 
         public override void TakeDamage(float damage)
         {
+            if (_currentHealth < 0) return;
+
             _currentHealth -= damage;
+
             OnTakingDamage?.Invoke(_currentHealth / maximumHealth);
 
             if (_currentHealth <= 0)

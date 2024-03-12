@@ -26,6 +26,7 @@ namespace Player_Scripts.States
         private float previousCharacterHeight;
         private GameObject surfaceEffect;
         private GameObject bubbleEffect;
+        private float _speedMultiplier = 1;
 
 
         private readonly static int onSurface = Animator.StringToHash("onSurface");
@@ -85,14 +86,14 @@ namespace Player_Scripts.States
                 player.EffectsManager.SetInteractionSound(Mathf.Abs(horizontalInput));
             }
 
-            
+
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.4f : 1) * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.5f : 1) * _speedMultiplier * movementVector * swimSpeed * Time.deltaTime);
 
 
-            player.AnimationController.SetFloat(Horizontal, (player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
+            player.AnimationController.SetFloat(Horizontal, ((player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput)), 0.2f, Time.deltaTime);
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);
@@ -113,6 +114,7 @@ namespace Player_Scripts.States
                     case PlayerInteractionType.NONE:
                         if (player.isInteracting)
                         {
+                            _speedMultiplier = 1;
                             player.isInteracting = false;
                             player.AnimationController.SetBool(Push, false);
                             player.enabledDirectionInput = false;
@@ -125,6 +127,7 @@ namespace Player_Scripts.States
 
                         if (!player.isInteracting)
                         {
+                            _speedMultiplier = 0.5f;
                             player.enabledDirectionInput = true;
                             player.isInteracting = true;
                             player.AnimationController.SetBool(Push, true);
@@ -139,6 +142,7 @@ namespace Player_Scripts.States
             {
                 if (player.isInteracting)
                 {
+                    _speedMultiplier = 1;
                     player.isInteracting = false;
                     player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
