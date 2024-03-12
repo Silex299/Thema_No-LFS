@@ -30,7 +30,7 @@ namespace Player_Scripts.States
 
         private readonly static int onSurface = Animator.StringToHash("onSurface");
         private readonly static int StateIndex = Animator.StringToHash("StateIndex");
-
+        private readonly static int Push = Animator.StringToHash("Push");
 
         #region Overriden Methods
         public override void EnterState(Player player)
@@ -89,9 +89,10 @@ namespace Player_Scripts.States
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.25f : 1) * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.4f : 1) * movementVector * swimSpeed * Time.deltaTime);
 
-            player.AnimationController.SetFloat(Horizontal, Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
+
+            player.AnimationController.SetFloat(Horizontal, (player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput), 0.2f, Time.deltaTime);
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);
@@ -100,6 +101,49 @@ namespace Player_Scripts.States
 
 
             #region Interaction
+
+
+            if (player.interactable)
+            {
+
+                PlayerInteractionType interaction = player.interactable.Interact();
+
+                switch (interaction)
+                {
+                    case PlayerInteractionType.NONE:
+                        if (player.isInteracting)
+                        {
+                            player.isInteracting = false;
+                            player.AnimationController.SetBool(Push, false);
+                            player.enabledDirectionInput = false;
+                        }
+                        break;
+
+                    case PlayerInteractionType.PUSH:
+
+                        if (!atSurface) break;
+
+                        if (!player.isInteracting)
+                        {
+                            player.enabledDirectionInput = true;
+                            player.isInteracting = true;
+                            player.AnimationController.SetBool(Push, true);
+                        }
+
+                        //UPDATE PUSH
+                        break;
+                }
+
+            }
+            else
+            {
+                if (player.isInteracting)
+                {
+                    player.isInteracting = false;
+                    player.AnimationController.SetBool(Push, false);
+                    player.enabledDirectionInput = false;
+                }
+            }
 
             #endregion
 
