@@ -119,6 +119,9 @@ namespace Thema_Camera
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
 
+            print("cHANEG OFFSET");
+
+
             _initialCameraInfo = _cameraInfo;
             _cameraInfo = info;
 
