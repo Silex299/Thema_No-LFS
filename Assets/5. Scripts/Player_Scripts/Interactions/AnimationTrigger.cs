@@ -23,22 +23,26 @@ namespace Player_Scripts.Interactions
         /// Time needed to move the player to initial point of action;
         /// </summary>
         [SerializeField, BoxGroup("Movement")] private float initialDelay = 0.5f;
+
         [SerializeField, BoxGroup("Movement")] private float finalDelay = 0.3f;
+
         [SerializeField, BoxGroup("Movement")] private Transform initialPointOfAction;
         [SerializeField, BoxGroup("Movement")] private Transform finalPointOfAction;
 
+        [SerializeField, BoxGroup("Movement")] private float movementSpeed;
+
 
         [SerializeField, BoxGroup("State")] private bool changeState;
-        [SerializeField, BoxGroup("State"), ShowIf("changeState")] private PlayerMovementState ChangeState;
+        [SerializeField, BoxGroup("State"), ShowIf("changeState")] private PlayerMovementState exitState;
+        [SerializeField, BoxGroup("State"), ShowIf("changeState")] private int stateIndex;
 
         private bool _isExecuting;
         private bool _initialMove;
         private bool _finalMove;
 
         private Transform _target;
-        private Vector3 _initialPositon;
-        private Vector3 _initialRotaion;
-        private float _movementTimeElapsed;
+        private float _fraction;
+
 
 
         #region Editor
@@ -120,22 +124,18 @@ namespace Player_Scripts.Interactions
         {
             if (!_initialMove)
             {
-                _initialPositon = _target.position;
-                _initialRotaion = _target.eulerAngles;
-                _movementTimeElapsed = 0;
                 _initialMove = true;
+                _fraction = 0;
             }
             else
             {
 
-                _movementTimeElapsed += Time.deltaTime;
+                _fraction += Time.deltaTime * movementSpeed;
 
-                float fraction = _movementTimeElapsed / initialDelay;
+                _target.position = Vector3.Lerp(_target.position, initialPointOfAction.position, _fraction);
+                _target.rotation = Quaternion.Slerp(_target.rotation, initialPointOfAction.rotation, _fraction);
 
-                _target.position = Vector3.Lerp(_initialPositon, initialPointOfAction.position, fraction);
-                _target.eulerAngles = Vector3.Lerp(_initialRotaion, initialPointOfAction.eulerAngles, fraction);
-
-                if (fraction >= 1)
+                if (_fraction >= 1)
                 {
                     _initialMove = false;
                 }
@@ -145,26 +145,37 @@ namespace Player_Scripts.Interactions
 
         private void FinalMove()
         {
+
             if (!_finalMove)
             {
-                _initialPositon = _target.position;
-                _movementTimeElapsed = 0;
+                if (!finalPointOfAction)
+                {
+                    return;
+                }
+
+                _fraction = 0;
                 _finalMove = true;
             }
             else
             {
-                _movementTimeElapsed += Time.deltaTime;
-                float fraction = _movementTimeElapsed / finalDelay;
+                _fraction += Time.deltaTime * movementSpeed;
 
-                _target.position = Vector3.Lerp(_initialPositon, finalPointOfAction.position, fraction);
+                _target.position = Vector3.Lerp(_target.position, finalPointOfAction.position, _fraction);
 
-                if (fraction >= 1)
+                if (_fraction >= 1)
                 {
                     _finalMove = false;
                 }
             }
         }
 
+
+        public void Execute()
+        {
+            if (_isExecuting) return;
+
+            StartCoroutine(ExecuteAnimation());
+        }
 
         private IEnumerator ExecuteAnimation()
         {
@@ -174,18 +185,21 @@ namespace Player_Scripts.Interactions
             PlayerMovementController player = PlayerMovementController.Instance;
             player.DiablePlayerMovement(true);
             player.player.CController.enabled = false;
+
             _isExecuting = true;
             _initialMove = true;
 
             _target = player.transform;
+
             InitialMove();
             //Move player
 
             yield return new WaitUntil(() => !_initialMove);
 
-
             //Play first aniamtion
             player.PlayAnimation(animationName, 0.4f, 1);
+            player.ChangeState(exitState, stateIndex);
+
 
             yield return new WaitForSeconds(animationDelay);
 
@@ -195,8 +209,9 @@ namespace Player_Scripts.Interactions
 
             //Reset everything
             _isExecuting = false;
-            player.DiablePlayerMovement(false);
+
             player.player.CController.enabled = true;
+            player.DiablePlayerMovement(false);
         }
 
     }

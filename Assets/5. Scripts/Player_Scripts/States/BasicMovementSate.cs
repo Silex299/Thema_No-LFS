@@ -49,6 +49,11 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             defaultStateIndex = player.currentStateIndex;
+
+            Debug.Log("Fuck Yoy");
+
+            player.AnimationController.CrossFade("Basic Movement", 0.2f);
+            player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }
 
         public override void UpdateState(Player player)

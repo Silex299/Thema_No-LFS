@@ -96,6 +96,8 @@ namespace Player_Scripts
 
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
+            print("Change State");
+
             if (stateIndex == player.currentStateIndex) return;
 
             player.previousStateIndex = player.currentStateIndex;
@@ -110,6 +112,7 @@ namespace Player_Scripts
 
 
             player.e_currentState = newState;
+
             switch (newState)
             {
                 case PlayerMovementState.BasicMovement:
@@ -149,6 +152,10 @@ namespace Player_Scripts
                 case 1:
                     player.e_currentState = PlayerMovementState.Ladder;
                     player.currentState = player.ladderMovementState;
+                    break;
+                case 2:
+                    player.e_currentState = PlayerMovementState.Water;
+                    player.currentState = player.waterMovement;
                     break;
             }
 
