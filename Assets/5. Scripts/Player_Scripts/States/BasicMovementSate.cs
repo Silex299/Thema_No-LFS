@@ -50,8 +50,6 @@ namespace Player_Scripts.States
         {
             defaultStateIndex = player.currentStateIndex;
 
-            Debug.Log("Fuck Yoy");
-
             player.AnimationController.CrossFade("Basic Movement", 0.2f);
             player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }

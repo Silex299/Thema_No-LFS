@@ -166,47 +166,25 @@ namespace Player_Scripts.Interactions
         private IEnumerator ExecuteAnimation()
         {
 
-            if (_isExecuting) yield return null;
-
             PlayerMovementController player = PlayerMovementController.Instance;
 
-            _isExecuting = true;
-            _initialMove = true;
+            player.ChangeState(-1);
 
-            _target = player.transform;
-
-            InitialMove();
-            //Move player
-
-            yield return new WaitForSeconds(initalDelay);
-
-            _initialMove = false;
-            _fraction = 0;
-
-
-            player.ChangeState(exitState, stateIndex);
-            player.DiablePlayerMovement(true);
             player.player.CController.enabled = false;
-            //Play first aniamtion
-            player.PlayAnimation(animationName, 0.4f, 1);
+            player.DiablePlayerMovement(true);
+            player.transform.position = initialPointOfAction.position;
+            player.transform.rotation = initialPointOfAction.rotation;
 
-
-
+            player.PlayAnimation(animationName, 0.2f, 1);
             yield return new WaitForSeconds(animationDelay);
 
 
-            FinalMove();
-            //Moveplayer
 
 
-            yield return new WaitForSeconds(finalDelay);
 
-            _fraction = 0;
-            _finalMove = false;
-            _isExecuting = false;
-
-            player.player.CController.enabled = true;
             player.DiablePlayerMovement(false);
+            player.player.CController.enabled = true;
+
         }
 
     }

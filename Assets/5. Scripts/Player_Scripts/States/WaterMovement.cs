@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 
@@ -42,6 +43,10 @@ namespace Player_Scripts.States
             player.CController.height = 0.7f;
             Physics.gravity = new Vector3(0, -1f, 0);
 
+            PlayerMovementController.Instance.DiablePlayerMovement(true);
+            player.StartCoroutine(EnablePlayerMovement());
+
+
             #region Spawning Effects
 
             bubbleEffect = player.EffectsManager.SpawnEffect("UnderWater", new Vector3(0, 1f, 0));
@@ -52,13 +57,11 @@ namespace Player_Scripts.States
 
             if (atSurface)
             {
-
                 bubbleEffect.SetActive(false);
                 surfaceEffect.SetActive(true);
             }
             else
             {
-
                 bubbleEffect.SetActive(true);
                 surfaceEffect.SetActive(false);
             }
@@ -168,7 +171,7 @@ namespace Player_Scripts.States
 
         public override void LateUpdateState(Player player)
         {
-            RestrictPosition(player);
+
         }
 
         public override void ExitState(Player player)
@@ -201,6 +204,14 @@ namespace Player_Scripts.States
 
         #region Custom Methods
 
+
+        private IEnumerator EnablePlayerMovement()
+        {
+            yield return new WaitForSeconds(3f);
+
+            PlayerMovementController.Instance.DiablePlayerMovement(false);
+        }
+
         private void Rotate(Player player, float horizontalInput)
         {
             if (Mathf.Abs(horizontalInput) < 0.3f) return;
@@ -210,24 +221,10 @@ namespace Player_Scripts.States
 
         }
 
-        private void RestrictPosition(Player player)
-        {
-            Vector3 playerPos = player.transform.position;
-            playerPos.x = restrictedXPosition;
-
-            if (atSurface && Input.GetAxis("Vertical") >= 0)
-            {
-                playerPos.y = restrictedYPosition;
-            }
-
-            player.transform.position = playerPos;
-        }
-
-
         public void PlayerAtSurfact(Player player, bool status)
         {
             atSurface = status;
-            player.Health.ResetHealth();
+
             player.AnimationController.SetBool(onSurface, status);
 
 
@@ -235,6 +232,7 @@ namespace Player_Scripts.States
 
             if (status)
             {
+                player.Health.ResetHealth();
                 player.EffectsManager.PlayGeneralSoundDefaultRandom("DiveOut", 0.1f);
             }
 

@@ -107,6 +107,7 @@ namespace Player_Scripts
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
             if (player.DisablePlayerMovement) return;
+
             print("Change State");
 
             if (stateIndex == player.currentStateIndex) return;
@@ -212,13 +213,7 @@ namespace Player_Scripts
 
         public void WaterSurfaceHit(bool atSurface)
         {
-            if(player.e_currentState == PlayerMovementState.Water)
-            {
-                if (!player.DisablePlayerMovement)
-                {
-                    player.waterMovement.PlayerAtSurfact(player, atSurface);
-                }
-            }
+            player.waterMovement.PlayerAtSurfact(player, atSurface);
         }
 
         public void WaterBottomHit(bool atBottom)
