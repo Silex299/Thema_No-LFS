@@ -15,17 +15,21 @@ namespace Player_Scripts.Interactions
 
     public class AnimationTrigger : MonoBehaviour
     {
-        [SerializeField] private string animationName;
+        [SerializeField, BoxGroup("Animation")] private string animationName;
+
+        [SerializeField, BoxGroup("Animation")] private float animationDelay = 1.5f;
 
         /// <summary>
         /// Time needed to move the player to initial point of action;
         /// </summary>
-        [SerializeField,Space(10)] private float initialDelay = 0.5f;
-        [SerializeField] private float animationDelay = 1.5f;
-        [SerializeField] private float finalDelay = 0.3f;
+        [SerializeField, BoxGroup("Movement")] private float initialDelay = 0.5f;
+        [SerializeField, BoxGroup("Movement")] private float finalDelay = 0.3f;
+        [SerializeField, BoxGroup("Movement")] private Transform initialPointOfAction;
+        [SerializeField, BoxGroup("Movement")] private Transform finalPointOfAction;
 
-        [SerializeField,Space(10)] private Transform initialPointOfAction;
-        [SerializeField] private Transform finalPointOfAction;
+
+        [SerializeField, BoxGroup("State")] private bool changeState;
+        [SerializeField, BoxGroup("State"), ShowIf("changeState")] private PlayerMovementState ChangeState;
 
         private bool _isExecuting;
         private bool _initialMove;
@@ -37,6 +41,7 @@ namespace Player_Scripts.Interactions
         private float _movementTimeElapsed;
 
 
+        #region Editor
 
 #if UNITY_EDITOR
 
@@ -48,7 +53,7 @@ namespace Player_Scripts.Interactions
         private Vector3 _initialPlayerPos;
         private Vector3 _initialPlayerRot;
 
-        [Button("Preview", ButtonSizes.Large), GUIColor(0.1f, 0.6f,0f)]
+        [Button("Preview", ButtonSizes.Large), GUIColor(0.1f, 0.6f, 0f)]
         private void Preview()
         {
             if (!_preview)
@@ -91,6 +96,8 @@ namespace Player_Scripts.Interactions
 
 #endif
 
+        #endregion
+
 
         private void LateUpdate()
         {
@@ -128,7 +135,7 @@ namespace Player_Scripts.Interactions
                 _target.position = Vector3.Lerp(_initialPositon, initialPointOfAction.position, fraction);
                 _target.eulerAngles = Vector3.Lerp(_initialRotaion, initialPointOfAction.eulerAngles, fraction);
 
-                if(fraction >= 1)
+                if (fraction >= 1)
                 {
                     _initialMove = false;
                 }
@@ -184,7 +191,7 @@ namespace Player_Scripts.Interactions
 
             FinalMove();
             //Moveplayer
-            yield return new WaitUntil(()=>!_finalMove);
+            yield return new WaitUntil(() => !_finalMove);
 
             //Reset everything
             _isExecuting = false;
