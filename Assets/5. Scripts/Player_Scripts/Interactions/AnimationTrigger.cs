@@ -19,13 +19,9 @@ namespace Player_Scripts.Interactions
 
         [SerializeField, BoxGroup("Animation")] private float animationDelay = 1.5f;
 
-        /// <summary>
-        /// Time needed to move the player to initial point of action;
-        /// </summary>
-        [SerializeField, BoxGroup("Movement")] private float initialDelay = 0.5f;
 
+        [SerializeField, BoxGroup("Movement")] private float initalDelay = 0.5f;
         [SerializeField, BoxGroup("Movement")] private float finalDelay = 0.3f;
-
         [SerializeField, BoxGroup("Movement")] private Transform initialPointOfAction;
         [SerializeField, BoxGroup("Movement")] private Transform finalPointOfAction;
 
@@ -125,20 +121,14 @@ namespace Player_Scripts.Interactions
             if (!_initialMove)
             {
                 _initialMove = true;
-                _fraction = 0;
             }
             else
             {
-
                 _fraction += Time.deltaTime * movementSpeed;
 
                 _target.position = Vector3.Lerp(_target.position, initialPointOfAction.position, _fraction);
                 _target.rotation = Quaternion.Slerp(_target.rotation, initialPointOfAction.rotation, _fraction);
 
-                if (_fraction >= 1)
-                {
-                    _initialMove = false;
-                }
             }
         }
 
@@ -153,7 +143,6 @@ namespace Player_Scripts.Interactions
                     return;
                 }
 
-                _fraction = 0;
                 _finalMove = true;
             }
             else
@@ -161,11 +150,8 @@ namespace Player_Scripts.Interactions
                 _fraction += Time.deltaTime * movementSpeed;
 
                 _target.position = Vector3.Lerp(_target.position, finalPointOfAction.position, _fraction);
+                _target.rotation = Quaternion.Slerp(_target.rotation, finalPointOfAction.rotation, _fraction);
 
-                if (_fraction >= 1)
-                {
-                    _finalMove = false;
-                }
             }
         }
 
@@ -183,8 +169,6 @@ namespace Player_Scripts.Interactions
             if (_isExecuting) yield return null;
 
             PlayerMovementController player = PlayerMovementController.Instance;
-            player.DiablePlayerMovement(true);
-            player.player.CController.enabled = false;
 
             _isExecuting = true;
             _initialMove = true;
@@ -194,20 +178,31 @@ namespace Player_Scripts.Interactions
             InitialMove();
             //Move player
 
-            yield return new WaitUntil(() => !_initialMove);
+            yield return new WaitForSeconds(initalDelay);
 
+            _initialMove = false;
+            _fraction = 0;
+
+
+            player.ChangeState(exitState, stateIndex);
+            player.DiablePlayerMovement(true);
+            player.player.CController.enabled = false;
             //Play first aniamtion
             player.PlayAnimation(animationName, 0.4f, 1);
-            player.ChangeState(exitState, stateIndex);
+
 
 
             yield return new WaitForSeconds(animationDelay);
 
+
             FinalMove();
             //Moveplayer
-            yield return new WaitUntil(() => !_finalMove);
 
-            //Reset everything
+
+            yield return new WaitForSeconds(finalDelay);
+
+            _fraction = 0;
+            _finalMove = false;
             _isExecuting = false;
 
             player.player.CController.enabled = true;

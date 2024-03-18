@@ -25,6 +25,7 @@ namespace Triggers
 
         private void OnTriggerEnter(Collider other)
         {
+
             if (other.CompareTag(triggerTag))
             {
                 _playerIsInTrigger = true;
@@ -35,7 +36,6 @@ namespace Triggers
 
         private void OnTriggerStay(Collider other)
         {
-            if (!continuousCheck) return;
 
             if (other.CompareTag(triggerTag))
             {
@@ -62,7 +62,7 @@ namespace Triggers
 
             yield return new WaitForSeconds(0.1f);
 
-            ResetTrigger();
+            Reset();
         }
 
 
@@ -106,9 +106,35 @@ namespace Triggers
 
         private void Reset()
         {
-            exitAction?.Invoke();
+
+            _triggerReset = null;
+            _interactCollider = null;
             _playerIsInTrigger = false;
             _executed = false;
+
+            if (conditions.Length > 0)
+            {
+                bool result = true;
+
+                foreach (TriggerCondition condition in conditions)
+                {
+                    result = result && condition.Condition(_interactCollider);
+                    if (!result)
+                    {
+                        return;
+                    }
+                }
+
+                if (result)
+                {
+                    exitAction?.Invoke();
+                }
+            }
+            else
+            {
+                exitAction?.Invoke();
+            }
+
         }
     }
 

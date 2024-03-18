@@ -49,8 +49,20 @@ namespace Player_Scripts.States
             Vector3 surfaceEffectPosition = transform.forward * 0.606f + transform.up * 1.3f;
             surfaceEffect = player.EffectsManager.SpawnEffect("SurfaceWater", surfaceEffectPosition);
 
-            bubbleEffect.SetActive(true);
-            surfaceEffect.SetActive(false);
+
+            if (atSurface)
+            {
+
+                bubbleEffect.SetActive(false);
+                surfaceEffect.SetActive(true);
+            }
+            else
+            {
+
+                bubbleEffect.SetActive(true);
+                surfaceEffect.SetActive(false);
+            }
+
 
             #endregion
 
@@ -162,6 +174,9 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.height = previousCharacterHeight;
+            if (surfaceEffect) { GameObject.Destroy(surfaceEffect); }
+            if (bubbleEffect) { GameObject.Destroy(bubbleEffect); }
+
             Physics.gravity = new Vector3(0, -9.8f, 0);
         }
 
@@ -170,6 +185,9 @@ namespace Player_Scripts.States
         {
             player.Health.TakeDamage(Time.deltaTime * lostBreathSpeed);
         }
+
+
+
 
         #endregion
 

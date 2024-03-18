@@ -79,6 +79,16 @@ namespace Player_Scripts
 
         }
 
+        public void DiablePlayerMovementInt(int disable)
+        {
+            player.DisablePlayerMovement = (disable == 1);
+
+            if (disable == 1)
+            {
+                ResetAnimator();
+            }
+        }
+
         internal void SetInteractable(Interactable item)
         {
             player.interactable = item;
@@ -96,6 +106,7 @@ namespace Player_Scripts
 
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
+            if (player.DisablePlayerMovement) return;
             print("Change State");
 
             if (stateIndex == player.currentStateIndex) return;
@@ -132,6 +143,8 @@ namespace Player_Scripts
 
         public void ChangeState(int index)
         {
+            if (player.DisablePlayerMovement) return;
+
             if (index == player.currentStateIndex) return;
 
             player.previousStateIndex = player.currentStateIndex;
