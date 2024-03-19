@@ -213,7 +213,10 @@ namespace Player_Scripts
 
         public void WaterSurfaceHit(bool atSurface)
         {
-            player.waterMovement.PlayerAtSurfact(player, atSurface);
+            if (player.e_currentState == PlayerMovementState.Water)
+            {
+                player.waterMovement.PlayerAtSurfact(player, atSurface);
+            }
         }
 
         public void WaterBottomHit(bool atBottom)

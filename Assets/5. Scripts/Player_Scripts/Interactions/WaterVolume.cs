@@ -72,6 +72,7 @@ namespace Player_Scripts.Interactions
                 if(distance < surfaceThreshold - 1f)
                 {
                     _player.ChangeState(PlayerMovementState.Water, 2);
+                    _player.WaterSurfaceHit(false);
                 }
             }
 
