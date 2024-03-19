@@ -20,7 +20,7 @@ namespace Player_Scripts.Interactions
         [SerializeField, BoxGroup("Animation")] private float animationDelay = 1.5f;
 
 
-        [SerializeField, BoxGroup("Movement")] private float initalDelay = 0.5f;
+        [SerializeField, BoxGroup("Movement")] private float initialDelay = 0.5f;
         [SerializeField, BoxGroup("Movement")] private float finalDelay = 0.3f;
         [SerializeField, BoxGroup("Movement")] private Transform initialPointOfAction;
         [SerializeField, BoxGroup("Movement")] private Transform finalPointOfAction;
@@ -37,7 +37,7 @@ namespace Player_Scripts.Interactions
         private bool _finalMove;
 
         private Transform _target;
-        private float _fraction;
+        private float _timeElapsed;
 
 
 
@@ -101,7 +101,7 @@ namespace Player_Scripts.Interactions
 
         private void LateUpdate()
         {
-            if (!_isExecuting) return;
+            if (_isExecuting) return;
 
             if (_initialMove)
             {
@@ -116,18 +116,33 @@ namespace Player_Scripts.Interactions
         }
 
 
+        private Vector3 _intialPosition;
+        private Quaternion _initialRotation;
+
         private void InitialMove()
         {
             if (!_initialMove)
             {
                 _initialMove = true;
+
+                _timeElapsed = 0;
+                _intialPosition = _target.position;
+                _initialRotation = _target.rotation;
             }
             else
             {
-                _fraction += Time.deltaTime * movementSpeed;
+                _timeElapsed += Time.deltaTime;
 
-                _target.position = Vector3.Lerp(_target.position, initialPointOfAction.position, _fraction);
-                _target.rotation = Quaternion.Slerp(_target.rotation, initialPointOfAction.rotation, _fraction);
+                float fraction = _timeElapsed / initialDelay;
+
+                _target.position = Vector3.Lerp(_intialPosition, initialPointOfAction.position, fraction);
+                _target.rotation = Quaternion.Slerp(_initialRotation, initialPointOfAction.rotation, fraction);
+
+
+                if (fraction >= 1)
+                {
+                    _initialMove = false;
+                }
 
             }
         }
@@ -138,19 +153,26 @@ namespace Player_Scripts.Interactions
 
             if (!_finalMove)
             {
-                if (!finalPointOfAction)
-                {
-                    return;
-                }
-
                 _finalMove = true;
+
+                _timeElapsed = 0;
+                _intialPosition = _target.position;
+                _initialRotation = _target.rotation;
             }
             else
             {
-                _fraction += Time.deltaTime * movementSpeed;
+                _timeElapsed += Time.deltaTime;
 
-                _target.position = Vector3.Lerp(_target.position, finalPointOfAction.position, _fraction);
-                _target.rotation = Quaternion.Slerp(_target.rotation, finalPointOfAction.rotation, _fraction);
+                float fraction = _timeElapsed / finalDelay;
+
+                _target.position = Vector3.Lerp(_intialPosition, finalPointOfAction.position, fraction);
+                _target.rotation = Quaternion.Slerp(_initialRotation, finalPointOfAction.rotation, fraction);
+
+
+                if (fraction >= 1)
+                {
+                    _finalMove = false;
+                }
 
             }
         }
@@ -167,23 +189,37 @@ namespace Player_Scripts.Interactions
         {
 
             PlayerMovementController player = PlayerMovementController.Instance;
+            _target = player.transform;
 
+
+            InitialMove();
+            //player.transform.position = initialPointOfAction.position;
+            //player.transform.rotation = initialPointOfAction.rotation;
+
+            yield return new WaitUntil(() => !_initialMove);
+
+            print("END OF INITIAL MOVE");
+
+
+            //ANIMATION AND STATE
             player.ChangeState(-1);
-
             player.player.CController.enabled = false;
             player.DiablePlayerMovement(true);
-            player.transform.position = initialPointOfAction.position;
-            player.transform.rotation = initialPointOfAction.rotation;
-
             player.PlayAnimation(animationName, 0.2f, 1);
+
+
             yield return new WaitForSeconds(animationDelay);
 
 
+            FinalMove();
 
 
+            yield return new WaitUntil(() => !_finalMove);
 
+            print("END OF Final MOVE");
             player.DiablePlayerMovement(false);
             player.player.CController.enabled = true;
+
 
         }
 

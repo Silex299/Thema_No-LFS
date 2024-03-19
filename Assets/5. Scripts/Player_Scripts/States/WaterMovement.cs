@@ -207,7 +207,7 @@ namespace Player_Scripts.States
 
         private IEnumerator EnablePlayerMovement()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1.7f);
 
             PlayerMovementController.Instance.DiablePlayerMovement(false);
         }
