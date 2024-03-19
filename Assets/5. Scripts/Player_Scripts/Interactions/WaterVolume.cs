@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Sirenix.OdinInspector;
 
 namespace Player_Scripts.Interactions
 {
@@ -8,16 +9,25 @@ namespace Player_Scripts.Interactions
     public class WaterVolume : MonoBehaviour
     {
 
-        public float distance;
+        [SerializeField, BoxGroup("Movement Params"), Tooltip("distance from bottom at what the player switches from underwater to surface water params")] 
+        private float surfaceThreshold = 9f;
 
-        [SerializeField] private UnityEvent onSurfaceAction;
-        [SerializeField] private UnityEvent underwaterAction;
-        [SerializeField] private UnityEvent bottomAction;
+        [SerializeField, BoxGroup("Movement Params"), Tooltip("distance from bottom at what the player doesn't try to go below")] 
+        private float bottomThreshold = 0.5f;
 
-        [SerializeField, Space(10)] private float surfaceThreshold = 9f;
-        [SerializeField] private float bottomThreshold = 0.5f;
+        [SerializeField, Space(10), BoxGroup("Movement Params"), Tooltip("fixed y position when the player is at the suface of the water")] 
+        private float restrictedY = 7.2f;
+        [SerializeField, BoxGroup("Movement Params"), Tooltip("restricted x position")] 
+        private float restrictedX = -5.76f;
 
 
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent onSurfaceAction;
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent underwaterAction;
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent bottomAction;
+
+
+
+        private float _distance;
         private bool _playerIsInTrigger;
         private PlayerMovementController _player;
         private Coroutine _resetCoroutine;
@@ -55,6 +65,7 @@ namespace Player_Scripts.Interactions
         {
             yield return new WaitForSeconds(0.3f);
             _playerIsInTrigger = false;
+            _player = null;
         }
 
 
@@ -64,12 +75,12 @@ namespace Player_Scripts.Interactions
 
 
 
-            distance = Mathf.Abs(transform.position.y - _player.transform.position.y);
+            _distance = Mathf.Abs(transform.position.y - _player.transform.position.y);
 
 
             if (!_player.VerifyState(PlayerMovementState.Water))
             {
-                if(distance < surfaceThreshold - 1f)
+                if(_distance < surfaceThreshold - 1f)
                 {
                     _player.ChangeState(PlayerMovementState.Water, 2);
                     _player.WaterSurfaceHit(false);
@@ -78,7 +89,7 @@ namespace Player_Scripts.Interactions
 
 
 
-            if (distance > surfaceThreshold)
+            if (_distance > surfaceThreshold)
             {
                 if (!_atSurface)
                 {
@@ -95,7 +106,7 @@ namespace Player_Scripts.Interactions
                 }
             }
 
-            if(distance < bottomThreshold)
+            if(_distance < bottomThreshold)
             {
                 if (!_atBottom)
                 {
@@ -125,22 +136,23 @@ namespace Player_Scripts.Interactions
                 return;
             }
 
+
+
+            Vector3 playerPos = _player.transform.position;
             if (_atSurface)
             {
-                Vector3 playerPos = _player.transform.position;
-                playerPos.x = -5.76f;
 
                 if (Input.GetAxis("Vertical") >= 0)
                 {
-                    playerPos.y = 7.2f;
+                    playerPos.y = restrictedY;
                 }
 
-                _player.transform.position = playerPos;
             }
 
-           
+            playerPos.x = restrictedX;
 
 
+            _player.transform.position = playerPos;
         }
 
 

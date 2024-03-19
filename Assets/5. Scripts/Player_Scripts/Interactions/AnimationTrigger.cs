@@ -25,11 +25,8 @@ namespace Player_Scripts.Interactions
         [SerializeField, BoxGroup("Movement")] private Transform initialPointOfAction;
         [SerializeField, BoxGroup("Movement")] private Transform finalPointOfAction;
 
-        [SerializeField, BoxGroup("Movement")] private float movementSpeed;
-
 
         [SerializeField, BoxGroup("State")] private bool changeState;
-        [SerializeField, BoxGroup("State"), ShowIf("changeState")] private PlayerMovementState exitState;
         [SerializeField, BoxGroup("State"), ShowIf("changeState")] private int stateIndex;
 
         private bool _isExecuting;
@@ -38,6 +35,8 @@ namespace Player_Scripts.Interactions
 
         private Transform _target;
         private float _timeElapsed;
+        private Vector3 _intialPosition;
+        private Quaternion _initialRotation;
 
 
 
@@ -101,7 +100,7 @@ namespace Player_Scripts.Interactions
 
         private void LateUpdate()
         {
-            if (_isExecuting) return;
+            if (!_isExecuting) return;
 
             if (_initialMove)
             {
@@ -115,9 +114,6 @@ namespace Player_Scripts.Interactions
 
         }
 
-
-        private Vector3 _intialPosition;
-        private Quaternion _initialRotation;
 
         private void InitialMove()
         {
@@ -188,21 +184,23 @@ namespace Player_Scripts.Interactions
         private IEnumerator ExecuteAnimation()
         {
 
+            _isExecuting = true;
             PlayerMovementController player = PlayerMovementController.Instance;
             _target = player.transform;
 
 
             InitialMove();
-            //player.transform.position = initialPointOfAction.position;
-            //player.transform.rotation = initialPointOfAction.rotation;
 
             yield return new WaitUntil(() => !_initialMove);
 
-            print("END OF INITIAL MOVE");
 
 
             //ANIMATION AND STATE
-            player.ChangeState(-1);
+            if (changeState)
+            {
+                player.ChangeState(stateIndex);
+            }
+
             player.player.CController.enabled = false;
             player.DiablePlayerMovement(true);
             player.PlayAnimation(animationName, 0.2f, 1);
@@ -216,7 +214,10 @@ namespace Player_Scripts.Interactions
 
             yield return new WaitUntil(() => !_finalMove);
 
-            print("END OF Final MOVE");
+
+            //RESET
+            _isExecuting = false;
+            _target = null;
             player.DiablePlayerMovement(false);
             player.player.CController.enabled = true;
 
