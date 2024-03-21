@@ -20,6 +20,9 @@ namespace Triggers
         [SerializeField, BoxGroup("Visual")] private Material defaultMaterial;
 
 
+        [SerializeField, BoxGroup("Sound")] private AudioSource source;
+        [SerializeField, BoxGroup("Sound")] private AudioClip triggerClip;
+
 
         private bool _playerIsInTrigger;
         private bool _triggered;
@@ -57,6 +60,7 @@ namespace Triggers
                     _lastTriggerTime = Time.time;
                     _triggered = !_triggered;
                     UpdateSwitchVisual(_triggered);
+                    TriggerSound();
                 }
             }
         }
@@ -80,7 +84,10 @@ namespace Triggers
             renderer.materials = materials;
         }
 
-
+        public void TriggerSound()
+        {
+            source.PlayOneShot(triggerClip);
+        }
 
     }
 

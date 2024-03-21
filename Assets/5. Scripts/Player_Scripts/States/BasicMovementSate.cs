@@ -229,7 +229,14 @@ namespace Player_Scripts.States
 
         public void PlayJump(Player player, int JumpForward)
         {
-            _m_playerVelocity.x = ((JumpForward == 1) ? player.JumpForwardVelocity : 0) * (-Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical"));
+            if(JumpForward == 1)
+            {
+                Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
+
+                _m_playerVelocity += velocityChange * (Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical"));
+
+            }
+
             _m_playerVelocity.y = player.JumpVelocity;
         }
 

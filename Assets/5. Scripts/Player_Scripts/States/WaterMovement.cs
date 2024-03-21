@@ -39,11 +39,13 @@ namespace Player_Scripts.States
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
             player.AnimationController.SetInteger(StateIndex, 2);
+
             previousCharacterHeight = player.CController.height;
             player.CController.height = 0.7f;
             Physics.gravity = new Vector3(0, -1f, 0);
 
             PlayerMovementController.Instance.DiablePlayerMovement(true);
+
             player.StartCoroutine(EnablePlayerMovement());
 
 
@@ -209,7 +211,7 @@ namespace Player_Scripts.States
 
         private IEnumerator EnablePlayerMovement()
         {
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(1.5f);
 
             PlayerMovementController.Instance.DiablePlayerMovement(false);
         }

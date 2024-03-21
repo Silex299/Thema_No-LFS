@@ -37,8 +37,6 @@ namespace Player_Scripts.Interactables
         {
             if (!continuousInteraction) return;
 
-            print("filcll");
-
             if (other.CompareTag("Player_Main"))
             {
                 if (_resetTrigger != null)

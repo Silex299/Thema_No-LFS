@@ -245,7 +245,6 @@ namespace Player_Scripts
         /// <param name="soundKey">action name</param>
         public void PlayGeneralSoundDefaultRandom(string soundKey)
         {
-            if (player.DisablePlayerMovement) return;
 
             try
             {
@@ -254,7 +253,7 @@ namespace Player_Scripts
                     if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                     {
                         var randomIndex = Random.Range(0, clips.Count);
-                        playerSoundSource.PlayOneShot(clips[randomIndex], 0.7f);
+                        playerSoundSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
                     }
                 }
 

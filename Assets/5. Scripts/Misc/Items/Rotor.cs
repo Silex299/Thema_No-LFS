@@ -6,12 +6,17 @@ namespace Misc
 
     public class Rotor : MonoBehaviour
     {
-        [SerializeField, BoxGroup] private bool active = true;
+        [SerializeField, BoxGroup("Params")] private bool active = true;
 
-        [SerializeField, BoxGroup] private float speed;
-        [SerializeField, BoxGroup] private Vector3 rotationAxis;
+        [SerializeField, BoxGroup("Params")] private float speed;
+        [SerializeField, BoxGroup("Params")] private float accelerationTime;
+        [SerializeField, BoxGroup("Params")] private Vector3 rotationAxis;
 
-        [SerializeField, BoxGroup] private float accelerationTime;
+
+        [SerializeField, BoxGroup("Sounds")] private AudioSource source;
+        [SerializeField, BoxGroup("Sounds"), Space(10)] private AudioClip machineSound;
+        [SerializeField, BoxGroup("Sounds")] private AudioClip startSound;
+        [SerializeField, BoxGroup("Sounds")] private AudioClip stopSound;
 
         private bool _running;
         private bool _transition;
@@ -45,6 +50,13 @@ namespace Misc
             else if(_running)
             {
                 Rotate();
+
+                if (!source.isPlaying)
+                {
+                    source.clip = machineSound;
+                    source.loop = true;
+                    source.Play();
+                }
             }
 
         }
@@ -65,6 +77,7 @@ namespace Misc
             {
                 _transition = true;
                 _transitionTimeElapsed = 0;
+                source.PlayOneShot(stopSound);
             }
             else
             {
@@ -80,6 +93,7 @@ namespace Misc
                 {
                     _transition = false;
                     _running = false;
+                    source.Stop();
                 }
             }
         }
@@ -93,6 +107,7 @@ namespace Misc
             {
                 _transition = true;
                 _transitionTimeElapsed = 0;
+                source.PlayOneShot(startSound);
             }
             else
             {
@@ -108,6 +123,9 @@ namespace Misc
                 {
                     _transition = false;
                     _running = true;
+
+                    source.clip = machineSound;
+                    source.loop = true;
                 }
 
             }
