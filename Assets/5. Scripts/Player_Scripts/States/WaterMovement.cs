@@ -177,6 +177,8 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.height = previousCharacterHeight;
+            player.EffectsManager.PlayLoopInteraction("", false); // Stop loop interaction
+
             if (surfaceEffect) { GameObject.Destroy(surfaceEffect); }
             if (bubbleEffect) { GameObject.Destroy(bubbleEffect); }
 

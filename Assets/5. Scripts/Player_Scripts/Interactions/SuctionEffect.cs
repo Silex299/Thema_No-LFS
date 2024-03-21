@@ -40,12 +40,14 @@ namespace Player_Scripts.Interactions
 
         private Coroutine _tiggerExit;
         private bool _playerIsInTrigger;
+        private bool disable;
 
         private Player_Scripts.PlayerMovementController _playerController;
 
 
         private void OnTriggerEnter(Collider other)
         {
+            if (disable) return;
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
@@ -55,6 +57,7 @@ namespace Player_Scripts.Interactions
 
         private void OnTriggerStay(Collider other)
         {
+            if (disable) return;
             if (other.CompareTag("Player_Main"))
             {
                 if (_tiggerExit != null)
@@ -75,6 +78,7 @@ namespace Player_Scripts.Interactions
 
         private void LateUpdate()
         {
+            if (disable) return;
             if (_playerIsInTrigger)
             {
                 Vector3 targetPosition = _playerController.transform.position;
@@ -91,6 +95,7 @@ namespace Player_Scripts.Interactions
 
             }
         }
+
         
     }
 

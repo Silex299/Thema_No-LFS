@@ -113,6 +113,18 @@ namespace Misc
             }
         }
 
+
+        public void ToggleRotor(bool start)
+        {
+            if (!start)
+            {
+                StopRotor();
+            }
+            else
+            {
+                StartRotor();
+            }
+        }
     }
 
 }

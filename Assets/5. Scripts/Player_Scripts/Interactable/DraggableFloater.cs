@@ -43,7 +43,7 @@ namespace Player_Scripts.Interactables
 
         public override PlayerInteractionType Interact()
         {
-            if (!GetKey())
+            if (!GetKey() || !_playerIsInTrigger)
             {
                 _isInteracting = false;
                 return PlayerInteractionType.NONE;
