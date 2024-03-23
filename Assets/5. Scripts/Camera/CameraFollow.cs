@@ -119,7 +119,7 @@ namespace Thema_Camera
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
 
-            print("cHANEG OFFSET");
+            print(JsonUtility.ToJson(info));
 
 
             _initialCameraInfo = _cameraInfo;
