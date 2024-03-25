@@ -144,7 +144,7 @@ namespace Player_Scripts
 
         public void ChangeState(int index)
         {
-            if (player.DisablePlayerMovement) return;
+            //if (player.DisablePlayerMovement) return;
 
             if (index == player.currentStateIndex) return;
 

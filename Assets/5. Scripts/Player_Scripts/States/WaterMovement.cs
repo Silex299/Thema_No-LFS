@@ -107,7 +107,7 @@ namespace Player_Scripts.States
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.5f : 1) * _speedMultiplier * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.8f : 1) * _speedMultiplier * movementVector * swimSpeed * Time.deltaTime);
 
 
             player.AnimationController.SetFloat(Horizontal, ((player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput)), 0.2f, Time.deltaTime);
@@ -144,7 +144,7 @@ namespace Player_Scripts.States
 
                         if (!player.isInteracting)
                         {
-                            _speedMultiplier = 0.7f;
+                            _speedMultiplier = 0.5f;
                             player.enabledDirectionInput = true;
                             player.isInteracting = true;
                             player.AnimationController.SetBool(Push, true);

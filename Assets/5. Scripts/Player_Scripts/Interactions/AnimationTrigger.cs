@@ -189,6 +189,9 @@ namespace Player_Scripts.Interactions
             _target = player.transform;
 
 
+            player.player.CController.enabled = false;
+            player.DiablePlayerMovement(true);
+
             InitialMove();
 
             yield return new WaitUntil(() => !_initialMove);
@@ -201,10 +204,7 @@ namespace Player_Scripts.Interactions
                 player.ChangeState(stateIndex);
             }
 
-            player.player.CController.enabled = false;
-            player.DiablePlayerMovement(true);
             player.PlayAnimation(animationName, 0.2f, 1);
-
 
             yield return new WaitForSeconds(animationDelay);
 

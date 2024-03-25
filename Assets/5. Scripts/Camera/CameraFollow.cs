@@ -108,6 +108,7 @@ namespace Thema_Camera
                 m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
             }
 
+            _cameraInfo = info;
             m_Offset = info.offset;
 
             transform.position = followTarget.position + m_Offset;
@@ -118,8 +119,6 @@ namespace Thema_Camera
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
-
-            print(JsonUtility.ToJson(info));
 
 
             _initialCameraInfo = _cameraInfo;

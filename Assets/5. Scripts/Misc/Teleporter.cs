@@ -22,6 +22,7 @@ namespace Misc
         private void OnTriggerEnter(Collider other)
         {
             if (_isTriggered) return;
+
             if (other.CompareTag("Player_Main"))
             {
                 StartCoroutine(Teleport(other.transform));
