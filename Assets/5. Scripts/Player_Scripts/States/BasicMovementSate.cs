@@ -233,9 +233,10 @@ namespace Player_Scripts.States
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 
-                _m_playerVelocity += velocityChange * (Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical"));
+                _m_playerVelocity += velocityChange;
 
             }
+
 
             _m_playerVelocity.y = player.JumpVelocity;
         }

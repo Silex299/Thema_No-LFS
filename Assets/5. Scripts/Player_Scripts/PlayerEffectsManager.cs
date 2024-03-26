@@ -293,8 +293,6 @@ namespace Player_Scripts
 
         public void PlayLoopInteraction(string soundKey, bool play)
         {
-            if (player.DisablePlayerMovement) return;
-
             if (!play)
             {
                 interactionSource.loop = false;
@@ -328,6 +326,7 @@ namespace Player_Scripts
 
 
         }
+
 
         public GameObject SpawnEffect(string key, Vector3 overridePosition)
         {

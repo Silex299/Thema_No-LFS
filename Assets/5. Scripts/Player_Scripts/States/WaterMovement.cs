@@ -241,7 +241,7 @@ namespace Player_Scripts.States
             }
 
             //play swim sound
-
+            
             player.EffectsManager.PlayLoopInteraction("Swim", status);
 
             bubbleEffect.SetActive(!status);

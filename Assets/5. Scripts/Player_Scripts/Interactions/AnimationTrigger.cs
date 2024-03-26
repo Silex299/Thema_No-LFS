@@ -189,8 +189,8 @@ namespace Player_Scripts.Interactions
             _target = player.transform;
 
 
-            player.player.CController.enabled = false;
             player.DiablePlayerMovement(true);
+            player.player.CController.enabled = false;
 
             InitialMove();
 
