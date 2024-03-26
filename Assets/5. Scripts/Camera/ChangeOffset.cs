@@ -64,6 +64,7 @@ namespace Thema_Camera
         public Vector3 rotation;
         public Vector3 audioListenerLocalPosition;
         public float FOV;
+        public Vector2 lenseShift;
     }
 
 }

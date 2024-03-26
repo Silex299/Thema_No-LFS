@@ -93,6 +93,7 @@ namespace Thema_Camera
             m_Offset = Vector3.Lerp(_initialCameraInfo.offset, _cameraInfo.offset, fraction);
             transform.rotation = Quaternion.Slerp(Quaternion.Euler(_initialCameraInfo.rotation), Quaternion.Euler(_cameraInfo.rotation), fraction);
             myCamera.fieldOfView = Mathf.Lerp(_initialCameraInfo.FOV, _cameraInfo.FOV, fraction);
+            myCamera.lensShift = Vector2.Lerp(_initialCameraInfo.lenseShift, _cameraInfo.lenseShift, fraction);
 
             if (fraction >= 1)
             {
@@ -114,6 +115,7 @@ namespace Thema_Camera
             transform.position = followTarget.position + m_Offset;
             transform.rotation = Quaternion.Euler(info.rotation);
             myCamera.fieldOfView = info.FOV;
+            myCamera.lensShift = info.lenseShift;
 
         }
 
