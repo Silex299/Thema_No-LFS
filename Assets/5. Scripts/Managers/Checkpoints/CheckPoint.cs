@@ -30,6 +30,7 @@ namespace Managers.Checkpoints
         {
             cameraOffsetInfo.ChangeCameraOffsetInstantaneous();
             PlayerMovementController.Instance.ChangeState(playerState, playerStateIndex);
+            PlayerMovementController.Instance.player.Health.ResetHealth();
 
             CameraManager.Instance.Reset();
 

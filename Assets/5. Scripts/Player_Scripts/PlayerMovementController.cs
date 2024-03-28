@@ -106,7 +106,6 @@ namespace Player_Scripts
 
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
-            if (player.DisablePlayerMovement) return;
 
             print("Change State");
 
