@@ -116,6 +116,8 @@ namespace Player_Scripts.Interactions
             }
             else
             {
+
+                print("fuck me daddy");
                 if (_atBottom)
                 {
                     _atBottom = false;

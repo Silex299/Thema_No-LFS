@@ -222,10 +222,7 @@ namespace Player_Scripts
         {
             if (player.e_currentState == PlayerMovementState.Water)
             {
-                if (!player.DisablePlayerMovement)
-                {
-                    player.waterMovement.PlayerAtBottom(player, atBottom);
-                }
+                player.waterMovement.PlayerAtBottom(player, atBottom);
             }
         }
 
