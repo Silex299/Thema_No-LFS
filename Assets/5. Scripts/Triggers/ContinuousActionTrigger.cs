@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
+using System;
 
 
 #if UNITY_EDITOR
@@ -14,15 +16,20 @@ namespace Triggers
     public class ContinuousActionTrigger : MonoBehaviour
     {
 
-        [SerializeField] private string activationInput;
-        [SerializeField] private string actionInput;
-        [SerializeField] private float timeToTrigger;
-        [SerializeField] private float actionDelay;
+        [SerializeField, BoxGroup("Trigger")] private string activationInput;
+        [SerializeField, BoxGroup("Trigger")] private string actionInput;
+        [SerializeField, BoxGroup("Trigger")] private float timeToTrigger;
 
-        [SerializeField, Space(10)] private string engageActionName;
-        [SerializeField] private string actionName;
 
-        [SerializeField] private Transform pointOfAction;
+        [SerializeField, BoxGroup("Animation")] private string engageActionName;
+        [SerializeField, BoxGroup("Animation")] private string actionName;
+
+
+        [SerializeField, BoxGroup("Action")] private float actionDelay;
+        [SerializeField, BoxGroup("Action")] private Transform pointOfAction;
+        [SerializeField, BoxGroup("Action")] private UnityEvent action;
+
+
 
         private Transform _target;
 
@@ -30,9 +37,14 @@ namespace Triggers
         private bool _movePlayer;
         private bool _playerEngaged;
         [SerializeField] private bool _triggerd;
-        private Coroutine _resetTrigger;
-        private float _actionTriggerTime;
 
+        private float _actionTriggerTime;
+        private Coroutine _resetTrigger;
+
+
+        private Vector3 _initialPos;
+        private Quaternion _initialRot;
+        private float _timeElapsed;
 
 
         #region Editor
@@ -92,6 +104,7 @@ namespace Triggers
 
         #endregion
 
+        #region Built-in methods
 
         private void OnTriggerStay(Collider other)
         {
@@ -113,18 +126,6 @@ namespace Triggers
             }
 
         }
-
-        private IEnumerator ResetTrigger()
-        {
-
-            yield return new WaitForSeconds(0.1f);
-
-            print("wtf");
-            _playerIsInTrigger = false;
-            _playerEngaged = false;
-            _actionTriggerTime = 0;
-        }
-
 
         private void Update()
         {
@@ -184,7 +185,10 @@ namespace Triggers
                 }
                 else if (_movePlayer && _playerEngaged)
                 {
-                    Disengage();
+                    Disengage(() =>
+                    {
+                        PlayerMovementController.Instance.DiablePlayerMovement(false);
+                    });
                 }
             }
             else
@@ -194,13 +198,13 @@ namespace Triggers
                     ResetRotation();
                 }
             }
-            
+
         }
 
+        #endregion
 
-        private Vector3 _initialPos;
-        private Quaternion _initialRot;
-        private float _timeElapsed;
+        #region Custom Methods
+
         private void Engage()
         {
             if (!_movePlayer)
@@ -213,14 +217,14 @@ namespace Triggers
                 _timeElapsed = 0;
 
                 PlayerMovementController.Instance.DiablePlayerMovement(true);
-                PlayerMovementController.Instance.PlayAnimation(engageActionName, 0.6f, 1);
+                PlayerMovementController.Instance.PlayAnimation(engageActionName, 0.4f, 1);
             }
 
             else
             {
                 _timeElapsed += Time.deltaTime;
 
-                float fraction = _timeElapsed / 0.5f;
+                float fraction = _timeElapsed / 0.4f;
 
                 _target.position = Vector3.Lerp(_initialPos, pointOfAction.position, fraction);
 
@@ -235,15 +239,35 @@ namespace Triggers
             }
         }
 
+        private void Disengage(Action action = null)
 
-
-        private void Disengage()
         {
             if (!_movePlayer)
             {
                 _movePlayer = true;
                 _timeElapsed = 0;
-                PlayerMovementController.Instance.PlayAnimation("Default", 0.2f, 1);
+                _initialRot = _target.rotation;
+                PlayerMovementController.Instance.PlayAnimation("Default", 1f, 1);
+            }
+
+            else
+            {
+                ResetRotation(() =>
+                {
+                    PlayerMovementController.Instance.DiablePlayerMovement(false);
+                });
+
+            }
+        }
+
+
+        private void ResetRotation(Action action = null)
+        {
+            if (!_movePlayer)
+            {
+                _movePlayer = true;
+                _timeElapsed = 0;
+                _initialRot = _target.rotation;
             }
 
             else
@@ -252,42 +276,27 @@ namespace Triggers
 
                 float fraction = _timeElapsed / 0.5f;
 
-                _target.position = Vector3.Lerp(pointOfAction.position, _initialPos, fraction);
-                _target.rotation = Quaternion.Slerp(pointOfAction.rotation, _initialRot, fraction);
+                _target.rotation = Quaternion.Slerp(_initialRot, new Quaternion(0, 0, 0, 1), fraction);
 
                 if (fraction >= 1)
                 {
                     _movePlayer = false;
                     _playerEngaged = false;
-                    PlayerMovementController.Instance.DiablePlayerMovement(false);
+                    action?.Invoke();
                 }
 
             }
         }
 
-        private void ResetRotation()
+        private IEnumerator ResetTrigger()
         {
-            if (!_movePlayer)
-            {
-                _timeElapsed = 0;
-                _movePlayer = true;
-            }
-            else
-            {
-                _timeElapsed += Time.deltaTime;
 
-                float fraction = _timeElapsed / 1f;
+            yield return new WaitForSeconds(0.1f);
 
-                _target.rotation = Quaternion.Slerp(pointOfAction.rotation, _initialRot, fraction);
-
-                if (fraction >= 1)
-                {
-                    _movePlayer = false;
-                }
-            }
-            
+            _playerIsInTrigger = false;
+            _playerEngaged = false;
+            _actionTriggerTime = 0;
         }
-
 
         private IEnumerator Trigger()
         {
@@ -300,18 +309,24 @@ namespace Triggers
 
             PlayerMovementController.Instance.PlayAnimation(actionName, 1);
 
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.8f);
 
+            action?.Invoke();
+
+            //TODO: make the time delay dynamic if needed;
+            yield return new WaitForSeconds(0.5f);
 
             ResetRotation();
 
             yield return new WaitForSeconds(1.8f);
+
 
             PlayerMovementController.Instance.DiablePlayerMovement(false);
 
         }
 
 
+        #endregion 
 
 
 

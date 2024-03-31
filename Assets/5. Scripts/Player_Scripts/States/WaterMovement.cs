@@ -129,6 +129,7 @@ namespace Player_Scripts.States
                 switch (interaction)
                 {
                     case PlayerInteractionType.NONE:
+
                         if (player.isInteracting)
                         {
                             _speedMultiplier = 1;
@@ -157,9 +158,11 @@ namespace Player_Scripts.States
             }
             else
             {
+                //TODO: MAKE IT CALL ONLY ONCE
+                _speedMultiplier = 1;
+
                 if (player.isInteracting)
                 {
-                    _speedMultiplier = 1;
                     player.isInteracting = false;
                     player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
