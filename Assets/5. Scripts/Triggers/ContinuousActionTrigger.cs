@@ -4,6 +4,9 @@ using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine.Events;
 using System;
+using Thema_Camera;
+using UnityEngine.UI;
+using TMPro;
 
 
 #if UNITY_EDITOR
@@ -23,6 +26,10 @@ namespace Triggers
 
         [SerializeField, BoxGroup("Animation")] private string engageActionName;
         [SerializeField, BoxGroup("Animation")] private string actionName;
+
+        [SerializeField, BoxGroup("UI")] private Image progressBar;
+        [SerializeField, BoxGroup("UI")] private TextMeshProUGUI actionText;
+        [SerializeField, BoxGroup("UI")] private Vector3 visualOffset;
 
 
         [SerializeField, BoxGroup("Action")] private float actionDelay;
@@ -151,8 +158,11 @@ namespace Triggers
             if (!_playerEngaged || _movePlayer) return;
 
 
+
             if (Input.GetButton(actionInput))
             {
+                VisualUI((Time.time - _actionTriggerTime) / timeToTrigger);
+
                 if (_actionTriggerTime == 0)
                 {
                     _actionTriggerTime = Time.time;
@@ -163,8 +173,13 @@ namespace Triggers
                 {
                     //Play Trigger;
                     StartCoroutine(Trigger());
+
                 }
 
+            }
+            else
+            {
+                VisualUI(0);
             }
 
             if (Input.GetButtonUp(actionInput))
@@ -322,6 +337,43 @@ namespace Triggers
 
 
             PlayerMovementController.Instance.DiablePlayerMovement(false);
+
+        }
+
+
+
+        private Coroutine UICoroutine;
+        private void VisualUI(float fill)
+        {
+            var camera = CameraFollow.Instance.myCamera;
+
+            var pos = camera.WorldToScreenPoint(transform.position + visualOffset);
+            progressBar.rectTransform.position = pos;
+            progressBar.fillAmount = fill;
+
+            if (!progressBar.gameObject.activeInHierarchy)
+            {
+                progressBar.gameObject.SetActive(true);
+
+                //TODO: CHANGE IT
+                actionText.text = ">";
+            }
+
+            if(UICoroutine!= null)
+            {
+                StopCoroutine(UICoroutine);
+            }
+
+            UICoroutine = StartCoroutine(ResetUI());
+
+
+        }
+
+        private IEnumerator ResetUI()
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            progressBar.gameObject.SetActive(false);
 
         }
 
