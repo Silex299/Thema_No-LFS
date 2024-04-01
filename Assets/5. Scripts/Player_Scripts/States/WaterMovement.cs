@@ -19,6 +19,8 @@ namespace Player_Scripts.States
 
 
 
+
+
         //Defines player position if player is at the surface of the water body or at bottom depth
         internal bool atBottom;
         internal bool atSurface;
@@ -129,7 +131,6 @@ namespace Player_Scripts.States
                 switch (interaction)
                 {
                     case PlayerInteractionType.NONE:
-
                         if (player.isInteracting)
                         {
                             _speedMultiplier = 1;

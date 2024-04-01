@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sounds
+namespace Player_Scripts.Volumes
 {
     //[RequireComponent(typeof(BoxCollider))]
     public class SoundVolumeTrigger : MonoBehaviour

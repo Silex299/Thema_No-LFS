@@ -53,6 +53,10 @@ namespace Player_Scripts.Interactables
         {
             yield return new WaitForSeconds(0.2f);
             _playerIsInTrigger = false;
+            if(PlayerMovementController.Instance.player.interactable != this)
+            {
+                PlayerMovementController.Instance.player.interactable = null;
+            }
         }
 
         protected virtual void OnTriggerExit(Collider other)

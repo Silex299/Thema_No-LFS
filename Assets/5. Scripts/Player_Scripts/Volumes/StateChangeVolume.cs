@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 
-namespace Player_Scripts
+namespace Player_Scripts.Volumes
 {
     [RequireComponent(typeof(Collider))]
     public class StateChangeVolume : MonoBehaviour
