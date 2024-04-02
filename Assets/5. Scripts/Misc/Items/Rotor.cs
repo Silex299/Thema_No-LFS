@@ -51,12 +51,16 @@ namespace Misc
             {
                 Rotate();
 
-                if (!source.isPlaying)
+                if (source)
                 {
-                    source.clip = machineSound;
-                    source.loop = true;
-                    source.Play();
+                    if (!source.isPlaying)
+                    {
+                        source.clip = machineSound;
+                        source.loop = true;
+                        source.Play();
+                    }
                 }
+                
             }
 
         }
@@ -77,7 +81,10 @@ namespace Misc
             {
                 _transition = true;
                 _transitionTimeElapsed = 0;
-                source.PlayOneShot(stopSound);
+                if (source)
+                {
+                    source.PlayOneShot(stopSound);
+                }
             }
             else
             {
@@ -93,7 +100,10 @@ namespace Misc
                 {
                     _transition = false;
                     _running = false;
-                    source.Stop();
+                    if (source)
+                    {
+                        source.Stop();
+                    }
                 }
             }
         }
@@ -107,7 +117,11 @@ namespace Misc
             {
                 _transition = true;
                 _transitionTimeElapsed = 0;
-                source.PlayOneShot(startSound);
+
+                if (source)
+                {
+                    source.PlayOneShot(startSound);
+                }
             }
             else
             {
@@ -123,9 +137,11 @@ namespace Misc
                 {
                     _transition = false;
                     _running = true;
-
-                    source.clip = machineSound;
-                    source.loop = true;
+                    if (source)
+                    {
+                        source.clip = machineSound;
+                        source.loop = true;
+                    }
                 }
 
             }
