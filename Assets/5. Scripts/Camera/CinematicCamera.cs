@@ -28,11 +28,8 @@ namespace Thema_Camera
         private void Update()
         {
             if (!target) return;
-
             var newPos = target.position + _offset;
-
             transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime * followSmoothness);
-
 
         }
 

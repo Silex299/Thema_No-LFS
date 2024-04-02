@@ -10,6 +10,7 @@ namespace Triggers
 
 
         [SerializeField, BoxGroup("Trigger")] private bool isEnabled;
+        [SerializeField, BoxGroup("Trigger")] private bool oneTime;
         [SerializeField, BoxGroup("Trigger")] private string triggerString;
         [SerializeField, BoxGroup("Trigger")] private float secondActionDelay;
         [SerializeField, BoxGroup("Trigger")] private UnityEvent<bool> action;
@@ -57,8 +58,14 @@ namespace Triggers
                 if (_lastTriggerTime + secondActionDelay < Time.time)
                 {
                     action?.Invoke(_triggered);
+
+                    if (oneTime)
+                    {
+                        isEnabled = false;
+                    }
                     _lastTriggerTime = Time.time;
                     _triggered = !_triggered;
+
                     UpdateSwitchVisual(_triggered);
                     TriggerSound();
                 }
@@ -86,7 +93,10 @@ namespace Triggers
 
         public void TriggerSound()
         {
-            source.PlayOneShot(triggerClip);
+            if (source)
+            {
+                source.PlayOneShot(triggerClip);
+            }
         }
 
     }

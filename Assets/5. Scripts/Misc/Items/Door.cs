@@ -30,7 +30,7 @@ public class Door : MonoBehaviour
 
 #endif
 
-    private bool _isOpen;
+    [SerializeField, BoxGroup("Misc")] private bool isOpen;
     private bool _action;
     private Coroutine _toggleDoor;
     private float _timeElapsed;
@@ -42,7 +42,7 @@ public class Door : MonoBehaviour
         if (!_action) return;
 
 
-        if (_isOpen)
+        if (isOpen)
         {
             _timeElapsed += Time.deltaTime;
             float fraction = _timeElapsed / transitionTime;
@@ -88,11 +88,11 @@ public class Door : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        if (open != _isOpen)
+        if (open != isOpen)
         {
             _toggleDoor = null;
             _action = true;
-            _isOpen = open;
+            isOpen = open;
             _timeElapsed = 0;
             PlaySound(open);
         }
@@ -110,7 +110,7 @@ public class Door : MonoBehaviour
     {
         print("instant");
         transform.localPosition = open ? openPosition : closedPosition;
-        _isOpen = open;
+        isOpen = open;
     }
 
 

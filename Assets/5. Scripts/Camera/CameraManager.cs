@@ -79,6 +79,12 @@ namespace Thema_Camera
             _isMainCameraActive = false;
         }
 
+        public void InstantCinematicSwitch()
+        {
+            cinematicCamera.gameObject.SetActive(true);
+            mainCamera.gameObject.SetActive(false);
+        }
+
         public void SwitchToMainCamera()
         {
             //Activate main camera,
