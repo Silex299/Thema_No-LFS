@@ -172,7 +172,12 @@ namespace Player_Scripts.Volumes
 
 
             //Restrict
-            if (_player.player.DisablePlayerMovement || !_player.VerifyState(PlayerMovementState.Water))
+            if (!_player.VerifyState(PlayerMovementState.Water))
+            {
+                return;
+            }
+
+            if (_player.player.DisablePlayerMovement && !dynamicWater)
             {
                 return;
             }

@@ -187,8 +187,6 @@ namespace Player_Scripts.Interactions
             _isExecuting = true;
             PlayerMovementController player = PlayerMovementController.Instance;
             _target = player.transform;
-
-
             player.DiablePlayerMovement(true);
             player.player.CController.enabled = false;
 
