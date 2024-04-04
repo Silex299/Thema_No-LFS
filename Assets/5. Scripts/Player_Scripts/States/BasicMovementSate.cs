@@ -149,7 +149,12 @@ namespace Player_Scripts.States
             #region PLAYER ANIMATION UPDATE
             if (Input.GetButtonDown("Jump"))
             {
-                if (player.CanJump && player.IsGrounded)
+                if (player.currentStateIndex == -5)
+                {
+                    //WHILE SLIDING
+                    player.AnimationController.SetTrigger(Jump);
+                }
+                else if (player.CanJump && player.IsGrounded)
                 {
                     player.AnimationController.SetTrigger(Jump);
                 }
@@ -177,7 +182,6 @@ namespace Player_Scripts.States
 
         private void OneWayRotate(Player player, Vector3 rotateTowards)
         {
-            Debug.Log("oNE WA");
             var transform = player.transform;
             var pos = transform.position;
             rotateTowards.y = pos.y;
@@ -229,7 +233,7 @@ namespace Player_Scripts.States
 
         public void PlayJump(Player player, int JumpForward)
         {
-            if(JumpForward == 1)
+            if (JumpForward == 1)
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 

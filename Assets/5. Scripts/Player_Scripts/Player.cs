@@ -28,16 +28,16 @@ namespace Player_Scripts
 
         [SerializeField, BoxGroup("Player Movement")] internal bool enabledDirectionInput;
         [SerializeField, BoxGroup("Player Movement")] private bool canJump;
+        /// <summary>
+        /// Used for sprint and other other boosing mechanisms
+        /// </summary>
+        [BoxGroup("Player Movement")] public bool canBoost;
 
         /// <summary>
         /// Resets the direction only to forward direction if not moving
         /// </summary>
         [SerializeField, BoxGroup("Player Movement")] internal bool oneWayRotation;
 
-        /// <summary>
-        /// Used for sprint and other other boosing mechanisms
-        /// </summary>
-        [BoxGroup("Player Movement")] public bool canBoost;
 
         [SerializeField, BoxGroup("Misc")]
         internal LayerMask groundMask;
