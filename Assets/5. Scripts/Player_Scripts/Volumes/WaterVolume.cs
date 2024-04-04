@@ -213,7 +213,6 @@ namespace Player_Scripts.Volumes
         private void WaterSurfaceCheck(out float surfaceDistance)
         {
             surfaceDistance = waterSurface.position.y - transform.position.y;
-            print(surfaceDistance);
             surfaceThreshold = surfaceDistance - surfaceDistanceOffset;
         }
 
