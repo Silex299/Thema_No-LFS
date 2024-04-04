@@ -32,9 +32,11 @@ namespace Triggers
         [SerializeField, BoxGroup("UI")] private Vector3 visualOffset;
 
 
-        [SerializeField, BoxGroup("Action")] private float actionDelay;
         [SerializeField, BoxGroup("Action")] private Transform pointOfAction;
-        [SerializeField, BoxGroup("Action")] private UnityEvent action;
+        [SerializeField, BoxGroup("Action")] private bool careRotation = true;
+        [SerializeField, BoxGroup("Action")] private float actionDelay;
+        [SerializeField, BoxGroup("Action")] private float[] timings = { 0.8f, 0.5f, 1.8f };
+        [SerializeField, BoxGroup("Action"), Space(10)] private UnityEvent action;
 
 
 
@@ -72,6 +74,7 @@ namespace Triggers
             if (!_preview)
             {
                 EditorApplication.update += Preview;
+
                 player = FindObjectOfType<PlayerMovementController>();
                 player.player.AnimationController.Play(engageActionName, 1, 0);
                 _preview = true;
@@ -85,7 +88,7 @@ namespace Triggers
                 tran.position = pointOfAction.position;
                 tran.rotation = pointOfAction.rotation;
 
-                Invoke("Reset", 1f);
+                Invoke("ResetPreview", 3f);
             }
             else
             {
@@ -93,8 +96,10 @@ namespace Triggers
             }
         }
 
-        private void Reset()
+        [Button("Force Preview Stop", ButtonSizes.Large), GUIColor(1, 0.2f, 0.2f)]
+        public void ResetPreview()
         {
+            EditorApplication.update -= Preview;
             _preview = false;
             Transform trans = player.transform;
             trans.position = _initialPlayerPos;
@@ -103,7 +108,6 @@ namespace Triggers
             player.PlayAnimation("Default", 1);
             player.player.AnimationController.Update(0);
 
-            EditorApplication.update -= Preview;
         }
 
 
@@ -172,6 +176,8 @@ namespace Triggers
                 if (_actionTriggerTime + timeToTrigger < Time.time)
                 {
                     //Play Trigger;
+                    Debug.Log("I want to masterbater so bad");
+                    _actionTriggerTime = Time.time;
                     StartCoroutine(Trigger());
 
                 }
@@ -255,8 +261,18 @@ namespace Triggers
         }
 
         private void Disengage(Action action = null)
-
         {
+
+            if (!careRotation)
+            {
+                _movePlayer = false;
+                _playerEngaged = false;
+                PlayerMovementController.Instance.PlayAnimation("Default", 0.3f, 1);
+                PlayerMovementController.Instance.DiablePlayerMovement(false);
+                return;
+            }
+
+
             if (!_movePlayer)
             {
                 _movePlayer = true;
@@ -264,7 +280,6 @@ namespace Triggers
                 _initialRot = _target.rotation;
                 PlayerMovementController.Instance.PlayAnimation("Default", 1f, 1);
             }
-
             else
             {
                 ResetRotation(() =>
@@ -313,27 +328,36 @@ namespace Triggers
             _actionTriggerTime = 0;
         }
 
+
         private IEnumerator Trigger()
         {
 
-            if (_triggerd) yield return null;
+            if (_triggerd)
+            {
+                yield break;
+            }
+
+            Debug.LogError(this.gameObject.name + _triggerd);
 
             yield return new WaitForSeconds(actionDelay);
 
             _triggerd = true;
-
+            PlayerMovementController.Instance.DiablePlayerMovement(true);
             PlayerMovementController.Instance.PlayAnimation(actionName, 1);
 
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(timings[0]);
 
             action?.Invoke();
 
             //TODO: make the time delay dynamic if needed;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(timings[1]);
 
-            ResetRotation();
+            if (careRotation)
+            {
+                ResetRotation();
+            }
 
-            yield return new WaitForSeconds(1.8f);
+            yield return new WaitForSeconds(timings[2]);
 
 
             PlayerMovementController.Instance.DiablePlayerMovement(false);
@@ -359,7 +383,7 @@ namespace Triggers
                 actionText.text = ">";
             }
 
-            if(UICoroutine!= null)
+            if (UICoroutine != null)
             {
                 StopCoroutine(UICoroutine);
             }
@@ -377,6 +401,10 @@ namespace Triggers
 
         }
 
+        public void ReActivate()
+        {
+            _triggerd = false;
+        }
 
         #endregion 
 

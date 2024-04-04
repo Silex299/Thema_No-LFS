@@ -50,6 +50,7 @@ namespace Player_Scripts.States
         {
             defaultStateIndex = player.currentStateIndex;
 
+
             player.AnimationController.CrossFade("Basic Movement", 0.25f);
             player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }
