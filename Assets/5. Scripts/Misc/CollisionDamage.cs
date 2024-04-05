@@ -9,6 +9,7 @@ namespace Misc
         [SerializeField] private float maximumDamage;
         [SerializeField] private bool enable = true;
 
+
         private void OnCollisionEnter(Collision collision)
         {
 

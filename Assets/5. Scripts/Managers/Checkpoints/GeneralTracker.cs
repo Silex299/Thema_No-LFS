@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,15 +8,23 @@ namespace Managers.Checkpoints
     public class GeneralTracker : Tracker
     {
 
+        /// <summary>
+        /// If tracker should be called during Start Call
+        /// </summary>
         [SerializeField] private bool callToInitiate = true;
-        [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialPosition;
-        [SerializeField, TabGroup("States", "InitialState")] private Vector3 initialEualrRotation;
-        [SerializeField, TabGroup("States", "FinalState")] private Vector3 finalPosition;
-        [SerializeField, TabGroup("States", "FinalState")] private Vector3 finalEularRotation;
+        /// <summary>
+        /// If transforms should be tracked
+        /// </summary>
+        [SerializeField] private bool trackTransform = true;
+        [SerializeField, TabGroup("States", "InitialState"), ShowIf(nameof(trackTransform))] private Vector3 initialPosition;
+        [SerializeField, TabGroup("States", "InitialState"), ShowIf(nameof(trackTransform))] private Vector3 initialEualrRotation;
+        [SerializeField, TabGroup("States", "FinalState"), ShowIf(nameof(trackTransform))] private Vector3 finalPosition;
+        [SerializeField, TabGroup("States", "FinalState"), ShowIf(nameof(trackTransform))] private Vector3 finalEularRotation;
 
 
-        [SerializeField, Space(10)] private UnityEvent initialStateAction;
-        [SerializeField] private UnityEvent finalStateAction;
+
+        [SerializeField, Space(10), InfoBox("Called when checkpoint is less than or equal to thresold checkpoint")] private UnityEvent initialStateAction;
+        [SerializeField, InfoBox("Called when checkpoint is greater than thresold checkpoint")] private UnityEvent finalStateAction;
 
 
         public override void InitialSetup(CheckPoint checkPoint)
@@ -35,14 +41,20 @@ namespace Managers.Checkpoints
 
             if (CheckpointManager.Instance.CurrentCheckpoint > thresholdCheckpoint)
             {
-                this.transform.localPosition = finalPosition;
-                this.transform.localRotation = Quaternion.Euler(finalEularRotation);
+                if (trackTransform)
+                {
+                    this.transform.localPosition = finalPosition;
+                    this.transform.localRotation = Quaternion.Euler(finalEularRotation);
+                }
                 finalStateAction?.Invoke();
             }
             else
             {
-                this.transform.localPosition = initialPosition;
-                this.transform.localRotation = Quaternion.Euler(initialEualrRotation);
+                if (trackTransform)
+                {
+                    this.transform.localPosition = initialPosition;
+                    this.transform.localRotation = Quaternion.Euler(initialEualrRotation);
+                }
                 initialStateAction?.Invoke();
             }
         }

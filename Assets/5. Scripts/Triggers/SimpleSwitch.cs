@@ -63,18 +63,25 @@ namespace Triggers
                     {
                         isEnabled = false;
                     }
+
                     _lastTriggerTime = Time.time;
                     _triggered = !_triggered;
 
-                    UpdateSwitchVisual(_triggered);
+                    UpdateSwitch(_triggered);
                     TriggerSound();
                 }
             }
         }
 
-        public void UpdateSwitchVisual(bool status)
+        public void UpdateSwitch(bool status)
         {
             _triggered = status;
+
+
+            if(oneTime && status)
+            {
+                isEnabled = false;
+            }
 
             var renderer = GetComponent<MeshRenderer>();
             var materials = renderer.materials;
@@ -98,6 +105,7 @@ namespace Triggers
                 source.PlayOneShot(triggerClip);
             }
         }
+
 
     }
 

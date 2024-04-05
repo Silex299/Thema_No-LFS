@@ -6,7 +6,7 @@ namespace Misc
 
     public class Rotor : MonoBehaviour
     {
-        [SerializeField, BoxGroup("Params")] private bool active = true;
+        //[SerializeField, BoxGroup("Params")] private bool active = true;
 
         [SerializeField, BoxGroup("Params")] private float speed;
         [SerializeField, BoxGroup("Params")] private float accelerationTime;
@@ -18,27 +18,32 @@ namespace Misc
         [SerializeField, BoxGroup("Sounds")] private AudioClip startSound;
         [SerializeField, BoxGroup("Sounds")] private AudioClip stopSound;
 
-        private bool _running;
+        [SerializeField] private bool running = true;
         private bool _transition;
         private float _currentSpeed;
         private float _transitionTimeElapsed;
 
+        public bool Running
+        {
+            set
+            {
+                running = value;
+            }
+        }
 
         private void Start()
         {
-            _running = active;
             _currentSpeed = speed;
             _transition = false;
         }
 
         private void Update()
         {
-            if (!active) return;
 
 
             if (_transition)
             {
-                if (_running)
+                if (running)
                 {
                     StopRotor();
                 }
@@ -47,7 +52,7 @@ namespace Misc
                     StartRotor();
                 }
             }
-            else if(_running)
+            else if(running)
             {
                 Rotate();
 
@@ -75,7 +80,8 @@ namespace Misc
         [SerializeField, Button("Stop Rotor", ButtonSizes.Medium), GUIColor(1f,0f,0f)]
         public void StopRotor()
         {
-            if (!_running) return;
+            if (!running) return;
+
 
             if (!_transition)
             {
@@ -99,7 +105,7 @@ namespace Misc
                 if (fraction >= 1)
                 {
                     _transition = false;
-                    _running = false;
+                    running = false;
                     if (source)
                     {
                         source.Stop();
@@ -111,7 +117,7 @@ namespace Misc
         [SerializeField, Button("Start Rotor", ButtonSizes.Medium), GUIColor(0.2f, 1f, 0.2f)]
         public void StartRotor()
         {
-            if (_running) return;
+            if (running) return;
 
             if (!_transition)
             {
@@ -136,7 +142,7 @@ namespace Misc
                 if (fraction >= 1)
                 {
                     _transition = false;
-                    _running = true;
+                    running = true;
                     if (source)
                     {
                         source.clip = machineSound;
