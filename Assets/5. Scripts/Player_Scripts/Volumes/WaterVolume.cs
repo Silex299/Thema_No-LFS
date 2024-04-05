@@ -120,7 +120,7 @@ namespace Player_Scripts.Volumes
                 if (_distance < surfaceThreshold - 1f)
                 {
                     _player.ChangeState(PlayerMovementState.Water, 2);
-                    _player.WaterSurfaceHit(false);
+                    underwaterAction?.Invoke();
                 }
             }
             else

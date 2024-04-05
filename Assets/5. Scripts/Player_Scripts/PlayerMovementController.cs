@@ -107,7 +107,7 @@ namespace Player_Scripts
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
 
-            print("Change State");
+            print("Change State :" + newState);
 
             if (stateIndex == player.currentStateIndex) return;
 

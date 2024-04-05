@@ -39,6 +39,7 @@ namespace Player_Scripts.States
         #region Overriden Methods
         public override void EnterState(Player player)
         {
+            Debug.Log("Entering Water");
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
             player.AnimationController.SetInteger(StateIndex, 2);
 
