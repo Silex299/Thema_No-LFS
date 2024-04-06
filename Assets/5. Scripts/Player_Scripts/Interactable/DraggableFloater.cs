@@ -87,6 +87,11 @@ namespace Player_Scripts.Interactables
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = localPosition.x;
                     }
+                    else
+                    {
+                        Debug.DrawLine(xRay.origin, xRay.origin + xRay.direction, Color.red, 1f);
+
+                    }
                 }
                 else
                 {
@@ -98,6 +103,10 @@ namespace Player_Scripts.Interactables
                         //TODO REMOVE
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = localPosition.x;
+                    }
+                    else
+                    {
+                        Debug.DrawLine(xRay.origin, xRay.origin + xRay.direction, Color.red, 1f);
                     }
                 }
 
@@ -119,6 +128,10 @@ namespace Player_Scripts.Interactables
                         Debug.DrawLine(zRay.origin, info.point, Color.green);
                         desiredLocalPosition.z = localPosition.z;
                     }
+                    else
+                    {
+                        Debug.DrawLine(zRay.origin, zRay.origin + zRay.direction, Color.red, 1f);
+                    }
                 }
                 else
                 {
@@ -130,6 +143,10 @@ namespace Player_Scripts.Interactables
                         //TODO REMOVE
                         Debug.DrawLine(zRay.origin, info.point, Color.green);
                         desiredLocalPosition.z = localPosition.z;
+                    }
+                    else
+                    {
+                        Debug.DrawLine(zRay.origin, zRay.origin + zRay.direction, Color.red, 1f);
                     }
                 }
 
