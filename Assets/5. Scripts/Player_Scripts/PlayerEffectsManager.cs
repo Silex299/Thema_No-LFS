@@ -122,7 +122,7 @@ namespace Player_Scripts
         {
             var step = footInfo as Step;
 
-            if (!player.IsGrounded || player.DisablePlayerMovement) return;
+            if (!player.IsGrounded || player.DisabledPlayerMovement) return;
 
             //Call for Spawn Steps
             StartCoroutine(SpawnSteps(step.whichStep));
@@ -192,7 +192,7 @@ namespace Player_Scripts
         public void PlayStepsIndependent(string soundKey)
         {
 
-            if (player.DisablePlayerMovement) return;
+            if (player.DisabledPlayerMovement) return;
 
             try
             {
@@ -217,7 +217,7 @@ namespace Player_Scripts
         /// <param name="soundKey"> action name </param>
         public void PlayGeneralSoundRandom(string soundKey)
         {
-            if (player.DisablePlayerMovement) return;
+            if (player.DisabledPlayerMovement) return;
             try
             {
                 if (generalSounds.TryGetValue(_currentEffectVolume, out var sounds))
@@ -266,7 +266,7 @@ namespace Player_Scripts
 
         public void PlayGeneralSoundDefaultRandom(string soundKey, float volume)
         {
-            if (player.DisablePlayerMovement) return;
+            if (player.DisabledPlayerMovement) return;
 
             try
             {

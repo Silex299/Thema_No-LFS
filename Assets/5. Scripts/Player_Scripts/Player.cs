@@ -92,7 +92,7 @@ namespace Player_Scripts
         }
 
 
-        public bool DisablePlayerMovement
+        public bool DisabledPlayerMovement
         {
             get => disablePlayerMovement;
             set => disablePlayerMovement = value;

@@ -177,7 +177,7 @@ namespace Player_Scripts.Volumes
                 return;
             }
 
-            if (_player.player.DisablePlayerMovement && !dynamicWater)
+            if (_player.player.DisabledPlayerMovement && !dynamicWater)
             {
                 return;
             }

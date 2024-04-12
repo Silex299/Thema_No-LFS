@@ -56,21 +56,21 @@ namespace Player_Scripts
 
         private void Update()
         {
-            if (player.DisablePlayerMovement) return;
+            if (player.DisabledPlayerMovement) return;
 
             player.currentState.UpdateState(player);
         }
 
         private void LateUpdate()
         {
-            if (player.DisablePlayerMovement) return;
+            if (player.DisabledPlayerMovement) return;
 
             player.currentState.LateUpdateState(player);
         }
 
         public void DiablePlayerMovement(bool disable)
         {
-            player.DisablePlayerMovement = disable;
+            player.DisabledPlayerMovement = disable;
 
             if (disable)
             {
@@ -81,7 +81,7 @@ namespace Player_Scripts
 
         public void DiablePlayerMovementInt(int disable)
         {
-            player.DisablePlayerMovement = (disable == 1);
+            player.DisabledPlayerMovement = (disable == 1);
 
             if (disable == 1)
             {
@@ -200,7 +200,7 @@ namespace Player_Scripts
         {
             if (player.e_currentState == PlayerMovementState.BasicMovement)
             {
-                if (!player.DisablePlayerMovement)
+                if (!player.DisabledPlayerMovement)
                 {
                     player.basicMovementState.PlayJump(player, forward);
                 }
@@ -259,7 +259,7 @@ namespace Player_Scripts
         public void Reset()
         {
             player.AnimationController.Play("Default", 1);
-            player.DisablePlayerMovement = false;
+            player.DisabledPlayerMovement = false;
         }
 
 

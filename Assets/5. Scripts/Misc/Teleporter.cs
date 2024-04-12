@@ -36,14 +36,14 @@ namespace Misc
             {
                 Player_Scripts.PlayerMovementController controller = Player_Scripts.PlayerMovementController.Instance;
 
-                controller.player.DisablePlayerMovement = true;
+                controller.player.DisabledPlayerMovement = true;
                 controller.player.CController.enabled = false;
 
                 controller.transform.position = destination.position;
                 teleportAction?.Invoke();
 
                 controller.player.CController.enabled = true;
-                controller.player.DisablePlayerMovement = false;
+                controller.player.DisabledPlayerMovement = false;
                 _trigger = false;
             }
         }
