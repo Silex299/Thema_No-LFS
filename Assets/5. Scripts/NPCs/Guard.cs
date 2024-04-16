@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 
+// ReSharper disable once CheckNamespace
 namespace NPCs
 {
     public class Guard : MonoBehaviour
@@ -45,11 +46,11 @@ namespace NPCs
 
             switch (currentGuardState)
             {
-                case GuardStateEnum.GUARD:
+                case GuardStateEnum.Guard:
                     _currentState = surveillanceState;
                     _currentState.StateEnter(this);
                     break;
-                case GuardStateEnum.CHASE:
+                case GuardStateEnum.Chase:
                     _currentState = chaseState;
                     _currentState.StateEnter(this);
                     break;
@@ -72,8 +73,8 @@ namespace NPCs
     [System.Serializable]
     public enum GuardStateEnum
     {
-        GUARD,
-        CHASE,
+        Guard,
+        Chase,
     }
 
 
@@ -115,17 +116,14 @@ namespace NPCs
 
             if (distance < stopDistance)
             {
-                if (_nexPointCoroutine == null)
-                {
-                    _nexPointCoroutine = guard.StartCoroutine(ChangeGuardPoint());
-                }
+                _nexPointCoroutine ??= guard.StartCoroutine(ChangeGuardPoint());
 
 
                 string idle = "Idle " + Random.Range(0, 2);
 
                 if (_walk)
                 {
-                    guard.animator.CrossFade(idle, 0.5f, 0);
+                    guard.animator.CrossFade(idle, 0.1f, 0);
                     _walk = false;
                 }
             }
@@ -133,7 +131,7 @@ namespace NPCs
             {
                 if (!_walk)
                 {
-                    guard.animator.CrossFade("Walk", 0.5f, 0);
+                    guard.animator.CrossFade("Walk", 0.1f, 0);
                     _walk = true;
                 }
 
@@ -156,21 +154,21 @@ namespace NPCs
     {
         [SerializeField] private float chaseDistance;
         [SerializeField] private float attackDistance;
-        [SerializeField] private float _distance;
 
         [SerializeField] private float attackInterval;
 
 
         private float _lastAttackTime;
-        private Transform target;
+        private Transform _target;
         private bool _playerDead;
+        private static readonly int Speed = Animator.StringToHash("Speed");
 
 
         public override void StateEnter(Guard guard)
         {
             _playerDead = false;
             guard.animator.CrossFade("Chase", 0.2f);
-            target = Player_Scripts.PlayerMovementController.Instance.transform;
+            _target = Player_Scripts.PlayerMovementController.Instance.transform;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
         }
 
@@ -186,18 +184,17 @@ namespace NPCs
             }
 
 
-            Vector3 targetPos = target.position;
+            Vector3 targetPos = _target.position;
             Vector3 guardPos = guard.transform.position;
 
             targetPos.y = guardPos.y;
 
             float distance = Vector3.Distance(targetPos, guardPos);
-            _distance = distance;
 
 
             if (distance > chaseDistance)
             {
-                guard.animator.SetFloat("Speed", 2, 0.2f, Time.deltaTime);
+                guard.animator.SetFloat(Speed, 2, 0.2f, Time.deltaTime);
             }
             else if (distance < attackDistance)
             {
@@ -206,10 +203,10 @@ namespace NPCs
 
             if (distance < 0.7f)
             {
-                guard.animator.SetFloat("Speed", 0, 0.2f, Time.deltaTime);
+                guard.animator.SetFloat(Speed, 0, 0.5f, Time.deltaTime);
             }
 
-            guard.Rotate(target.position);
+            guard.Rotate(_target.position);
         }
 
 
