@@ -39,6 +39,19 @@ namespace NPCs
             _currentState.StateUpdate(this);
         }
 
+        public void StartChasing()
+        {
+            ChangeState(GuardStateEnum.Chase);
+        }
+
+        public void StopChasing()
+        {
+            if (currentGuardState == GuardStateEnum.Chase)
+            {
+                chaseState.StopChasing();
+            }
+        }
+        
         public void ChangeState(GuardStateEnum newState)
         {
             _currentState?.StateExit(this);
@@ -56,7 +69,6 @@ namespace NPCs
                     break;
             }
         }
-
 
         internal void Rotate(Vector3 rotateTowards)
         {
@@ -131,7 +143,7 @@ namespace NPCs
 
                 if (_walk)
                 {
-                    guard.animator.CrossFade(idle, 0.1f, 0);
+                    guard.animator.CrossFade(idle, 0.3f, 0);
                     _walk = false;
                 }
             }
@@ -139,7 +151,7 @@ namespace NPCs
             {
                 if (!_walk)
                 {
-                    guard.animator.CrossFade("Walk", 0.1f, 0);
+                    guard.animator.CrossFade("Walk", 0.3f, 0);
                     _walk = true;
                 }
 
@@ -248,13 +260,13 @@ namespace NPCs
         {
             var distance = Vector3.Distance(guard.transform.position, _target.position);
             Debug.LogError(distance);
-            if (distance < 1.65f)
+            if (distance < 1.7f)
             {
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(100f);
             }
         }
 
-        private void StopChasing()
+        internal void StopChasing()
         {
             _playerDead = true;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
