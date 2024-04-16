@@ -7,8 +7,6 @@ namespace NPCs
 {
     public class Guard : MonoBehaviour
     {
-
-
         [SerializeField] internal Animator animator;
         [SerializeField] internal float rotationSpeed;
         [SerializeField] private GuardStateEnum currentGuardState;
@@ -24,55 +22,51 @@ namespace NPCs
 
 #endif
 
-
-        private GuardState currentState;
+        private GuardState _currentState;
         [SerializeField, BoxGroup("States")] private SurveillanceState surveillanceState = new SurveillanceState();
         [SerializeField, BoxGroup("States")] private ChaseState chaseState = new ChaseState();
-
-
 
 
         private void Start()
         {
             ChangeState(currentGuardState);
-            currentState.StateEnter(this);
+            _currentState.StateEnter(this);
         }
 
         private void Update()
         {
-            currentState.StateUpdate(this);
+            _currentState.StateUpdate(this);
         }
 
         public void ChangeState(GuardStateEnum newState)
         {
-
-            currentState?.StateExit(this);
+            _currentState?.StateExit(this);
             currentGuardState = newState;
 
             switch (currentGuardState)
             {
                 case GuardStateEnum.GUARD:
-                    currentState = surveillanceState;
-                    currentState.StateEnter(this);
+                    _currentState = surveillanceState;
+                    _currentState.StateEnter(this);
                     break;
                 case GuardStateEnum.CHASE:
-                    currentState = chaseState;
-                    currentState.StateEnter(this);
+                    _currentState = chaseState;
+                    _currentState.StateEnter(this);
                     break;
             }
         }
 
 
-
         internal void Rotate(Vector3 rotateTowards)
         {
-            Vector3 position = transform.position;
+            var transform1 = transform;
+
+            Vector3 position = transform1.position;
             rotateTowards.y = position.y;
 
             Vector3 newForward = rotateTowards - position;
-            transform.forward = Vector3.Lerp(transform.forward, newForward, Time.deltaTime * rotationSpeed);
+            transform.forward = Vector3.Lerp(transform1.forward, newForward, Time.deltaTime * rotationSpeed);
         }
-
     }
 
     [System.Serializable]
@@ -94,7 +88,6 @@ namespace NPCs
     [System.Serializable]
     public class SurveillanceState : GuardState
     {
-
         [SerializeField] private Transform[] guardPoints;
         [SerializeField] private float stopDistance;
         [SerializeField] private float stopDelay;
@@ -107,7 +100,6 @@ namespace NPCs
         {
             guard.animator.CrossFade("Walk", 0.4f, 0);
             _walk = true;
-
         }
 
         public override void StateExit(Guard guard)
@@ -136,7 +128,6 @@ namespace NPCs
                     guard.animator.CrossFade(idle, 0.5f, 0);
                     _walk = false;
                 }
-
             }
             else
             {
@@ -148,7 +139,6 @@ namespace NPCs
 
                 guard.Rotate(nextPoint);
             }
-
         }
 
         private IEnumerator ChangeGuardPoint()
@@ -164,7 +154,6 @@ namespace NPCs
     [System.Serializable]
     public class ChaseState : GuardState
     {
-
         [SerializeField] private float chaseDistance;
         [SerializeField] private float attackDistance;
         [SerializeField] private float _distance;
@@ -176,8 +165,6 @@ namespace NPCs
         private Transform target;
         private bool _playerDead;
 
-
-        
 
         public override void StateEnter(Guard guard)
         {
@@ -193,7 +180,6 @@ namespace NPCs
 
         public override void StateUpdate(Guard guard)
         {
-
             if (_playerDead)
             {
                 return;
@@ -229,7 +215,6 @@ namespace NPCs
 
         private void Attack(Guard guard)
         {
-
             if (Time.time < _lastAttackTime + attackInterval) return;
 
             _lastAttackTime = Time.time;
@@ -242,7 +227,5 @@ namespace NPCs
             _playerDead = true;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
         }
-
     }
-
 }
