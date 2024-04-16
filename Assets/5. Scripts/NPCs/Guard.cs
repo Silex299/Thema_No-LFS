@@ -68,6 +68,14 @@ namespace NPCs
             Vector3 newForward = rotateTowards - position;
             transform.forward = Vector3.Lerp(transform1.forward, newForward, Time.deltaTime * rotationSpeed);
         }
+
+        public void AttackCallback()
+        {
+            if (currentGuardState == GuardStateEnum.Chase)
+            {
+                chaseState.AttackCallback(this);
+            }
+        }
     }
 
     [System.Serializable]
@@ -161,12 +169,15 @@ namespace NPCs
         private float _lastAttackTime;
         private Transform _target;
         private bool _playerDead;
+        private bool _stopChasing;
+        private float _chasingSpeed;
         private static readonly int Speed = Animator.StringToHash("Speed");
 
 
         public override void StateEnter(Guard guard)
         {
             _playerDead = false;
+            _stopChasing = false;
             guard.animator.CrossFade("Chase", 0.2f);
             _target = Player_Scripts.PlayerMovementController.Instance.transform;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
@@ -178,8 +189,12 @@ namespace NPCs
 
         public override void StateUpdate(Guard guard)
         {
+            if (_stopChasing) return;
+
             if (_playerDead)
             {
+                guard.StartCoroutine(StopChaseAnimationUpdate(guard));
+                _stopChasing = true;
                 return;
             }
 
@@ -191,19 +206,29 @@ namespace NPCs
 
             float distance = Vector3.Distance(targetPos, guardPos);
 
-
             if (distance > chaseDistance)
             {
-                guard.animator.SetFloat(Speed, 2, 0.2f, Time.deltaTime);
+                _chasingSpeed = 2;
             }
-            else if (distance < attackDistance)
+            else if (distance < chaseDistance && distance > 1f)
             {
-                Attack(guard);
+                if (_chasingSpeed < 1)
+                {
+                    _chasingSpeed = 1;
+                }
+            }
+            else if (distance < 1f)
+            {
+                _chasingSpeed = 0;
             }
 
-            if (distance < 0.7f)
+
+            guard.animator.SetFloat(Speed, _chasingSpeed, 0.2f, Time.deltaTime);
+
+
+            if (distance < attackDistance)
             {
-                guard.animator.SetFloat(Speed, 0, 0.5f, Time.deltaTime);
+                Attack(guard);
             }
 
             guard.Rotate(_target.position);
@@ -219,10 +244,26 @@ namespace NPCs
             guard.animator.CrossFade("Attack", 0.3f, 1);
         }
 
+        public void AttackCallback(Guard guard)
+        {
+            var distance = Vector3.Distance(guard.transform.position, _target.position);
+            Debug.LogError(distance);
+            if (distance < 1.65f)
+            {
+                Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(100f);
+            }
+        }
+
         private void StopChasing()
         {
             _playerDead = true;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
+        }
+
+        private IEnumerator StopChaseAnimationUpdate(Guard guard)
+        {
+            yield return new WaitForSeconds(1f);
+            guard.animator.CrossFade("Basic Idle", 1f, 0);
         }
     }
 }

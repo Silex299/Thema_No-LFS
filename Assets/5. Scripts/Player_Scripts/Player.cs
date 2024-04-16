@@ -63,7 +63,6 @@ namespace Player_Scripts
 
 
         [SerializeField] private bool disablePlayerMovement;
-        private bool _isGrounded;
 
         internal Interactable interactable;
         internal bool isInteracting;
@@ -80,16 +79,9 @@ namespace Player_Scripts
         public PlayerHealth Health => health;
         public PlayerEffectsManager EffectsManager => effectsManager;
 
-        public bool IsGrounded
-        {
-            get { return _isGrounded; }
-            set { _isGrounded = value; }
-        }
+        public bool IsGrounded { get; set; }
 
-        public bool CanJump
-        {
-            get => canJump;
-        }
+        public bool CanJump => canJump;
 
 
         public bool DisabledPlayerMovement
