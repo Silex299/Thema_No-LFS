@@ -38,12 +38,7 @@ namespace NPCs
         {
             _currentState.StateUpdate(this);
         }
-
-        public void StartChasing()
-        {
-            ChangeState(GuardStateEnum.Chase);
-        }
-
+        
         public void StopChasing()
         {
             if (currentGuardState == GuardStateEnum.Chase)
@@ -66,6 +61,19 @@ namespace NPCs
                 case GuardStateEnum.Chase:
                     _currentState = chaseState;
                     _currentState.StateEnter(this);
+                    break;
+            }
+        }
+
+        public void ChangeState(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    ChangeState(GuardStateEnum.Guard);
+                    break;
+                case 1:
+                    ChangeState(GuardStateEnum.Chase);
                     break;
             }
         }
@@ -259,7 +267,6 @@ namespace NPCs
         public void AttackCallback(Guard guard)
         {
             var distance = Vector3.Distance(guard.transform.position, _target.position);
-            Debug.LogError(distance);
             if (distance < 1.7f)
             {
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(100f);
@@ -268,8 +275,8 @@ namespace NPCs
 
         public void ImmediateStop(Guard guard)
         {
+            Debug.LogError("Stop");
             guard.animator.CrossFade("Basic Idle", 0.3f, 0);
-            _playerDead = true;
             _stopChasing = true;
         }
         private void StopChasing()

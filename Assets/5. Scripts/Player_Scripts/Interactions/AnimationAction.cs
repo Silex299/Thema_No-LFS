@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace Player_Scripts.Interactions
@@ -11,6 +12,8 @@ namespace Player_Scripts.Interactions
         [SerializeField] private string input;
 
 
+        [SerializeField, Space(10)] private UnityEvent entryAction;
+        [SerializeField] private UnityEvent exitAction;
         private bool _playerEngaged;
         private bool _enabled = true;
 
@@ -37,6 +40,7 @@ namespace Player_Scripts.Interactions
 
         private IEnumerator EnterAction()
         {
+            entryAction?.Invoke();
             PlayerMovementController.Instance.PlayAnimation(entryAnimation, 0.1f, 1);
 
             yield return new WaitForSeconds(0.3f);
@@ -53,6 +57,7 @@ namespace Player_Scripts.Interactions
             PlayerMovementController.Instance.PlayAnimation(exitAnimation, 0.4f, 1);
             yield return new WaitForSeconds(3.5f);
             PlayerMovementController.Instance.DisablePlayerMovement(false);
+            exitAction?.Invoke();
         }
     }
 }
