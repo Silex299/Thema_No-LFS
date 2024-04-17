@@ -96,7 +96,7 @@ public class LevelTrigger : MonoBehaviour
             {
                 _triggerEngaged = true;
                 _lastTriggerTime = Time.time;
-                player.DiablePlayerMovement(true);
+                player.DisablePlayerMovement(true);
 
                 _forwardDirection = CheckPlayerDirection();
                 if (_forwardDirection)
@@ -219,7 +219,7 @@ public class LevelTrigger : MonoBehaviour
     {
         _triggerEngaged = false;
         PlayerMovementController.Instance.PlayAnimation("Default", 0.5f, 1);
-        PlayerMovementController.Instance.DiablePlayerMovement(false);
+        PlayerMovementController.Instance.DisablePlayerMovement(false);
     }
 
     private bool CheckPlayerDirection()

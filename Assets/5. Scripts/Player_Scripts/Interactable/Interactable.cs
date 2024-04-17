@@ -27,7 +27,7 @@ namespace Player_Scripts.Interactables
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
-                PlayerMovementController.Instance.SetInteractable(this);
+                PlayerMovementController.Instance.SetIntractable(this);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Player_Scripts.Interactables
             {
                 _playerIsInTrigger = false;
                 _isInteracting = false;
-                PlayerMovementController.Instance.SetInteractable(null);
+                PlayerMovementController.Instance.SetIntractable(null);
             }
         }
 

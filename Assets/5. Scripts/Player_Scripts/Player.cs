@@ -29,7 +29,7 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player Movement")] internal bool enabledDirectionInput;
         [SerializeField, BoxGroup("Player Movement")] private bool canJump;
         /// <summary>
-        /// Used for sprint and other other boosing mechanisms
+        /// Used for sprint and other other boosting mechanisms
         /// </summary>
         [BoxGroup("Player Movement")] public bool canBoost;
 

@@ -48,7 +48,7 @@ namespace NPCs
         {
             if (currentGuardState == GuardStateEnum.Chase)
             {
-                chaseState.StopChasing();
+                chaseState.ImmediateStop(this);
             }
         }
         
@@ -266,7 +266,13 @@ namespace NPCs
             }
         }
 
-        internal void StopChasing()
+        public void ImmediateStop(Guard guard)
+        {
+            guard.animator.CrossFade("Basic Idle", 0.3f, 0);
+            _playerDead = true;
+            _stopChasing = true;
+        }
+        private void StopChasing()
         {
             _playerDead = true;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;

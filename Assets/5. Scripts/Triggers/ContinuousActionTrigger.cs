@@ -208,7 +208,7 @@ namespace Triggers
                 {
                     Disengage(() =>
                     {
-                        PlayerMovementController.Instance.DiablePlayerMovement(false);
+                        PlayerMovementController.Instance.DisablePlayerMovement(false);
                     });
                 }
             }
@@ -237,7 +237,7 @@ namespace Triggers
                 _initialRot = _target.rotation;
                 _timeElapsed = 0;
 
-                PlayerMovementController.Instance.DiablePlayerMovement(true);
+                PlayerMovementController.Instance.DisablePlayerMovement(true);
                 PlayerMovementController.Instance.PlayAnimation(engageActionName, 0.4f, 1);
             }
 
@@ -268,7 +268,7 @@ namespace Triggers
                 _movePlayer = false;
                 _playerEngaged = false;
                 PlayerMovementController.Instance.PlayAnimation("Default", 0.3f, 1);
-                PlayerMovementController.Instance.DiablePlayerMovement(false);
+                PlayerMovementController.Instance.DisablePlayerMovement(false);
                 return;
             }
 
@@ -284,7 +284,7 @@ namespace Triggers
             {
                 ResetRotation(() =>
                 {
-                    PlayerMovementController.Instance.DiablePlayerMovement(false);
+                    PlayerMovementController.Instance.DisablePlayerMovement(false);
                 });
 
             }
@@ -342,7 +342,7 @@ namespace Triggers
             yield return new WaitForSeconds(actionDelay);
 
             _triggerd = true;
-            PlayerMovementController.Instance.DiablePlayerMovement(true);
+            PlayerMovementController.Instance.DisablePlayerMovement(true);
             PlayerMovementController.Instance.PlayAnimation(actionName, 1);
 
             yield return new WaitForSeconds(timings[0]);
@@ -360,7 +360,7 @@ namespace Triggers
             yield return new WaitForSeconds(timings[2]);
 
 
-            PlayerMovementController.Instance.DiablePlayerMovement(false);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
 
         }
 
