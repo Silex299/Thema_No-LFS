@@ -68,7 +68,7 @@ namespace Player_Scripts
             player.currentState.LateUpdateState(player);
         }
 
-        public void DiablePlayerMovement(bool disable)
+        public void DisablePlayerMovement(bool disable)
         {
             player.DisabledPlayerMovement = disable;
 
@@ -79,7 +79,7 @@ namespace Player_Scripts
 
         }
 
-        public void DiablePlayerMovementInt(int disable)
+        public void DisablePlayerMovementInt(int disable)
         {
             player.DisabledPlayerMovement = (disable == 1);
 
@@ -89,7 +89,7 @@ namespace Player_Scripts
             }
         }
 
-        internal void SetInteractable(Interactable item)
+        internal void SetIntractable(Interactable item)
         {
             player.interactable = item;
         }

@@ -187,7 +187,7 @@ namespace Player_Scripts.Interactions
             _isExecuting = true;
             PlayerMovementController player = PlayerMovementController.Instance;
             _target = player.transform;
-            player.DiablePlayerMovement(true);
+            player.DisablePlayerMovement(true);
             player.player.CController.enabled = false;
 
             InitialMove();
@@ -216,7 +216,7 @@ namespace Player_Scripts.Interactions
             //RESET
             _isExecuting = false;
             _target = null;
-            player.DiablePlayerMovement(false);
+            player.DisablePlayerMovement(false);
             player.player.CController.enabled = true;
 
 

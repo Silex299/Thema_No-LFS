@@ -145,7 +145,7 @@ namespace Triggers
             _movePlayer = true;
             _triggerStartTime = 0;
 
-            PlayerMovementController.Instance.DiablePlayerMovement(true);
+            PlayerMovementController.Instance.DisablePlayerMovement(true);
             PlayerMovementController.Instance.PlayAnimation("Start Hatch", 0.2f, 1);
 
             yield return new WaitForSeconds(1.15f);
@@ -163,7 +163,7 @@ namespace Triggers
 
             yield return new WaitForSeconds(0.3f);
 
-            PlayerMovementController.Instance.DiablePlayerMovement(false);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
 
 
             _isCallingAnimation = false;
@@ -183,7 +183,7 @@ namespace Triggers
 
             yield return new WaitForSeconds(2.4f);
 
-            PlayerMovementController.Instance.DiablePlayerMovement(false);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
 
             _isCallingAnimation = false;
             _isEquiped = false;

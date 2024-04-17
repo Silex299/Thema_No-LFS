@@ -47,7 +47,7 @@ namespace Player_Scripts.States
             player.CController.height = 0.7f;
             Physics.gravity = new Vector3(0, -1f, 0);
 
-            PlayerMovementController.Instance.DiablePlayerMovement(true);
+            PlayerMovementController.Instance.DisablePlayerMovement(true);
 
             player.StartCoroutine(EnablePlayerMovement());
 
@@ -218,7 +218,7 @@ namespace Player_Scripts.States
         {
             yield return new WaitForSeconds(1.5f);
 
-            PlayerMovementController.Instance.DiablePlayerMovement(false);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
         }
 
         private void Rotate(Player player, float horizontalInput)
