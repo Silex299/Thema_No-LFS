@@ -16,7 +16,7 @@ namespace NPCs.Weapons
 
         private bool _fired;
         
-        private void OnCollisionEnter(Collision other)
+        private void OnCollisionStay(Collision other)
         {
             Debug.LogError(other.collider.tag);
             

@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.ComponentModel;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.VFX;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs.Weapons
@@ -12,6 +15,9 @@ namespace NPCs.Weapons
     {
 
         [SerializeField] private GameObject bulletPrefab;
+        [SerializeField] private VisualEffect muzzle;
+        [SerializeField] private LayerMask fireMask;
+        [SerializeField] private float tracerLifetime;
         
         // ReSharper disable once CollectionNeverUpdated.Global
         [SerializeField] internal Dictionary<string, GameObject> hitEffects;
@@ -32,14 +38,22 @@ namespace NPCs.Weapons
                 return;
             }
             
-            var transform1 = transform;
+            Vector3 direction = PlayerMovementController.Instance.transform.position + 0.5f*(Vector3.up) - transform.position;
+            direction = direction.normalized;
             
             if (bulletPrefab)
             {
-                //TODO: If you can change these costly commands
-                Instantiate(bulletPrefab, transform.position, transform1.rotation).GetComponent<Bullet>().BulletFire(this, PlayerMovementController.Instance.transform.position + (Vector3.up));
+                Transform muzzleSocket = muzzle.transform;
+                GameObject obj = Instantiate(bulletPrefab, muzzleSocket.position, muzzleSocket.rotation);
+                StartCoroutine(MoveTracer(obj, direction));
             }
 
+            if (muzzle)
+            {
+                muzzle.Play();
+            }
+            
+            
             if (source)
             {
                 source.PlayOneShot(firingSound);
@@ -48,10 +62,58 @@ namespace NPCs.Weapons
             _lastFireTime = Time.time;
         }
 
-        public void OnEnable()
+        
+        
+        
+        IEnumerator MoveTracer(GameObject tracer, Vector3 direction)
         {
-            PlayerMovementController.Instance.player.Health.OnDeath += ResetWeapon;
+            float startTime = Time.time;
+
+            float time = Time.time;
+            
+            while (Time.time - startTime < tracerLifetime)
+            {
+                float deltaTime = Time.time - time;
+                time = Time.time;
+                tracer.transform.position += direction * (bulletSpeed * deltaTime);
+                Transform muzzleSocket = muzzle.transform;
+                
+                if(Physics.Linecast(muzzleSocket.position, tracer.transform.position, out RaycastHit hit, fireMask))
+                {
+                    Debug.LogError(hit.collider.name);
+                    if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
+                    {
+                        PlayerMovementController.Instance.player.Health.TakeDamage(101);
+                    }
+                    
+                    SpawnEffects(hit.collider.tag, hit.point);
+                    yield break;
+                }
+                
+                yield return null;
+            }
+            
+            Destroy(tracer);
+            
+            
         }
+
+
+        private void SpawnEffects(string hitTag, Vector3 hitPoint)
+        {
+            try
+            {
+                if(hitEffects.TryGetValue(hitTag, out GameObject obj))
+                {
+                    Instantiate(obj, hitPoint, Quaternion.identity);
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
+        
         public void OnDisable()
         {
             PlayerMovementController.Instance.player.Health.OnDeath -= ResetWeapon;
@@ -59,6 +121,10 @@ namespace NPCs.Weapons
 
         public void AutomaticFire(bool autoFire)
         {
+            if (autoFire == true)
+            {
+                PlayerMovementController.Instance.player.Health.OnDeath += ResetWeapon;
+            }
             _autoFire = autoFire;
         }
 

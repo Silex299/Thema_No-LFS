@@ -1,4 +1,5 @@
 using NPCs.Weapons;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -45,8 +46,11 @@ namespace NPCs
         public override void StateUpdate(Guard guard)
         {
             Vector3 nextPoint = guardPoints[currentGuardPoint].position;
-
-            float distance = Vector3.Distance(guard.transform.position, nextPoint);
+            var transform = guard.transform;
+            var position = transform.position;
+            
+            nextPoint.y = position.y;
+            float distance = Vector3.Distance(position, nextPoint);
 
 
             if (distance < stopDistance)
@@ -54,7 +58,7 @@ namespace NPCs
                 nexPointCoroutine ??= guard.StartCoroutine(ChangeGuardPoint());
                 if (walk)
                 {
-                    guard.animator.CrossFade("Basic Idle", 0.3f, 0);
+                    guard.animator.CrossFade("Basic Idle", 0.1f, 0);
                     walk = false;
                 }
             }
@@ -62,7 +66,7 @@ namespace NPCs
             {
                 if (!walk)
                 {
-                    guard.animator.CrossFade("Walk", 0.3f, 0);
+                    guard.animator.CrossFade("Walk", 0.1f, 0);
                     walk = true;
                 }
 
@@ -76,6 +80,8 @@ namespace NPCs
     {
 
         private static readonly int Attack1 = Animator.StringToHash("Attack");
+        private bool _isAttacking;
+        private float _firstFireTime;
 
         public override void StateUpdate(Guard guard)
         {
@@ -92,7 +98,6 @@ namespace NPCs
             Vector3 guardPos = guard.transform.position;
 
             targetPos.y = guardPos.y;
-
             float distance = Vector3.Distance(targetPos, guardPos);
             
             float speed = 0;
@@ -106,28 +111,77 @@ namespace NPCs
                 speed = 0;
             }
 
-            guard.animator.SetBool(Attack1,distance < attackDistance);
-
             if (distance < attackDistance)
             {
-                Attack(guard);
+                if (CheckAngle(guard))
+                {
+                    guard.animator.SetBool(Attack1,true);
+                    Attack(guard);
+                }
+                else
+                {
+                    guard.animator.SetBool(Attack1,false);
+                    _isAttacking = false;
+                }
+            }
+            else if (_isAttacking)
+            {
+                if (CheckAngle(guard))
+                {
+                    guard.animator.SetBool(Attack1,true);
+                    Attack(guard);
+                }
+                else
+                {
+                    guard.animator.SetBool(Attack1,false);
+                    _isAttacking = false;
+                }
             }
             
             guard.animator.SetFloat(Speed, speed, 0.2f, Time.deltaTime);
            
             
-            guard.Rotate(targetPos);
+            guard.Rotate(targetPos, 15f);
             
         }
 
         protected override void Attack(Guard guard)
         {
+
+            if (!_isAttacking)
+            {
+                _isAttacking = true;
+                _firstFireTime = Time.time;
+                return;
+            }
+            
+            
+            if (Time.time < _firstFireTime + 0.7f)
+            {
+                return;
+            }
+            
+            
             var parentGuard = guard as GuardWithWeapon;
             
             // ReSharper disable once PossibleNullReferenceException
             parentGuard.rifle.FireBullet();
 
-            lastAttackTime = Time.time;
+        }
+
+        private bool CheckAngle(Guard guard)
+        {
+            var transform = guard.transform;
+            Vector3 guardForward = transform.forward;
+            Vector3 direction = PlayerMovementController.Instance.transform.position - transform.position;
+
+            guardForward.y = 0;
+            direction.y = 0;
+            
+            float angle = Vector3.Angle(guardForward, direction);
+            
+
+            return angle < 2;
         }
     }
 }

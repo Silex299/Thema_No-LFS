@@ -82,7 +82,7 @@ namespace NPCs
             }
         }
 
-        internal void Rotate(Vector3 rotateTowards)
+        internal void Rotate(Vector3 rotateTowards, float overrideSpeed = 1)
         {
             var transform1 = transform;
 
@@ -90,7 +90,7 @@ namespace NPCs
             rotateTowards.y = position.y;
 
             Vector3 newForward = rotateTowards - position;
-            transform.forward = Vector3.Lerp(transform1.forward, newForward, Time.deltaTime * rotationSpeed);
+            transform.forward = Vector3.Lerp(transform1.forward, newForward, Time.deltaTime * rotationSpeed * overrideSpeed);
         }
 
         public void AttackCallback()
