@@ -23,19 +23,19 @@ namespace Triggers
         private float _lastTriggerTime;
         private bool _playerIsInTrigger;
         private Collider _interactCollider;
-        private Coroutine reset;
+        private Coroutine _reset;
 
         protected virtual void OnTriggerStay(Collider other)
         {
 
             if (other.CompareTag(triggerTag))
             {
-                if (reset != null)
+                if (_reset != null)
                 {
-                    StopCoroutine(reset);
+                    StopCoroutine(_reset);
                 }
 
-                reset = StartCoroutine(ResetTrigger());
+                _reset = StartCoroutine(ResetTrigger());
                 
                 if (_isTriggered) return;
 

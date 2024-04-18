@@ -1,3 +1,4 @@
+
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
@@ -8,9 +9,17 @@ namespace NPCs
 {
     public class Guard : MonoBehaviour
     {
+        
+        protected GuardState currentState;
+
+        [SerializeField, BoxGroup("States")] private SurveillanceState surveillanceState = new SurveillanceState();
+        
+        [SerializeField, BoxGroup("States")] private ChaseState chaseState = new ChaseState();
+
+        
         [SerializeField] internal Animator animator;
         [SerializeField] internal float rotationSpeed;
-        [SerializeField] private GuardStateEnum currentGuardState;
+        [SerializeField] protected GuardStateEnum currentGuardState;
 
 #if UNITY_EDITOR
 
@@ -22,21 +31,16 @@ namespace NPCs
         }
 
 #endif
-
-        private GuardState _currentState;
-        [SerializeField, BoxGroup("States")] private SurveillanceState surveillanceState = new SurveillanceState();
-        [SerializeField, BoxGroup("States")] private ChaseState chaseState = new ChaseState();
-
-
-        private void Start()
+        
+        protected virtual void Start()
         {
             ChangeState(currentGuardState);
-            _currentState.StateEnter(this);
+            currentState.StateEnter(this);
         }
 
         private void Update()
         {
-            _currentState.StateUpdate(this);
+            currentState.StateUpdate(this);
         }
         
         public void StopChasing()
@@ -47,20 +51,20 @@ namespace NPCs
             }
         }
         
-        public void ChangeState(GuardStateEnum newState)
+        public virtual void ChangeState(GuardStateEnum newState)
         {
-            _currentState?.StateExit(this);
+            currentState?.StateExit(this);
             currentGuardState = newState;
 
             switch (currentGuardState)
             {
                 case GuardStateEnum.Guard:
-                    _currentState = surveillanceState;
-                    _currentState.StateEnter(this);
+                    currentState = surveillanceState;
+                    currentState.StateEnter(this);
                     break;
                 case GuardStateEnum.Chase:
-                    _currentState = chaseState;
-                    _currentState.StateEnter(this);
+                    currentState = chaseState;
+                    currentState.StateEnter(this);
                     break;
             }
         }
@@ -117,18 +121,18 @@ namespace NPCs
     [System.Serializable]
     public class SurveillanceState : GuardState
     {
-        [SerializeField] private Transform[] guardPoints;
-        [SerializeField] private float stopDistance;
-        [SerializeField] private float stopDelay;
+        [SerializeField] protected Transform[] guardPoints;
+        [SerializeField] protected float stopDistance;
+        [SerializeField] protected float stopDelay;
 
-        private int _currentGuardPoint;
-        private Coroutine _nexPointCoroutine;
-        private bool _walk;
+        protected int currentGuardPoint;
+        protected Coroutine nexPointCoroutine;
+        protected bool walk;
 
         public override void StateEnter(Guard guard)
         {
             guard.animator.CrossFade("Walk", 0.4f, 0);
-            _walk = true;
+            walk = true;
         }
 
         public override void StateExit(Guard guard)
@@ -137,42 +141,42 @@ namespace NPCs
 
         public override void StateUpdate(Guard guard)
         {
-            Vector3 nextPoint = guardPoints[_currentGuardPoint].position;
+            Vector3 nextPoint = guardPoints[currentGuardPoint].position;
 
             float distance = Vector3.Distance(guard.transform.position, nextPoint);
 
 
             if (distance < stopDistance)
             {
-                _nexPointCoroutine ??= guard.StartCoroutine(ChangeGuardPoint());
+                nexPointCoroutine ??= guard.StartCoroutine(ChangeGuardPoint());
 
 
                 string idle = "Idle " + Random.Range(0, 2);
 
-                if (_walk)
+                if (walk)
                 {
                     guard.animator.CrossFade(idle, 0.3f, 0);
-                    _walk = false;
+                    walk = false;
                 }
             }
             else
             {
-                if (!_walk)
+                if (!walk)
                 {
                     guard.animator.CrossFade("Walk", 0.3f, 0);
-                    _walk = true;
+                    walk = true;
                 }
 
                 guard.Rotate(nextPoint);
             }
         }
 
-        private IEnumerator ChangeGuardPoint()
+        protected IEnumerator ChangeGuardPoint()
         {
             yield return new WaitForSeconds(stopDelay);
 
-            _currentGuardPoint = (_currentGuardPoint + 1) % guardPoints.Length;
-            _nexPointCoroutine = null;
+            currentGuardPoint = (currentGuardPoint + 1) % guardPoints.Length;
+            nexPointCoroutine = null;
         }
     }
 
@@ -180,26 +184,26 @@ namespace NPCs
     [System.Serializable]
     public class ChaseState : GuardState
     {
-        [SerializeField] private float chaseDistance;
-        [SerializeField] private float attackDistance;
+        [SerializeField] protected float chaseDistance;
+        [SerializeField] protected float attackDistance;
 
-        [SerializeField] private float attackInterval;
+        [SerializeField] protected float attackInterval;
 
 
-        private float _lastAttackTime;
-        private Transform _target;
-        private bool _playerDead;
-        private bool _stopChasing;
+        protected float lastAttackTime;
+        protected Transform target;
+        protected bool playerDead;
+        protected bool stopChasing;
         private float _chasingSpeed;
-        private static readonly int Speed = Animator.StringToHash("Speed");
+        protected static readonly int Speed = Animator.StringToHash("Speed");
 
 
         public override void StateEnter(Guard guard)
         {
-            _playerDead = false;
-            _stopChasing = false;
+            playerDead = false;
+            stopChasing = false;
             guard.animator.CrossFade("Chase", 0.2f);
-            _target = Player_Scripts.PlayerMovementController.Instance.transform;
+            target = Player_Scripts.PlayerMovementController.Instance.transform;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
         }
 
@@ -209,17 +213,17 @@ namespace NPCs
 
         public override void StateUpdate(Guard guard)
         {
-            if (_stopChasing) return;
+            if (stopChasing) return;
 
-            if (_playerDead)
+            if (playerDead)
             {
                 guard.StartCoroutine(StopChaseAnimationUpdate(guard));
-                _stopChasing = true;
+                stopChasing = true;
                 return;
             }
 
 
-            Vector3 targetPos = _target.position;
+            Vector3 targetPos = target.position;
             Vector3 guardPos = guard.transform.position;
 
             targetPos.y = guardPos.y;
@@ -251,44 +255,43 @@ namespace NPCs
                 Attack(guard);
             }
 
-            guard.Rotate(_target.position);
+            guard.Rotate(targetPos);
         }
 
 
-        private void Attack(Guard guard)
+        protected virtual void Attack(Guard guard)
         {
-            if (Time.time < _lastAttackTime + attackInterval) return;
+            if (Time.time < lastAttackTime + attackInterval) return;
 
-            _lastAttackTime = Time.time;
+            lastAttackTime = Time.time;
             //TODO Change
             guard.animator.CrossFade("Attack", 0.3f, 1);
         }
 
         public void AttackCallback(Guard guard)
         {
-            var distance = Vector3.Distance(guard.transform.position, _target.position);
+            var distance = Vector3.Distance(guard.transform.position, target.position);
             if (distance < 1.7f)
             {
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(100f);
             }
         }
 
-        public void ImmediateStop(Guard guard)
+        public virtual void ImmediateStop(Guard guard)
         {
-            Debug.LogError("Stop");
-            guard.animator.CrossFade("Basic Idle", 0.3f, 0);
-            _stopChasing = true;
+            guard.animator.CrossFade("Basic Idle", 0.6f, 0);
+            stopChasing = true;
         }
         private void StopChasing()
         {
-            _playerDead = true;
+            playerDead = true;
             Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
         }
 
-        private IEnumerator StopChaseAnimationUpdate(Guard guard)
+        protected IEnumerator StopChaseAnimationUpdate(Guard guard)
         {
             yield return new WaitForSeconds(1f);
-            guard.animator.CrossFade("Basic Idle", 1f, 0);
+            ImmediateStop(guard);
         }
     }
 }

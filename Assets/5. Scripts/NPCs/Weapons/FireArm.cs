@@ -12,6 +12,8 @@ namespace NPCs.Weapons
     {
 
         [SerializeField] private GameObject bulletPrefab;
+        
+        // ReSharper disable once CollectionNeverUpdated.Global
         [SerializeField] internal Dictionary<string, GameObject> hitEffects;
         [SerializeField] private AudioSource source;
         [SerializeField] private AudioClip firingSound;

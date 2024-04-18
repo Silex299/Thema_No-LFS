@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Player_Scripts;
 using UnityEngine;
 
@@ -17,9 +18,9 @@ namespace NPCs.Weapons
         
         private void OnCollisionEnter(Collision other)
         {
-            Debug.LogError(other.collider.name);
+            Debug.LogError(other.collider.tag);
             
-            if (other.collider.CompareTag("Player"))
+            if (other.collider.CompareTag("Player_Main"))
             {
                 PlayerMovementController.Instance.player.Health.TakeDamage(damagePercentage);
             }
@@ -33,8 +34,8 @@ namespace NPCs.Weapons
             _direction = target - transform.position;
             _direction = _direction.normalized;
             _fired = true;
-            
-            Invoke(nameof(SelfDestroy), selfDestructTime);
+
+            StartCoroutine(SelfDestroy(selfDestructTime));
         }
         
         private void SpawnEffect(string colliderTag, Vector3 contactPoint)
@@ -51,11 +52,12 @@ namespace NPCs.Weapons
                 Debug.LogError(e);
             }
 
-            SelfDestroy();
+            StartCoroutine(SelfDestroy(0));
         }
 
-        private void SelfDestroy()
+        private IEnumerator SelfDestroy(float delay)
         {
+            yield return new WaitForSeconds(delay);
             Destroy(this.gameObject);
         }
         
