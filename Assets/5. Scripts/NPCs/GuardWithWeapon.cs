@@ -102,14 +102,7 @@ namespace NPCs
             
             float speed = 0;
 
-            if (distance > chaseDistance)
-            {
-                speed = 1;
-            }
-            else if(distance < 1.4f)
-            {
-                speed = 0;
-            }
+            speed = distance > chaseDistance ? 1 : 0;
 
             if (distance < attackDistance)
             {
@@ -141,7 +134,7 @@ namespace NPCs
             guard.animator.SetFloat(Speed, speed, 0.2f, Time.deltaTime);
            
             
-            guard.Rotate(targetPos, 15f);
+            guard.Rotate(targetPos, 40f);
             
         }
 
@@ -156,7 +149,7 @@ namespace NPCs
             }
             
             
-            if (Time.time < _firstFireTime + 0.7f)
+            if (Time.time < _firstFireTime + 0.5f)
             {
                 return;
             }
@@ -174,13 +167,13 @@ namespace NPCs
             var transform = guard.transform;
             Vector3 guardForward = transform.forward;
             Vector3 direction = PlayerMovementController.Instance.transform.position - transform.position;
+            direction = direction.normalized;
 
             guardForward.y = 0;
             direction.y = 0;
             
             float angle = Vector3.Angle(guardForward, direction);
             
-
             return angle < 2;
         }
     }
