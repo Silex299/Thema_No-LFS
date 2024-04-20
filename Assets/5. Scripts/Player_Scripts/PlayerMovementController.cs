@@ -239,6 +239,10 @@ namespace Player_Scripts
             player.AnimationController.CrossFade(animationName, normalisationDuration, animationLayer);
         }
 
+        public void PlayAnimation(string animationName)
+        {
+            player.AnimationController.CrossFade(animationName, 0.25f, 1);
+        }
         public void SetAnimationTrigger(string triggerName)
         {
             player.AnimationController.SetTrigger(triggerName);
@@ -250,7 +254,7 @@ namespace Player_Scripts
         {
             player.AnimationController.SetFloat(Speed, 0);
             player.AnimationController.SetBool(IsGrounded, true);
-            player.AnimationController.ResetTrigger("Jump");
+            player.AnimationController.ResetTrigger($"Jump");
         }
 
         #endregion

@@ -43,9 +43,8 @@ namespace Thema_Camera
             }
             catch
             {
-
+                // ignored
             }
-
         }
     }
 

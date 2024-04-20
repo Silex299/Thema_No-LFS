@@ -1,3 +1,5 @@
+using System;
+using Misc;
 using NPCs.Weapons;
 using Player_Scripts;
 using Sirenix.OdinInspector;
@@ -10,6 +12,7 @@ namespace NPCs
     public class GuardWithWeapon : Guard
     {
         [SerializeField] internal FireArm rifle;
+        [SerializeField] internal SightDetection sightSensor;
         
         
         [SerializeField, BoxGroup("States")] 
@@ -35,8 +38,16 @@ namespace NPCs
                     break;
             }
         }
-        
-        
+
+        private void OnEnable()
+        {
+            sightSensor.enabled = true;
+        }
+
+        private void OnDisable()
+        {
+            sightSensor.enabled = false;
+        }
     }
 
 
@@ -149,11 +160,10 @@ namespace NPCs
             }
             
             
-            if (Time.time < _firstFireTime + 0.5f)
+            if (Time.time < _firstFireTime + 0.8f)
             {
                 return;
             }
-            
             
             var parentGuard = guard as GuardWithWeapon;
             
