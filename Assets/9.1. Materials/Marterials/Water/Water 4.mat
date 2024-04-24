@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
@@ -61,6 +61,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: 10f4af17875050c489b68eee2c599af7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_1:
@@ -126,6 +130,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _Noise_tiling: 153.25
     - _Normal_Strength: 0.895
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -148,13 +153,14 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     - _depth: -0.32
-    - _smoothness: 0.964
+    - _noise_speed: 12
+    - _smoothness: 1
     - _wave_Displacement_Speed: 200
     m_Colors:
     - WaveSpeed: {r: 19, g: 9, b: -16, a: -7}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Depth_Color: {r: 0.35631007, g: 0.44764316, b: 0.4811321, a: 1}
+    - _Depth_Color: {r: 0.27224994, g: 0.3342354, b: 0.3584906, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HorizonColor: {r: 0.17199996, g: 0.46299994, b: 0.43499997, a: 1}
     - _RefrColor: {r: 0.33999997, g: 0.85, b: 0.92, a: 1}
