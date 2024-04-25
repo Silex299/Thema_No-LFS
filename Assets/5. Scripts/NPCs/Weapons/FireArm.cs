@@ -102,7 +102,7 @@ namespace NPCs.Weapons
                     Instantiate(obj, hitPoint, Quaternion.identity);
                 }
             }
-            catch (Exception e)
+            catch 
             {
                 // ignored
             }

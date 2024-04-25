@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Thema_Camera;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Guard = NPCs.Guard;
 
 // ReSharper disable once CheckNamespace
@@ -22,8 +23,8 @@ namespace Misc
         [SerializeField, TabGroup("Visual", "Visual")]
         private float turnUpTime = 1f;
 
-        [SerializeField, TabGroup("Visual", "Visual")]
-        private Light light;
+        [FormerlySerializedAs("light")] [SerializeField, TabGroup("Visual", "Visual")]
+        private Light godLight;
 
         [SerializeField, TabGroup("Visual", "Visual")]
         private float powerUpIntensity;
@@ -299,7 +300,7 @@ namespace Misc
                 timeElapsed += Time.deltaTime;
                 float fraction = timeElapsed / turnUpTime;
 
-                light.intensity = Mathf.Lerp(0, powerUpIntensity, fraction);
+                godLight.intensity = Mathf.Lerp(0, powerUpIntensity, fraction);
 
                 if (fraction >= 1)
                 {
@@ -332,7 +333,7 @@ namespace Misc
                 timeElapsed += Time.deltaTime;
                 float fraction = timeElapsed / turnUpTime;
 
-                light.intensity = Mathf.Lerp(powerUpIntensity, 0, fraction);
+                godLight.intensity = Mathf.Lerp(powerUpIntensity, 0, fraction);
 
                 if (fraction >= 1)
                 {
@@ -365,7 +366,7 @@ namespace Misc
         {
             isEnabled = false;
             _destroyed = false;
-            light.intensity = 0;
+            godLight.intensity = 0;
             CameraManager.Instance.StartShaking(false);
         }
     }
