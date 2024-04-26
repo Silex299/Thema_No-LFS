@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using NPCs.Weapons;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs.FlyingBot
 {
     public class FlyingBot : MonoBehaviour
     {
+        [SerializeField] private bool _enabled;
+        
         [BoxGroup("Movement")] public Transform[] surveillancePoints;
         [SerializeField, BoxGroup("Movement")] private Transform[] rotors;
         [SerializeField, BoxGroup("Movement"), Space(5)] private float rotorSpeed;
@@ -33,13 +38,21 @@ namespace NPCs.FlyingBot
         {
             ChangeState(state);
             _currentState.StateEnter(this);
+            PlayerMovementController.Instance.player.Health.OnDeath += PlayerDeathCallback;
+        }
+
+        private void OnDisable()
+        {
+            PlayerMovementController.Instance.player.Health.OnDeath -= PlayerDeathCallback;
         }
 
         private void Update()
         {
             RotateRotors();
-
-            _currentState.StateUpdate(this);
+            if (_enabled)
+            {
+                _currentState.StateUpdate(this);
+            }
         }
 
 
@@ -83,12 +96,18 @@ namespace NPCs.FlyingBot
 
             transform.forward = Vector3.Lerp(transform1.forward, direction, rotationSmoothness * Time.deltaTime * speedMultiplier);
         }
+
+        private void PlayerDeathCallback()
+        {
+            _enabled = false;
+        }
     }
 
     //Class Called BotChaseState inherit from BotState abstract class
     [System.Serializable]
     public class BotChaseState : BotState
     {
+        public float fireDistance;
         public float stopDistance;
         public float safeDistance;
         public float defaultY;
@@ -141,6 +160,12 @@ namespace NPCs.FlyingBot
                 _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
             }
             
+            
+            //If distance is less than firingDistance fire the weapon
+            if (targetDistance < fireDistance)
+            {
+                bot.weapon.Fire(bot.target.position);
+            }
 
             //Move the bot to target point
             bot.transform.position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);;
