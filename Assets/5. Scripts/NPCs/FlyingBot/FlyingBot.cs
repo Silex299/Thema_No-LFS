@@ -1,10 +1,5 @@
-using System;
 using System.Collections;
-using TMPro;
-using UnityEditor;
-using UnityEditor.Timeline;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs.FlyingBot
@@ -92,6 +87,7 @@ namespace NPCs.FlyingBot
     public class BotChaseState : BotState
     {
         public float stopDistance;
+        public float safeDistance;
         public float defaultY;
         public float movementFrequency = 3;
         public float movementAmplitude = 1;
@@ -104,33 +100,59 @@ namespace NPCs.FlyingBot
             bot.animator.CrossFade("Go Forward", 0.2f);
             _currentSpeed = bot.botSpeed;
         }
-
+        
+        
         public override void StateUpdate(FlyingBot bot)
         {
             Vector3 targetPoint = bot.target.position;
             var position = bot.transform.position;
 
-            //Change the target point y sinusoidally with amplitude 2 and frequency 1, position.y being the center
-            targetPoint.y = defaultY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
+            targetPoint.y = position.y;
+            
+            float targetDistance = Vector3.Distance(position, targetPoint); 
+            
+            
+            //if distance between bot and target is less than safe distance
+            if (targetDistance < safeDistance)
+            {
+                //draw a red debug line
+                Debug.DrawLine(bot.transform.position, targetPoint, Color.red);
+                targetPoint += (position - targetPoint).normalized * (safeDistance + 0.2f);
+            }
+            else
+            {
+                //Draw a green debug line
+                Debug.DrawLine(bot.transform.position, targetPoint, Color.green);
+                targetPoint.y = defaultY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
+            }
+            
+            //if the distance of the bot and target is less than stopDistance stop the bot and set animator Speed
+            if (targetDistance < stopDistance)
+            {
+                if (targetDistance > safeDistance)
+                {
+                    bot.animator.SetFloat(Speed, 0, 0.2f, Time.deltaTime);
+                    _currentSpeed = Mathf.Lerp(_currentSpeed, 0, 3 * Time.deltaTime);
+                }
+                else
+                {
+                    bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
+                    _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
+                }
+            }
+            else
+            {
+                bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
+                _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
+            }
+            
 
             //Move the bot to target point
             position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);
             bot.transform.position = position;
 
 
-            //if the distance of the bot and target is less than stopDistance stop the bot and set animator Speed
-            if (Vector3.Distance(bot.transform.position, bot.target.position) < stopDistance)
-            {
-                bot.animator.SetFloat(Speed, 0, 0.2f, Time.deltaTime);
-                //Make the currentSpeed to 0 in 1 seconds
-                _currentSpeed = Mathf.Lerp(_currentSpeed, 0, 3 * Time.deltaTime);
-            }
-            else
-            {
-                bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
-                //Make the currentSpeed to botSpeed in 1 seconds
-                _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
-            }
+            
 
             //call rotate from bot
             bot.Rotate(_currentSpeed > 0, bot.target.position);
@@ -141,7 +163,7 @@ namespace NPCs.FlyingBot
         }
     }
 
-    //Class called BotSurveillanceState inherit from BotState abstract class, the bot surveills the points in the surveillancePoints array in loop, with a delay between each point
+    //Class called BotSurveillanceState inherit from BotState abstract class, the bot surveil  the points in the surveillancePoints array in loop, with a delay between each point
     [System.Serializable]
     public class BotSurveillanceState : BotState
     {
@@ -183,11 +205,7 @@ namespace NPCs.FlyingBot
                 _currentSpeed = Mathf.Lerp(_currentSpeed, 0, 3 * Time.deltaTime);
                 bot.animator.SetFloat(Speed, 0, 0.5f, Time.deltaTime);
                 
-                if (_waitCoroutine == null)
-                {
-                    // current speed to 0 in 3 seconds
-                    _waitCoroutine = bot.StartCoroutine(Wait(bot));
-                }
+                _waitCoroutine ??= bot.StartCoroutine(Wait(bot));
             }
             else
             {
