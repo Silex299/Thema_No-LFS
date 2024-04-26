@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 
@@ -13,7 +14,7 @@ namespace NPCs.Weapons
         [SerializeField] private float timeBetweenFire;
         [SerializeField] private float bulletSpeed;
         [SerializeField] private float bulletDestroyTime;
-        
+        [SerializeField] private LayerMask layerMask;
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Animator animator;
         [SerializeField] private Dictionary<string, GameObject> hitEffects;
@@ -25,44 +26,52 @@ namespace NPCs.Weapons
         private bool _traceBullet;
         
 
-        public void Fire(Vector3 target)
+        public void Fire(Vector3 target, float error)
         {
             //fire bullet at firRate
             if (!(Time.time - _lastFireTime > timeBetweenFire)) return;
             
-            animator.Play("Power Up");
-            StartCoroutine(TraceBullet(target));
+            StartCoroutine(TraceBullet(target, error));
             _lastFireTime = Time.time;
         }
 
-        private IEnumerator TraceBullet(Vector3 target)
+        private IEnumerator TraceBullet(Vector3 target, float error)
         {
-            float timeElapsed = 0;
-            
-            var bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity).transform;
 
+            animator.Play("Power Up");
+
+            var position = transform.position;
+            Vector3 dir = target - position - Vector3.up * error;
+            dir = dir.normalized;
+            
+            
+            var bullet = Instantiate(bulletPrefab, position, Quaternion.identity).transform;
+            
+            float timeElapsed = 0;
             while (timeElapsed < bulletDestroyTime)
             {
-                if (Physics.Linecast(transform.position, bullet.position, out RaycastHit hit))
+                //Move the bullet in dir direction with speed of bulletSpeed
+                bullet.position += dir * (bulletSpeed * Time.deltaTime);
+                
+                if (Physics.Linecast(transform.position, bullet.position, out RaycastHit hit, layerMask))
                 {
+
                     //If hit collider tag is playerMain give 101 damage to player health
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
                         Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(101);
                     }
                     
-                    print(hit.collider.name);
                     
                     SpawnEffects(hit.point, hit.collider.tag);
+                    
+                    Debug.DrawLine(transform.position, hit.point, Color.green, 10f);
                     
                     Destroy(bullet.gameObject);
                     break;
                 }
                 
                 
-                Vector3 dir = (target + Vector3.up * 0.2f) - transform.position;
-                //Move the bullet in dir direction with speed of bulletSpeed
-                bullet.position += dir.normalized * (bulletSpeed * Time.deltaTime);
                 
                 timeElapsed += Time.deltaTime;
                 yield return null;

@@ -164,7 +164,7 @@ namespace NPCs.FlyingBot
             //If distance is less than firingDistance fire the weapon
             if (targetDistance < fireDistance)
             {
-                bot.weapon.Fire(bot.target.position);
+                bot.weapon.Fire(bot.target.position, targetDistance < stopDistance ? -0.5f : 0.5f);
             }
 
             //Move the bot to target point
