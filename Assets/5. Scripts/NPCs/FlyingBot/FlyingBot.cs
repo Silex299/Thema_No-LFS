@@ -1,4 +1,6 @@
 using System.Collections;
+using NPCs.Weapons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -6,20 +8,21 @@ namespace NPCs.FlyingBot
 {
     public class FlyingBot : MonoBehaviour
     {
-        public Transform[] surveillancePoints;
-        [SerializeField] private Transform[] rotors;
-        [SerializeField] private float rotorSpeed;
-        public float botSpeed;
-        [SerializeField] private float rotationSmoothness;
+        [BoxGroup("Movement")] public Transform[] surveillancePoints;
+        [SerializeField, BoxGroup("Movement")] private Transform[] rotors;
+        [SerializeField, BoxGroup("Movement"), Space(5)] private float rotorSpeed;
+        [BoxGroup("Movement")]public float botSpeed;
+        [SerializeField, BoxGroup("Movement")] private float rotationSmoothness;
 
-        public Animator animator;
+        [BoxGroup("References")]public Animator animator;
 
-        public Transform target;
-        [SerializeField] private GuardStateEnum state;
-
+        [BoxGroup("References")]public Transform target;
+        [BoxGroup("References")] public PowerUpWeapon weapon;
+        
+        [SerializeField, BoxGroup("States"), EnumToggleButtons, HideLabel] private GuardStateEnum state;
         private BotState _currentState;
-        [SerializeField] private BotChaseState chaseState = new BotChaseState();
-        [SerializeField] private BotSurveillanceState surveillanceState = new BotSurveillanceState();
+        [SerializeField, BoxGroup("States")] private BotChaseState chaseState = new BotChaseState();
+        [SerializeField, BoxGroup("States")] private BotSurveillanceState surveillanceState = new BotSurveillanceState();
 
 
         private bool _movingForward;
@@ -110,52 +113,41 @@ namespace NPCs.FlyingBot
             targetPoint.y = position.y;
             
             float targetDistance = Vector3.Distance(position, targetPoint); 
-            
-            
-            //if distance between bot and target is less than safe distance
-            if (targetDistance < safeDistance)
-            {
-                //draw a red debug line
-                Debug.DrawLine(bot.transform.position, targetPoint, Color.red);
-                targetPoint += (position - targetPoint).normalized * (safeDistance + 0.2f);
-            }
-            else
-            {
-                //Draw a green debug line
-                Debug.DrawLine(bot.transform.position, targetPoint, Color.green);
-                targetPoint.y = defaultY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
-            }
-            
+          
             //if the distance of the bot and target is less than stopDistance stop the bot and set animator Speed
             if (targetDistance < stopDistance)
             {
+
+                targetPoint += (position-targetPoint).normalized * (safeDistance);
+                
                 if (targetDistance > safeDistance)
                 {
+                    Debug.DrawLine(bot.transform.position, targetPoint, Color.green, 1f);
                     bot.animator.SetFloat(Speed, 0, 0.2f, Time.deltaTime);
-                    _currentSpeed = Mathf.Lerp(_currentSpeed, 0, 3 * Time.deltaTime);
+                    //lerp the currentSpeed to 0 in 1/3 seconds
+                    _currentSpeed = Mathf.Lerp(_currentSpeed, 0,  0.5f * Time.deltaTime);
                 }
                 else
                 {
+                    Debug.DrawLine(bot.transform.position, targetPoint, Color.red, 1f);
                     bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
                     _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
                 }
             }
             else
             {
+                targetPoint.y = defaultY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
                 bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
                 _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
             }
             
 
             //Move the bot to target point
-            position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);
-            bot.transform.position = position;
-
-
-            
+            bot.transform.position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);;
 
             //call rotate from bot
             bot.Rotate(_currentSpeed > 0, bot.target.position);
+            bot.weapon.LookForPlayer(bot.target);
         }
 
         public override void StateExit(FlyingBot bot)
