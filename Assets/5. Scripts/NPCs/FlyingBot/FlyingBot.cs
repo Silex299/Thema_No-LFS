@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using NPCs.Weapons;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs.FlyingBot
@@ -21,7 +19,7 @@ namespace NPCs.FlyingBot
 
         [BoxGroup("References")]public Animator animator;
 
-        [BoxGroup("References")]public Transform target;
+
         [BoxGroup("References")] public PowerUpWeapon weapon;
         
         [SerializeField, BoxGroup("States"), EnumToggleButtons, HideLabel] private GuardStateEnum state;
@@ -34,7 +32,7 @@ namespace NPCs.FlyingBot
         private bool _movingUp;
 
 
-        private void Start()
+        private void OnEnable()
         {
             ChangeState(state);
             _currentState.StateEnter(this);
@@ -74,6 +72,21 @@ namespace NPCs.FlyingBot
                     break;
             }
         }
+
+        public void ChangeState(int index)
+        {
+            //Change state according to index, 0 for guard and 1 for chase
+            switch (index)
+            {
+                case 0:
+                    ChangeState(GuardStateEnum.Guard);
+                    break;
+                case 1:
+                    ChangeState(GuardStateEnum.Chase);
+                    break;
+            }
+        }
+        
 
         //Function to rotate the rotors around their up with a speed
         private void RotateRotors()
@@ -126,7 +139,9 @@ namespace NPCs.FlyingBot
         
         public override void StateUpdate(FlyingBot bot)
         {
-            Vector3 targetPoint = bot.target.position;
+            Transform target = Player_Scripts.PlayerMovementController.Instance.transform;
+            
+            Vector3 targetPoint = target.position;
             var position = bot.transform.position;
 
             targetPoint.y = position.y;
@@ -164,15 +179,15 @@ namespace NPCs.FlyingBot
             //If distance is less than firingDistance fire the weapon
             if (targetDistance < fireDistance)
             {
-                bot.weapon.Fire(bot.target.position, targetDistance < stopDistance ? -0.5f : 0.5f);
+                bot.weapon.Fire(target.position, targetDistance < stopDistance ? -0.5f : 0.5f);
             }
 
             //Move the bot to target point
             bot.transform.position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);;
 
             //call rotate from bot
-            bot.Rotate(_currentSpeed > 0, bot.target.position);
-            bot.weapon.LookForPlayer(bot.target);
+            bot.Rotate(_currentSpeed > 0, target.position);
+            bot.weapon.LookForPlayer(target);
         }
 
         public override void StateExit(FlyingBot bot)

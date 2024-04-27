@@ -28,7 +28,7 @@ namespace Triggers
 
         private bool ButtonTrigger()
         {
-            if (Input.GetButtonDown(triggerName))
+            if (Input.GetButton(triggerName))
             {
                 return true;
             }
