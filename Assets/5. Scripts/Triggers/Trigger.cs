@@ -37,7 +37,7 @@ namespace Triggers
 
                 _reset = StartCoroutine(ResetTrigger());
                 
-                if (_isTriggered) return;
+                if (_isTriggered && oneTime) return;
 
 
                 _playerIsInTrigger = true;
@@ -53,7 +53,7 @@ namespace Triggers
             yield return new WaitForSeconds(0.2f);
 
             _playerIsInTrigger = false;
-            _isTriggered = false;
+            //_isTriggered = false;
             _interactCollider = null;
 
             exitActions?.Invoke();
@@ -67,6 +67,7 @@ namespace Triggers
 
             if ((oneTime && _isTriggered) || !isEnabled) return;
 
+            if (Time.time < secondActionDelay + _lastTriggerTime) return;
 
             if (conditionComponent.Length > 0)
             {
@@ -98,9 +99,6 @@ namespace Triggers
 
         private void PerformAction()
         {
-            if (_isTriggered) return;
-            if (Time.time < secondActionDelay + _lastTriggerTime) return;
-
             actions?.Invoke();
 
             _isTriggered = true;

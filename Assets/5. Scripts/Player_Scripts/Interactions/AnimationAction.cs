@@ -10,6 +10,7 @@ namespace Player_Scripts.Interactions
         [SerializeField] private string entryAnimation;
         [SerializeField] private string exitAnimation;
         [SerializeField] private string input;
+        [SerializeField] private bool disablePlayerMovment = true;
 
 
         [SerializeField, Space(10)] private UnityEvent entryAction;
@@ -43,9 +44,11 @@ namespace Player_Scripts.Interactions
             entryAction?.Invoke();
             PlayerMovementController.Instance.PlayAnimation(entryAnimation, 0.1f, 1);
 
-            yield return new WaitForSeconds(0.3f);
-
-            PlayerMovementController.Instance.DisablePlayerMovement(true);
+            if (disablePlayerMovment)
+            {
+                yield return new WaitForSeconds(0.3f);
+                PlayerMovementController.Instance.DisablePlayerMovement(true);
+            }
 
             yield return new WaitForSeconds(2f);
             
