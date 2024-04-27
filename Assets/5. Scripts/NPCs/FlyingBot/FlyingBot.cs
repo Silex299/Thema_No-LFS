@@ -9,7 +9,7 @@ namespace NPCs.FlyingBot
 {
     public class FlyingBot : MonoBehaviour
     {
-        [SerializeField] private bool isEnabled;
+        public bool isEnabled;
         
         [BoxGroup("Movement")] public Transform[] surveillancePoints;
         [SerializeField, BoxGroup("Movement")] private Transform[] rotors;
@@ -113,8 +113,14 @@ namespace NPCs.FlyingBot
 
         private void PlayerDeathCallback()
         {
-            isEnabled = false;
+            EnableBot(false);
         }
+
+        public void EnableBot(bool status)
+        {
+            isEnabled = status;
+        }
+        
     }
 
     //Class Called BotChaseState inherit from BotState abstract class
