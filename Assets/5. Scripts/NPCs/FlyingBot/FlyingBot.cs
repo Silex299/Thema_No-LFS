@@ -9,7 +9,7 @@ namespace NPCs.FlyingBot
 {
     public class FlyingBot : MonoBehaviour
     {
-        [SerializeField] private bool _enabled;
+        [SerializeField] private bool isEnabled;
         
         [BoxGroup("Movement")] public Transform[] surveillancePoints;
         [SerializeField, BoxGroup("Movement")] private Transform[] rotors;
@@ -47,7 +47,8 @@ namespace NPCs.FlyingBot
         private void Update()
         {
             RotateRotors();
-            if (_enabled)
+            
+            if (isEnabled)
             {
                 _currentState.StateUpdate(this);
             }
@@ -112,7 +113,7 @@ namespace NPCs.FlyingBot
 
         private void PlayerDeathCallback()
         {
-            _enabled = false;
+            isEnabled = false;
         }
     }
 
@@ -139,27 +140,29 @@ namespace NPCs.FlyingBot
         
         public override void StateUpdate(FlyingBot bot)
         {
-            Transform target = Player_Scripts.PlayerMovementController.Instance.transform;
             
+            //TODO cleanup
+            
+            Transform target = PlayerMovementController.Instance.transform;
             Vector3 targetPoint = target.position;
-            var position = bot.transform.position;
-
-            targetPoint.y = position.y;
             
-            float targetDistance = Vector3.Distance(position, targetPoint); 
-          
+            Vector3 botPosition = bot.transform.position;
+            float botY = targetPoint.y + defaultY;
+            targetPoint.y = botPosition.y;
+
+            float targetDistance = Vector3.Distance(botPosition, targetPoint);
+
             //if the distance of the bot and target is less than stopDistance stop the bot and set animator Speed
             if (targetDistance < stopDistance)
             {
+                targetPoint += (botPosition - targetPoint).normalized * (safeDistance);
 
-                targetPoint += (position-targetPoint).normalized * (safeDistance);
-                
                 if (targetDistance > safeDistance)
                 {
                     Debug.DrawLine(bot.transform.position, targetPoint, Color.green, 1f);
                     bot.animator.SetFloat(Speed, 0, 0.2f, Time.deltaTime);
                     //lerp the currentSpeed to 0 in 1/3 seconds
-                    _currentSpeed = Mathf.Lerp(_currentSpeed, 0,  0.5f * Time.deltaTime);
+                    _currentSpeed = Mathf.Lerp(_currentSpeed, 0, 0.5f * Time.deltaTime);
                 }
                 else
                 {
@@ -170,20 +173,23 @@ namespace NPCs.FlyingBot
             }
             else
             {
-                targetPoint.y = defaultY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
+                targetPoint.y = botY + movementAmplitude * Mathf.Sin(movementFrequency * Time.time);
+
                 bot.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
                 _currentSpeed = Mathf.Lerp(_currentSpeed, bot.botSpeed, 3 * Time.deltaTime);
             }
-            
-            
+
+
             //If distance is less than firingDistance fire the weapon
             if (targetDistance < fireDistance)
             {
                 bot.weapon.Fire(target.position, targetDistance < stopDistance ? -0.5f : 0.5f);
             }
 
+
             //Move the bot to target point
-            bot.transform.position = Vector3.MoveTowards(position, targetPoint, _currentSpeed * Time.deltaTime);;
+            bot.transform.position = Vector3.MoveTowards(botPosition, targetPoint, _currentSpeed * Time.deltaTime);
+            
 
             //call rotate from bot
             bot.Rotate(_currentSpeed > 0, target.position);

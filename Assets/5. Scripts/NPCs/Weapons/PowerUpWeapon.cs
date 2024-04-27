@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using TMPro;
 using UnityEngine;
 
 
@@ -96,5 +94,6 @@ namespace NPCs.Weapons
             transform.rotation = Quaternion.Slerp(transform1.rotation,
                 Quaternion.LookRotation(target.position - transform1.position), 1f * Time.deltaTime);
         }
+
     }
 }
