@@ -1,10 +1,8 @@
-using System;
 using Misc;
 using NPCs.Weapons;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs
@@ -109,11 +107,34 @@ namespace NPCs
             Vector3 guardPos = guard.transform.position;
 
             targetPos.y = guardPos.y;
+
+            if (advancedPathFinding)
+            {
+                if (!AdvancedPathFinding(guard))
+                {
+                    ChaseAction(guard, targetPos, guardPos);
+                }
+                else
+                {
+                    guard.animator.SetFloat(Speed, 1, 0.2f, Time.deltaTime);
+                }
+                
+            }
+            else
+            {  
+                ChaseAction(guard, targetPos, guardPos);
+            }
+            
+            
+            guard.Rotate(targetPos, 40f);
+            
+        }
+
+        protected override void ChaseAction(Guard guard, Vector3 targetPos, Vector3 guardPos)
+        {
             float distance = Vector3.Distance(targetPos, guardPos);
             
-            float speed = 0;
-
-            speed = distance > chaseDistance ? 1 : 0;
+            float speed = distance > chaseDistance ? 1 : 0;
 
             if (distance < attackDistance)
             {
@@ -141,13 +162,10 @@ namespace NPCs
                     _isAttacking = false;
                 }
             }
-            
+
             guard.animator.SetFloat(Speed, speed, 0.2f, Time.deltaTime);
-           
-            
-            guard.Rotate(targetPos, 40f);
-            
         }
+
 
         protected override void Attack(Guard guard)
         {

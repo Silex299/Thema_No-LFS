@@ -29,6 +29,7 @@ namespace NPCs.Weapons
         // ReSharper disable once MemberCanBePrivate.Global
         public void FireBullet()
         {
+            Debug.LogError("deom");
             if (Time.time < _lastFireTime + (1 / fireRate))
             {
                 return;

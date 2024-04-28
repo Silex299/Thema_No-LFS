@@ -26,6 +26,8 @@ namespace Player_Scripts.Volumes
 
         private void OnTriggerStay(Collider other)
         {
+            if(!enabled) return;
+            
             if (!_triggered)
             {
                 if (other.CompareTag("Player_Main"))

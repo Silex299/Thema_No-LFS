@@ -1,6 +1,8 @@
-
 using Sirenix.OdinInspector;
 using System.Collections;
+using System.Collections.Specialized;
+using Player_Scripts;
+using Triggers;
 using UnityEngine;
 
 
@@ -9,14 +11,13 @@ namespace NPCs
 {
     public class Guard : MonoBehaviour
     {
-        
         protected GuardState currentState;
 
         [SerializeField, BoxGroup("States")] private SurveillanceState surveillanceState = new SurveillanceState();
-        
+
         [SerializeField, BoxGroup("States")] private ChaseState chaseState = new ChaseState();
 
-        
+
         [SerializeField] internal Animator animator;
         [SerializeField] internal float rotationSpeed;
         [SerializeField] protected GuardStateEnum currentGuardState;
@@ -31,7 +32,7 @@ namespace NPCs
         }
 
 #endif
-        
+
         protected virtual void Start()
         {
             ChangeState(currentGuardState);
@@ -42,7 +43,7 @@ namespace NPCs
         {
             currentState.StateUpdate(this);
         }
-        
+
         public void StopChasing()
         {
             if (currentGuardState == GuardStateEnum.Chase)
@@ -50,7 +51,7 @@ namespace NPCs
                 chaseState.ImmediateStop(this);
             }
         }
-        
+
         public virtual void ChangeState(GuardStateEnum newState)
         {
             currentState?.StateExit(this);
@@ -90,7 +91,8 @@ namespace NPCs
             rotateTowards.y = position.y;
 
             Vector3 newForward = rotateTowards - position;
-            transform.forward = Vector3.Lerp(transform1.forward, newForward, Time.deltaTime * rotationSpeed * overrideSpeed);
+            transform.forward = Vector3.Lerp(transform1.forward, newForward,
+                Time.deltaTime * rotationSpeed * overrideSpeed);
         }
 
         public void AttackCallback()
@@ -186,8 +188,15 @@ namespace NPCs
     {
         [SerializeField] protected float chaseDistance;
         [SerializeField] protected float attackDistance;
-
         [SerializeField] protected float attackInterval;
+
+        [SerializeField] protected bool advancedPathFinding;
+
+        [SerializeField, ShowIf(nameof(advancedPathFinding))]
+        protected Transform[] pathFindingPoints;
+
+        [SerializeField, ShowIf(nameof(advancedPathFinding))]
+        protected LayerMask rayCastMask;
 
 
         protected float lastAttackTime;
@@ -203,8 +212,8 @@ namespace NPCs
             playerDead = false;
             stopChasing = false;
             guard.animator.CrossFade("Chase", 0.2f);
-            target = Player_Scripts.PlayerMovementController.Instance.transform;
-            Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
+            target = PlayerMovementController.Instance.transform;
+            PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
         }
 
         public override void StateExit(Guard guard)
@@ -228,6 +237,27 @@ namespace NPCs
 
             targetPos.y = guardPos.y;
 
+            if (advancedPathFinding)
+            {
+                if (!AdvancedPathFinding(guard))
+                {
+                    ChaseAction(guard, targetPos, guardPos);
+                }
+                else
+                {
+                    guard.animator.SetFloat(Speed, _chasingSpeed, 0.2f, Time.deltaTime);
+                }
+            }
+            else
+            {
+                ChaseAction(guard, targetPos, guardPos);
+            }
+
+            guard.Rotate(targetPos);
+        }
+
+        protected virtual void ChaseAction(Guard guard, Vector3 targetPos, Vector3 guardPos)
+        {
             float distance = Vector3.Distance(targetPos, guardPos);
 
             if (distance > chaseDistance)
@@ -254,8 +284,6 @@ namespace NPCs
             {
                 Attack(guard);
             }
-
-            guard.Rotate(targetPos);
         }
 
 
@@ -282,16 +310,53 @@ namespace NPCs
             guard.animator.CrossFade("Basic Idle", 0.6f, 0);
             stopChasing = true;
         }
+
         private void StopChasing()
         {
+            Debug.LogError("Dead");
             playerDead = true;
-            Player_Scripts.PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
+            PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
         }
 
         protected IEnumerator StopChaseAnimationUpdate(Guard guard)
         {
             yield return new WaitForSeconds(1f);
             ImmediateStop(guard);
+        }
+
+
+        protected virtual bool AdvancedPathFinding(Guard guard)
+        {
+            if (!InSight((guard.transform.position + Vector3.up * 0.75f), (target.position + Vector3.up)))
+            {
+                Debug.DrawLine(guard.transform.position + Vector3.up * 0.75f, target.position + Vector3.up, Color.cyan,
+                    10f);
+
+                foreach (Transform point in pathFindingPoints)
+                {
+                    Debug.DrawLine(guard.transform.position + Vector3.up, point.position, Color.red, 10f);
+                    if (InSight((guard.transform.position + Vector3.up), point.position))
+                    {
+                        //Debug draw a line from guard position to point position
+
+                        if (InSight(target.position + Vector3.up, point.position))
+                        {
+                            Debug.DrawLine(target.position + Vector3.up, point.position, Color.green, 2f);
+                            target = point;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            target = PlayerMovementController.Instance.transform;
+
+            return false;
+        }
+
+        protected virtual bool InSight(Vector3 obj1, Vector3 obj2)
+        {
+            return !Physics.Linecast(obj1, obj2, rayCastMask);
         }
     }
 }
