@@ -16,7 +16,6 @@ namespace Player_Scripts
             get => instance;
         }
 
-
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
         private void Awake()
@@ -106,8 +105,7 @@ namespace Player_Scripts
 
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
-
-            print("Change State :" + newState);
+            print(stateIndex);
 
             if (stateIndex == player.currentStateIndex) return;
 
@@ -115,8 +113,8 @@ namespace Player_Scripts
             player.currentStateIndex = stateIndex;
 
             player.AnimationController.SetInteger(StateIndex, stateIndex);
-            
-            if(newState != player.e_currentState)
+
+            if (newState != player.e_currentState)
             {
                 player.currentState.ExitState(player);
             }
@@ -144,6 +142,8 @@ namespace Player_Scripts
         public void ChangeState(int index)
         {
             //if (player.DisablePlayerMovement) return;
+
+            print(index);
 
             if (index == player.currentStateIndex) return;
 
@@ -207,6 +207,17 @@ namespace Player_Scripts
             }
         }
 
+
+        //TODO: TEMPORARY FIX
+        public void InstantRotate(Vector3 rotateTowards)
+        {
+            var pos = transform.position;
+            rotateTowards.y = pos.y;
+
+            var newRotation = Quaternion.LookRotation((pos - rotateTowards), transform.up);
+
+            transform.rotation = newRotation;
+        }
 
         //WATER MOVEMENT
 

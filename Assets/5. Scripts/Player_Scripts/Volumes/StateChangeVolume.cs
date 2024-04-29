@@ -1,3 +1,4 @@
+using Path_Scripts;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
@@ -38,6 +39,9 @@ namespace Player_Scripts.Volumes
 
                     playerController.player.enabledDirectionInput = enableDirection;
                     playerController.player.oneWayRotation = oneWayRotation;
+                    if(oneWayRotation){
+                        PlayerMovementController.Instance.InstantRotate(PlayerPathController.Instance.GetPreviousPosition());
+                    }
                 }
             }
 

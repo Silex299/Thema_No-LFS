@@ -49,9 +49,6 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             defaultStateIndex = player.currentStateIndex;
-
-
-            player.AnimationController.CrossFade("Basic Movement", 0.25f);
             player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }
 
@@ -193,6 +190,9 @@ namespace Player_Scripts.States
 
         }
 
+
+
+
         private void Gravity(Player player)
         {
             _m_playerVelocity.y -= 10 * Time.deltaTime;
@@ -227,6 +227,7 @@ namespace Player_Scripts.States
             //TODO may need change????
             player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
+
 
         #endregion
 
