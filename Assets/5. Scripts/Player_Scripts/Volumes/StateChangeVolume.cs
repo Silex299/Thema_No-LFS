@@ -49,7 +49,7 @@ namespace Player_Scripts.Volumes
                 }
 
                 triggerReset = StartCoroutine(ResetTrigger());
-
+                
             }
         }
 
@@ -61,6 +61,8 @@ namespace Player_Scripts.Volumes
             {
                 triggerReset = StartCoroutine(ResetTrigger());
             }
+            
+            
         }
 
         private IEnumerator ResetTrigger()

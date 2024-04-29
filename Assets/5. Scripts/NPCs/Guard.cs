@@ -211,11 +211,14 @@ namespace NPCs
         {
             playerDead = false;
             stopChasing = false;
+            
             guard.animator.CrossFade("Chase", 0.2f);
             target = PlayerMovementController.Instance.transform;
             PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
         }
 
+        
+        
         public override void StateExit(Guard guard)
         {
         }
@@ -313,7 +316,6 @@ namespace NPCs
 
         private void StopChasing()
         {
-            Debug.LogError("Dead");
             playerDead = true;
             PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
         }

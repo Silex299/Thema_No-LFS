@@ -97,12 +97,12 @@ namespace NPCs
             if (stopChasing) return;
 
             if (playerDead)
-            {
+            { 
                 guard.StartCoroutine(StopChaseAnimationUpdate(guard));
                 stopChasing = true;
                 return;
             }
-
+ 
             Vector3 targetPos = target.position;
             Vector3 guardPos = guard.transform.position;
 

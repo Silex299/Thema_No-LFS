@@ -15,14 +15,11 @@ namespace Thema_Camera
         [SerializeField] internal bool lookAtTarget;
 
         [SerializeField] internal Camera myCamera;
-
-
         private static CameraFollow instance;
         public static CameraFollow Instance
         {
             get => instance;
         }
-
 
         private bool _changeOffset;
 
@@ -39,6 +36,7 @@ namespace Thema_Camera
             if (followTarget == null) return;
 
             m_Offset = transform.position - followTarget.position;
+
         }
 
 
@@ -135,7 +133,6 @@ namespace Thema_Camera
             _timeElapsed = 0f;
             _changeOffset = true;
         }
-
 
 
     }
