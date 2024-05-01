@@ -1,5 +1,3 @@
-using System.IO;
-using Path_Scripts;
 using UnityEngine;
 
 namespace Player_Scripts.Volumes
@@ -14,6 +12,7 @@ namespace Player_Scripts.Volumes
         [SerializeField] private bool enableDirection;
         [SerializeField] private bool oneWayRotation;
 
+
         //Create a function to state Player state in PlayerMovementController.cs
         private void OnTriggerEnter(Collider other)
         {
@@ -24,9 +23,6 @@ namespace Player_Scripts.Volumes
                 PlayerMovementController.Instance.player.enabledDirectionInput = enableDirection;
                 PlayerMovementController.Instance.player.oneWayRotation = oneWayRotation;
 
-                if(oneWayRotation){
-                    PlayerMovementController.Instance.InstantRotate(PlayerPathController.Instance.GetNextPosition());
-                }
             }
         }
 

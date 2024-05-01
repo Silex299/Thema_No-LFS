@@ -21,14 +21,13 @@ namespace Player_Scripts.Volumes
         [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
 
 
-
         private bool _triggered;
         private Coroutine triggerReset;
 
         private void OnTriggerStay(Collider other)
         {
-            if(!enabled) return;
-            
+            if (!enabled) return;
+
             if (!_triggered)
             {
                 if (other.CompareTag("Player_Main"))
@@ -39,21 +38,18 @@ namespace Player_Scripts.Volumes
 
                     playerController.player.enabledDirectionInput = enableDirection;
                     playerController.player.oneWayRotation = oneWayRotation;
-                    if(oneWayRotation){
-                        PlayerMovementController.Instance.InstantRotate(PlayerPathController.Instance.GetPreviousPosition());
-                    }
                 }
             }
 
             if (_triggered)
             {
-                if(triggerReset!= null)
+                if (triggerReset != null)
                 {
                     StopCoroutine(triggerReset);
                 }
 
                 triggerReset = StartCoroutine(ResetTrigger());
-                
+
             }
         }
 
@@ -65,8 +61,8 @@ namespace Player_Scripts.Volumes
             {
                 triggerReset = StartCoroutine(ResetTrigger());
             }
-            
-            
+
+
         }
 
         private IEnumerator ResetTrigger()

@@ -208,17 +208,6 @@ namespace Player_Scripts
         }
 
 
-        //TODO: TEMPORARY FIX
-        public void InstantRotate(Vector3 rotateTowards)
-        {
-            var pos = transform.position;
-            rotateTowards.y = pos.y;
-
-            var newRotation = Quaternion.LookRotation((pos - rotateTowards), transform.up);
-
-            transform.rotation = newRotation;
-        }
-
         //WATER MOVEMENT
 
         public void WaterSurfaceHit(bool atSurface)
@@ -236,7 +225,7 @@ namespace Player_Scripts
                 player.waterMovement.PlayerAtBottom(player, atBottom);
             }
         }
-
+        
 
         #endregion
 

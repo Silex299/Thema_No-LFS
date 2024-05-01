@@ -1,7 +1,9 @@
 using Path_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+// ReSharper disable once CheckNamespace
 namespace Player_Scripts.States
 {
 
@@ -13,8 +15,8 @@ namespace Player_Scripts.States
         private float sphereCastOffset;
         [SerializeField, BoxGroup("Ground Check Variables")]
         private float sphereCastRadius;
-        [SerializeField, BoxGroup("Ground Check Variables")]
-        private float GroundOffset;
+        [FormerlySerializedAs("GroundOffset")] [SerializeField, BoxGroup("Ground Check Variables")]
+        private float groundOffset;
 
         [SerializeField, BoxGroup("Misc")] private int defaultStateIndex = 0;
 
@@ -25,10 +27,8 @@ namespace Player_Scripts.States
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Push = Animator.StringToHash("Push");
 
-
-        private Vector3 _m_playerVelocity;
-
-
+        private Vector3 _mPlayerVelocity;
+        
 
         #region Unused Methods
 
@@ -60,23 +60,36 @@ namespace Player_Scripts.States
 
             #region PLAYER DIRECTIONS
 
-
-            //Rotate player to next or previous destination
-            if (input < -0.3f)
+            if (player.oneWayRotation)
             {
-                if (player.oneWayRotation)
+
+                if (input >= 0)
                 {
-                    OneWayRotate(player, PlayerPathController.Instance.GetPreviousPosition());
+                    SideRotation(player, PlayerPathController.Instance.GetNextPosition(), true);
                 }
                 else
                 {
+                    SideRotation(player, PlayerPathController.Instance.GetPreviousPosition(), false);
+                }
+
+            }
+            else
+            {
+                //Rotate player to next or previous destination
+                if (input < -0.3f)
+                {
+
                     Rotate(player, PlayerPathController.Instance.GetPreviousPosition());
                 }
+                else if (input > 0.3f)
+                {
+
+                    Rotate(player, PlayerPathController.Instance.GetNextPosition());
+                }
+
             }
-            else if (input > 0.3f)
-            {
-                Rotate(player, PlayerPathController.Instance.GetNextPosition());
-            }
+
+
 
             #endregion
 
@@ -89,7 +102,7 @@ namespace Player_Scripts.States
             Gravity(player);
 
             //Move player base on player velocity (Only responsible for gravity and jump)
-            player.CController.Move(_m_playerVelocity * Time.deltaTime);
+            player.CController.Move(_mPlayerVelocity * Time.deltaTime);
 
             #endregion
 
@@ -165,6 +178,7 @@ namespace Player_Scripts.States
         #endregion
 
 
+        
         #region Custom Methods
 
         private void Rotate(Player player, Vector3 rotateTowards)
@@ -174,39 +188,55 @@ namespace Player_Scripts.States
             rotateTowards.y = pos.y;
 
             var newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
+            
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness * Mathf.Rad2Deg);
         }
+        
 
-        private void OneWayRotate(Player player, Vector3 rotateTowards)
+        private void SideRotation(Player player, Vector3 rotateTowards, bool isRight)
         {
+        
             var transform = player.transform;
             var pos = transform.position;
             rotateTowards.y = pos.y;
 
-            var newRotation = Quaternion.LookRotation((pos - rotateTowards), transform.up);
+            Quaternion newRotation;
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness);
+            if (isRight)
+            {
+                newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
+                //Rotate newRotation by 90degrees in Y axis
+                newRotation *= Quaternion.Euler(0, 90, 0);
+                
+            }
+            else
+            {
+                newRotation = Quaternion.LookRotation((pos - rotateTowards), transform.up);
+                //Rotate newRotation by 90degrees in Y axis
+                newRotation *= Quaternion.Euler(0, 90, 0);
+            }
+            
 
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness * Mathf.Rad2Deg);
         }
 
-
-
+        
 
         private void Gravity(Player player)
         {
-            _m_playerVelocity.y -= 10 * Time.deltaTime;
+            _mPlayerVelocity.y -= 10 * Time.deltaTime;
 
             if (player.IsGrounded)
             {
-                if (_m_playerVelocity.y <= 0)
+                if (_mPlayerVelocity.y <= 0)
                 {
-                    _m_playerVelocity = new Vector3(0, -10, 0);
+                    _mPlayerVelocity = new Vector3(0, -10, 0);
                 }
             }
             else
             {
-                player.AnimationController.SetFloat(VerticalAcceleration, _m_playerVelocity.y);
+                player.AnimationController.SetFloat(VerticalAcceleration, _mPlayerVelocity.y);
             }
         }
 
@@ -218,12 +248,13 @@ namespace Player_Scripts.States
 
             if (Physics.SphereCast(ray, sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
             {
-                player.IsGrounded = hit.distance < GroundOffset + sphereCastOffset;
+                player.IsGrounded = hit.distance < groundOffset + sphereCastOffset;
             }
             else
             {
                 player.IsGrounded = false;
             }
+            
             //TODO may need change????
             player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
@@ -233,18 +264,18 @@ namespace Player_Scripts.States
 
         #region Animation Callbacks
 
-        public void PlayJump(Player player, int JumpForward)
+        public void PlayJump(Player player, int jumpForward)
         {
-            if (JumpForward == 1)
+            if (jumpForward == 1)
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 
-                _m_playerVelocity += velocityChange;
+                _mPlayerVelocity += velocityChange;
 
             }
 
 
-            _m_playerVelocity.y = player.JumpVelocity;
+            _mPlayerVelocity.y = player.JumpVelocity;
         }
 
 
