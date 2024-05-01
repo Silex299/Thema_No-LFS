@@ -157,6 +157,12 @@ namespace Player_Scripts.Interactions
             }
             else
             {
+                if (!finalPointOfAction)
+                {
+                    _finalMove = false;
+                    return;
+                }
+                
                 _timeElapsed += Time.deltaTime;
 
                 float fraction = _timeElapsed / finalDelay;
