@@ -1,11 +1,7 @@
-using System;
 using System.Collections;
-using Cinemachine;
 using Player_Scripts;
-using Triggers;
 using UnityEngine;
-using UnityEngine.UIElements;
-using VLB;
+
 
 namespace NPCs
 {
@@ -36,13 +32,20 @@ namespace NPCs
             ChangeState(state);
         }
 
+        private void Update()
+        {
+            if (!enabled) return;
+
+            _currentState.StateUpdate(this);
+        }
+
         private void FixedUpdate()
         {
             if (!enabled) return;
 
             _currentState.StateFixedUpdate(this);
         }
-        
+
         private void LateUpdate()
         {
             if (!enabled) return;
@@ -98,6 +101,10 @@ namespace NPCs
         {
         }
 
+        public override void StateUpdate(WaterCreature creature)
+        {
+        }
+
         public override void StateFixedUpdate(WaterCreature creature)
         {
             MoveCreature(creature);
@@ -107,7 +114,6 @@ namespace NPCs
 
         public override void LateUpdate(WaterCreature creature)
         {
-            
         }
 
 
@@ -137,16 +143,17 @@ namespace NPCs
     public class CreatureChaseState : CreatureState
     {
         [SerializeField] private float attackDistance;
-        [SerializeField] private float attackSpeed;
-        [SerializeField] private float attackForce;
-        [SerializeField] private float attackInterval;
-        [SerializeField] private float restrictedY;
-        
+
+        [SerializeField] private float minY;
+        [SerializeField] private float defaultY;
+        [SerializeField] private float maxY;
+
 
         [SerializeField] private bool playerInWater;
 
 
         private bool _isAttacking;
+
         public override void StateEnter(WaterCreature creature)
         {
         }
@@ -155,95 +162,111 @@ namespace NPCs
         {
         }
 
-        public override void StateFixedUpdate(WaterCreature creature)
+
+        public override void StateUpdate(WaterCreature creature)
         {
             MoveCreature(creature);
-            //Rotate the creature in the direction of the player
-            creature.Rotate(PlayerMovementController.Instance.transform.position);
+        }
+
+        public override void StateFixedUpdate(WaterCreature creature)
+        {
         }
 
         public override void LateUpdate(WaterCreature creature)
         {
-            //Restrict the y position of the creature smoothly
-            Vector3 position = creature.transform.position;
-            position.y = Mathf.Lerp(position.y, restrictedY, 0.1f);
-            creature.transform.position = position;
         }
+
 
         //Create a function that moves the creature towards the player
         private void MoveCreature(WaterCreature creature)
         {
-            
-            if(_isAttacking) return;
-            
-            
-            
-            Vector3 playerPos = PlayerMovementController.Instance.transform.position;
-            Transform creatureTransform = creature.transform;
-            Vector3 direction = (playerPos - creature.transform.position).normalized;
-            
-            //restrict the y position of the creature
-            creature.rb.AddForce(direction * attackSpeed);
-            
-            //if distance between player and creature is less than attackDistance, call the UnderWaterAttack function
-            if (!(Vector3.Distance(creatureTransform.position, playerPos) < attackDistance)) return;
+            if (_isAttacking)
+            {
+                return;
+            }
 
-            //debug draw a line between player and creature
-            Debug.DrawLine(creatureTransform.position, playerPos, Color.green, 0.1f);
-            
-            creature.StartCoroutine(Attack(creature));
+            //Move the creature towards the player with restricting the y position
+            Vector3 targetPosition = PlayerMovementController.Instance.player.transform.position;
 
+            targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
+
+            creature.transform.position = Vector3.MoveTowards(creature.transform.position, targetPosition,
+                creature.creatureSpeed * Time.deltaTime);
+
+
+            //Attack the player if the distance between the player and the creature is less than attackDistance
+            if (!(Vector3.Distance(creature.transform.position, targetPosition) < attackDistance)) return;
+
+            Debug.Log("calling again and again");
+            creature.StartCoroutine(AttackPlayer(creature));
         }
 
-        private IEnumerator Attack(WaterCreature creature)
+        public float timeToAttack = 1;
+
+        //Create a function that attacks the player
+        private IEnumerator AttackPlayer(WaterCreature creature)
         {
-
             _isAttacking = true;
-            
-            if (playerInWater)
+
+            Vector3 targetPosition = PlayerMovementController.Instance.player.transform.position;
+            Vector3 creaturePosition = creature.transform.position;
+
+            float y = targetPosition.y - 2;
+            float timeElapse = 0;
+
+            while (timeElapse < timeToAttack)
             {
-                UnderWaterAttack(creature);
-            }
-            else
-            {
-                AboveWaterAttack(creature);
+                timeElapse += Time.deltaTime;
+                float fraction = timeElapse / timeToAttack;
+
+                y = Mathf.Lerp((targetPosition.y - 2), Mathf.Clamp(targetPosition.y, -100, maxY),
+                    Mathf.Pow(fraction, 2));
+
+                Vector3 moveTo = new Vector3(targetPosition.x, y, targetPosition.z);
+
+                creature.transform.position = Vector3.Lerp(creaturePosition, moveTo, fraction);
+                creature.Rotate(moveTo);
+
+                yield return null;
             }
 
-            yield return new WaitForSeconds(attackInterval);
+            creaturePosition = creature.transform.position;
+
+            float angle = Vector3.Angle(creature.transform.forward, Vector3.right);
+
+            Vector3 moveTo_1 = angle > 90
+                ? creaturePosition - Vector3.right * (attackDistance + 1)
+                : creaturePosition + Vector3.right * (attackDistance + 1);
+            moveTo_1.y = defaultY;
+
+            timeElapse = 0;
+
+            while (timeElapse < timeToAttack)
+            {
+                timeElapse += Time.deltaTime;
+                float fraction = timeElapse / timeToAttack;
+
+                creature.transform.position = Vector3.Lerp(creaturePosition, moveTo_1, fraction);
+                creature.Rotate(moveTo_1);
+
+                yield return null;
+            }
 
             _isAttacking = false;
-
         }
 
-        private void UnderWaterAttack(WaterCreature creature)
-        {
-            //Add force to the creature in the direction of the player
-            Vector3 direction = PlayerMovementController.Instance.transform.position - creature.transform.position;
-            creature.rb.AddForce(direction.normalized * attackForce, ForceMode.Impulse);
-        }
-        
-        private void AboveWaterAttack(WaterCreature creature)
-        {
-            //Add force to the creature in the direction of the player
-            Vector3 direction = PlayerMovementController.Instance.transform.position - creature.transform.position;
-            creature.rb.AddForce(direction.normalized * attackForce, ForceMode.Impulse);
-        }
-        
-        
+
         public void Collision(WaterCreature creature, Collision other)
         {
-            if (other.collider.CompareTag("Player_Main"))
-            {
-                PlayerMovementController.Instance.player.Health.TakeDamage(101);
-            }
+            Debug.Log(other.collider.name);
         }
-        
     }
 
     public abstract class CreatureState
     {
         public abstract void StateEnter(WaterCreature creature);
         public abstract void StateExit(WaterCreature creature);
+        public abstract void StateUpdate(WaterCreature creature);
         public abstract void StateFixedUpdate(WaterCreature creature);
         public abstract void LateUpdate(WaterCreature creature);
     }
