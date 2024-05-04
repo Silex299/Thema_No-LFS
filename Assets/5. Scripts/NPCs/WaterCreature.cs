@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Player_Scripts;
+using UnityEditor.Timeline;
 using UnityEngine;
 
 
@@ -10,7 +12,19 @@ namespace NPCs
         [SerializeField] private GuardStateEnum state;
         [SerializeField] private float creatureRotationSpeed;
         [SerializeField] internal float creatureSpeed;
-        [SerializeField] internal Rigidbody rb;
+        [SerializeField] internal bool stayOnSurf;
+
+        [SerializeField, Space(10)] internal Rigidbody rb;
+        [SerializeField] internal Animator animator;
+
+        /**
+         * minY and maxY are the limits for the y position of the creature when moving roam and chase states
+         * defaultY is the y position of the creature moves away from player after attack;
+         **/
+        [SerializeField, Space(10)] internal float minY;
+
+        [SerializeField] internal float defaultY;
+        [SerializeField] internal float maxY;
 
 
         private CreatureState _currentState;
@@ -32,25 +46,21 @@ namespace NPCs
             ChangeState(state);
         }
 
+        private void OnEnable()
+        {
+            PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+        }
+
+        private void OnDisable()
+        {
+            PlayerMovementController.Instance.player.Health.OnDeath -= OnPlayerDeath;
+        }
+
         private void Update()
         {
             if (!enabled) return;
 
             _currentState.StateUpdate(this);
-        }
-
-        private void FixedUpdate()
-        {
-            if (!enabled) return;
-
-            _currentState.StateFixedUpdate(this);
-        }
-
-        private void LateUpdate()
-        {
-            if (!enabled) return;
-
-            _currentState.LateUpdate(this);
         }
 
         //Create a function that changes the current state
@@ -69,17 +79,25 @@ namespace NPCs
                     break;
             }
 
-            _currentState.StateEnter(this);
+            _currentState?.StateEnter(this);
         }
 
 
         //Create a function that rotates the creature towards the player
-        public void Rotate(Vector3 rotateTowards)
+        public void Rotate(Vector3 rotateTowards, float speedMultiplier = 1)
         {
             Vector3 direction = rotateTowards - transform.position;
+
+
+            direction.y = 0;
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation,
-                creatureRotationSpeed * Time.fixedDeltaTime);
+                creatureRotationSpeed * speedMultiplier * Time.fixedDeltaTime);
+        }
+
+        private void OnPlayerDeath()
+        {
+            _currentState?.OnPlayerDeath(this);
         }
     }
 
@@ -87,14 +105,19 @@ namespace NPCs
     [System.Serializable]
     public class CreatureRoamState : CreatureState
     {
-        [SerializeField] private Transform[] roamPoints;
-        [SerializeField] private float stopDistance;
-
-
-        private int _currentRoamPoint;
+        [SerializeField] private float roamRadius;
+        [SerializeField] private float roamSpeed;
+        private Vector3 _center;
 
         public override void StateEnter(WaterCreature creature)
         {
+            _center = creature.transform.position;
+            if (creature.stayOnSurf)
+            {
+                //set y value to be defaultY
+                creature.transform.position = new Vector3(creature.transform.position.x, creature.defaultY,
+                    creature.transform.position.z);
+            }
         }
 
         public override void StateExit(WaterCreature creature)
@@ -103,39 +126,32 @@ namespace NPCs
 
         public override void StateUpdate(WaterCreature creature)
         {
-        }
+            //move the creature in a circular path around the center with a radius 10  
+            float angle = Time.time * roamSpeed;
+            float x = Mathf.Cos(angle) * roamRadius;
+            float z = Mathf.Sin(angle) * roamRadius;
 
-        public override void StateFixedUpdate(WaterCreature creature)
-        {
-            MoveCreature(creature);
-            //Rotate the creature in the direction of the current roam point
-            creature.Rotate(roamPoints[_currentRoamPoint].position);
-        }
-
-        public override void LateUpdate(WaterCreature creature)
-        {
-        }
-
-
-        //Create a function to move the creature to the next roam point and change to the next roam point if the distance between creature and roam point is less than stopDistance
-        private void MoveCreature(WaterCreature creature)
-        {
-            if (Vector3.Distance(creature.transform.position, roamPoints[_currentRoamPoint].position) < stopDistance)
+            float y = 0;
+            if (creature.stayOnSurf)
             {
-                ChangeRoamPoint();
+                y = creature.defaultY;
             }
             else
             {
-                creature.transform.position = Vector3.MoveTowards(creature.transform.position,
-                    roamPoints[_currentRoamPoint].position, creature.creatureSpeed * Time.fixedDeltaTime);
+                y = Mathf.Sin(angle) * (creature.maxY - creature.minY) / 2 + (creature.maxY + creature.minY) / 2;
             }
+
+            //set the y position to the default y position
+            Vector3 newPos = new Vector3(_center.x + x, y, _center.z + z);
+            creature.transform.position = newPos;
+
+            //get tangent to the circle
+            Vector3 tangent = new Vector3(-z, y, x).normalized;
+            creature.Rotate(newPos + tangent, 5);
         }
 
-
-        //Create a function that changes the currentRoamPoint to the next one in the array
-        private void ChangeRoamPoint()
+        public override void OnPlayerDeath(WaterCreature creature)
         {
-            _currentRoamPoint = (_currentRoamPoint + 1) % roamPoints.Length;
         }
     }
 
@@ -143,23 +159,31 @@ namespace NPCs
     public class CreatureChaseState : CreatureState
     {
         [SerializeField] private float attackDistance;
-
-        [SerializeField] private float minY;
-        [SerializeField] private float defaultY;
-        [SerializeField] private float maxY;
-
+        [SerializeField] private float afterAttackDistance;
+        [SerializeField] private float timeToAttack = 1;
 
         [SerializeField] private bool playerInWater;
 
 
         private bool _isAttacking;
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int Chase = Animator.StringToHash("Chase");
 
         public override void StateEnter(WaterCreature creature)
         {
+            if (creature.stayOnSurf)
+            {
+                creature.transform.position = new Vector3(creature.transform.position.x, creature.defaultY,
+                    creature.transform.position.z);
+            }
+
+            creature.animator.SetBool(Chase, true);
         }
 
         public override void StateExit(WaterCreature creature)
         {
+            _isAttacking = false;
+            creature.animator.SetBool(Chase, false);
         }
 
 
@@ -168,12 +192,9 @@ namespace NPCs
             MoveCreature(creature);
         }
 
-        public override void StateFixedUpdate(WaterCreature creature)
+        public override void OnPlayerDeath(WaterCreature creature)
         {
-        }
-
-        public override void LateUpdate(WaterCreature creature)
-        {
+            creature.ChangeState(GuardStateEnum.Guard);
         }
 
 
@@ -188,20 +209,42 @@ namespace NPCs
             //Move the creature towards the player with restricting the y position
             Vector3 targetPosition = PlayerMovementController.Instance.player.transform.position;
 
-            targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
+            targetPosition.y =
+                creature.stayOnSurf ? creature.defaultY : Mathf.Clamp(targetPosition.y, creature.minY, creature.maxY);
 
             creature.transform.position = Vector3.MoveTowards(creature.transform.position, targetPosition,
                 creature.creatureSpeed * Time.deltaTime);
 
+            creature.Rotate(targetPosition, 0.5f);
 
-            //Attack the player if the distance between the player and the creature is less than attackDistance
-            if (!(Vector3.Distance(creature.transform.position, targetPosition) < attackDistance)) return;
+            float distance = Vector3.Distance(creature.transform.position, targetPosition);
 
-            Debug.Log("calling again and again");
-            creature.StartCoroutine(AttackPlayer(creature));
+            if (playerInWater)
+            {
+                if (distance < 1)
+                {
+                    creature.StartCoroutine(AttackPlayerUnderWater(creature));
+                }
+            }
+            else
+            {
+                if (distance < attackDistance)
+                {
+                    creature.StartCoroutine(AttackPlayer(creature));
+                }
+            }
         }
 
-        public float timeToAttack = 1;
+        private IEnumerator AttackPlayerUnderWater(WaterCreature creature)
+        {
+            _isAttacking = true;
+            creature.animator.SetTrigger(Attack);
+            yield return new WaitForSeconds(0.2f);
+
+            PlayerMovementController.Instance.player.Health.TakeDamage(101);
+
+            _isAttacking = false;
+        }
 
         //Create a function that attacks the player
         private IEnumerator AttackPlayer(WaterCreature creature)
@@ -214,12 +257,14 @@ namespace NPCs
             float y = targetPosition.y - 2;
             float timeElapse = 0;
 
+            creature.animator.SetTrigger(Attack);
+
             while (timeElapse < timeToAttack)
             {
                 timeElapse += Time.deltaTime;
                 float fraction = timeElapse / timeToAttack;
 
-                y = Mathf.Lerp((targetPosition.y - 2), Mathf.Clamp(targetPosition.y, -100, maxY),
+                y = Mathf.Lerp((targetPosition.y - 2), Mathf.Clamp(targetPosition.y, -100, creature.maxY),
                     Mathf.Pow(fraction, 2));
 
                 Vector3 moveTo = new Vector3(targetPosition.x, y, targetPosition.z);
@@ -230,31 +275,46 @@ namespace NPCs
                 yield return null;
             }
 
-            creaturePosition = creature.transform.position;
 
             float angle = Vector3.Angle(creature.transform.forward, Vector3.right);
 
-            Vector3 moveTo_1 = angle > 90
-                ? creaturePosition - Vector3.right * (attackDistance + 1)
-                : creaturePosition + Vector3.right * (attackDistance + 1);
-            moveTo_1.y = defaultY;
+            Vector3 moveTo1 = angle > 90
+                ? creaturePosition - Vector3.right * afterAttackDistance
+                : creaturePosition + Vector3.right * afterAttackDistance;
+
+            moveTo1.y = creature.defaultY;
+
 
             timeElapse = 0;
-
-            while (timeElapse < timeToAttack)
+            while (true)
             {
                 timeElapse += Time.deltaTime;
-                float fraction = timeElapse / timeToAttack;
 
-                creature.transform.position = Vector3.Lerp(creaturePosition, moveTo_1, fraction);
-                creature.Rotate(moveTo_1);
+                if (timeElapse < 0.5)
+                {
+                    moveTo1.y = creature.defaultY - 2;
+                }
+                else
+                {
+                    moveTo1.y = creature.defaultY;
+                }
+
+                //move creature to moveTo1 with speed creatureSpeed
+                creature.transform.position = Vector3.MoveTowards(creature.transform.position, moveTo1,
+                    creature.creatureSpeed * Time.deltaTime);
+                creature.Rotate(moveTo1);
+
+                //if the distance between the creature and the moveTo1 is less than 0.1f break the loop
+                if (Vector3.Distance(creature.transform.position, moveTo1) < 0.01f)
+                {
+                    break;
+                }
 
                 yield return null;
             }
 
             _isAttacking = false;
         }
-
 
         public void Collision(WaterCreature creature, Collision other)
         {
@@ -267,7 +327,6 @@ namespace NPCs
         public abstract void StateEnter(WaterCreature creature);
         public abstract void StateExit(WaterCreature creature);
         public abstract void StateUpdate(WaterCreature creature);
-        public abstract void StateFixedUpdate(WaterCreature creature);
-        public abstract void LateUpdate(WaterCreature creature);
+        public abstract void OnPlayerDeath(WaterCreature creature);
     }
 }
