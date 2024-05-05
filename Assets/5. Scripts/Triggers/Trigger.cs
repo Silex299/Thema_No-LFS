@@ -8,11 +8,20 @@ namespace Triggers
     [RequireComponent(typeof(BoxCollider))]
     public class Trigger : MonoBehaviour
     {
+        [SerializeField, BoxGroup("Properties"), Space(5)]
+        protected string triggerTag;
 
-        [SerializeField, BoxGroup("Properties"), Space(5)] protected string triggerTag;
-        [SerializeField, BoxGroup("Properties")] private bool oneTime;
-        [SerializeField, BoxGroup("Properties")] private float secondActionDelay = 1;
-        [SerializeField, BoxGroup("Properties"), Space(5)] private TriggerCondition[] conditionComponent;
+        [SerializeField, BoxGroup("Properties")]
+        private bool oneTime;
+
+        [SerializeField, BoxGroup("Properties")]
+        private bool entryTrigger;
+
+        [SerializeField, BoxGroup("Properties")]
+        private float secondActionDelay = 1;
+
+        [SerializeField, BoxGroup("Properties"), Space(5)]
+        private TriggerCondition[] conditionComponent;
 
 
         [SerializeField, Space(10)] private UnityEvent actions;
@@ -27,7 +36,6 @@ namespace Triggers
 
         protected virtual void OnTriggerStay(Collider other)
         {
-
             if (other.CompareTag(triggerTag))
             {
                 if (_reset != null)
@@ -36,29 +44,31 @@ namespace Triggers
                 }
 
                 _reset = StartCoroutine(ResetTrigger());
-                
+
                 if (_isTriggered && oneTime) return;
 
 
                 _playerIsInTrigger = true;
                 _interactCollider = other;
-
             }
         }
 
 
         public IEnumerator ResetTrigger()
         {
-
             yield return new WaitForSeconds(0.2f);
 
             _playerIsInTrigger = false;
             //_isTriggered = false;
             _interactCollider = null;
 
+            if (entryTrigger)
+            {
+                _isTriggered = false;
+            }
+
             exitActions?.Invoke();
         }
-
 
 
         private void Update()
@@ -87,7 +97,6 @@ namespace Triggers
                 {
                     PerformAction();
                 }
-
             }
             else
             {
@@ -96,21 +105,17 @@ namespace Triggers
         }
 
 
-
         private void PerformAction()
         {
             actions?.Invoke();
 
             _isTriggered = true;
             _lastTriggerTime = Time.time;
-            
         }
 
         public void EnableTrigger(bool status)
         {
             isEnabled = status;
         }
-
     }
-
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using Player_Scripts;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 
@@ -8,27 +9,58 @@ namespace NPCs
 {
     public class WaterCreature : MonoBehaviour
     {
-        [SerializeField] private GuardStateEnum state;
-        [SerializeField] private float creatureRotationSpeed;
-        [SerializeField] internal float creatureSpeed;
-        [SerializeField] internal bool stayOnSurf;
+        #region State Settings
 
-        [SerializeField, Space(10)] internal Rigidbody rb;
-        [SerializeField] internal Animator animator;
+        [BoxGroup("State Settings"), SerializeField]
+        private GuardStateEnum state;
 
-        /**
-         * minY and maxY are the limits for the y position of the creature when moving roam and chase states
-         * defaultY is the y position of the creature moves away from player after attack;
-         **/
-        [SerializeField, Space(10)] internal float minY;
+        [BoxGroup("State Settings"), SerializeField]
+        private CreatureRoamState roamState = new CreatureRoamState();
 
-        [SerializeField] internal float defaultY;
-        [SerializeField] internal float maxY;
-
-
+        [BoxGroup("State Settings"), SerializeField]
+        private CreatureChaseState chaseState = new CreatureChaseState();
+        
         private CreatureState _currentState;
-        [SerializeField] private CreatureRoamState roamState = new CreatureRoamState();
-        [SerializeField] private CreatureChaseState chaseState = new CreatureChaseState();
+
+        #endregion
+
+        #region Creature Settings
+
+        [BoxGroup("Creature Settings"), SerializeField]
+        private float creatureRotationSpeed;
+
+        [BoxGroup("Creature Settings"), SerializeField]
+        internal float creatureSpeed;
+
+        [BoxGroup("Creature Settings"), SerializeField]
+        internal bool stayOnSurf;
+
+        #endregion
+
+        #region Creature Components
+
+        [BoxGroup("Creature Components"), SerializeField, Space(10)]
+        internal Rigidbody rb;
+
+        [BoxGroup("Creature Components"), SerializeField]
+        internal Animator animator;
+
+        #endregion
+
+        #region Position Settings
+
+        [BoxGroup("Position Settings"), SerializeField, Space(10)]
+        internal float minY;
+
+        [BoxGroup("Position Settings"), SerializeField]
+        internal float defaultY;
+
+        [BoxGroup("Position Settings"), SerializeField]
+        internal float maxY;
+
+        private static readonly int InWater = Animator.StringToHash("PlayerInWater");
+
+        #endregion
 
 
         private void Start()
@@ -57,6 +89,7 @@ namespace NPCs
         public void ChangeState(GuardStateEnum newState)
         {
             _currentState?.StateExit(this);
+            
             state = newState;
 
             switch (state)
@@ -72,7 +105,20 @@ namespace NPCs
             _currentState?.StateEnter(this);
         }
 
+        //Create a function that changes the current state with integer 0 as roam and 1 as chase
+        public void ChangeState(int newState)
+        {
+            ChangeState((GuardStateEnum) newState);
+        }
+        
 
+        public void PlayerInWater(bool inWater)
+        {
+            animator.SetBool(InWater, inWater);
+            //change PlayerInWater in chase state
+            chaseState.playerInWater = inWater;
+        }
+        
         //Create a function that rotates the creature towards the player
         public void Rotate(Vector3 rotateTowards, float speedMultiplier = 1)
         {
@@ -171,7 +217,7 @@ namespace NPCs
         [SerializeField] private float timeToAttack = 1;
 
         [SerializeField] private GameObject hitEffect;
-        [SerializeField] private bool playerInWater;
+        [SerializeField] internal bool playerInWater;
 
 
         private bool _isAttacking;
@@ -194,6 +240,7 @@ namespace NPCs
         public override void StateExit(WaterCreature creature)
         {
             _isAttacking = false;
+            Debug.Log("Calling State Exit");
             creature.animator.SetBool(Chase, false);
         }
 
@@ -241,9 +288,12 @@ namespace NPCs
             float distance = Vector3.Distance(creature.transform.position, targetPosition);
 
             // If the player is in water and the distance is less than 1, start the underwater attack
-            if (playerInWater && distance < 1)
+            if (playerInWater)
             {
-                creature.StartCoroutine(AttackPlayerUnderWater(creature));
+                if (distance < 1)
+                {
+                    creature.StartCoroutine(AttackPlayerUnderWater(creature));
+                }
             }
             // If the distance is less than the attack distance, start the attack
             else if (distance < attackDistance)
@@ -350,7 +400,7 @@ namespace NPCs
 
             _isAttacking = false;
         }
-
+        
         #endregion
     }
 
