@@ -1,7 +1,10 @@
 using System.Collections;
+using System.Net.NetworkInformation;
+using System.Timers;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 // ReSharper disable once CheckNamespace
@@ -19,7 +22,7 @@ namespace NPCs
 
         [BoxGroup("State Settings"), SerializeField]
         private CreatureChaseState chaseState = new CreatureChaseState();
-        
+
         private CreatureState _currentState;
 
         #endregion
@@ -30,10 +33,12 @@ namespace NPCs
         private float creatureRotationSpeed;
 
         [BoxGroup("Creature Settings"), SerializeField]
-        internal float creatureSpeed;
+        private float creatureSpeed;
 
         [BoxGroup("Creature Settings"), SerializeField]
         internal bool stayOnSurf;
+
+        internal float CurrentSpeed;
 
         #endregion
 
@@ -65,7 +70,8 @@ namespace NPCs
 
         private void Start()
         {
-            ChangeState(state);
+            CurrentSpeed = creatureSpeed;
+            ChangeState(state, true);
         }
 
         private void OnEnable()
@@ -86,10 +92,12 @@ namespace NPCs
         }
 
         //Create a function that changes the current state
-        public void ChangeState(GuardStateEnum newState)
+        public void ChangeState(GuardStateEnum newState, bool initial = false)
         {
-            _currentState?.StateExit(this);
+            if (!initial && state == newState) return;
             
+            _currentState?.StateExit(this);
+
             state = newState;
 
             switch (state)
@@ -108,9 +116,9 @@ namespace NPCs
         //Create a function that changes the current state with integer 0 as roam and 1 as chase
         public void ChangeState(int newState)
         {
-            ChangeState((GuardStateEnum) newState);
+            ChangeState((GuardStateEnum)newState);
         }
-        
+
 
         public void PlayerInWater(bool inWater)
         {
@@ -118,7 +126,7 @@ namespace NPCs
             //change PlayerInWater in chase state
             chaseState.playerInWater = inWater;
         }
-        
+
         //Create a function that rotates the creature towards the player
         public void Rotate(Vector3 rotateTowards, float speedMultiplier = 1)
         {
@@ -134,6 +142,11 @@ namespace NPCs
         private void OnPlayerDeath()
         {
             _currentState?.OnPlayerDeath(this);
+        }
+
+        public void ChangeSpeed(float speed)
+        {
+            CurrentSpeed = speed <= 0 ? creatureSpeed : speed;
         }
     }
 
@@ -162,6 +175,9 @@ namespace NPCs
                 creature.transform.position = new Vector3(creature.transform.position.x, creature.defaultY,
                     creature.transform.position.z);
             }
+            
+            
+            _reachedPerimeter = false;
         }
 
         public override void StateExit(WaterCreature creature)
@@ -177,6 +193,10 @@ namespace NPCs
         {
         }
 
+
+        private bool _reachedPerimeter;
+        private float _lastPerimeterTime;
+
         /// <summary>
         /// Moves the creature in a circular path around a center point.
         /// The creature's y position is determined based on whether it stays on the surface or not.
@@ -184,12 +204,44 @@ namespace NPCs
         /// <param name="creature">The creature that is moving.</param>
         private void MovePlayer(WaterCreature creature)
         {
-            //move the creature in a circular path around the center with a radius 10
-            float angle = Time.time * roamSpeed;
-            float x = Mathf.Cos(angle) * roamRadius;
-            float z = Mathf.Sin(angle) * roamRadius;
+            float angle = 0, x, y, z;
 
-            float y;
+            if (!_reachedPerimeter)
+            {
+                x = roamRadius;
+                z = 0;
+
+                if (creature.stayOnSurf)
+                {
+                    y = creature.defaultY;
+                }
+                else
+                {
+                    y = creature.transform.position.y;
+                }
+
+
+                Vector3 moveTo = new Vector3(_center.x + x, y, _center.z + z);
+                
+                
+                creature.transform.position = Vector3.Lerp(creature.transform.position, moveTo, creature.CurrentSpeed * Time.deltaTime);
+                creature.Rotate(moveTo);
+
+                //if distance between the creature and the center is less than 0.1, set reached perimeter to true
+                if (Vector3.Distance(creature.transform.position, moveTo) < 0.1f)
+                {
+                    _reachedPerimeter = true;
+                    _lastPerimeterTime = Time.time;
+                }
+                
+                return;
+            }
+
+            //move the creature in a circular path around the center with a radius 10
+            angle = (Time.time - _lastPerimeterTime) * roamSpeed;
+            x = Mathf.Cos(angle) * roamRadius;
+            z = Mathf.Sin(angle) * roamRadius;
+
             if (creature.stayOnSurf)
             {
                 y = creature.defaultY;
@@ -219,6 +271,7 @@ namespace NPCs
         [SerializeField] private GameObject hitEffect;
         [SerializeField] internal bool playerInWater;
 
+        [SerializeField] private UnityEvent onAttack;
 
         private bool _isAttacking;
         private static readonly int Attack = Animator.StringToHash("Attack");
@@ -279,7 +332,7 @@ namespace NPCs
 
             // Move the creature towards the player at a speed of creatureSpeed
             creature.transform.position = Vector3.MoveTowards(creature.transform.position, targetPosition,
-                creature.creatureSpeed * Time.deltaTime);
+                creature.CurrentSpeed * Time.deltaTime);
 
             // Rotate the creature towards the player
             creature.Rotate(targetPosition, 0.5f);
@@ -355,6 +408,8 @@ namespace NPCs
 
             // Instantiate hit effect
             MonoBehaviour.Instantiate(hitEffect, creature.transform.position, Quaternion.identity);
+            //call on attack event
+            onAttack?.Invoke();
 
             // If creature is close to player, trigger player animation
             if (Vector3.Distance(creature.transform.position, PlayerMovementController.Instance.transform.position) < 2)
@@ -387,7 +442,7 @@ namespace NPCs
                 }
 
                 creature.transform.position = Vector3.MoveTowards(creature.transform.position, moveTo1,
-                    creature.creatureSpeed * Time.deltaTime);
+                    creature.CurrentSpeed * Time.deltaTime);
                 creature.Rotate(moveTo1);
 
                 if (Vector3.Distance(creature.transform.position, moveTo1) < 0.01f)
@@ -400,7 +455,7 @@ namespace NPCs
 
             _isAttacking = false;
         }
-        
+
         #endregion
     }
 

@@ -54,6 +54,7 @@ namespace NPCs
 
         public virtual void ChangeState(GuardStateEnum newState)
         {
+            
             currentState?.StateExit(this);
             currentGuardState = newState;
 
