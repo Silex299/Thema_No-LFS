@@ -99,12 +99,20 @@ namespace NPCs
         [SerializeField] private float roamSpeed;
         private Vector3 _center;
 
+        /// <summary>
+        /// Sets the initial state of the creature when it starts roaming.
+        /// If the creature stays on the surface, its y position is set to defaultY.
+        /// </summary>
+        /// <param name="creature">The creature that is entering the state.</param>
         public override void StateEnter(WaterCreature creature)
         {
+            // Set the center position to the creature's current position
             _center = creature.transform.position;
+
+            // Check if the creature stays on the surface
             if (creature.stayOnSurf)
             {
-                //set y value to be defaultY
+                // If it does, set the y value of the creature's position to be defaultY
                 creature.transform.position = new Vector3(creature.transform.position.x, creature.defaultY,
                     creature.transform.position.z);
             }
@@ -116,7 +124,21 @@ namespace NPCs
 
         public override void StateUpdate(WaterCreature creature)
         {
-            //move the creature in a circular path around the center with a radius 10  
+            MovePlayer(creature);
+        }
+
+        public override void OnPlayerDeath(WaterCreature creature)
+        {
+        }
+
+        /// <summary>
+        /// Moves the creature in a circular path around a center point.
+        /// The creature's y position is determined based on whether it stays on the surface or not.
+        /// </summary>
+        /// <param name="creature">The creature that is moving.</param>
+        private void MovePlayer(WaterCreature creature)
+        {
+            //move the creature in a circular path around the center with a radius 10
             float angle = Time.time * roamSpeed;
             float x = Mathf.Cos(angle) * roamRadius;
             float z = Mathf.Sin(angle) * roamRadius;
@@ -139,10 +161,6 @@ namespace NPCs
             Vector3 tangent = new Vector3(-z, y, x).normalized;
             creature.Rotate(newPos + tangent, 5);
         }
-
-        public override void OnPlayerDeath(WaterCreature creature)
-        {
-        }
     }
 
     [System.Serializable]
@@ -159,6 +177,8 @@ namespace NPCs
         private bool _isAttacking;
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Chase = Animator.StringToHash("Chase");
+
+        #region State Methods
 
         public override void StateEnter(WaterCreature creature)
         {
@@ -177,7 +197,6 @@ namespace NPCs
             creature.animator.SetBool(Chase, false);
         }
 
-
         public override void StateUpdate(WaterCreature creature)
         {
             MoveCreature(creature);
@@ -188,48 +207,62 @@ namespace NPCs
             creature.ChangeState(GuardStateEnum.Guard);
         }
 
+        #endregion
 
-        //Create a function that moves the creature towards the player
+        #region Movement and Attack Methods
+
+        /// <summary>
+        /// Moves the creature towards the player and initiates an attack if the player is within a certain distance.
+        /// The creature's movement is halted if it is currently attacking.
+        /// </summary>
+        /// <param name="creature">The creature that is performing the movement and potential attack.</param>
         private void MoveCreature(WaterCreature creature)
         {
-            if (_isAttacking)
-            {
-                return;
-            }
+            // Check if the creature is currently attacking
+            if (_isAttacking) return;
 
-            //Move the creature towards the player with restricting the y position
+            // Get the player's position
             Vector3 targetPosition = PlayerMovementController.Instance.player.transform.position;
 
-            targetPosition.y =
-                creature.stayOnSurf ? creature.defaultY : Mathf.Clamp(targetPosition.y, creature.minY, creature.maxY);
+            // If the creature stays on the surface, set the y position to defaultY
+            // Otherwise, clamp the y position between minY and maxY
+            targetPosition.y = creature.stayOnSurf
+                ? creature.defaultY
+                : Mathf.Clamp(targetPosition.y, creature.minY, creature.maxY);
 
+            // Move the creature towards the player at a speed of creatureSpeed
             creature.transform.position = Vector3.MoveTowards(creature.transform.position, targetPosition,
                 creature.creatureSpeed * Time.deltaTime);
 
+            // Rotate the creature towards the player
             creature.Rotate(targetPosition, 0.5f);
 
+            // Calculate the distance between the creature and the player
             float distance = Vector3.Distance(creature.transform.position, targetPosition);
 
-            if (playerInWater)
+            // If the player is in water and the distance is less than 1, start the underwater attack
+            if (playerInWater && distance < 1)
             {
-                if (distance < 1)
-                {
-                    creature.StartCoroutine(AttackPlayerUnderWater(creature));
-                }
+                creature.StartCoroutine(AttackPlayerUnderWater(creature));
             }
-            else
+            // If the distance is less than the attack distance, start the attack
+            else if (distance < attackDistance)
             {
-                if (distance < attackDistance)
-                {
-                    creature.StartCoroutine(AttackPlayer(creature));
-                }
+                creature.StartCoroutine(AttackPlayer(creature));
             }
         }
 
+        /// <summary>
+        /// This coroutine handles the underwater attack of the creature.
+        /// It triggers the attack animation, waits for a short period, applies damage to the player, and then ends the attack.
+        /// </summary>
+        /// <param name="creature">The creature that is performing the attack.</param>
         private IEnumerator AttackPlayerUnderWater(WaterCreature creature)
         {
             _isAttacking = true;
+
             creature.animator.SetTrigger(Attack);
+
             yield return new WaitForSeconds(0.2f);
 
             PlayerMovementController.Instance.player.Health.TakeDamage(101);
@@ -237,7 +270,11 @@ namespace NPCs
             _isAttacking = false;
         }
 
-        //Create a function that attacks the player
+        /// <summary>
+        /// This coroutine handles the attack of the creature.
+        /// It triggers the attack animation, moves the creature towards the player, applies damage to the player, and then moves the creature away from the player.
+        /// </summary>
+        /// <param name="creature">The creature that is performing the attack.</param>
         private IEnumerator AttackPlayer(WaterCreature creature)
         {
             _isAttacking = true;
@@ -249,6 +286,7 @@ namespace NPCs
 
             creature.animator.SetTrigger(Attack);
 
+            // Move creature towards the player and rotate it
             while (timeElapse < timeToAttack)
             {
                 timeElapse += Time.deltaTime;
@@ -265,27 +303,25 @@ namespace NPCs
                 yield return null;
             }
 
-
+            // Instantiate hit effect
             MonoBehaviour.Instantiate(hitEffect, creature.transform.position, Quaternion.identity);
-             
-            //If distance between the creature and the player are less than 2, Player plays animation 
+
+            // If creature is close to player, trigger player animation
             if (Vector3.Distance(creature.transform.position, PlayerMovementController.Instance.transform.position) < 2)
             {
                 PlayerMovementController.Instance.DisablePlayerMovement(true);
                 PlayerMovementController.Instance.PlayAnimation("Tripping", 0.2f, 1);
             }
 
-            
-            
+            // Determine direction for creature to move after attack
             float angle = Vector3.Angle(creature.transform.forward, Vector3.right);
-
             Vector3 moveTo1 = angle > 90
                 ? creaturePosition - Vector3.right * afterAttackDistance
                 : creaturePosition + Vector3.right * afterAttackDistance;
 
             moveTo1.y = creature.defaultY;
 
-
+            // Move creature away from player after attack
             timeElapse = 0;
             while (true)
             {
@@ -300,12 +336,10 @@ namespace NPCs
                     moveTo1.y = creature.defaultY;
                 }
 
-                //move creature to moveTo1 with speed creatureSpeed
                 creature.transform.position = Vector3.MoveTowards(creature.transform.position, moveTo1,
                     creature.creatureSpeed * Time.deltaTime);
                 creature.Rotate(moveTo1);
 
-                //if the distance between the creature and the moveTo1 is less than 0.1f break the loop
                 if (Vector3.Distance(creature.transform.position, moveTo1) < 0.01f)
                 {
                     break;
@@ -314,11 +348,10 @@ namespace NPCs
                 yield return null;
             }
 
-            
-           
             _isAttacking = false;
         }
-        
+
+        #endregion
     }
 
     public abstract class CreatureState
