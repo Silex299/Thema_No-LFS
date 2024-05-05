@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using Player_Scripts;
-using UnityEditor.Timeline;
 using UnityEngine;
 
 
+// ReSharper disable once CheckNamespace
 namespace NPCs
 {
     public class WaterCreature : MonoBehaviour
@@ -31,15 +30,6 @@ namespace NPCs
         [SerializeField] private CreatureRoamState roamState = new CreatureRoamState();
         [SerializeField] private CreatureChaseState chaseState = new CreatureChaseState();
 
-
-        private void OnCollisionEnter(Collision other)
-        {
-            //if state is chase call the Collision function in chaseState
-            if (state == GuardStateEnum.Chase)
-            {
-                chaseState.Collision(this, other);
-            }
-        }
 
         private void Start()
         {
@@ -131,7 +121,7 @@ namespace NPCs
             float x = Mathf.Cos(angle) * roamRadius;
             float z = Mathf.Sin(angle) * roamRadius;
 
-            float y = 0;
+            float y;
             if (creature.stayOnSurf)
             {
                 y = creature.defaultY;
@@ -162,6 +152,7 @@ namespace NPCs
         [SerializeField] private float afterAttackDistance;
         [SerializeField] private float timeToAttack = 1;
 
+        [SerializeField] private GameObject hitEffect;
         [SerializeField] private bool playerInWater;
 
 
@@ -254,7 +245,6 @@ namespace NPCs
             Vector3 targetPosition = PlayerMovementController.Instance.player.transform.position;
             Vector3 creaturePosition = creature.transform.position;
 
-            float y = targetPosition.y - 2;
             float timeElapse = 0;
 
             creature.animator.SetTrigger(Attack);
@@ -264,7 +254,7 @@ namespace NPCs
                 timeElapse += Time.deltaTime;
                 float fraction = timeElapse / timeToAttack;
 
-                y = Mathf.Lerp((targetPosition.y - 2), Mathf.Clamp(targetPosition.y, -100, creature.maxY),
+                var y = Mathf.Lerp((targetPosition.y - 2), Mathf.Clamp(targetPosition.y, -100, creature.maxY),
                     Mathf.Pow(fraction, 2));
 
                 Vector3 moveTo = new Vector3(targetPosition.x, y, targetPosition.z);
@@ -276,6 +266,17 @@ namespace NPCs
             }
 
 
+            MonoBehaviour.Instantiate(hitEffect, creature.transform.position, Quaternion.identity);
+             
+            //If distance between the creature and the player are less than 2, Player plays animation 
+            if (Vector3.Distance(creature.transform.position, PlayerMovementController.Instance.transform.position) < 2)
+            {
+                PlayerMovementController.Instance.DisablePlayerMovement(true);
+                PlayerMovementController.Instance.PlayAnimation("Tripping", 0.2f, 1);
+            }
+
+            
+            
             float angle = Vector3.Angle(creature.transform.forward, Vector3.right);
 
             Vector3 moveTo1 = angle > 90
@@ -313,13 +314,11 @@ namespace NPCs
                 yield return null;
             }
 
+            
+           
             _isAttacking = false;
         }
-
-        public void Collision(WaterCreature creature, Collision other)
-        {
-            Debug.Log(other.collider.name);
-        }
+        
     }
 
     public abstract class CreatureState
