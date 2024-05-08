@@ -4,21 +4,14 @@ using UnityEngine;
 
 namespace Player_Scripts.States
 {
-
     [System.Serializable]
     public class WaterMovement : PlayerBaseStates
     {
-
-        private readonly static int Horizontal = Animator.StringToHash("Speed");
-        private readonly static int Vertical = Animator.StringToHash("Direction");
 
         [SerializeField] private float swimSpeed = 10;
         [SerializeField] private float lostBreathSpeed = 10;
         public float restrictedYPosition = 7.1f;
         public float restrictedXPosition;
-
-
-
 
 
         //Defines player position if player is at the surface of the water body or at bottom depth
@@ -32,15 +25,20 @@ namespace Player_Scripts.States
         private float _speedMultiplier = 1;
 
 
-        private readonly static int onSurface = Animator.StringToHash("onSurface");
-        private readonly static int StateIndex = Animator.StringToHash("StateIndex");
-        private readonly static int Push = Animator.StringToHash("Push");
+        private static readonly int Horizontal = Animator.StringToHash("Speed");
+        private static readonly int Vertical = Animator.StringToHash("Direction");
+        private static readonly int onSurface = Animator.StringToHash("onSurface");
+        private static readonly int StateIndex = Animator.StringToHash("StateIndex");
+        private static readonly int Push = Animator.StringToHash("Push");
 
         #region Overriden Methods
+
         public override void EnterState(Player player)
         {
             Debug.Log("Entering Water");
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
+            
+            //TODO: REMOVE THIS STATE INDEX??
             player.AnimationController.SetInteger(StateIndex, 2);
 
             previousCharacterHeight = player.CController.height;
@@ -71,21 +69,17 @@ namespace Player_Scripts.States
                 surfaceEffect.SetActive(false);
             }
 
-
             #endregion
-
         }
 
         public override void UpdateState(Player player)
         {
-
             //Basic movement and animator
 
             #region Basic Movement
 
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
-
 
 
             if (atSurface && verticalInput > 0)
@@ -107,13 +101,14 @@ namespace Player_Scripts.States
             }
 
 
-
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.8f : 1) * _speedMultiplier * movementVector * swimSpeed * Time.deltaTime);
+            player.CController.Move((atSurface ? 0.8f : 1) * _speedMultiplier * movementVector * swimSpeed *
+                                    Time.deltaTime);
 
 
-            player.AnimationController.SetFloat(Horizontal, ((player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput)), 0.2f, Time.deltaTime);
+            player.AnimationController.SetFloat(Horizontal,
+                ((player.enabledDirectionInput) ? horizontalInput : Mathf.Abs(horizontalInput)), 0.2f, Time.deltaTime);
             player.AnimationController.SetFloat(Vertical, verticalInput, 0.2f, Time.deltaTime);
 
             Rotate(player, horizontalInput);
@@ -123,10 +118,8 @@ namespace Player_Scripts.States
 
             #region Interaction
 
-
             if (player.interactable)
             {
-
                 PlayerInteractionType interaction = player.interactable.Interact();
 
                 switch (interaction)
@@ -139,6 +132,7 @@ namespace Player_Scripts.States
                             player.AnimationController.SetBool(Push, false);
                             player.enabledDirectionInput = false;
                         }
+
                         break;
 
                     case PlayerInteractionType.PUSH:
@@ -156,7 +150,6 @@ namespace Player_Scripts.States
                         //UPDATE PUSH
                         break;
                 }
-
             }
             else
             {
@@ -172,13 +165,11 @@ namespace Player_Scripts.States
             }
 
             #endregion
-
         }
 
 
         public override void LateUpdateState(Player player)
         {
-
         }
 
         public override void ExitState(Player player)
@@ -186,8 +177,15 @@ namespace Player_Scripts.States
             player.CController.height = previousCharacterHeight;
             player.EffectsManager.PlayLoopInteraction("", false); // Stop loop interaction
 
-            if (surfaceEffect) { GameObject.Destroy(surfaceEffect); }
-            if (bubbleEffect) { GameObject.Destroy(bubbleEffect); }
+            if (surfaceEffect)
+            {
+                GameObject.Destroy(surfaceEffect);
+            }
+
+            if (bubbleEffect)
+            {
+                GameObject.Destroy(bubbleEffect);
+            }
 
             Physics.gravity = new Vector3(0, -9.8f, 0);
         }
@@ -197,9 +195,6 @@ namespace Player_Scripts.States
         {
             player.Health.TakeDamage(Time.deltaTime * lostBreathSpeed);
         }
-
-
-
 
         #endregion
 
@@ -213,7 +208,6 @@ namespace Player_Scripts.States
 
         #region Custom Methods
 
-
         private IEnumerator EnablePlayerMovement()
         {
             yield return new WaitForSeconds(1.5f);
@@ -226,8 +220,8 @@ namespace Player_Scripts.States
             if (Mathf.Abs(horizontalInput) < 0.3f) return;
 
             Quaternion newRotation = Quaternion.LookRotation(-horizontalInput * Vector3.forward, Vector3.up);
-            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness);
-
+            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, newRotation,
+                Time.deltaTime * player.RotationSmoothness);
         }
 
         public void PlayerAtSurfact(Player player, bool status)
@@ -246,12 +240,11 @@ namespace Player_Scripts.States
             }
 
             //play swim sound
-            
+
             player.EffectsManager.PlayLoopInteraction("Swim", status);
 
             bubbleEffect.SetActive(!status);
             surfaceEffect.SetActive(status);
-
         }
 
         public void PlayerAtBottom(Player player, bool status)
@@ -260,7 +253,5 @@ namespace Player_Scripts.States
         }
 
         #endregion
-
     }
-
 }

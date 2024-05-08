@@ -4,7 +4,6 @@ using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
 
-
 namespace Player_Scripts
 {
 
@@ -29,7 +28,7 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player Movement")] internal bool enabledDirectionInput;
         [SerializeField, BoxGroup("Player Movement")] private bool canJump;
         /// <summary>
-        /// Used for sprint and other other boosting mechanisms
+        /// Used for sprint and other boosting mechanisms
         /// </summary>
         [BoxGroup("Player Movement")] public bool canBoost;
 
@@ -43,15 +42,16 @@ namespace Player_Scripts
         internal LayerMask groundMask;
 
 
-        //STATES
 
+        //MARKER : States
         /// <summary>
-        /// NOT AN ENUM. Absract class for current State
+        /// NOT AN ENUM. Abstract class for current State
         /// </summary>
         internal PlayerBaseStates currentState;
         [SerializeField, BoxGroup("Player States")] internal BasicMovementSate basicMovementState = new BasicMovementSate();
         [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState = new LadderMovementState();
         [SerializeField, BoxGroup("Player States")] internal WaterMovement waterMovement = new WaterMovement();
+        [SerializeField, BoxGroup("Player States")] internal RopeMovement ropeMovement = new RopeMovement();
 
 
         /// <summary>
@@ -107,9 +107,11 @@ namespace Player_Scripts
     [System.Serializable]
     public enum PlayerMovementState
     {
+        //MARKER : State
         BasicMovement,
         Ladder,
-        Water
+        Water,
+        Rope
     }
 
     /// <summary>

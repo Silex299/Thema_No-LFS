@@ -1,3 +1,4 @@
+using System;
 using Player_Scripts.Interactables;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace Player_Scripts
             }
 
             player.AnimationController.SetInteger(StateIndex, player.currentStateIndex);
+            //MARKER : states
             switch (player.e_currentState)
             {
                 case PlayerMovementState.BasicMovement:
@@ -43,7 +45,9 @@ namespace Player_Scripts
                 case PlayerMovementState.Water:
                     player.currentState = player.waterMovement;
                     break;
-
+                case PlayerMovementState.Rope:
+                    player.currentState = player.ropeMovement;
+                    break;
                 default:
                     player.currentState = player.basicMovementState;
                     break;
@@ -65,6 +69,14 @@ namespace Player_Scripts
             if (player.DisabledPlayerMovement) return;
 
             player.currentState.LateUpdateState(player);
+        }
+
+        private void FixedUpdate()
+        {
+            if (!player.DisabledPlayerMovement)
+            {
+                player.currentState.FixedUpdateState(player);
+            }
         }
 
         public void DisablePlayerMovement(bool disable)
@@ -103,6 +115,8 @@ namespace Player_Scripts
             return state == player.e_currentState;
         }
 
+        
+        //MARKER: State
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
             print(stateIndex);
@@ -133,12 +147,17 @@ namespace Player_Scripts
                 case PlayerMovementState.Water:
                     player.currentState = player.waterMovement;
                     break;
+                case PlayerMovementState.Rope:
+                    player.currentState = player.ropeMovement;
+                    break;
             }
 
 
             player.currentState.EnterState(player);
         }
 
+        //MARKER: State
+        //TODO : switch case to change state directly
         public void ChangeState(int index)
         {
             //if (player.DisablePlayerMovement) return;
@@ -169,6 +188,10 @@ namespace Player_Scripts
                 case 2:
                     player.e_currentState = PlayerMovementState.Water;
                     player.currentState = player.waterMovement;
+                    break;
+                case 3:
+                    player.e_currentState = PlayerMovementState.Rope;
+                    player.currentState = player.ropeMovement;
                     break;
             }
 

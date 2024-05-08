@@ -14,7 +14,7 @@ namespace Misc.Items
 
         [SerializeField, BoxGroup("HingeJoint")] private float spring, damp;
 
-        [SerializeField, Space(10)] private GameObject[] ropeSegments;
+        [SerializeField, Space(10)] public GameObject[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
 
         private bool _swing;
@@ -37,7 +37,7 @@ namespace Misc.Items
             for (int i = 0; i < ropeResolution; i++)
             {
                 //instantiate gameObject with current object being the parent
-                ropeSegments[i] = new GameObject("RopeSegment_" + i)
+                ropeSegments[i] = new GameObject(i.ToString())
                 {
                     transform =
                     {
