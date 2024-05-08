@@ -1,16 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Player_Scripts;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
 {
     public class Rope : MonoBehaviour
     {
+        #region Rope Properties
+
         [SerializeField, BoxGroup("Rope Properties")]
         private int ropeResolution;
 
@@ -26,50 +26,65 @@ namespace Misc.Items
         [SerializeField, BoxGroup("HingeJoint")]
         private float spring, damp;
 
-        [SerializeField, Space(10)] public GameObject[] ropeSegments;
+        #endregion
+
+        #region Player Movement
+
+        [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
+        [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
+
+        #endregion
+
+        #region Unexposed Variables
+
+        [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
+        private bool _connected;
+        private float _closestIndex;
+        private float _closestDistance = 100f;
 
-        [SerializeField, Space(10)] private bool connected;
-        [SerializeField] private float[] distances;
-        [SerializeField] private Vector3 offset;
+        #endregion
 
-        private bool _swing;
-        private Coroutine[] _coroutines = new Coroutine[3];
+        #region Editor Specific
 
-        public float _closestIndex;
-        public float _closestDistance = 100f;
+        private Vector3 _giz;
 
         [Button("Create Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
         public void CreateRopeSegments()
         {
-            //delete all children
-            foreach (GameObject obj in ropeSegments)
+            //delete all the children of the current object
+            foreach (var segment in ropeSegments)
             {
-                DestroyImmediate(obj);
+                DestroyImmediate(segment.gameObject);
             }
 
-            ropeSegments = new GameObject[ropeResolution];
+
+            ropeSegments = new Rigidbody[ropeResolution];
             lineRenderers = new LineRenderer[ropeResolution];
 
             for (int i = 0; i < ropeResolution; i++)
             {
                 //instantiate gameObject with current object being the parent
-                ropeSegments[i] = new GameObject(i.ToString())
+                GameObject obj = new GameObject(i.ToString())
                 {
                     transform =
                     {
                         parent = transform,
                         position = new Vector3(transform.position.x,
                             transform.position.y - i * (ropeLength) / (ropeResolution - 1), transform.position.z)
-                    }
+                    },
+                    //Set object layer to Ignore Player
+                    layer = LayerMask.NameToLayer("Ignore Player")
                 };
+
+                ropeSegments[i] = obj.AddComponent<Rigidbody>();
 
 
                 if (i > 0)
                 {
                     #region Line Renderer
 
-                    lineRenderers[i] = ropeSegments[i].AddComponent<LineRenderer>();
+                    lineRenderers[i] = ropeSegments[i].gameObject.AddComponent<LineRenderer>();
 
                     lineRenderers[i].startWidth = ropeThickness;
                     lineRenderers[i].endWidth = ropeThickness;
@@ -84,14 +99,12 @@ namespace Misc.Items
 
                     #region Hinge Joint
 
-                    ropeSegments[i].AddComponent<Rigidbody>();
+                    CapsuleCollider addedCollider = ropeSegments[i].gameObject.AddComponent<CapsuleCollider>();
+                    addedCollider.center = new Vector3(0, ((ropeLength / (ropeResolution - 1)) - 0.1f) / 2, 0);
+                    addedCollider.height = (ropeLength / (ropeResolution - 1)) - 0.1f;
+                    addedCollider.radius = ropeThickness / 2;
 
-                    CapsuleCollider collider = ropeSegments[i].AddComponent<CapsuleCollider>();
-                    collider.center = new Vector3(0, ((ropeLength / (ropeResolution - 1)) - 0.1f) / 2, 0);
-                    collider.height = (ropeLength / (ropeResolution - 1)) - 0.1f;
-                    collider.radius = ropeThickness / 2;
-
-                    HingeJoint joint = ropeSegments[i].AddComponent<HingeJoint>();
+                    HingeJoint joint = ropeSegments[i].gameObject.AddComponent<HingeJoint>();
 
                     joint.useSpring = true;
                     joint.spring = new JointSpring()
@@ -107,17 +120,24 @@ namespace Misc.Items
                 }
                 else
                 {
-                    ropeSegments[i].AddComponent<Rigidbody>();
-                    ropeSegments[i].AddComponent<FixedJoint>();
+                    ropeSegments[i].gameObject.AddComponent<FixedJoint>();
                 }
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(_giz, 0.3f);
+        }
+
+        #endregion
+
+
+        #region Bultin Methods
 
         private void Start()
         {
-            _coroutines = new Coroutine[ropeResolution];
-            distances = new float[ropeResolution];
             StartCoroutine(CalculateDistance());
         }
 
@@ -131,152 +151,101 @@ namespace Misc.Items
             }
         }
 
+        #endregion
 
-        private void OnDrawGizmos()
+        #region Custom Methods
+
+        /// <summary>
+        /// Moves the player along the rope based on the input.
+        /// </summary>
+        /// <param name="input">The vertical input from the player.</param>
+        public void MovePlayer(float input)
         {
-            Gizmos.color=Color.red;
-            Gizmos.DrawWireSphere(giz, 0.3f);
+            if (!_connected) return;
+
+            // If the player is moving upwards along the rope
+            if (input > 0.2f)
+            {
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.deltaTime * climbSpeed);
+            }
+            // If the player is moving downwards along the rope
+            else if (input < -0.2f)
+            {
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.deltaTime * climbSpeed);
+            }
+
+            // Ensure the closest index is within the bounds of the rope resolution
+            _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution - 1);
+
+            var playerInstance = PlayerMovementController.Instance;
+            // Update the player's position to the desired position on the rope
+            playerInstance.transform.position = GetDesiredPosition() + playerInstance.player.ropeMovement.offset;
         }
 
-        private Vector3 giz;
-
-        private void LateUpdate()
+        /// <summary>
+        /// Applies a force to the rope segment closest to the player, causing the rope to swing.
+        /// The direction and magnitude of the force are determined by the player's input.
+        /// </summary>
+        /// <param name="input">The horizontal input from the player.</param>
+        public void SwingRope(float input)
         {
-            
-            if (connected)
+            if (_connected)
             {
-
-                Transform playerTransform = PlayerMovementController.Instance.transform;
-                Vector3 pos = playerTransform.position;
-
-                Vector3 newPos = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.position;
-                var distance = _closestIndex - Mathf.Floor(_closestIndex);
-
-                Vector3 direction = Vector3.zero;
-                
-                if ((int)Mathf.Floor(_closestIndex) + 1 <ropeResolution)
-                {
-                    direction = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.position - ropeSegments[(int)Mathf.Floor(_closestIndex)+1].transform.position;
-                }
-                
-                giz = newPos - direction * distance;
-
-                PlayerMovementController.Instance.transform.position = giz + offset;
-
-                
-                var input = Input.GetAxis("Vertical");
-                
-                if (input > 0.2f)
-                {
-                    print("Ded");
-                    _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.deltaTime * 1f);
-                    _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution-1);
-                }
-                else if (input < -0.2f)
-                {
-                    _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.deltaTime * 1f);
-                    _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution-1);
-                }
-                
+                Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
+                rb.AddForce(0, 0, swingForce * Time.fixedDeltaTime * input);
             }
         }
 
-        private void FixedUpdate()
+        /// <summary>
+        /// Calculates the desired position of the player on the rope.
+        /// </summary>
+        /// <returns>The desired position of the player on the rope.</returns>
+        private Vector3 GetDesiredPosition()
         {
-            if (connected)
+            // Get the index of the closest rope segment
+            int closestIndexFloor = (int)Mathf.Floor(_closestIndex);
+            Vector3 newPos = ropeSegments[closestIndexFloor].transform.position;
+
+            // If there is a next rope segment, interpolate the position between the current and next segment
+            if (closestIndexFloor + 1 < ropeResolution)
             {
-                Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)].GetComponent<Rigidbody>();
-                rb.AddForce(0, 0, 200 * Time.fixedDeltaTime * Input.GetAxis("Horizontal"));
+                Vector3 direction = ropeSegments[closestIndexFloor].transform.position -
+                                    ropeSegments[closestIndexFloor + 1].transform.position;
+                float distance = _closestIndex - closestIndexFloor;
+                newPos -= direction * distance;
             }
+
+            // Debugging line, can be removed
+            _giz = newPos;
+            return newPos;
         }
 
+        /// <summary>
+        /// Calculates the distance from the player to each rope segment to find the closest one.
+        /// </summary>
+        /// <returns>An IEnumerator to be used in a coroutine.</returns>
         private IEnumerator CalculateDistance()
         {
             for (int i = 1; i < ropeResolution; i++)
             {
-                distances[i] =
+                var distance =
                     Vector3.Distance(PlayerMovementController.Instance.player.ropeMovement.handSocket.position,
                         ropeSegments[i].transform.position);
 
-                if (distances[i] < _closestDistance)
+                // If the current segment is closer than the previous closest, update the closest distance and index
+                if (distance < _closestDistance)
                 {
-                    _closestDistance = distances[i];
+                    _closestDistance = distance;
                     _closestIndex = i;
                 }
 
                 yield return null;
             }
+
+            // Once all segments have been checked, set the rope as connected
+            _connected = true;
         }
 
-
-        /**
-        if (_swing) return;
-
-        var distance = ropeSegments[2].position.z - ropeSegments[1].position.z;
-
-        if (Mathf.Abs(distance) > 0.1f)
-        {
-            _coroutines[1] = StartCoroutine(SwaySegment(1));
-        }
-
-    }
-
-    private IEnumerator SwaySegment(int index)
-    {
-        _swing = true;
-
-        float timeElapsed = 0;
-        Vector3 pos1 = ropeSegments[index].position;
-        Vector3 pos0 = ropeSegments[index - 1].position;
-        float amp = pos0.z - pos1.z;
-
-        while (timeElapsed < stiffness)
-        {
-            Vector3 segmentPos = ropeSegments[index].position;
-            Vector3 prevSegmentPos = ropeSegments[index - 1].position;
-
-            if (index < ropeResolution - 1)
-            {
-                Vector3 nextSegmentPos = ropeSegments[index + 1].position;
-                if (Vector3.Distance(nextSegmentPos, segmentPos) > 0.2f)
-                {
-                    if (_coroutines[index + 1] == null)
-                    {
-                        _coroutines[index + 1] = StartCoroutine(SwaySegment(index + 1));
-                    }
-                }
-            }
-
-            float segmentDistance = (ropeLength) / (ropeResolution - 1);
-
-
-            if (index == overriderIndex)
-            {
-                segmentPos.z = 0.5f;
-            }
-            else
-            {
-                float z = Thema.Spring(timeElapsed, amp, damp, stiffness);
-
-                segmentPos.z = prevSegmentPos.z + Mathf.Clamp(z, -segmentDistance, segmentDistance);
-            }
-
-
-            float y = prevSegmentPos.y -
-                      Mathf.Sqrt(Mathf.Pow(segmentDistance, 2) - Mathf.Pow(segmentPos.z - prevSegmentPos.z, 2));
-
-            segmentPos.y = y;
-
-            ropeSegments[index].position = segmentPos;
-            timeElapsed += Time.deltaTime;
-
-            yield return null;
-        }
-
-        _coroutines[index] = null;
-        _swing = false;
-    }
-
-        **/
+        #endregion
     }
 }
