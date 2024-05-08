@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
@@ -7,20 +11,33 @@ namespace Misc.Items
 {
     public class Rope : MonoBehaviour
     {
-        [SerializeField, BoxGroup("Rope Properties")] private int ropeResolution;
-        [SerializeField, BoxGroup("Rope Properties")] private float ropeLength;
-        [SerializeField, BoxGroup("Rope Properties")] private float ropeThickness;
-        [SerializeField, BoxGroup("Rope Properties")] private Material ropeMaterial;
+        [SerializeField, BoxGroup("Rope Properties")]
+        private int ropeResolution;
 
-        [SerializeField, BoxGroup("HingeJoint")] private float spring, damp;
+        [SerializeField, BoxGroup("Rope Properties")]
+        private float ropeLength;
+
+        [SerializeField, BoxGroup("Rope Properties")]
+        private float ropeThickness;
+
+        [SerializeField, BoxGroup("Rope Properties")]
+        private Material ropeMaterial;
+
+        [SerializeField, BoxGroup("HingeJoint")]
+        private float spring, damp;
 
         [SerializeField, Space(10)] public GameObject[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
 
+        [SerializeField, Space(10)] private bool connected;
+        [SerializeField] private float[] distances;
+        [SerializeField] private Vector3 offset;
+
         private bool _swing;
         private Coroutine[] _coroutines = new Coroutine[3];
 
-        public int overriderIndex;
+        public float _closestIndex;
+        public float _closestDistance = 100f;
 
         [Button("Create Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
         public void CreateRopeSegments()
@@ -50,8 +67,7 @@ namespace Misc.Items
 
                 if (i > 0)
                 {
-
-                    #region  Line Renderer
+                    #region Line Renderer
 
                     lineRenderers[i] = ropeSegments[i].AddComponent<LineRenderer>();
 
@@ -60,7 +76,7 @@ namespace Misc.Items
                     lineRenderers[i].material = ropeMaterial;
                     lineRenderers[i].textureMode = LineTextureMode.Tile;
                     lineRenderers[i].positionCount = 2;
-                    
+
                     lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
                     lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
 
@@ -69,22 +85,22 @@ namespace Misc.Items
                     #region Hinge Joint
 
                     ropeSegments[i].AddComponent<Rigidbody>();
-                    
+
                     CapsuleCollider collider = ropeSegments[i].AddComponent<CapsuleCollider>();
                     collider.center = new Vector3(0, ((ropeLength / (ropeResolution - 1)) - 0.1f) / 2, 0);
                     collider.height = (ropeLength / (ropeResolution - 1)) - 0.1f;
-                    collider.radius = ropeThickness/2;
-                    
+                    collider.radius = ropeThickness / 2;
+
                     HingeJoint joint = ropeSegments[i].AddComponent<HingeJoint>();
-                    
+
                     joint.useSpring = true;
                     joint.spring = new JointSpring()
                     {
                         spring = spring,
                         damper = damp
                     };
-                    
-                    joint.anchor =new Vector3(0, ropeLength / (ropeResolution - 1), 0);
+
+                    joint.anchor = new Vector3(0, ropeLength / (ropeResolution - 1), 0);
                     joint.connectedBody = ropeSegments[i - 1].GetComponent<Rigidbody>();
 
                     #endregion
@@ -94,8 +110,6 @@ namespace Misc.Items
                     ropeSegments[i].AddComponent<Rigidbody>();
                     ropeSegments[i].AddComponent<FixedJoint>();
                 }
-
-                
             }
         }
 
@@ -103,6 +117,8 @@ namespace Misc.Items
         private void Start()
         {
             _coroutines = new Coroutine[ropeResolution];
+            distances = new float[ropeResolution];
+            StartCoroutine(CalculateDistance());
         }
 
         private void Update()
@@ -112,6 +128,83 @@ namespace Misc.Items
             {
                 lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
                 lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
+            }
+        }
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color=Color.red;
+            Gizmos.DrawWireSphere(giz, 0.3f);
+        }
+
+        private Vector3 giz;
+
+        private void LateUpdate()
+        {
+            
+            if (connected)
+            {
+
+                Transform playerTransform = PlayerMovementController.Instance.transform;
+                Vector3 pos = playerTransform.position;
+
+                Vector3 newPos = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.position;
+                var distance = _closestIndex - Mathf.Floor(_closestIndex);
+
+                Vector3 direction = Vector3.zero;
+                
+                if ((int)Mathf.Floor(_closestIndex) + 1 <ropeResolution)
+                {
+                    direction = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.position - ropeSegments[(int)Mathf.Floor(_closestIndex)+1].transform.position;
+                }
+                
+                giz = newPos - direction * distance;
+
+                PlayerMovementController.Instance.transform.position = giz + offset;
+
+                
+                var input = Input.GetAxis("Vertical");
+                
+                if (input > 0.2f)
+                {
+                    print("Ded");
+                    _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.deltaTime * 1f);
+                    _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution-1);
+                }
+                else if (input < -0.2f)
+                {
+                    _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.deltaTime * 1f);
+                    _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution-1);
+                }
+                
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (connected)
+            {
+                Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)].GetComponent<Rigidbody>();
+                rb.AddForce(0, 0, 200 * Time.fixedDeltaTime * Input.GetAxis("Horizontal"));
+            }
+        }
+
+        private IEnumerator CalculateDistance()
+        {
+            for (int i = 1; i < ropeResolution; i++)
+            {
+                distances[i] =
+                    Vector3.Distance(PlayerMovementController.Instance.player.ropeMovement.handSocket.position,
+                        ropeSegments[i].transform.position);
+
+                if (distances[i] < _closestDistance)
+                {
+                    _closestDistance = distances[i];
+                    _closestIndex = i;
+                }
+
+                yield return null;
             }
         }
 

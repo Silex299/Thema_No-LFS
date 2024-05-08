@@ -7,17 +7,15 @@ namespace Player_Scripts.States
     [System.Serializable]
     public class RopeMovement : PlayerBaseStates
     {
-        [SerializeField] private Transform handSocket;
+        public Transform handSocket;
+        public Vector3 offset;
 
         private Rigidbody _lastRigidBody;
         private bool _constrainY;
+        private bool _swing;
         private static readonly int Speed = Animator.StringToHash("Speed");
 
         public override void ExitState(Player player)
-        {
-        }
-
-        public override void LateUpdateState(Player player)
         {
         }
 
@@ -29,9 +27,11 @@ namespace Player_Scripts.States
 
         public override void UpdateState(Player player)
         {
+            
             float input = Input.GetAxis("Vertical");
             player.AnimationController.SetFloat(Speed, input);
 
+            return;
             _constrainY = (Mathf.Abs(input) < 0.1f);
 
             float horizontalInput = Input.GetAxis("Horizontal");
@@ -41,43 +41,53 @@ namespace Player_Scripts.States
                 {
                     _lastRigidBody.AddForce(0, 0, horizontalInput * Time.deltaTime * 200);
                     player.transform.parent = _lastRigidBody.transform;
+                    _swing = true;
                 }
-            }
-            else
-            {
-                player.transform.parent = MasterManager.Instance.transform;
             }
         }
 
 
         public override void FixedUpdateState(Player player)
         {
+           
+            
+            return;
+
+            /**
+            if (!_swing)
+            {
+                // sphere cast from the socket in forward direction
+                if (Physics.SphereCast(handSocket.position, 0.1f, handSocket.forward, out RaycastHit hit, 1, ropeLayer))
+                {
+                    //debugDrawLine
+                    Debug.DrawLine(handSocket.position, hit.point, Color.red);
+                    _lastRigidBody = hit.collider.attachedRigidbody;
+                }
+            }
+            **/
+        }
+
+
+        public override void LateUpdateState(Player player)
+        {
+            return;
             //Create a Layer mask only for the rope
             LayerMask ropeLayer = LayerMask.GetMask("Ignore Player");
 
 
-            // sphere cast from the socket in forward direction
-            if (Physics.SphereCast(handSocket.position, 0.1f, handSocket.forward, out RaycastHit hit, 1, ropeLayer))
+            if (Physics.Raycast(handSocket.position, Vector3.forward, out RaycastHit hit1, 10f, ropeLayer))
             {
-                //debugDrawLine
-                Debug.DrawLine(handSocket.position, hit.point, Color.red);
-                _lastRigidBody = hit.collider.attachedRigidbody;
+                Debug.DrawLine(handSocket.position, hit1.point, Color.red);
+                _lastRigidBody = hit1.collider.attachedRigidbody;
+
+                Vector3 newPos = _lastRigidBody.transform.position + offset;
+                player.transform.position = newPos;
+                
+                
+                _lastRigidBody.AddForce(0, 0, 200 * Mathf.Sin(Time.deltaTime));
+
             }
-
-
-            if (_lastRigidBody)
-            {
-                Vector3 playerPos = player.transform.position;
-                Vector3 rbPosition = _lastRigidBody.transform.position;
-
-                Vector3 newPos = new Vector3(rbPosition.x, playerPos.y, rbPosition.z);
-
-
-                player.transform.position = Vector3.Lerp(playerPos, newPos, Time.fixedDeltaTime * 10);
-                player.transform.rotation = Quaternion.identity;
-
-                _lastRigidBody.AddForce(0, 0, 200 * Mathf.Sin(Time.fixedDeltaTime));
-            }
+            
         }
     }
 }
