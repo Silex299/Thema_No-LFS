@@ -134,7 +134,6 @@ namespace Misc.Items
 
         #endregion
 
-
         #region Bultin Methods
 
         private void Update()
@@ -257,21 +256,32 @@ namespace Misc.Items
             return ropeSegments[(int)Mathf.Floor(_closestIndex)];
         }
 
+        /// <summary>
+        /// Attempts to attach the player to the rope.
+        /// </summary>
         public void AttachPlayer()
         {
-            if(Time.time - _lastAttachedTime < 1.5f) return;
-            
+            // If the last attachment was less than 1.5 seconds ago, do not attach again
+            if (Time.time - _lastAttachedTime < 1.5f) return;
+
+            // If the player can be attached to the rope
             if (PlayerMovementController.Instance.player.ropeMovement.AttachRope(this))
             {
+                // Start the initial connection process
                 StartCoroutine(InitialConnect());
             }
         }
 
-
+        /// <summary>
+        /// Detaches the player from the rope and resets the relevant variables.
+        /// </summary>
         public void Detached()
         {
+            // Record the time of detachment
             _lastAttachedTime = Time.time;
+            // Reset the closest distance to a large value
             _closestDistance = 100;
+            // Set the connection status to false
             _connected = false;
         }
 
