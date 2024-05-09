@@ -178,8 +178,14 @@ namespace Misc.Items
             _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution - 1);
 
             var playerInstance = PlayerMovementController.Instance;
-            // Update the player's position to the desired position on the rope
-            playerInstance.transform.position = GetDesiredPosition() + playerInstance.player.ropeMovement.offset;
+            var playerInstanceTransform = playerInstance.transform;
+            Vector3 newOffset = playerInstance.player.ropeMovement.offset;
+
+            newOffset = newOffset.x * playerInstanceTransform.right + newOffset.y * playerInstanceTransform.up +
+                        newOffset.z * playerInstanceTransform.forward; 
+            
+            playerInstanceTransform.position = GetDesiredPosition() + newOffset;
+            playerInstanceTransform.rotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
         }
 
         /// <summary>

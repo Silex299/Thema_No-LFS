@@ -10,7 +10,9 @@ namespace Player_Scripts.States
         public Transform handSocket;
         public Vector3 offset;
 
+        private bool _isSwinging;
         private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Action = Animator.StringToHash("Action");
 
         public override void ExitState(Player player)
         {
@@ -24,25 +26,49 @@ namespace Player_Scripts.States
 
         public override void UpdateState(Player player)
         {
+            if(_isSwinging) return;
+            
             player.AnimationController.SetFloat(Speed, Input.GetAxis("Vertical"));
-
         }
 
 
         public override void FixedUpdateState(Player player)
         {
 
+            var input = Input.GetAxis("Horizontal");
+            player.AnimationController.SetFloat(Speed, input);
+
             if (Input.GetButton("Horizontal"))
             {
-                connectedRope.SwingRope(Input.GetAxis("Horizontal"));
+                if (Mathf.Abs(input) > 0.2f)
+                {
+                    connectedRope.SwingRope(Input.GetAxis("Horizontal"));
+                    if (!_isSwinging)
+                    {
+                        player.AnimationController.SetBool(Action, true);
+                        _isSwinging = true;
+                    }
+                }
+            }
+            else
+            {
+                
+                if (_isSwinging)
+                {
+                    player.AnimationController.SetBool(Action, false);
+                    _isSwinging = false;
+                }
+                
             }
 
         }
 
-
         public override void LateUpdateState(Player player)
         {
-            connectedRope.MovePlayer(Input.GetAxis("Vertical"));
+
+            var input = _isSwinging ? 0 : Input.GetAxis("Vertical");
+            
+            connectedRope.MovePlayer(input);
         }
     }
 }
