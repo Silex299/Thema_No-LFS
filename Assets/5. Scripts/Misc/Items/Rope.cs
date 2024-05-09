@@ -2,7 +2,6 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
@@ -32,6 +31,7 @@ namespace Misc.Items
 
         [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
         [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
+        [SerializeField, BoxGroup("Movement")] private float entryForce = 10;
 
         #endregion
 
@@ -42,6 +42,7 @@ namespace Misc.Items
         private bool _connected;
         private float _closestIndex;
         private float _closestDistance = 100f;
+        private float _lastAttachedTime;
 
         #endregion
 
@@ -136,11 +137,6 @@ namespace Misc.Items
 
         #region Bultin Methods
 
-        private void Start()
-        {
-            StartCoroutine(CalculateDistance());
-        }
-
         private void Update()
         {
             //for each line render segment set the 2nd position to the previous segment position and 1st position to current segment position
@@ -182,8 +178,8 @@ namespace Misc.Items
             Vector3 newOffset = playerInstance.player.ropeMovement.offset;
 
             newOffset = newOffset.x * playerInstanceTransform.right + newOffset.y * playerInstanceTransform.up +
-                        newOffset.z * playerInstanceTransform.forward; 
-            
+                        newOffset.z * playerInstanceTransform.forward;
+
             playerInstanceTransform.position = GetDesiredPosition() + newOffset;
             playerInstanceTransform.rotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
         }
@@ -230,7 +226,7 @@ namespace Misc.Items
         /// Calculates the distance from the player to each rope segment to find the closest one.
         /// </summary>
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
-        private IEnumerator CalculateDistance()
+        private IEnumerator InitialConnect()
         {
             for (int i = 1; i < ropeResolution; i++)
             {
@@ -247,9 +243,36 @@ namespace Misc.Items
 
                 yield return null;
             }
-
+            
+            //direction of the current closest rope segment from player
+            
+            //apply an impulse force in that direction
+            ropeSegments[(int)Mathf.Floor(_closestIndex)].AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
             // Once all segments have been checked, set the rope as connected
             _connected = true;
+        }
+
+        public Rigidbody CurrentRopeSegment()
+        {
+            return ropeSegments[(int)Mathf.Floor(_closestIndex)];
+        }
+
+        public void AttachPlayer()
+        {
+            if(Time.time - _lastAttachedTime < 1.5f) return;
+            
+            if (PlayerMovementController.Instance.player.ropeMovement.AttachRope(this))
+            {
+                StartCoroutine(InitialConnect());
+            }
+        }
+
+
+        public void Detached()
+        {
+            _lastAttachedTime = Time.time;
+            _closestDistance = 100;
+            _connected = false;
         }
 
         #endregion

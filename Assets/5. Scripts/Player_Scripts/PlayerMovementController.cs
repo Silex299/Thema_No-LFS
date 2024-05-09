@@ -162,8 +162,6 @@ namespace Player_Scripts
         {
             //if (player.DisablePlayerMovement) return;
 
-            print(index);
-
             if (index == player.currentStateIndex) return;
 
             player.previousStateIndex = player.currentStateIndex;

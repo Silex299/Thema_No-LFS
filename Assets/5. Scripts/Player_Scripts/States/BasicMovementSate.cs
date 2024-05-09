@@ -189,7 +189,6 @@ namespace Player_Scripts.States
 
             var newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
             
-
             transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness * Mathf.Rad2Deg);
         }
         
@@ -240,7 +239,7 @@ namespace Player_Scripts.States
             }
         }
 
-        private void GroundCheck(Player player)
+        public void GroundCheck(Player player)
         {
             var transform = player.transform;
 
@@ -277,7 +276,7 @@ namespace Player_Scripts.States
 
             _mPlayerVelocity.y = player.JumpVelocity;
         }
-
+        
 
         #endregion
 
