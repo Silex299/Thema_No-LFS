@@ -18,7 +18,8 @@ namespace Misc
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            print(other.tag);
+            if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
             {
                 _bodyCount++;
             }
@@ -26,7 +27,8 @@ namespace Misc
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            print("exit trigger");
+            if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
             {
                 _bodyCount = Mathf.Clamp(_bodyCount - 1, 0, 99);
             }

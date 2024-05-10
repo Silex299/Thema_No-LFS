@@ -9,7 +9,6 @@ namespace NPCs.FlyingBot
 {
     public class FlyingBot : MonoBehaviour
     {
-        public bool isEnabled;
         
         [BoxGroup("Movement")] public Transform[] surveillancePoints;
         [SerializeField, BoxGroup("Movement")] private Transform[] rotors;
@@ -18,11 +17,10 @@ namespace NPCs.FlyingBot
         [SerializeField, BoxGroup("Movement")] private float rotationSmoothness;
 
         [BoxGroup("References")]public Animator animator;
-
-
         [BoxGroup("References")] public PowerUpWeapon weapon;
         
         [SerializeField, BoxGroup("States"), EnumToggleButtons, HideLabel] private GuardStateEnum state;
+        
         private BotState _currentState;
         [SerializeField, BoxGroup("States")] private BotChaseState chaseState = new BotChaseState();
         [SerializeField, BoxGroup("States")] private BotSurveillanceState surveillanceState = new BotSurveillanceState();
@@ -48,7 +46,7 @@ namespace NPCs.FlyingBot
         {
             RotateRotors();
             
-            if (isEnabled)
+            if (enabled)
             {
                 _currentState.StateUpdate(this);
             }
@@ -113,26 +111,32 @@ namespace NPCs.FlyingBot
 
         private void PlayerDeathCallback()
         {
-            EnableBot(false);
+            enabled = false;
         }
 
-        public void EnableBot(bool status)
-        {
-            isEnabled = status;
-        }
-        
     }
 
     //Class Called BotChaseState inherit from BotState abstract class
     [System.Serializable]
     public class BotChaseState : BotState
     {
-        public float fireDistance;
-        public float stopDistance;
-        public float safeDistance;
-        public float defaultY;
-        public float movementFrequency = 3;
-        public float movementAmplitude = 1;
+       [Tooltip("The distance at which the bot can fire at the target.")]
+       public float fireDistance;
+
+       [Tooltip("The distance at which the bot will stop moving towards the target.")]
+       public float stopDistance;
+
+       [Tooltip("The distance at which the bot will start moving away from the target if inside stopDistance.")]
+       public float safeDistance;
+
+       [Tooltip("The default height at which the bot will hover.")]
+       public float defaultY;
+
+       [Tooltip("The frequency of the bot's vertical oscillation when moving.")]
+       public float movementFrequency = 3;
+
+       [Tooltip("The amplitude of the bot's vertical oscillation when moving.")]
+       public float movementAmplitude = 1;
 
         private static readonly int Speed = Animator.StringToHash("Speed");
         private float _currentSpeed;
@@ -205,6 +209,7 @@ namespace NPCs.FlyingBot
         public override void StateExit(FlyingBot bot)
         {
         }
+
     }
 
     //Class called BotSurveillanceState inherit from BotState abstract class, the bot surveil  the points in the surveillancePoints array in loop, with a delay between each point

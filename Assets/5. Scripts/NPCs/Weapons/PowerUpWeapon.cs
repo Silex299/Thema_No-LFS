@@ -16,16 +16,17 @@ namespace NPCs.Weapons
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Animator animator;
         [SerializeField] private Dictionary<string, GameObject> hitEffects;
-        [SerializeField] private bool _enabled = true;
 
-        
 
+        private bool _isEnabled = true;
         private float _lastFireTime;
         private bool _traceBullet;
         
 
         public void Fire(Vector3 target, float error)
         {
+            if(!_isEnabled) return;
+            
             //fire bullet at firRate
             if (!(Time.time - _lastFireTime > timeBetweenFire)) return;
             
@@ -93,6 +94,11 @@ namespace NPCs.Weapons
             var transform1 = transform;
             transform.rotation = Quaternion.Slerp(transform1.rotation,
                 Quaternion.LookRotation(target.position - transform1.position), 1f * Time.deltaTime);
+        }
+
+        public void SetEnabled(bool status)
+        {
+            _isEnabled = status;
         }
 
     }

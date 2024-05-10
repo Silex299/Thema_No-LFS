@@ -337,7 +337,6 @@ namespace Triggers
                 yield break;
             }
 
-            Debug.LogError(this.gameObject.name + _triggerd);
 
             yield return new WaitForSeconds(actionDelay);
 
