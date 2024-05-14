@@ -271,7 +271,7 @@ namespace Player_Scripts
 
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
-        private void ResetAnimator()
+        public void ResetAnimator()
         {
             player.AnimationController.SetFloat(Speed, 0);
             player.AnimationController.SetBool(IsGrounded, true);

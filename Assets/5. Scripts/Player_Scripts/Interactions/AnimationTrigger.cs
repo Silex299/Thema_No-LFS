@@ -222,6 +222,7 @@ namespace Player_Scripts.Interactions
             //RESET
             _isExecuting = false;
             _target = null;
+            player.ResetAnimator();
             player.DisablePlayerMovement(false);
             player.player.CController.enabled = true;
 
