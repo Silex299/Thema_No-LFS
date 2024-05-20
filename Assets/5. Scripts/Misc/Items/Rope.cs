@@ -22,8 +22,15 @@ namespace Misc.Items
         [SerializeField, BoxGroup("Rope Properties")]
         private Material ropeMaterial;
 
-        [SerializeField, BoxGroup("HingeJoint")]
-        private float spring, damp;
+        [Tooltip(
+            "TIt determines how strongly the joint will try to maintain its position. A higher spring value will make the joint stiffer and more resistant to rotational movement")]
+        [SerializeField, BoxGroup("Rope Properties")]
+        private float spring;
+
+        [Tooltip(
+            "It determines how quickly the joint will come to rest after being moved. A higher damping value will make the joint slow down and stop more quickly after being moved")]
+        [SerializeField, BoxGroup("Rope Properties")]
+        private float damp;
 
         #endregion
 
@@ -32,6 +39,7 @@ namespace Misc.Items
         [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
         [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
         [SerializeField, BoxGroup("Movement")] private float entryForce = 10;
+        [SerializeField, BoxGroup("Movement")] internal float exitForce = 3;
 
         #endregion
 
@@ -193,7 +201,7 @@ namespace Misc.Items
             if (_connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
-                rb.AddForce(0, 0, swingForce * Time.fixedDeltaTime * input);
+                rb.AddForce(0, 0, swingForce * input * Time.fixedDeltaTime);
             }
         }
 
@@ -242,11 +250,12 @@ namespace Misc.Items
 
                 yield return null;
             }
-            
+
             //direction of the current closest rope segment from player
-            
+
             //apply an impulse force in that direction
-            ropeSegments[(int)Mathf.Floor(_closestIndex)].AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
+            ropeSegments[(int)Mathf.Floor(_closestIndex)]
+                .AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
             // Once all segments have been checked, set the rope as connected
             _connected = true;
         }
@@ -261,14 +270,17 @@ namespace Misc.Items
         /// </summary>
         public void AttachPlayer()
         {
+            print("Fuck");
             // If the last attachment was less than 1.5 seconds ago, do not attach again
             if (Time.time - _lastAttachedTime < 1.5f) return;
 
             // If the player can be attached to the rope
             if (PlayerMovementController.Instance.player.ropeMovement.AttachRope(this))
             {
+                print("Fuck Passed");
                 // Start the initial connection process
                 StartCoroutine(InitialConnect());
+                _lastAttachedTime = Time.time;
             }
         }
 

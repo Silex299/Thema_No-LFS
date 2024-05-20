@@ -13,7 +13,6 @@ namespace Player_Scripts.States
         [SerializeField] private Rope attachedRope;
         public Transform handSocket;
         public Vector3 offset;
-        [SerializeField] private float exitForceMultiplier = 3;
 
         #endregion
 
@@ -21,6 +20,8 @@ namespace Player_Scripts.States
 
         private bool _isAttached = false;
         private bool _isSwinging;
+
+        private Coroutine _detachCoroutine;
 
         #endregion
 
@@ -32,7 +33,7 @@ namespace Player_Scripts.States
         private static readonly int Jump = Animator.StringToHash("Jump");
 
         #endregion
-        
+
         #region Overriden Methods
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace Player_Scripts.States
             attachedRope = null;
             _isAttached = false;
             player.AnimationController.SetFloat(Speed, 0);
+            player.MovementController.ResetAnimator();
             ResetPlayerRotation(player);
         }
 
@@ -56,6 +58,11 @@ namespace Player_Scripts.States
         {
             player.AnimationController.CrossFade("Rope", 0.1f, 0);
             player.IsGrounded = false;
+            
+            if (_detachCoroutine != null)
+            {
+                player.StopCoroutine(_detachCoroutine);
+            }
         }
 
         /// <summary>
@@ -65,12 +72,15 @@ namespace Player_Scripts.States
         /// </summary>
         public override void UpdateState(Player player)
         {
+            if (!_isAttached) return;
+
             if (Input.GetButtonDown("Jump"))
             {
-                player.StartCoroutine(DetachPlayer(player));
+                Debug.LogError("You pressed Jump");
+                _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
             }
 
-            if (!_isAttached || _isSwinging) return;
+            if (_isSwinging) return;
 
             player.AnimationController.SetFloat(Speed, Input.GetAxis("Vertical"));
         }
@@ -142,7 +152,9 @@ namespace Player_Scripts.States
             attachedRope?.Detached();
             // Attach the new rope
             attachedRope = rope;
-            // Set the attachment status to true
+
+            EnterState(PlayerMovementController.Instance.player);
+            // Set the attachment status to true   
             _isAttached = true;
 
             return true;
@@ -166,8 +178,8 @@ namespace Player_Scripts.States
             attachedRope.Detached();
 
             // Calculate the player's velocity when detaching from the rope
-            Vector3 playerVelocity = attachedRope.CurrentRopeSegment().velocity * exitForceMultiplier +
-                                     Vector3.up * exitForceMultiplier;
+            Vector3 playerVelocity = attachedRope.CurrentRopeSegment().velocity * attachedRope.exitForce +
+                                     Vector3.up * attachedRope.exitForce;
 
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)

@@ -160,6 +160,8 @@ namespace Player_Scripts
         //TODO : switch case to change state directly
         public void ChangeState(int index)
         {
+            print("Changing State");
+            
             //if (player.DisablePlayerMovement) return;
 
             if (index == player.currentStateIndex) return;

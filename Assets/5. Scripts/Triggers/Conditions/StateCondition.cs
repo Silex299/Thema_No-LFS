@@ -4,7 +4,6 @@ using Player_Scripts;
 
 namespace Triggers
 {
-    [RequireComponent(typeof(TriggerCondition))]
     public class StateCondition : TriggerCondition
     {
 
