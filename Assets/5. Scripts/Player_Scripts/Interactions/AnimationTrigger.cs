@@ -28,6 +28,8 @@ namespace Player_Scripts.Interactions
 
         [SerializeField, BoxGroup("State")] private bool changeState;
         [SerializeField, BoxGroup("State"), ShowIf("changeState")] private int stateIndex;
+        [SerializeField, BoxGroup("State")] private bool overrideAnimation;
+        [SerializeField, BoxGroup("State"), ShowIf("overrideAnimation")] private string overrideAnimationName;
 
         private bool _isExecuting;
         private bool _initialMove;
@@ -205,7 +207,15 @@ namespace Player_Scripts.Interactions
             //ANIMATION AND STATE
             if (changeState)
             {
-                player.ChangeState(stateIndex);
+                if (overrideAnimation)
+                {
+                    player.ChangeState(stateIndex, overrideAnimationName);
+                }
+                else
+                {
+                    player.ChangeState(stateIndex);
+                }
+                
             }
 
             player.PlayAnimation(animationName, 0.2f, 1);

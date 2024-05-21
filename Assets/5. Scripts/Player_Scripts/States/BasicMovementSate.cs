@@ -49,6 +49,7 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             defaultStateIndex = player.currentStateIndex;
+            
             player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }
 

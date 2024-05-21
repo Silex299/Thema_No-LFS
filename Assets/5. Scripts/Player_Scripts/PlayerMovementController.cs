@@ -194,10 +194,16 @@ namespace Player_Scripts
                     player.currentState = player.ropeMovement;
                     break;
             }
-
             player.currentState.EnterState(player);
         }
 
+        public void ChangeState(int index, string animationName)
+        {
+            ChangeState(index);
+            PlayAnimation(animationName, 0.3f, 0);
+        }
+        
+        
         /// <summary>
         /// Reverts back to previous state
         /// </summary>

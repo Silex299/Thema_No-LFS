@@ -43,6 +43,7 @@ namespace Player_Scripts.States
         /// </summary>
         public override void ExitState(Player player)
         {
+            attachedRope.Detached();
             attachedRope = null;
             _isAttached = false;
             player.AnimationController.SetFloat(Speed, 0);
