@@ -51,6 +51,8 @@ namespace Player_Scripts.Interactables
         public override PlayerInteractionType Interact()
         {
 
+            if (!enabled) return PlayerInteractionType.NONE;
+            
             if (!GetKey())
             {
                 _isInteracting = false;
@@ -147,7 +149,6 @@ namespace Player_Scripts.Interactables
 
                 return interactionType;
             }
-
 
         }
 

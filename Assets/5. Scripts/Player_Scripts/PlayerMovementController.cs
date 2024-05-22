@@ -161,6 +161,7 @@ namespace Player_Scripts
         public void ChangeState(int index)
         {
             print("Changing State");
+            ResetAnimator();
             
             //if (player.DisablePlayerMovement) return;
 
