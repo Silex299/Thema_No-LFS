@@ -20,6 +20,8 @@ namespace Player_Scripts.States
 
         private bool _isAttached = false;
         private bool _isSwinging;
+        private float _attachTime = 0;
+        
 
         private Coroutine _detachCoroutine;
 
@@ -59,6 +61,7 @@ namespace Player_Scripts.States
         {
             player.AnimationController.CrossFade("Rope", 0.1f, 0);
             player.IsGrounded = false;
+            _attachTime = Time.time;
             
             if (_detachCoroutine != null)
             {
@@ -77,8 +80,16 @@ namespace Player_Scripts.States
 
             if (Input.GetButtonDown("Jump"))
             {
-                Debug.LogError("You pressed Jump");
-                _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
+                if (Time.time - _attachTime > 1)
+                {
+                    Debug.LogError("You pressed Jump");
+                    _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
+                }
+                else
+                {
+                    Debug.Log("You can't dettach");
+                }
+                
             }
 
             if (_isSwinging) return;

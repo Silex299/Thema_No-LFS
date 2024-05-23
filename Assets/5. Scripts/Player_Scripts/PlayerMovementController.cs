@@ -160,8 +160,7 @@ namespace Player_Scripts
         //TODO : switch case to change state directly
         public void ChangeState(int index)
         {
-            print("Changing State");
-            ResetAnimator();
+            print("Changing State : " + index);
             
             //if (player.DisablePlayerMovement) return;
 
@@ -174,7 +173,9 @@ namespace Player_Scripts
             player.AnimationController.SetInteger(StateIndex, index);
 
             player.currentState.ExitState(player);
-
+            
+            ResetAnimator();
+            
             switch (index)
             {
                 case <= 0:
