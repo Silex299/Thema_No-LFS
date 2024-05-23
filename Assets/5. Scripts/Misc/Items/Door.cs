@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Door : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Door : MonoBehaviour
     [SerializeField, BoxGroup("Sound")] private AudioClip openSound;
     [SerializeField, BoxGroup("Sound")] private AudioClip closeSound;
     [SerializeField, BoxGroup("Sound")] private AudioSource soundSource;
+
+    [SerializeField, BoxGroup("Sound")] private UnityEvent<bool> action;
 
 
 #if UNITY_EDITOR
@@ -31,46 +34,8 @@ public class Door : MonoBehaviour
 #endif
 
     [SerializeField, BoxGroup("Misc")] private bool isOpen;
-    private bool _action;
     private Coroutine _toggleDoor;
-    private float _timeElapsed;
 
-
-
-    private void Update()
-    {
-        if (!_action) return;
-
-
-        if (isOpen)
-        {
-            _timeElapsed += Time.deltaTime;
-            float fraction = _timeElapsed / transitionTime;
-
-            //Move to open position
-            transform.localPosition = Vector3.Lerp(closedPosition, openPosition, fraction);
-
-            if (fraction >= 1)
-            {
-                _action = false;
-            }
-        }
-
-        else
-        {
-            _timeElapsed += Time.deltaTime;
-            float fraction = _timeElapsed / transitionTime;
-
-            //Move to Close position
-            transform.localPosition = Vector3.Lerp(openPosition, closedPosition, fraction);
-
-            if (fraction >= 1)
-            {
-                _action = false;
-            }
-        }
-
-    }
 
 
     public void ToggleDoor(bool open)
@@ -83,22 +48,37 @@ public class Door : MonoBehaviour
         _toggleDoor = StartCoroutine(DoorToggle(open));
     }
 
-    public IEnumerator DoorToggle(bool open)
+    private IEnumerator DoorToggle(bool open)
     {
-
         yield return new WaitForSeconds(delay);
+
 
         if (open != isOpen)
         {
-            _toggleDoor = null;
-            _action = true;
+            Vector3 destination = open ? openPosition : closedPosition;
+            Vector3 initialPos = transform.position;
+            
+            float timeElapsed = 0;
+            
+            
+            while (timeElapsed < transitionTime)
+            {
+                timeElapsed += Time.deltaTime;
+                float fraction = timeElapsed / transitionTime;
+
+                transform.localPosition = Vector3.Lerp(initialPos, destination, fraction);
+                yield return null;
+            }
+            
             isOpen = open;
-            _timeElapsed = 0;
             PlaySound(open);
+            action.Invoke(open);
+
         }
+        
     }
 
-    public void PlaySound(bool open)
+    private void PlaySound(bool open)
     {
         if (soundSource)
         {

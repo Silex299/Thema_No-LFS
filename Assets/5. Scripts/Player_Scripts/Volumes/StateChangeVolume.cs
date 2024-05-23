@@ -21,60 +21,60 @@ namespace Player_Scripts.Volumes
         [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
 
 
-        private bool _triggered;
+        private bool _playerIsInTrigger;
         private Coroutine triggerReset;
 
         private void OnTriggerStay(Collider other)
         {
             if (!enabled) return;
 
-            if (!_triggered)
+            if (other.CompareTag("Player_Main"))
             {
-                if (other.CompareTag("Player_Main"))
+                if (!_playerIsInTrigger)
                 {
-                    _triggered = true;
+                    _playerIsInTrigger = true;
                     var playerController = PlayerMovementController.Instance;
                     playerController.ChangeState(entryState, entryStateIndex);
 
                     playerController.player.enabledDirectionInput = enableDirection;
                     playerController.player.oneWayRotation = oneWayRotation;
                 }
-            }
-
-            if (_triggered)
-            {
+                
                 if (triggerReset != null)
                 {
                     StopCoroutine(triggerReset);
                 }
 
                 triggerReset = StartCoroutine(ResetTrigger());
-
             }
+
+            
         }
 
 
         private void OnTriggerExit(Collider other)
         {
-            if (!_triggered) return;
+            if (!_playerIsInTrigger) return;
+            
             if (other.CompareTag("Player_Main"))
             {
                 triggerReset = StartCoroutine(ResetTrigger());
             }
 
-
         }
 
         private IEnumerator ResetTrigger()
         {
+            print("Calling");
             yield return new WaitForSeconds(0.2f);
+            print("Called");
             var playerController = PlayerMovementController.Instance;
             playerController.ChangeState(exitState, exitStateIndex);
             playerController.player.enabledDirectionInput = false;
             playerController.player.oneWayRotation = false;
 
             yield return new WaitForSeconds(reTriggerDelay);
-            _triggered = false;
+            _playerIsInTrigger = false;
         }
 
 
