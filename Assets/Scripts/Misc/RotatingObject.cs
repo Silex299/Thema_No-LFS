@@ -38,7 +38,7 @@ namespace Misc
                     transform.Rotate(0, 0, _currentSpeed * Time.deltaTime, rotationSpace);
                     break;
             }
-
+            
             if (limitRotation)
             {
                 var eularAngles = transform.eulerAngles;

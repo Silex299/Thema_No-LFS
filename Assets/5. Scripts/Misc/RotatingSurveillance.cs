@@ -55,7 +55,7 @@ public class RotatingSurveillance : MonoBehaviour
     private bool _powerDown;
 
     private bool _focus;
-    private Vector3 _focusEular;
+    private Quaternion _focusRotation;
     private float _currentAngularSpeed;
 
     #endregion
@@ -121,7 +121,7 @@ public class RotatingSurveillance : MonoBehaviour
         }
         else if (_focus)
         {
-            transform.eulerAngles = Vector3.MoveTowards(transform.eulerAngles, _focusEular, Time.deltaTime * focusSpeed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, _focusRotation, Time.deltaTime * focusSpeed);
         }
 
         if (_powerUp)
@@ -199,8 +199,9 @@ public class RotatingSurveillance : MonoBehaviour
 
             var focusAngle = Vector3.SignedAngle(v1, v2, Vector3.up);
 
-            _focusEular = transform.eulerAngles;
-            _focusEular.y += focusAngle;
+            Vector3 euler = transform.eulerAngles;
+            euler.y += focusAngle;
+            _focusRotation = Quaternion.Euler(euler);
 
             _focus = true;
         }
@@ -260,8 +261,9 @@ public class RotatingSurveillance : MonoBehaviour
             surveillanceLight.intensity = Mathf.Lerp(fromZero ? 0 : surveillanceLight.intensity, defaultLightIntensity, fraction);
             beam.intensityGlobal = Mathf.Lerp(fromZero ? 0 : beam.intensityGlobal, defaultBeamIntensity, fraction);
 
-            machineSource.volume = 1;
-            rumbleSoundSource.volume = 1;
+            
+            if(machineSource) machineSource.volume = 1;
+            if(rumbleSoundSource) rumbleSoundSource.volume = 1;
 
             if (fraction >= 1)
             {
