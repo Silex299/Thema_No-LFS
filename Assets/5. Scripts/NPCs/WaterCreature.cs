@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Net.NetworkInformation;
-using System.Timers;
+using Health;
 using Player_Scripts;
+using Player_Scripts.Player_States;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -72,16 +72,32 @@ namespace NPCs
         {
             CurrentSpeed = creatureSpeed;
             ChangeState(state, true);
+            
+            if (PlayerMovementController.Instance)
+            {
+                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+            }
         }
 
         private void OnEnable()
         {
-            PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+            if (PlayerMovementController.Instance)
+            {
+                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+            }
         }
 
         private void OnDisable()
         {
             PlayerMovementController.Instance.player.Health.OnDeath -= OnPlayerDeath;
+        }
+
+        public void OnCollisionEnter(Collision other)
+        {
+            if (state == GuardStateEnum.Chase)
+            {
+                chaseState.OnCollision(other);
+            }
         }
 
         private void Update()
@@ -134,9 +150,13 @@ namespace NPCs
 
 
             direction.y = 0;
+            transform.forward = Vector3.Lerp(transform.forward, direction.normalized,
+                creatureRotationSpeed * speedMultiplier * Time.deltaTime);
+            /**
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation,
-                creatureRotationSpeed * speedMultiplier * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation,
+                creatureRotationSpeed * speedMultiplier * Time.deltaTime);
+                **/
         }
 
         private void OnPlayerDeath()
@@ -224,7 +244,7 @@ namespace NPCs
                 Vector3 moveTo = new Vector3(_center.x + x, y, _center.z + z);
                 
                 
-                creature.transform.position = Vector3.Lerp(creature.transform.position, moveTo, creature.CurrentSpeed * Time.deltaTime);
+                creature.transform.position = Vector3.MoveTowards(creature.transform.position, moveTo, 5 * Time.deltaTime);
                 creature.Rotate(moveTo);
 
                 //if distance between the creature and the center is less than 0.1, set reached perimeter to true
@@ -267,11 +287,13 @@ namespace NPCs
         [SerializeField] private float attackDistance;
         [SerializeField] private float afterAttackDistance;
         [SerializeField] private float timeToAttack = 1;
+        [SerializeField] private float underWaterAttackDistance = 1;
 
         [SerializeField] private GameObject hitEffect;
         [SerializeField] internal bool playerInWater;
 
         [SerializeField] private UnityEvent onAttack;
+        
 
         private bool _isAttacking;
         private static readonly int Attack = Animator.StringToHash("Attack");
@@ -288,6 +310,7 @@ namespace NPCs
             }
 
             creature.animator.SetBool(Chase, true);
+
         }
 
         public override void StateExit(WaterCreature creature)
@@ -307,6 +330,7 @@ namespace NPCs
             creature.ChangeState(GuardStateEnum.Guard);
         }
 
+        
         #endregion
 
         #region Movement and Attack Methods
@@ -332,7 +356,7 @@ namespace NPCs
 
             // Move the creature towards the player at a speed of creatureSpeed
             creature.transform.position = Vector3.MoveTowards(creature.transform.position, targetPosition,
-                creature.CurrentSpeed * Time.deltaTime);
+                10*creature.CurrentSpeed * Time.deltaTime);
 
             // Rotate the creature towards the player
             creature.Rotate(targetPosition, 0.5f);
@@ -343,7 +367,7 @@ namespace NPCs
             // If the player is in water and the distance is less than 1, start the underwater attack
             if (playerInWater)
             {
-                if (distance < 1)
+                if (distance < underWaterAttackDistance)
                 {
                     creature.StartCoroutine(AttackPlayerUnderWater(creature));
                 }
@@ -414,8 +438,12 @@ namespace NPCs
             // If creature is close to player, trigger player animation
             if (Vector3.Distance(creature.transform.position, PlayerMovementController.Instance.transform.position) < 2)
             {
-                PlayerMovementController.Instance.DisablePlayerMovement(true);
-                PlayerMovementController.Instance.PlayAnimation("Tripping", 0.2f, 1);
+                if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.BasicMovement))
+                {
+                    PlayerMovementController.Instance.DisablePlayerMovement(true);
+                    PlayerMovementController.Instance.PlayAnimation("Tripping", 0.2f, 1);
+                }
+                
             }
 
             // Determine direction for creature to move after attack
@@ -425,10 +453,12 @@ namespace NPCs
                 : creaturePosition + Vector3.right * afterAttackDistance;
 
             moveTo1.y = creature.defaultY;
+            Vector3 initialPosition = creature.transform.position;
 
             // Move creature away from player after attack
             timeElapse = 0;
-            while (true)
+            
+            while (timeElapse<2.5f)
             {
                 timeElapse += Time.deltaTime;
 
@@ -441,14 +471,8 @@ namespace NPCs
                     moveTo1.y = creature.defaultY;
                 }
 
-                creature.transform.position = Vector3.MoveTowards(creature.transform.position, moveTo1,
-                    creature.CurrentSpeed * Time.deltaTime);
+                creature.transform.position = Vector3.Lerp(initialPosition, moveTo1, timeElapse/2.5f);
                 creature.Rotate(moveTo1);
-
-                if (Vector3.Distance(creature.transform.position, moveTo1) < 0.01f)
-                {
-                    break;
-                }
 
                 yield return null;
             }
@@ -456,6 +480,31 @@ namespace NPCs
             _isAttacking = false;
         }
 
+
+        public void OnCollision(Collision collision)
+        {
+            if (collision.collider.CompareTag("Interactable"))
+            {
+                if (collision.collider.TryGetComponent<HealthBaseClass>(out var component))
+                {
+
+                    Vector3 playerPos = PlayerMovementController.Instance.transform.position;
+                    float distance = Vector3.Distance(playerPos, collision.contacts[0].point);
+
+                    if (distance < 2)
+                    {
+                        if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.BasicMovement))
+                        {
+                            PlayerMovementController.Instance.player.Health.TakeDamage(101);
+                        }
+                    }
+                    
+                    
+                    component.TakeDamage(101);
+                }
+            }
+        }
+        
         #endregion
     }
 
