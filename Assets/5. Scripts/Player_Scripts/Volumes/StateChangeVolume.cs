@@ -65,9 +65,7 @@ namespace Player_Scripts.Volumes
 
         private IEnumerator ResetTrigger()
         {
-            print("Calling");
             yield return new WaitForSeconds(0.2f);
-            print("Called");
             var playerController = PlayerMovementController.Instance;
             playerController.ChangeState(exitState, exitStateIndex);
             playerController.player.enabledDirectionInput = false;
