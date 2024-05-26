@@ -25,7 +25,9 @@ public class LevelTrigger : MonoBehaviour
 
     [SerializeField, BoxGroup("Sounds")] private AudioSource soundSource;
     [SerializeField, BoxGroup("Sounds")] private AudioClip triggerSound;
+    [SerializeField, BoxGroup("Sounds")] private AudioClip disabledTriggerSound;
 
+    [Space(10)] public bool canPull = true;
 
     private bool _playerIsInTrigger;
     private bool _triggerEngaged;
@@ -99,6 +101,7 @@ public class LevelTrigger : MonoBehaviour
                 player.DisablePlayerMovement(true);
 
                 _forwardDirection = CheckPlayerDirection();
+                
                 if (_forwardDirection)
                 {
                     if (!triggerPulled)
@@ -194,25 +197,49 @@ public class LevelTrigger : MonoBehaviour
 
     private IEnumerator Trigger()
     {
-        yield return new WaitForSeconds(leverPullDelay);
 
-        if (soundSource)
+        print("Jello");
+        if (!canPull)
         {
-            soundSource.PlayOneShot(triggerSound);
-        }
-
-        yield return new WaitForSeconds(actionDelay);
-
-        if (triggerPulled)
-        {
-            triggerPullAction?.Invoke();
+            yield return new WaitUntil(() => !_triggerEngaged);
+            
+            _lastTriggerTime = Time.time;
+            triggerPulled = false;
+            
+            leverAnimator.speed = 3;
+            leverAnimator.Play("Trigger Inverse");
+            if (soundSource)
+            {
+                soundSource.PlayOneShot(disabledTriggerSound);
+            }
+            yield return new WaitForSeconds(0.5f);
+            leverAnimator.speed = 1;
+            _trigger = null;
         }
         else
         {
-            triggerPushAction?.Invoke();
-        }
+            yield return new WaitForSeconds(leverPullDelay);
 
-        _trigger = null;
+            if (soundSource)
+            {
+                soundSource.PlayOneShot(triggerSound);
+            }
+
+            yield return new WaitForSeconds(actionDelay);
+
+            if (triggerPulled)
+            {
+                triggerPullAction?.Invoke();
+            }
+            else
+            {
+                triggerPushAction?.Invoke();
+            }
+
+            _trigger = null;
+        }
+        
+        
     }
 
     private void Reset()
@@ -237,7 +264,10 @@ public class LevelTrigger : MonoBehaviour
         return angle < 90;
     }
 
-
+    public void DeActiveTrigger(bool status)
+    {
+        canPull = !status;
+    }
     public void ChangeState(bool pulled)
     {
         if (triggerPulled == pulled) return;
