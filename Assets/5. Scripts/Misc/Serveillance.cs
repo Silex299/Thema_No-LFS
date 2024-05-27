@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+﻿ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
-using Triggers;
 using UnityEngine;
 
 namespace Misc
@@ -16,6 +12,7 @@ namespace Misc
         [SerializeField] private LayerMask rayCastMask;
 
         private bool _isPlayerInTrigger = false;
+        private bool _objectFound = false;
 
         [SerializeField] private SurveillanceVisuals visuals;
 
@@ -37,51 +34,58 @@ namespace Misc
             StopCoroutine(CheckForPlayer());
         }
 
+        /// <summary>
+        /// Checks for the player while the player is in the trigger. If the player is found, it triggers the object found sequence.
+        /// </summary>
         private IEnumerator CheckForPlayer()
         {
-            if (!isMachineOn)
-            {
-                yield break;
-            }
-
-            while (_isPlayerInTrigger)
+            while (isMachineOn && _isPlayerInTrigger)
             {
                 var playerTransform = PlayerMovementController.Instance.transform;
-
                 Vector3 direction = (playerTransform.position + Vector3.up * 0.5f) - transform.position;
                 Ray ray = new Ray(transform.position, direction);
 
                 if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
                 {
-                    //Debug a line from the machine to hit point
                     Debug.DrawLine(transform.position, hit.point, Color.red);
-                    Debug.Log(hit.collider.name);
-                    
-                    if (hit.transform.CompareTag("Player_Main"))
-                    {
-                        PlayerFound();
-                    }
+                    ObjectFound(hit.collider.tag);
                 }
 
-                yield return null; // Adjust the wait time as needed
+                yield return null;
             }
         }
 
-        private bool called;
+
+        /// <summary>
+        /// Handles the actions to be taken when an object is found. If the object is the player, it triggers the player found sequence.
+        /// </summary>
+        /// <param name="tag">The tag of the found object.</param>
+        private void ObjectFound(string tag)
+        {
+            if (_objectFound) return;
+
+            if (tag == "Player_Main")
+            {
+                PlayerFound();
+                _objectFound = true;
+                mover.enabled = false;
+                visuals.PowerUp(this);
+            }
+        }
 
         private void PlayerFound()
         {
-            if (called) return;
-            
-            mover.enabled = false;
-            visuals.PowerUp(this);
             PlayerMovementController.Instance.player.Health.Kill("RAY");
-            called = true;
         }
 
+        /// <summary>
+        /// Toggles the state of the machine and its visuals based on the provided boolean value.
+        /// </summary>
+        /// <param name="turnOff">If true, the machine will be turned off. If false, the machine will be turned on.</param>
         private void TurnOffMachine(bool turnOff)
         {
             isMachineOn = !turnOff;
+            mover.StopMover(turnOff);
 
             if (turnOff)
                 visuals.PowerDown(this);

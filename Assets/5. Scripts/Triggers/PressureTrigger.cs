@@ -6,7 +6,7 @@ public class PressureTrigger : MonoBehaviour
 {
 
     [SerializeField] private bool canTrigger = true;
-    [SerializeField, Range(1, 30)] private int pressureThresold = 1;
+    [SerializeField, Range(1, 30)] private int pressureThreshold = 1;
     [SerializeField] private UnityEvent triggerAction;
     [SerializeField] private UnityEvent resetAction;
 
@@ -14,20 +14,20 @@ public class PressureTrigger : MonoBehaviour
     [SerializeField, Space(10)] private AudioSource soundSource;
     [SerializeField, Space(10)] private AudioClip triggerSound;
 
-    private int _objectInTirgger;
-    private bool _triggerd;
+    private int _objectInTrigger;
+    private bool _triggered;
 
     private void OnTriggerEnter(Collider other)
     {
 
         if (!canTrigger) return;
 
-        _objectInTirgger = _objectInTirgger + 1;
-        if (_triggerd) return;
+        _objectInTrigger = _objectInTrigger + 1;
+        if (_triggered) return;
 
-        if(_objectInTirgger >= pressureThresold)
+        if(_objectInTrigger >= pressureThreshold)
         {
-            _triggerd = true;
+            _triggered = true;
             triggerAction?.Invoke();
             soundSource?.PlayOneShot(triggerSound);
         }
@@ -38,13 +38,13 @@ public class PressureTrigger : MonoBehaviour
     {
         if (!canTrigger) return;
 
-        _objectInTirgger = Mathf.Clamp(_objectInTirgger-1, 0, 30);
+        _objectInTrigger = Mathf.Clamp(_objectInTrigger-1, 0, 30);
 
-        if (!_triggerd) return;
+        if (!_triggered) return;
 
-        if(_objectInTirgger < pressureThresold)
+        if(_objectInTrigger < pressureThreshold)
         {
-            _triggerd = false;
+            _triggered = false;
             resetAction?.Invoke();
         }
     }
