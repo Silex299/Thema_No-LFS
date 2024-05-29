@@ -173,8 +173,6 @@ public class TearableWire : MonoBehaviour
         else
         {
             
-            print(_tearJoint.connectedBody.GetComponent<ConstantForce>());
-            
             for (int i = 0; i <= tearIndex; i++)
             {
                 _lineRenderer1.SetPosition(i, ropeSegments[i].position);
