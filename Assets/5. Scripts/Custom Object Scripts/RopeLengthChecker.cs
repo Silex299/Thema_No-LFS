@@ -23,8 +23,5 @@ public class RopeLengthChecker : MonoBehaviour
     {
         currentRopeLength = Vector3.Distance(transform.position, rope.transform.position);
         cursor.ChangeLength(ropeLength);
-
-       
-        
     }
 }
