@@ -2,6 +2,8 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Analytics;
+using WireBuilder;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
@@ -21,6 +23,9 @@ namespace Misc.Items
 
         [SerializeField, BoxGroup("Rope Properties")]
         private Material ropeMaterial;
+
+        [SerializeField, BoxGroup("Rope Properties")]
+        private int breakIndex;
 
         [Tooltip(
             "TIt determines how strongly the joint will try to maintain its position. A higher spring value will make the joint stiffer and more resistant to rotational movement")]
@@ -69,7 +74,6 @@ namespace Misc.Items
 
 
             ropeSegments = new Rigidbody[ropeResolution];
-            lineRenderers = new LineRenderer[ropeResolution];
 
             for (int i = 0; i < ropeResolution; i++)
             {
@@ -91,21 +95,6 @@ namespace Misc.Items
 
                 if (i > 0)
                 {
-                    #region Line Renderer
-
-                    lineRenderers[i] = ropeSegments[i].gameObject.AddComponent<LineRenderer>();
-
-                    lineRenderers[i].startWidth = ropeThickness;
-                    lineRenderers[i].endWidth = ropeThickness;
-                    lineRenderers[i].material = ropeMaterial;
-                    lineRenderers[i].textureMode = LineTextureMode.Tile;
-                    lineRenderers[i].positionCount = 2;
-
-                    lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
-                    lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
-
-                    #endregion
-
                     #region Hinge Joint
 
                     CapsuleCollider addedCollider = ropeSegments[i].gameObject.AddComponent<CapsuleCollider>();
@@ -134,12 +123,47 @@ namespace Misc.Items
             }
         }
 
+
+        [Button("Create LineRenderer")]
+        public void CreateLineRenderer()
+        {
+
+            lineRenderers = new LineRenderer[ropeResolution];
+            
+            for(int i=1; i<ropeResolution; i++)
+            {
+                if (!ropeSegments[i].TryGetComponent<LineRenderer>(out lineRenderers[i]))
+                {
+                    lineRenderers[i] = ropeSegments[i].gameObject.AddComponent<LineRenderer>();
+                }
+
+                lineRenderers[i].startWidth = ropeThickness;
+                lineRenderers[i].endWidth = ropeThickness;
+                lineRenderers[i].material = ropeMaterial;
+                lineRenderers[i].textureMode = LineTextureMode.Tile;
+                lineRenderers[i].positionCount = 2;
+
+                lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
+                lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
+            }
+        }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(_giz, 0.3f);
         }
 
+        
+        [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
+        public void BreakRope()
+        {
+            Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
+            Destroy(lineRenderers[breakIndex]);
+            broken = true;
+        }
+
+        private bool broken;
+        
         #endregion
 
         #region Bultin Methods
@@ -149,6 +173,10 @@ namespace Misc.Items
             //for each line render segment set the 2nd position to the previous segment position and 1st position to current segment position
             for (int i = 1; i < ropeResolution; i++)
             {
+                if (broken && i == breakIndex)
+                {
+                    continue;
+                }
                 lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
                 lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
             }
@@ -156,7 +184,7 @@ namespace Misc.Items
 
         #endregion
 
-        #region Custom Methods
+        #region Custom Methods For Rope Movement
 
         /// <summary>
         /// Moves the player along the rope based on the input.
@@ -201,6 +229,7 @@ namespace Misc.Items
             if (_connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
+                print(input);
                 rb.AddForce(0, 0, swingForce * input * Time.deltaTime);
             }
         }
