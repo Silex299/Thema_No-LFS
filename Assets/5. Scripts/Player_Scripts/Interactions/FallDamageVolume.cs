@@ -7,10 +7,15 @@ namespace Player_Scripts.Interactions
     public class FallDamageVolume : MonoBehaviour
     {
 
+        #region Variables
         [SerializeField] private float accelerationThreshold = 10f;
 
         private bool _playerInTrigger;
         private Coroutine _resetCoroutine;
+
+        #endregion
+
+        #region  Checks if player is in trigger
 
         private void OnTriggerStay(Collider other)
         {
@@ -34,7 +39,7 @@ namespace Player_Scripts.Interactions
             _resetCoroutine = null;
         }
 
-
+        #endregion
 
         #region This is subscribed to the player's death event
         private void OnEnable()
@@ -61,20 +66,22 @@ namespace Player_Scripts.Interactions
         }
         #endregion
 
+        /// <summary>
+        /// Checks if the player is in the trigger and applies fall damage if necessary.
+        /// </summary>
         private void FixedUpdate()
         {
+            // If the player is not in the trigger, exit the function.
             if (!_playerInTrigger) return;
 
+            // Get the instance of the player.
             Player player = PlayerMovementController.Instance.player;
 
-            if (player.IsGrounded)
+            // If the player is grounded and their vertical acceleration exceeds the threshold, apply damage.
+            if (player.IsGrounded && accelerationThreshold < Mathf.Abs(player.verticalAcceleration))
             {
-                if(accelerationThreshold < Mathf.Abs(PlayerMovementController.Instance.player.verticalAcceleration))
-                {
-                    player.Health.TakeDamage(100);
-                }
+                player.Health.TakeDamage(100);
             }
-
         }
 
         private void OnPlayerDeath()
@@ -82,8 +89,6 @@ namespace Player_Scripts.Interactions
             _playerInTrigger = false;
             gameObject.SetActive(false);
         }
-
-
 
     }
 }
