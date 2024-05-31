@@ -102,7 +102,7 @@ namespace Player_Scripts
 
         internal void SetIntractable(Interactable item)
         {
-            player.interactable = item;
+            player.Interactable = item;
         }
 
 

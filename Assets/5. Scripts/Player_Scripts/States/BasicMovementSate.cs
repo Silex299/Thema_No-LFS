@@ -109,10 +109,10 @@ namespace Player_Scripts.States
 
             #region PLAYER INTERACTION
             //Interact
-            if (player.interactable)
+            if (player.Interactable)
             {
                 //I need Directions while interacting like if its pushing left or right
-                var interactionType = player.interactable.Interact();
+                var interactionType = player.Interactable.Interact();
 
 
                 switch (interactionType)
@@ -121,9 +121,9 @@ namespace Player_Scripts.States
 
                         //input =  Mathf.Lerp(input, input * multiplier, Time.deltaTime * 0.001f);
 
-                        if (!player.isInteracting)
+                        if (!player.IsInteracting)
                         {
-                            player.isInteracting = true;
+                            player.IsInteracting = true;
                             player.AnimationController.SetBool(Push, true);
                         }
 
@@ -133,9 +133,9 @@ namespace Player_Scripts.States
 
                     case PlayerInteractionType.NONE:
 
-                        if (player.isInteracting)
+                        if (player.IsInteracting)
                         {
-                            player.isInteracting = false;
+                            player.IsInteracting = false;
                             player.AnimationController.SetBool(Push, false);
                         }
                         player.enabledDirectionInput = false;
@@ -145,9 +145,9 @@ namespace Player_Scripts.States
             }
             else
             {
-                if (player.isInteracting)
+                if (player.IsInteracting)
                 {
-                    player.isInteracting = false;
+                    player.IsInteracting = false;
                     player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
                 }
@@ -237,6 +237,7 @@ namespace Player_Scripts.States
             else
             {
                 player.AnimationController.SetFloat(VerticalAcceleration, _mPlayerVelocity.y);
+                player.VerticalVelocity = _mPlayerVelocity.y;
             }
         }
 

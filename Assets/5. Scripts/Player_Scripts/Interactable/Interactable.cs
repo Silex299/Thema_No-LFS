@@ -54,9 +54,9 @@ namespace Player_Scripts.Interactables
             yield return new WaitForSeconds(0.2f);
             _playerIsInTrigger = false;
 
-            if(PlayerMovementController.Instance.player.interactable == this)
+            if(PlayerMovementController.Instance.player.Interactable == this)
             {
-                PlayerMovementController.Instance.player.interactable = null;
+                PlayerMovementController.Instance.player.Interactable = null;
             }
         }
 

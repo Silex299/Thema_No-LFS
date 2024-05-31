@@ -12,6 +12,7 @@ namespace Player_Scripts
     public class Player : MonoBehaviour
     {
 
+
         #region Variables
 
         [SerializeField, BoxGroup("References")] private Animator animator;
@@ -64,8 +65,11 @@ namespace Player_Scripts
 
         [SerializeField] private bool disablePlayerMovement;
 
-        internal Interactable interactable;
-        internal bool isInteracting;
+        internal Interactable Interactable;
+        internal bool IsInteracting;
+        internal float VerticalVelocity;
+        
+        
 
 
         #endregion
