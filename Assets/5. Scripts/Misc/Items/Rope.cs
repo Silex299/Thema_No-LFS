@@ -299,7 +299,6 @@ namespace Misc.Items
         /// </summary>
         public void AttachPlayer()
         {
-            print("Fuck");
             // If the last attachment was less than 1.5 seconds ago, do not attach again
             if (Time.time - _lastAttachedTime < 1.5f) return;
 

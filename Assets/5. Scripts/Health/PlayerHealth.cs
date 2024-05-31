@@ -81,14 +81,14 @@ namespace Health
                 DisableCompoents();
                 PlayerMovementController.Instance.PlayAnimation("Float Death", 0.5f, 1); //Play Death  Animation
             }
-            else if(message == "RAGDOLL DEATH")
+            else if (message == "RAGDOLL DEATH")
             {
                 player.AnimationController.enabled = false;
                 player.EffectsManager.PlayGeneralSoundDefaultRandom("Death");
                 DisableCompoents();
                 Death();
             }
-            else if(message == "FALL")
+            else if (message == "FALL")
             {
                 player.AnimationController.enabled = false;
                 player.EffectsManager.PlayGeneralSoundDefaultRandom("Fall Death");
@@ -118,7 +118,7 @@ namespace Health
                 float fraction = _dissolveTimeElapsed / dissolveTime;
 
 
-                float value =  Mathf.Lerp(-1, 1, fraction);
+                float value = Mathf.Lerp(-1, 1, fraction);
 
 
                 dissolveMaterial.SetFloat(Dissolve1, value);

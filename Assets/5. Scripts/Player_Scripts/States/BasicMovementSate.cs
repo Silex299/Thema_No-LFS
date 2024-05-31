@@ -15,7 +15,8 @@ namespace Player_Scripts.States
         private float sphereCastOffset;
         [SerializeField, BoxGroup("Ground Check Variables")]
         private float sphereCastRadius;
-        [FormerlySerializedAs("GroundOffset")] [SerializeField, BoxGroup("Ground Check Variables")]
+        [FormerlySerializedAs("GroundOffset")]
+        [SerializeField, BoxGroup("Ground Check Variables")]
         private float groundOffset;
 
         [SerializeField, BoxGroup("Misc")] private int defaultStateIndex = 0;
@@ -27,8 +28,6 @@ namespace Player_Scripts.States
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Push = Animator.StringToHash("Push");
 
-        private Vector3 _mPlayerVelocity;
-        
 
         #region Unused Methods
 
@@ -49,7 +48,7 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             defaultStateIndex = player.currentStateIndex;
-            
+
             player.AnimationController.SetInteger(StateIndex, defaultStateIndex);
         }
 
@@ -100,10 +99,10 @@ namespace Player_Scripts.States
 
             //Apply gravity and ground check
             GroundCheck(player);
-            Gravity(player);
+            player.MovementController.ApplyGravity();
 
             //Move player base on player velocity (Only responsible for gravity and jump)
-            player.CController.Move(_mPlayerVelocity * Time.deltaTime);
+            player.CController.Move(player.playerVelocity * Time.deltaTime);
 
             #endregion
 
@@ -179,7 +178,7 @@ namespace Player_Scripts.States
         #endregion
 
 
-        
+
         #region Custom Methods
 
         private void Rotate(Player player, Vector3 rotateTowards)
@@ -189,14 +188,14 @@ namespace Player_Scripts.States
             rotateTowards.y = pos.y;
 
             var newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
-            
+
             transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness * Mathf.Rad2Deg);
         }
-        
+
 
         private void SideRotation(Player player, Vector3 rotateTowards, bool isRight)
         {
-        
+
             var transform = player.transform;
             var pos = transform.position;
             rotateTowards.y = pos.y;
@@ -208,7 +207,7 @@ namespace Player_Scripts.States
                 newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
                 //Rotate newRotation by 90degrees in Y axis
                 newRotation *= Quaternion.Euler(0, 90, 0);
-                
+
             }
             else
             {
@@ -216,30 +215,11 @@ namespace Player_Scripts.States
                 //Rotate newRotation by 90degrees in Y axis
                 newRotation *= Quaternion.Euler(0, 90, 0);
             }
-            
+
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * player.RotationSmoothness * Mathf.Rad2Deg);
         }
 
-        
-
-        private void Gravity(Player player)
-        {
-            _mPlayerVelocity.y -= 10 * Time.deltaTime;
-
-            if (player.IsGrounded)
-            {
-                if (_mPlayerVelocity.y <= 0)
-                {
-                    _mPlayerVelocity = new Vector3(0, -10, 0);
-                }
-            }
-            else
-            {
-                player.AnimationController.SetFloat(VerticalAcceleration, _mPlayerVelocity.y);
-                player.VerticalVelocity = _mPlayerVelocity.y;
-            }
-        }
 
         public void GroundCheck(Player player)
         {
@@ -255,7 +235,7 @@ namespace Player_Scripts.States
             {
                 player.IsGrounded = false;
             }
-            
+
             //TODO may need change????
             player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
@@ -271,14 +251,14 @@ namespace Player_Scripts.States
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 
-                _mPlayerVelocity += velocityChange;
+                player.playerVelocity += velocityChange;
 
             }
 
 
-            _mPlayerVelocity.y = player.JumpVelocity;
+            player.playerVelocity.y = player.JumpVelocity;
         }
-        
+
 
         #endregion
 

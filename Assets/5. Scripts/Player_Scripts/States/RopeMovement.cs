@@ -21,7 +21,7 @@ namespace Player_Scripts.States
         private bool _isAttached = false;
         private bool _isSwinging;
         private float _attachTime = 0;
-        
+
 
         private Coroutine _detachCoroutine;
 
@@ -62,7 +62,7 @@ namespace Player_Scripts.States
             player.AnimationController.CrossFade("Rope", 0.1f, 0);
             player.IsGrounded = false;
             _attachTime = Time.time;
-            
+
             if (_detachCoroutine != null)
             {
                 player.StopCoroutine(_detachCoroutine);
@@ -89,7 +89,7 @@ namespace Player_Scripts.States
                 {
                     Debug.Log("You can't dettach");
                 }
-                
+
             }
 
             if (_isSwinging) return;
@@ -190,17 +190,15 @@ namespace Player_Scripts.States
             attachedRope.Detached();
 
             // Calculate the player's velocity when detaching from the rope
-            Vector3 playerVelocity = attachedRope.CurrentRopeSegment().velocity * attachedRope.exitForce +
+            player.playerVelocity = attachedRope.CurrentRopeSegment().velocity * attachedRope.exitForce +
                                      Vector3.up * attachedRope.exitForce;
 
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)
             {
-                playerVelocity.y -= 10 * Time.deltaTime;
+                player.MovementController.ApplyGravity();
 
-                player.AnimationController.SetFloat(VerticalAcceleration, playerVelocity.y);
-
-                player.CController.Move(playerVelocity * Time.deltaTime);
+                player.CController.Move(player.playerVelocity * Time.deltaTime);
 
                 player.basicMovementState.GroundCheck(player);
 

@@ -3,6 +3,7 @@ using UnityEngine;
 using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
+using UnityEngine.Video;
 
 namespace Player_Scripts
 {
@@ -67,8 +68,8 @@ namespace Player_Scripts
 
         internal Interactable Interactable;
         internal bool IsInteracting;
-        internal float VerticalVelocity;
-        
+        internal float verticalAcceleration;
+        internal Vector3 playerVelocity = Vector3.zero;
         
 
 

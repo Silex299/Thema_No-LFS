@@ -2,6 +2,7 @@ using System;
 using Player_Scripts.Interactables;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace Player_Scripts
 {
@@ -105,7 +106,26 @@ namespace Player_Scripts
             player.Interactable = item;
         }
 
+        /// <summary>
+        /// only updates player velocity vector, Doesn't move the player
+        /// </summary>
+        public void ApplyGravity()
+        {
+            player.playerVelocity.y -= 10 * Time.deltaTime;
 
+            if (player.IsGrounded)
+            {
+                if (player.playerVelocity.y <= 0)
+                {
+                    player.playerVelocity = new Vector3(0, -10, 0);
+                }
+            }
+            else
+            {
+                player.AnimationController.SetFloat("VerticalAcceleration", player.playerVelocity.y);
+                player.verticalAcceleration = player.playerVelocity.y;
+            }
+        }
 
 
         #region State Methods
@@ -115,7 +135,7 @@ namespace Player_Scripts
             return state == player.e_currentState;
         }
 
-        
+
         //MARKER: State
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
@@ -161,7 +181,7 @@ namespace Player_Scripts
         public void ChangeState(int index)
         {
             print("Changing State : " + index);
-            
+
             //if (player.DisablePlayerMovement) return;
 
             if (index == player.currentStateIndex) return;
@@ -173,9 +193,9 @@ namespace Player_Scripts
             player.AnimationController.SetInteger(StateIndex, index);
 
             player.currentState.ExitState(player);
-            
+
             ResetAnimator();
-            
+
             switch (index)
             {
                 case <= 0:
@@ -204,8 +224,8 @@ namespace Player_Scripts
             ChangeState(index);
             PlayAnimation(animationName, 0.3f, 0);
         }
-        
-        
+
+
         /// <summary>
         /// Reverts back to previous state
         /// </summary>
@@ -256,7 +276,7 @@ namespace Player_Scripts
                 player.waterMovement.PlayerAtBottom(player, atBottom);
             }
         }
-        
+
 
         #endregion
 
