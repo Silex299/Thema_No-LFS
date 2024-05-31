@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,9 +12,6 @@ namespace Player_Scripts.Interactions
 
         [SerializeField] private UnityEvent onThresholdExceeded;
 
-        private bool _playerInTrigger;
-        private Coroutine _resetCoroutine;
-
         #endregion
 
         #region  Checks if player is in trigger
@@ -24,22 +20,15 @@ namespace Player_Scripts.Interactions
         {
             if (other.CompareTag("Player_Main"))
             {
-                _playerInTrigger = true;
 
-                if (_resetCoroutine != null)
+                Player player = PlayerMovementController.Instance.player;
+
+                if(player.IsGrounded && accelerationThreshold < Mathf.Abs(player.verticalAcceleration))
                 {
-                    StopCoroutine(_resetCoroutine);
+                    onThresholdExceeded.Invoke();
                 }
-                _resetCoroutine = StartCoroutine(ResetTrigger());
             }
 
-        }
-
-        private IEnumerator ResetTrigger()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _playerInTrigger = false;
-            _resetCoroutine = null;
         }
 
         #endregion
@@ -69,27 +58,10 @@ namespace Player_Scripts.Interactions
         }
         #endregion
 
-        /// <summary>
-        /// Checks if the player is in the trigger and applies fall damage if necessary.
-        /// </summary>
-        private void FixedUpdate()
-        {
-            // If the player is not in the trigger, exit the function.
-            if (!_playerInTrigger) return;
-
-            // Get the instance of the player.
-            Player player = PlayerMovementController.Instance.player;
-
-            // If the player is grounded and their vertical acceleration exceeds the threshold, apply damage.
-            if (player.IsGrounded && accelerationThreshold < Mathf.Abs(player.verticalAcceleration))
-            {
-                onThresholdExceeded.Invoke();
-            }
-        }
+    
 
         private void OnPlayerDeath()
         {
-            _playerInTrigger = false;
             gameObject.SetActive(false);
         }
 
