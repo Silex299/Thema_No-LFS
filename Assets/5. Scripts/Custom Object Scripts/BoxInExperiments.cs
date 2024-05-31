@@ -14,6 +14,8 @@ public class BoxInExperiments : MonoBehaviour
     [SerializeField] private Rigidbody connectedLoad;
     [SerializeField] private Rope[] connectedRopes;
 
+    [SerializeField] private UnityEvent onBoxFall;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player_Main"))
@@ -46,5 +48,10 @@ public class BoxInExperiments : MonoBehaviour
 
     }
 
+
+    public void EnableRopeTrigger()
+    {
+        onBoxFall.Invoke();
+    }
 
 }

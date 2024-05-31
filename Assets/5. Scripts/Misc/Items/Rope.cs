@@ -229,7 +229,6 @@ namespace Misc.Items
             if (_connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
-                print(input);
                 rb.AddForce(0, 0, swingForce * input * Time.deltaTime);
             }
         }

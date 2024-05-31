@@ -58,8 +58,6 @@ namespace Player_Scripts.Interactions
         }
         #endregion
 
-    
-
         private void OnPlayerDeath()
         {
             gameObject.SetActive(false);
