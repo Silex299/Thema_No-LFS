@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Misc.Items;
 using UnityEngine;
+using UnityEngine.Video;
 
 // ReSharper disable once CheckNamespace
 namespace Player_Scripts.States
@@ -177,7 +178,7 @@ namespace Player_Scripts.States
         /// </summary>
         /// <param name="player">The player to detach.</param>
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
-        private IEnumerator DetachPlayer(Player player)
+        private IEnumerator DetachPlayer(Player player, float horizontal = 0)
         {
             // Set the attachment status to false
             _isAttached = false;
@@ -189,9 +190,8 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            // Calculate the player's velocity when detaching from the rope
-            player.playerVelocity = attachedRope.CurrentRopeSegment().velocity * attachedRope.exitForce +
-                                     Vector3.up * attachedRope.exitForce;
+            player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * Input.GetAxis("Horizontal"));
+            
 
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)

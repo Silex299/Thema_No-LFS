@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Player_Scripts.Interactions
 {
@@ -9,6 +10,8 @@ namespace Player_Scripts.Interactions
 
         #region Variables
         [SerializeField] private float accelerationThreshold = 10f;
+
+        [SerializeField] private UnityEvent onThresholdExceeded;
 
         private bool _playerInTrigger;
         private Coroutine _resetCoroutine;
@@ -80,7 +83,7 @@ namespace Player_Scripts.Interactions
             // If the player is grounded and their vertical acceleration exceeds the threshold, apply damage.
             if (player.IsGrounded && accelerationThreshold < Mathf.Abs(player.verticalAcceleration))
             {
-                player.Health.TakeDamage(100);
+                onThresholdExceeded.Invoke();
             }
         }
 

@@ -9331,8 +9331,11 @@ GameObject:
   - component: {fileID: 557544734}
   - component: {fileID: 557544733}
   - component: {fileID: 557544732}
+  - component: {fileID: 557544738}
+  - component: {fileID: 557544736}
+  - component: {fileID: 557544737}
   m_Layer: 13
-  m_Name: Cube.034
+  m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9462,6 +9465,57 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &557544736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557544728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049272a1a4f3fe54bba49d2c1a695b59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 557544737}
+  initialDelay: 0
+  connectedLoad: {fileID: 557544735}
+  connectedRopes:
+  - {fileID: 50887034}
+  - {fileID: 1588834666}
+--- !u!95 &557544737
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557544728}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5cfe27933a694764e8ba95a577d182bb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &557544738
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557544728}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.526188, y: 0.9230995, z: 5.846197}
+  m_Center: {x: 0, y: 2.952506, z: 0}
 --- !u!1 &560689142
 GameObject:
   m_ObjectHideFlags: 0
@@ -17262,6 +17316,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accelerationThreshold: 14
+  onThresholdExceeded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2040651018}
+        m_TargetAssemblyTypeName: Health.PlayerHealth, Assembly-CSharp
+        m_MethodName: TakeDamage
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 101
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &1069061990
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17273,8 +17342,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.117191, y: 4.5119295, z: 21.756088}
-  m_Center: {x: 0, y: 1.7559648, z: -4.4347763}
+  m_Size: {x: 10.117191, y: 6.700635, z: 21.756088}
+  m_Center: {x: 0, y: 2.8503175, z: -4.4347763}
 --- !u!43 &1069373280
 Mesh:
   m_ObjectHideFlags: 0
@@ -32568,7 +32637,7 @@ MonoBehaviour:
   ropeLength: 12
   ropeThickness: 0.3
   ropeMaterial: {fileID: 2100000, guid: 152c1efeaa069df408a2ec8c4aa63a08, type: 2}
-  breakIndex: 4
+  breakIndex: 2
   spring: 1
   damp: 4
   climbSpeed: 1.5
@@ -38393,6 +38462,7 @@ GameObject:
   - component: {fileID: 1917056172}
   - component: {fileID: 1917056170}
   - component: {fileID: 1917056171}
+  - component: {fileID: 1917056173}
   m_Layer: 0
   m_Name: Cube.021
   m_TagString: Untagged
@@ -38465,6 +38535,19 @@ Transform:
   m_Father: {fileID: 1490690046}
   m_RootOrder: 60
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1917056173
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917056169}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.188451, y: 13.446036, z: 0.22806308}
+  m_Center: {x: -0.0084306, y: -3.3678613, z: -0.06960799}
 --- !u!1 &1921108370
 GameObject:
   m_ObjectHideFlags: 0
@@ -42031,6 +42114,7 @@ GameObject:
   - component: {fileID: 2034016938}
   - component: {fileID: 2034016937}
   - component: {fileID: 2034016936}
+  - component: {fileID: 2034016939}
   m_Layer: 0
   m_Name: Cube.019
   m_TagString: Untagged
@@ -42103,6 +42187,19 @@ Transform:
   m_Father: {fileID: 1490690046}
   m_RootOrder: 64
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2034016939
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034016935}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.188451, y: 13.446036, z: 0.22806308}
+  m_Center: {x: -0.0084306, y: -3.3678613, z: -0.06960799}
 --- !u!1 &2037104223
 GameObject:
   m_ObjectHideFlags: 0
@@ -43124,6 +43221,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2040651012}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2040651018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1720567829666298894, guid: b969d6a300d6d534e98789b4be42a5d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2040651012}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656b18a30d055364aa9a784f1a9c8981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2046100219
 GameObject:
   m_ObjectHideFlags: 0
@@ -47441,8 +47550,8 @@ MonoBehaviour:
   breakIndex: 0
   spring: 1
   damp: 4
-  climbSpeed: 1.5
-  swingForce: 200
+  climbSpeed: 0.75
+  swingForce: 80
   entryForce: 5
   exitForce: 3
   ropeSegments:
