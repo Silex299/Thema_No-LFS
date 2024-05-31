@@ -158,6 +158,16 @@ namespace Player_Scripts.States
             #endregion
 
             #region PLAYER ANIMATION UPDATE
+            
+            if(Input.GetButtonDown("Crouch"))
+            {
+                CrouchPlayer(player, true);
+            }
+            else if(Input.GetButtonUp("Crouch"))
+            {
+                CrouchPlayer(player, false);
+            }
+
             if (Input.GetButtonDown("Jump"))
             {
                 if (player.currentStateIndex == -5)
@@ -240,6 +250,15 @@ namespace Player_Scripts.States
             player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
 
+        private void CrouchPlayer(Player player, bool crouch)
+        {
+            if(crouch){
+                player.AnimationController.SetInteger(StateIndex, -6);
+            }
+            else{
+                player.AnimationController.SetInteger(StateIndex, player.currentStateIndex);
+            }
+        }
 
         #endregion
 
