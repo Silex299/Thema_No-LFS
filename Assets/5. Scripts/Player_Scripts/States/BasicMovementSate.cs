@@ -1,7 +1,6 @@
 using Path_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Player_Scripts.States
@@ -10,15 +9,6 @@ namespace Player_Scripts.States
     [System.Serializable]
     public class BasicMovementSate : PlayerBaseStates
     {
-
-        [SerializeField, BoxGroup("Ground Check Variables")]
-        private float sphereCastOffset;
-        [SerializeField, BoxGroup("Ground Check Variables")]
-        private float sphereCastRadius;
-        [FormerlySerializedAs("GroundOffset")]
-        [SerializeField, BoxGroup("Ground Check Variables")]
-        private float groundOffset;
-
         [SerializeField, BoxGroup("Misc")] private int defaultStateIndex = 0;
 
         private static readonly int Speed = Animator.StringToHash("Speed");
@@ -98,7 +88,7 @@ namespace Player_Scripts.States
             float multiplier = player.canBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
 
             //Apply gravity and ground check
-            GroundCheck(player);
+            player.MovementController.GroundCheck();
             player.MovementController.ApplyGravity();
 
             //Move player base on player velocity (Only responsible for gravity and jump)
@@ -231,25 +221,6 @@ namespace Player_Scripts.States
         }
 
 
-        public void GroundCheck(Player player)
-        {
-            var transform = player.transform;
-
-            Ray ray = new Ray(transform.position + Vector3.up * sphereCastOffset, Vector3.down);
-
-            if (Physics.SphereCast(ray, sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
-            {
-                player.IsGrounded = hit.distance < groundOffset + sphereCastOffset;
-            }
-            else
-            {
-                player.IsGrounded = false;
-            }
-
-            //TODO may need change????
-            player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
-        }
-
         private void CrouchPlayer(Player player, bool crouch)
         {
             if(crouch){
@@ -262,24 +233,6 @@ namespace Player_Scripts.States
 
         #endregion
 
-        #region Animation Callbacks
-
-        public void PlayJump(Player player, int jumpForward)
-        {
-            if (jumpForward == 1)
-            {
-                Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
-
-                player.playerVelocity += velocityChange;
-
-            }
-
-
-            player.playerVelocity.y = player.JumpVelocity;
-        }
-
-
-        #endregion
 
 
     }

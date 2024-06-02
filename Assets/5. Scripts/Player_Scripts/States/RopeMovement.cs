@@ -200,7 +200,7 @@ namespace Player_Scripts.States
 
                 player.CController.Move(player.playerVelocity * Time.deltaTime);
 
-                player.basicMovementState.GroundCheck(player);
+                player.MovementController.GroundCheck();
 
                 yield return null;
             }

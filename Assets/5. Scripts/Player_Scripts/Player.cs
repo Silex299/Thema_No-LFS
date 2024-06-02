@@ -4,6 +4,7 @@ using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
 using UnityEngine.Video;
+using System.Data;
 
 namespace Player_Scripts
 {
@@ -40,8 +41,17 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player Movement")] internal bool oneWayRotation;
 
 
-        [SerializeField, BoxGroup("Misc")]
+
+        [SerializeField, BoxGroup("PlayerRaycast")]
         internal LayerMask groundMask;
+
+        [SerializeField, BoxGroup("PlayerRaycast")]
+        internal float sphereCastRadius;
+
+        [SerializeField, BoxGroup("PlayerRaycast")]
+        internal float sphereCastOffset;
+        [SerializeField, BoxGroup("PlayerRaycast")]
+        internal float groundOffset;
 
 
 
@@ -71,7 +81,7 @@ namespace Player_Scripts
         internal bool IsInteracting;
         internal float verticalAcceleration;
         internal Vector3 playerVelocity = Vector3.zero;
-        
+
 
 
         #endregion

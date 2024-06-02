@@ -130,8 +130,24 @@ namespace Player_Scripts
             }
         }
 
-        public void GroundCheck(){
-            
+        public void GroundCheck()
+        {
+
+            Ray ray = new Ray(transform.position + Vector3.up * player.sphereCastOffset, Vector3.down);
+
+            if (Physics.SphereCast(ray, player.sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
+            {
+                player.IsGrounded = hit.distance < player.groundOffset + player.sphereCastOffset;
+            }
+            else
+            {
+                player.IsGrounded = false;
+                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 2f, Color.red);
+
+            }
+
+            //TODO may need change????
+            player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
 
 
@@ -263,13 +279,17 @@ namespace Player_Scripts
 
         public void PlayJump(int forward)
         {
-            if (player.e_currentState == PlayerMovementState.BasicMovement)
+             if (forward == 1)
             {
-                if (!player.DisabledPlayerMovement)
-                {
-                    player.basicMovementState.PlayJump(player, forward);
-                }
+                Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
+
+                player.playerVelocity += velocityChange;
+
             }
+
+            player.playerVelocity.y = player.JumpVelocity;
+
+            print(player.playerVelocity.y);
         }
 
 
