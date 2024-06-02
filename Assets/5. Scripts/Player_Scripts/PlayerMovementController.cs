@@ -49,6 +49,9 @@ namespace Player_Scripts
                 case PlayerMovementState.Rope:
                     player.currentState = player.ropeMovement;
                     break;
+                case PlayerMovementState.FreeBasicMovement:
+                    player.currentState = player.freeBasicMovement;
+                    break;
                 default:
                     player.currentState = player.basicMovementState;
                     break;
@@ -127,6 +130,10 @@ namespace Player_Scripts
             }
         }
 
+        public void GroundCheck(){
+            
+        }
+
 
         #region State Methods
 
@@ -169,6 +176,9 @@ namespace Player_Scripts
                     break;
                 case PlayerMovementState.Rope:
                     player.currentState = player.ropeMovement;
+                    break;
+                case PlayerMovementState.FreeBasicMovement:
+                    player.currentState = player.freeBasicMovement;
                     break;
             }
 
@@ -214,6 +224,10 @@ namespace Player_Scripts
                 case 3:
                     player.e_currentState = PlayerMovementState.Rope;
                     player.currentState = player.ropeMovement;
+                    break;
+                case 11:
+                    player.e_currentState = PlayerMovementState.FreeBasicMovement;
+                    player.currentState = player.freeBasicMovement;
                     break;
             }
             player.currentState.EnterState(player);

@@ -54,6 +54,7 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState = new LadderMovementState();
         [SerializeField, BoxGroup("Player States")] internal WaterMovement waterMovement = new WaterMovement();
         [SerializeField, BoxGroup("Player States")] internal RopeMovement ropeMovement = new RopeMovement();
+        [SerializeField, BoxGroup("Player States"), Space(10)] internal FreeBasicMovement freeBasicMovement = new FreeBasicMovement();
 
 
         /// <summary>
@@ -116,7 +117,8 @@ namespace Player_Scripts
         BasicMovement,
         Ladder,
         Water,
-        Rope
+        Rope,
+        FreeBasicMovement
     }
 
     /// <summary>
