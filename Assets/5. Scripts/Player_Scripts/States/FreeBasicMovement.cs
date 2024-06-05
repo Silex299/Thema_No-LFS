@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Weapons;
 
 namespace Player_Scripts.States
 {
@@ -12,6 +13,9 @@ namespace Player_Scripts.States
 
         #region Variables
         [SerializeField, BoxGroup("Weapon")] private bool canEquipeMelee;
+        [SerializeField, BoxGroup("Weapon")] private Sword sword;
+
+
         private bool _meleeEquiped;
         private bool _canAttack = true;
         private Transform _cameraTransform;
@@ -19,6 +23,7 @@ namespace Player_Scripts.States
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int Jump = Animator.StringToHash("Jump");
+
         #endregion
 
         #region Unused Methods
@@ -47,55 +52,52 @@ namespace Player_Scripts.States
 
         public override void UpdateState(Player player)
         {
-
+            #region Gravity, Ground Check
             player.MovementController.GroundCheck();
             player.MovementController.ApplyGravity();
 
+            player.CController.Move(player.playerVelocity * Time.deltaTime);
+            #endregion
 
+            #region Inputs
             float vertical = Input.GetAxis("Vertical");
             float horizontal = Input.GetAxis("Horizontal");
+            #endregion
 
-
-            if (player.canBoost)
+            #region Boost
+            if (player.canBoost && Input.GetButton("Sprint"))
             {
-
-                if (Input.GetButton("Sprint"))
-                {
-
-                    Debug.Log("Sprint");
-                    vertical = 2 * vertical;
-
-                    if (vertical < 0.4f && vertical > -0.05f)
-                    {
-                        horizontal = 2 * horizontal;
-                    }
-
-                }
+                Debug.Log("Sprint");
+                vertical *= 2;
+                horizontal *= 2;
             }
+            #endregion
 
+            #region Jump
             if (Input.GetButtonDown("Jump"))
             {
                 player.AnimationController.SetTrigger(Jump);
                 player.StartCoroutine(ResetJump(player));
             }
+            #endregion
 
-            player.CController.Move(player.playerVelocity * Time.deltaTime);
-
-
-            float speed = Mathf.Sqrt(vertical * vertical + horizontal * horizontal);
-
+            #region Animation
+            float speed = Mathf.Max(Mathf.Abs(vertical), Mathf.Abs(horizontal));
             player.AnimationController.SetFloat(Speed, speed, 0.1f, Time.deltaTime);
+            #endregion
 
+            #region Rotation
             if (MathF.Abs(vertical) > 0.1f || MathF.Abs(horizontal) > 0.1f)
             {
                 RotatePlayer(player, vertical, horizontal);
             }
+            #endregion
 
-
-            EquipeMelee(player);
-            MeleeActions(player);
-
-
+            #region Melee
+            EquipMelee(player);
+            MeleeActions(player, speed);
+            #endregion
+        
         }
 
 
@@ -130,7 +132,7 @@ namespace Player_Scripts.States
         /// <summary> Equipe the melee weapon
         /// <param name="player"> The player to equipe the weapon </param>
         /// </summary>
-        private void EquipeMelee(Player player)
+        private void EquipMelee(Player player)
         {
             if (!canEquipeMelee) return;
 
@@ -139,7 +141,12 @@ namespace Player_Scripts.States
                 if (player.IsGrounded)
                 {
                     _meleeEquiped = !_meleeEquiped;
+
                     player.AnimationController.SetBool("Melee", _meleeEquiped);
+                    if (sword)
+                    {
+                        sword.ActivateSword(_meleeEquiped);
+                    }
                 }
             }
 
@@ -148,30 +155,45 @@ namespace Player_Scripts.States
         /// <summary> Actions for the melee weapon
         /// <param name="player"> The player to attack </param>
         /// </summary>
-        private void MeleeActions(Player player)
+        private void MeleeActions(Player player, float speed)
         {
             if (!_meleeEquiped || !player.IsGrounded || !_canAttack)
                 return;
 
+            sword.ActivateSword(speed < 1.5f);
+
+
             if (Input.GetButtonDown("Fire1"))
             {
-                string attackString = "Move_Attack_" + UnityEngine.Random.Range(1, 6);
+                if (sword)
+                {
+                    sword.ActivateSword(true);
+                }
+
+                string attackString = "Move_Attack_" + UnityEngine.Random.Range(1, 5);
                 Debug.Log(attackString);
                 player.AnimationController.CrossFade(attackString, 0.2f, 0);
 
-                player.StartCoroutine(ResetCanBoost(player));
+                _boostResetCoroutine = player.StartCoroutine(ResetCanBoost(player));
             }
         }
 
         #endregion
-        
+
+        private Coroutine _boostResetCoroutine;
         private IEnumerator ResetCanBoost(Player player)
         {
+            if (_boostResetCoroutine != null)
+                yield break;
+
             player.canBoost = false;
             _canAttack = false;
-            yield return new WaitForSeconds(1);
+            
+            yield return new WaitForSeconds(1f);
+
             player.canBoost = true;
             _canAttack = true;
+            _boostResetCoroutine = null;
         }
 
         #endregion
