@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &144711593197456247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2270884127778896975}
+  - component: {fileID: 3474244669044829084}
+  - component: {fileID: 26095579350304394}
+  - component: {fileID: 1057174622219363893}
+  - component: {fileID: 6622093297352011108}
+  m_Layer: 0
+  m_Name: DimensionalShift
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2270884127778896975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144711593197456247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1359745, y: 2.258116, z: -1.293994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3474244669044829084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144711593197456247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: cf0f4991a57f48844aed360bfa179f3c, type: 2}
+    - {fileID: 11400000, guid: 0e54e231b35cd894e8603f11f6b53646, type: 2}
+    - {fileID: 11400000, guid: a3e49f529eb26d8469d5dd27c9777e20, type: 2}
+    - {fileID: 11400000, guid: 1e5ac51acf0e8544d82aba9a13b6ae8e, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6622093297352011108}
+          m_TargetAssemblyTypeName: RendererController, Assembly-CSharp
+          m_MethodName: EnableFullScreenRenderer
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6622093297352011108}
+          m_TargetAssemblyTypeName: RendererController, Assembly-CSharp
+          m_MethodName: EnableFullScreenRenderer
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6622093297352011108}
+          m_TargetAssemblyTypeName: RendererController, Assembly-CSharp
+          m_MethodName: ShiftDimension
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6622093297352011108}
+          m_TargetAssemblyTypeName: RendererController, Assembly-CSharp
+          m_MethodName: ShiftDimension
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!320 &26095579350304394
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144711593197456247}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 541d57dd6c56e3e419ae5fdb49ea2a28, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 2320532044855906028, guid: 929fd276974a0654d92083a287c78a18, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2132153994875910918, guid: 929fd276974a0654d92083a287c78a18, type: 2}
+    value: {fileID: 3474244669044829084}
+  - key: {fileID: 2320532044855906028, guid: 541d57dd6c56e3e419ae5fdb49ea2a28, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2132153994875910918, guid: 541d57dd6c56e3e419ae5fdb49ea2a28, type: 2}
+    value: {fileID: 3474244669044829084}
+  m_ExposedReferences:
+    m_References: []
+--- !u!114 &1057174622219363893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144711593197456247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9219aa14e3ec045aa290948f9d4731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_director: {fileID: 26095579350304394}
+  m_sceneAnimations:
+  - {fileID: 11400000, guid: 929fd276974a0654d92083a287c78a18, type: 2}
+  - {fileID: 11400000, guid: 541d57dd6c56e3e419ae5fdb49ea2a28, type: 2}
+--- !u!114 &6622093297352011108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144711593197456247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cccbea667d0adc84ab5fc60064817526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererData:
+  - {fileID: 11400000, guid: 707360a9c581a4bd7aa53bfeb1429f71, type: 2}
+  - {fileID: 11400000, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
+  - {fileID: 11400000, guid: e634585d5c4544dd297acaee93dc2beb, type: 2}
+  alternateDimensionSpecific: {fileID: 0}
+  realDimensionSpecific: {fileID: 0}
