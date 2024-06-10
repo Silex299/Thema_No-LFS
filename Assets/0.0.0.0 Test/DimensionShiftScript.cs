@@ -2,6 +2,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using Player_Scripts;
 using UnityEngine;
+using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 public class DimensionShiftScript : MonoBehaviour
@@ -9,6 +10,10 @@ public class DimensionShiftScript : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private ParticleSystem shiftParticleEffect;
     [SerializeField] private float shiftDelay = 1f;
+
+
+    public UnityEvent alternateDimensionShift;
+    public UnityEvent normalDimensionShift;
 
     private bool _isInRealDimension = true;
     private Coroutine _shiftDimensionCoroutine;
@@ -27,8 +32,7 @@ public class DimensionShiftScript : MonoBehaviour
         {
             return;
         }
-        _isInRealDimension = !_isInRealDimension;
-
+        
         _shiftDimensionCoroutine = StartCoroutine(ShiftDimensionCoroutine());
     }
 
@@ -45,7 +49,7 @@ public class DimensionShiftScript : MonoBehaviour
 
         player.AnimationController.CrossFade("ShiftDimension", 0.5f, 1);
         player.MovementController.DisablePlayerMovement(true);
- 
+
         yield return new WaitForSeconds(1);
 
 
@@ -53,9 +57,21 @@ public class DimensionShiftScript : MonoBehaviour
         {
             shiftParticleEffect.Play();
         }
+        
+        _isInRealDimension = !_isInRealDimension;
+
+        if (_isInRealDimension)
+        {
+            normalDimensionShift.Invoke();
+        }
+        else
+        {
+            alternateDimensionShift.Invoke();
+        }
+
 
         yield return new WaitForSeconds(shiftDelay - 1);
-        
+
 
         player.AnimationController.CrossFade("Default", 0.2f, 1);
         yield return new WaitForSeconds(0.5f);
