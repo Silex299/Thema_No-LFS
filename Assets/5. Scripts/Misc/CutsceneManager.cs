@@ -1,15 +1,35 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class CutsceneManager : MonoBehaviour
+// ReSharper disable once CheckNamespace
+namespace Misc
 {
-    [SerializeField] private PlayableAsset[] clip;
-    [SerializeField] private PlayableDirector director;
- 
-    
-    public void PlayClip(int index)
+    public class CutsceneManager : MonoBehaviour
     {
-        director.Play(clip[index]);
-    }
+        [SerializeField] private PlayableAsset[] clip;
+        [SerializeField] private PlayableDirector director;
+ 
+        
+        //Create singleton instance
+        public static CutsceneManager Instance { get; private set; }
+        
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+    
+        public void PlayClip(int index)
+        {
+            Debug.Log(index);
+            director.Play(clip[index]);
+        }
 
+    }
 }

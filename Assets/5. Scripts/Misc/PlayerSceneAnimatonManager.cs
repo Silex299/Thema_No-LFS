@@ -1,19 +1,38 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class PlayerSceneAnimatonManager : MonoBehaviour
+// ReSharper disable once CheckNamespace
+namespace Misc
 {
-
-    [SerializeField] private PlayableDirector m_director;
-    [SerializeField] private PlayableAsset[] m_sceneAnimations;
-
-
-
-    public void PlayPlayerSceneAnimation(int index)
+    public class PlayerSceneAnimatonManager : MonoBehaviour
     {
-        m_director.Play(m_sceneAnimations[index]);
+
+        [SerializeField] private PlayableDirector m_director;
+        [SerializeField] private PlayableAsset[] m_sceneAnimations;
+
+
+        //Create a singleton 
+        public static PlayerSceneAnimatonManager Instance { get; private set; }
+    
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+    
+
+        public void PlayPlayerSceneAnimation(int index)
+        {
+            m_director.Play(m_sceneAnimations[index]);
+        }
+
+
+
     }
-
-
-
 }

@@ -1,22 +1,18 @@
 using System.Collections;
-using System.Runtime.InteropServices;
+using System.Net.NetworkInformation;
+using Misc;
 using Player_Scripts;
 using UnityEngine;
-using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 public class DimensionShiftScript : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private ParticleSystem shiftParticleEffect;
-    [SerializeField] private float shiftDelay = 1f;
 
-
-    public UnityEvent alternateDimensionShift;
-    public UnityEvent normalDimensionShift;
 
     private bool _isInRealDimension = true;
-    private Coroutine _shiftDimensionCoroutine;
+    private bool _isTransitioning = false;
 
     private void Update()
     {
@@ -28,55 +24,43 @@ public class DimensionShiftScript : MonoBehaviour
 
     private void ShiftDimension()
     {
-        if (_shiftDimensionCoroutine != null)
-        {
-            return;
-        }
-        
-        _shiftDimensionCoroutine = StartCoroutine(ShiftDimensionCoroutine());
+        if(_isTransitioning) return;
+        DimensionShiftStart();
     }
 
 
-    private IEnumerator ShiftDimensionCoroutine()
+    private void DimensionShiftStart()
     {
-        //Play meditate animation
-
-        //Play transition animation
-
-        //change camera clip mask
-
-        //Bring player to movable state
-
+        _isTransitioning = true;
         player.AnimationController.CrossFade("ShiftDimension", 0.5f, 1);
         player.MovementController.DisablePlayerMovement(true);
+    }
 
-        yield return new WaitForSeconds(1);
-
-
+    public void ChangeDimension()
+    {
         if (shiftParticleEffect)
         {
             shiftParticleEffect.Play();
         }
-        
+
         _isInRealDimension = !_isInRealDimension;
 
         if (_isInRealDimension)
         {
-            normalDimensionShift.Invoke();
+            PlayerSceneAnimatonManager.Instance?.PlayPlayerSceneAnimation(0);
         }
         else
         {
-            alternateDimensionShift.Invoke();
+            PlayerSceneAnimatonManager.Instance?.PlayPlayerSceneAnimation(1);
         }
-
-
-        yield return new WaitForSeconds(shiftDelay - 1);
-
-
-        player.AnimationController.CrossFade("Default", 0.2f, 1);
-        yield return new WaitForSeconds(0.5f);
-        player.MovementController.DisablePlayerMovement(false);
-
-        _shiftDimensionCoroutine = null;
     }
+
+    public void DimensionShiftEnd()
+    {
+        _isTransitioning = false;
+        player.MovementController.DisablePlayerMovement(false);
+    }
+    
+    
+    
 }
