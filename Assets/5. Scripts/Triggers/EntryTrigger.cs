@@ -36,6 +36,9 @@ namespace Triggers
 
         private void OnTriggerStay(Collider other)
         {
+            
+            if(!continuousCheck) return;
+            
 
             if (other.CompareTag(triggerTag))
             {

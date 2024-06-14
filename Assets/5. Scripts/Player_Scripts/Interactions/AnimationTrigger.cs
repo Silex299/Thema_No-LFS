@@ -10,6 +10,7 @@ using UnityEditor;
 #endif
 
 
+// ReSharper disable once CheckNamespace
 namespace Player_Scripts.Interactions
 {
 
@@ -37,7 +38,7 @@ namespace Player_Scripts.Interactions
 
         private Transform _target;
         private float _timeElapsed;
-        private Vector3 _intialPosition;
+        private Vector3 _initialPosition;
         private Quaternion _initialRotation;
 
 
@@ -124,7 +125,7 @@ namespace Player_Scripts.Interactions
                 _initialMove = true;
 
                 _timeElapsed = 0;
-                _intialPosition = _target.position;
+                _initialPosition = _target.position;
                 _initialRotation = _target.rotation;
             }
             else
@@ -133,7 +134,7 @@ namespace Player_Scripts.Interactions
 
                 float fraction = _timeElapsed / initialDelay;
 
-                _target.position = Vector3.Lerp(_intialPosition, initialPointOfAction.position, fraction);
+                _target.position = Vector3.Lerp(_initialPosition, initialPointOfAction.position, fraction);
                 _target.rotation = Quaternion.Slerp(_initialRotation, initialPointOfAction.rotation, fraction);
 
 
@@ -154,7 +155,7 @@ namespace Player_Scripts.Interactions
                 _finalMove = true;
 
                 _timeElapsed = 0;
-                _intialPosition = _target.position;
+                _initialPosition = _target.position;
                 _initialRotation = _target.rotation;
             }
             else
@@ -169,7 +170,7 @@ namespace Player_Scripts.Interactions
 
                 float fraction = _timeElapsed / finalDelay;
 
-                _target.position = Vector3.Lerp(_intialPosition, finalPointOfAction.position, fraction);
+                _target.position = Vector3.Lerp(_initialPosition, finalPointOfAction.position, fraction);
                 _target.rotation = Quaternion.Slerp(_initialRotation, finalPointOfAction.rotation, fraction);
 
 
