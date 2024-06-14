@@ -34,6 +34,7 @@ public class EditorNoteTool : MonoBehaviour
             int fontSize = Mathf.RoundToInt(labelSizeInPixels.y * 0.5f);
 
             GUIStyle style = new GUIStyle();
+            
             style.normal.textColor = textColor;
             style.alignment = TextAnchor.MiddleCenter;
             style.fontSize = fontSize;
