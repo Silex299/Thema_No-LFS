@@ -1,6 +1,7 @@
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -46,6 +47,66 @@ public class PlayerActionTrigger : MonoBehaviour
     private Coroutine _playActionCoroutine;
     private Coroutine _triggerCoroutine;
 
+    
+    
+    #region Editor
+
+#if UNITY_EDITOR
+
+
+    //TODO: REMOVE ALL
+
+    private bool _preview;
+    private PlayerMovementController player;
+    private Vector3 _initialPlayerPos;
+    private Vector3 _initialPlayerRot;
+
+    [Button("Preview", ButtonSizes.Large), GUIColor(0.1f, 0.6f, 0f)]
+    private void Preview()
+    {
+        if (!_preview)
+        {
+            EditorApplication.update += Preview;
+            player = FindObjectOfType<PlayerMovementController>();
+            player.player.AnimationController.Play(engageAnimation, 1, 0);
+            _preview = true;
+
+
+            var tran = player.transform;
+
+            _initialPlayerPos = tran.position;
+            _initialPlayerRot = tran.eulerAngles;
+
+            tran.position = engagedTransform.position;
+            tran.rotation = engagedTransform.rotation;
+
+            Invoke("Reset", 3);
+        }
+        else
+        {
+            player.player.AnimationController.Update(Time.deltaTime);
+        }
+    }
+
+    private void Reset()
+    {
+        _preview = false;
+        Transform trans = player.transform;
+        trans.position = _initialPlayerPos;
+        trans.eulerAngles = _initialPlayerRot;
+
+        player.PlayAnimation("Default", 1);
+        player.player.AnimationController.Update(0);
+
+        EditorApplication.update -= Preview;
+    }
+
+
+#endif
+
+    #endregion
+    
+    
 
     private void OnTriggerStay(Collider other)
     {
@@ -55,7 +116,6 @@ public class PlayerActionTrigger : MonoBehaviour
             _triggerCoroutine = StartCoroutine(TriggerCoroutine());
         }
     }
-
 
     private void Update()
     {
@@ -100,8 +160,6 @@ public class PlayerActionTrigger : MonoBehaviour
             
         }
     }
-
-    
     
     private IEnumerator TriggerCoroutine()
     {
@@ -153,7 +211,7 @@ public class PlayerActionTrigger : MonoBehaviour
         print("Disengaging");
         
         //PLay default animation on layer 1
-        PlayerMovementController.Instance.PlayAnimation("Default", 0.2f, 1);
+        PlayerMovementController.Instance.PlayAnimation("Default", 0.5f, 1);
 
         //play a exit delay
         yield return new WaitForSeconds(0.5f);
