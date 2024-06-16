@@ -139,7 +139,7 @@ namespace Player_Scripts.Interactions.Animation
                 if (_actionCount < maximumActionCount)
                 {
                     //If action input is down
-                    if (Input.GetButtonDown(actionInput))
+                    if (Input.GetButton(actionInput))
                     {
                         if (_engagePlayerCoroutine == null && _disengagePlayerCoroutine == null)
                         {
@@ -180,7 +180,7 @@ namespace Player_Scripts.Interactions.Animation
             PlayerMovementController.Instance.PlayAnimation(engageAnimation, 0.2f, 1);
             print(Time.time);
             
-            yield return PlayerMover.MoveCoroutine(engagedTransform, transitionTime);
+            yield return PlayerMover.MoveCoroutine(engagedTransform, transitionTime, true, false, false);
             
             print(Time.time);
             _engagePlayerCoroutine = null;

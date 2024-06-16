@@ -33,13 +33,6 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField, BoxGroup("State"), ShowIf("overrideAnimation")] private string overrideAnimationName;
 
         private bool _isExecuting;
-        private bool _initialMove;
-        private bool _finalMove;
-
-        private Transform _target;
-        private float _timeElapsed;
-        private Vector3 _initialPosition;
-        private Quaternion _initialRotation;
 
 
 
@@ -104,87 +97,6 @@ namespace Player_Scripts.Interactions.Animation
         #endregion
 
 
-        private void LateUpdate()
-        {
-            if (!_isExecuting) return;
-
-            if (_initialMove)
-            {
-                InitialMove();
-            }
-
-            if (_finalMove)
-            {
-                FinalMove();
-            }
-
-        }
-
-
-        private void InitialMove()
-        {
-            if (!_initialMove)
-            {
-                _initialMove = true;
-
-                _timeElapsed = 0;
-                _initialPosition = _target.position;
-                _initialRotation = _target.rotation;
-            }
-            else
-            {
-                _timeElapsed += Time.deltaTime;
-
-                float fraction = _timeElapsed / initialDelay;
-
-                _target.position = Vector3.Lerp(_initialPosition, initialPointOfAction.position, fraction);
-                _target.rotation = Quaternion.Slerp(_initialRotation, initialPointOfAction.rotation, fraction);
-
-
-                if (fraction >= 1)
-                {
-                    _initialMove = false;
-                }
-
-            }
-        }
-
-
-        private void FinalMove()
-        {
-
-            if (!_finalMove)
-            {
-                _finalMove = true;
-
-                _timeElapsed = 0;
-                _initialPosition = _target.position;
-                _initialRotation = _target.rotation;
-            }
-            else
-            {
-                if (!finalPointOfAction)
-                {
-                    _finalMove = false;
-                    return;
-                }
-                
-                _timeElapsed += Time.deltaTime;
-
-                float fraction = _timeElapsed / finalDelay;
-
-                _target.position = Vector3.Lerp(_initialPosition, finalPointOfAction.position, fraction);
-                _target.rotation = Quaternion.Slerp(_initialRotation, finalPointOfAction.rotation, fraction);
-
-
-                if (fraction >= 1)
-                {
-                    _finalMove = false;
-                }
-
-            }
-        }
-
 
         public void Execute()
         {
@@ -197,52 +109,42 @@ namespace Player_Scripts.Interactions.Animation
         {
 
             _isExecuting = true;
+            PlayerMovementController.Instance.PlayAnimation(animationName, 0.2f, 1);
             
-            PlayerMovementController player = PlayerMovementController.Instance;
-            _target = player.transform;
+            yield return PlayerMover.MoveCoroutine(initialPointOfAction, initialDelay, true, false, false);
             
-            player.DisablePlayerMovement(true);
-            player.player.CController.enabled = false;
-
             
-            InitialMove();
-
-            yield return new WaitUntil(() => !_initialMove);
 
 
+            yield return new WaitForSeconds(animationDelay);
 
             //ANIMATION AND STATE
             if (changeState)
             {
                 if (overrideAnimation)
                 {
-                    player.ChangeState(stateIndex, overrideAnimationName);
+                    PlayerMovementController.Instance.ChangeState(stateIndex, overrideAnimationName);
                 }
                 else
                 {
-                    player.ChangeState(stateIndex);
+                    PlayerMovementController.Instance.ChangeState(stateIndex);
                 }
                 
             }
 
-            player.PlayAnimation(animationName, 0.2f, 1);
+            if (finalPointOfAction)
+            {
+                //MOVE TO FINAL POINT using PlayerMover
+                yield return PlayerMover.MoveCoroutine(finalPointOfAction, finalDelay, true, true, true);
+            }
 
-            yield return new WaitForSeconds(animationDelay);
-
-
-            FinalMove();
-
-
-            yield return new WaitUntil(() => !_finalMove);
-
-
+            
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
+            PlayerMovementController.Instance.player.CController.enabled = true;
+            PlayerMovementController.Instance.ResetAnimator();
+            
             //RESET
             _isExecuting = false;
-            _target = null;
-            player.ResetAnimator();
-            player.DisablePlayerMovement(false);
-            player.player.CController.enabled = true;
-
 
         }
 

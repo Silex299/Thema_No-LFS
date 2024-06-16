@@ -53,6 +53,7 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.enabled = true;
+            connectedLadder.engaged = false;
             connectedLadder = null;
         }
 

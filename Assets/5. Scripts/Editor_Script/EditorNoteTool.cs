@@ -39,6 +39,7 @@ public class EditorNoteTool : MonoBehaviour
             style.alignment = TextAnchor.MiddleCenter;
             style.fontSize = fontSize;
             style.padding = new RectOffset(10, 10, 5, 5);
+            
             style.normal.background = MakeTex(1, 1, backgroundColor);
 
             // Calculate the actual size of the text

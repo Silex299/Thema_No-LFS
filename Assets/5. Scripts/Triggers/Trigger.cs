@@ -107,6 +107,7 @@ namespace Triggers
 
         private void PerformAction()
         {
+            print("deiunde");
             actions?.Invoke();
 
             _isTriggered = true;
