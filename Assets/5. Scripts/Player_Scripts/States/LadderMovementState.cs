@@ -10,9 +10,10 @@ namespace Player_Scripts.States
 
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Jump = Animator.StringToHash("Jump");
-
+        
         private bool _isJumped;
-
+        
+        
         #region Unused Methods
 
         public override void FixedUpdateState(Player player)
@@ -31,6 +32,7 @@ namespace Player_Scripts.States
         {
             player.CController.enabled = false;
             _isJumped = false;
+            player.MovementController.ResetAnimator();
         }
         public override void UpdateState(Player player)
         {

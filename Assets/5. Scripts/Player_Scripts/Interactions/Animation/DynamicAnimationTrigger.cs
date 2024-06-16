@@ -2,7 +2,8 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Player_Scripts.Interactions
+// ReSharper disable once CheckNamespace
+namespace Player_Scripts.Interactions.Animation
 {
     public class DynamicAnimationTrigger : MonoBehaviour
     {

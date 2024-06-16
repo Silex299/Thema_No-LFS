@@ -11,7 +11,7 @@ using UnityEditor;
 
 
 // ReSharper disable once CheckNamespace
-namespace Player_Scripts.Interactions
+namespace Player_Scripts.Interactions.Animation
 {
 
     public class AnimationTrigger : MonoBehaviour
