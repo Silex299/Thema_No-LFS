@@ -107,7 +107,6 @@ public class PlayerActionTrigger : MonoBehaviour
     #endregion
     
     
-
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player_Main"))
