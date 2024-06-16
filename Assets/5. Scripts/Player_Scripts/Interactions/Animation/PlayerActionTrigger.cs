@@ -174,37 +174,17 @@ namespace Player_Scripts.Interactions.Animation
     
         private IEnumerator EngagePlayer()
         {
+
             _playerEngaged = true;
-            float timeElapsed = 0;
-            Vector3 initialPosition = PlayerMovementController.Instance.transform.position;
-            Quaternion initialRotation = PlayerMovementController.Instance.transform.rotation;
-
-
-            //Disable Player movement
-            PlayerMovementController.Instance.DisablePlayerMovement(true);
-            //Disable player character controller
-            PlayerMovementController.Instance.player.CController.enabled = false;
-
             //Play engage animation on layer 1
             PlayerMovementController.Instance.PlayAnimation(engageAnimation, 0.2f, 1);
-
-
-            PlayerMovementController.Instance.transform.position = engagedTransform.position;
-
-            while (timeElapsed < transitionTime)
-            {
-                timeElapsed += Time.deltaTime;
-
-                // Move player to the engaged transform
-                PlayerMovementController.Instance.transform.position = Vector3.Lerp(initialPosition,
-                    engagedTransform.position, timeElapsed / transitionTime);
-                PlayerMovementController.Instance.transform.rotation = Quaternion.Lerp(initialRotation,
-                    engagedTransform.rotation, timeElapsed / transitionTime);
-
-                yield return null;
-            }
-
+            print(Time.time);
+            
+            yield return PlayerMover.MoveCoroutine(engagedTransform, transitionTime);
+            
+            print(Time.time);
             _engagePlayerCoroutine = null;
+
         }
 
         private IEnumerator DisEngagePlayer()

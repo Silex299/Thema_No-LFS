@@ -12,7 +12,7 @@ namespace Player_Scripts.States
         private static readonly int Jump = Animator.StringToHash("Jump");
         
         private bool _isJumped;
-        
+        [HideInInspector] public Ladder connectedLadder;
         
         #region Unused Methods
 
@@ -42,7 +42,8 @@ namespace Player_Scripts.States
 
             player.AnimationController.SetFloat(Speed, input);
 
-            if (Input.GetButtonDown("Jump"))
+            if (!Input.GetButtonDown("Jump")) return;
+            if (connectedLadder.canJumpOfTheLadder)
             {
                 player.StartCoroutine(LeaveLadder(player));
             }
@@ -52,6 +53,7 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.enabled = true;
+            connectedLadder = null;
         }
 
         #endregion
@@ -62,9 +64,7 @@ namespace Player_Scripts.States
         {
             _isJumped = true;
             player.AnimationController.SetTrigger(Jump);
-
             yield return new WaitForSeconds(0.1f);
-
             PlayerMovementController.Instance.RollBack();
         }
 

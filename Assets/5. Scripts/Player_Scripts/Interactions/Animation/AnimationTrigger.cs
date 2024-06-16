@@ -82,6 +82,9 @@ namespace Player_Scripts.Interactions.Animation
             }
         }
 
+        
+        [Button("Reset", ButtonSizes.Large), GUIColor(0.6f, 0.1f, 0f)]
+        
         private void Reset()
         {
             _preview = false;
@@ -194,11 +197,14 @@ namespace Player_Scripts.Interactions.Animation
         {
 
             _isExecuting = true;
+            
             PlayerMovementController player = PlayerMovementController.Instance;
             _target = player.transform;
+            
             player.DisablePlayerMovement(true);
             player.player.CController.enabled = false;
 
+            
             InitialMove();
 
             yield return new WaitUntil(() => !_initialMove);
