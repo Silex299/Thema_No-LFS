@@ -1,5 +1,5 @@
 using System.Collections;
-using Player_Scripts;
+using Misc;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
