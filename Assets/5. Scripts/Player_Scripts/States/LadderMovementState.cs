@@ -40,9 +40,10 @@ namespace Player_Scripts.States
             if (_isJumped) return;
 
             var input = Input.GetAxis("Vertical");
-
+            
+            connectedLadder.MoveLadder(input);
             player.AnimationController.SetFloat(Speed, input);
-
+            
             if (!Input.GetButtonDown("Jump")) return;
             if (connectedLadder.canJumpOfTheLadder)
             {
@@ -54,8 +55,11 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             player.CController.enabled = true;
-            connectedLadder.engaged = false;
-            connectedLadder = null;
+            if (connectedLadder)
+            {
+                connectedLadder.engaged = false;
+                connectedLadder = null;
+            }
         }
 
         #endregion

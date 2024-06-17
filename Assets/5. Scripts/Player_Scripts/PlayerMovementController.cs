@@ -86,12 +86,8 @@ namespace Player_Scripts
         public void DisablePlayerMovement(bool disable)
         {
             player.DisabledPlayerMovement = disable;
-
-            if (disable)
-            {
-                ResetAnimator();
-            }
-
+            
+            Invoke(nameof(ResetAnimator), 0.1f);
         }
 
         public void DisablePlayerMovementInt(int disable)
@@ -337,7 +333,9 @@ namespace Player_Scripts
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
         public void ResetAnimator()
         {
+            print("Fuck me");
             player.AnimationController.SetFloat(Speed, 0);
+
             player.AnimationController.SetBool(IsGrounded, true);
             player.AnimationController.ResetTrigger($"Jump");
         }

@@ -2,6 +2,7 @@ using System.Collections;
 using Misc;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 
 
 #if UNITY_EDITOR
@@ -33,6 +34,9 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField, BoxGroup("State")] private bool overrideAnimation;
         [SerializeField, BoxGroup("State"), ShowIf("overrideAnimation")] private string overrideAnimationName;
 
+
+        [SerializeField, BoxGroup("Events")] private UnityEvent onActionComplete;
+        
         private bool _isExecuting;
 
 
@@ -114,11 +118,11 @@ namespace Player_Scripts.Interactions.Animation
             
             yield return PlayerMover.MoveCoroutine(initialPointOfAction, initialDelay, true, false, false);
             
-            
-
 
             yield return new WaitForSeconds(animationDelay);
 
+            
+            
             //ANIMATION AND STATE
             if (changeState)
             {
@@ -146,6 +150,8 @@ namespace Player_Scripts.Interactions.Animation
             
             //RESET
             _isExecuting = false;
+            
+            onActionComplete.Invoke();
 
         }
 

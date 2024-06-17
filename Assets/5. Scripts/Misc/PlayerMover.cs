@@ -29,17 +29,18 @@ namespace Misc
             PlayerMovementController.Instance.player.CController.enabled = false;
         
             var playerTransform = PlayerMovementController.Instance.transform;
-            while (timeElapsed < transitionTime)
+            while (timeElapsed <= transitionTime)
             {
                 timeElapsed += Time.deltaTime;
 
                 // Move the player to the required position and rotate if needed
                 playerTransform.position = Vector3.Lerp(playerTransform.position, moveTo.position, timeElapsed / transitionTime);
+                
                 if (changeRotation)
                 {
                     playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, moveTo.rotation, timeElapsed / transitionTime);
                 }
-            
+                
                 yield return null;
             }
 
