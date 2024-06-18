@@ -74,6 +74,7 @@ namespace NPCs.Weapons
 
                 if (Physics.Linecast(muzzleSocket.position, tracer.transform.position, out RaycastHit hit, fireMask))
                 {
+                    print(hit.collider.gameObject.name);
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
                         PlayerMovementController.Instance.player.Health.TakeDamage(101);

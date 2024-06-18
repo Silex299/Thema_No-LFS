@@ -18,7 +18,6 @@ namespace Misc
 
         private void OnTriggerEnter(Collider other)
         {
-            print(other.tag);
             if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
             {
                 _bodyCount++;
@@ -27,7 +26,6 @@ namespace Misc
 
         private void OnTriggerExit(Collider other)
         {
-            print("exit trigger");
             if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
             {
                 _bodyCount = Mathf.Clamp(_bodyCount - 1, 0, 99);
@@ -49,6 +47,7 @@ namespace Misc
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
             {
                 Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                print(hit.collider.gameObject.name);
                 if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                 {
                     if (!_inSight)
