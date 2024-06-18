@@ -11,8 +11,6 @@ namespace Weapons
         [SerializeField, BoxGroup("refrences")] private Animator animator;
 
         [SerializeField, BoxGroup("Weapon Properties")] private bool isActive = true;
-        [SerializeField, BoxGroup("Weapon Properties")] private float maximumDamge = 10;
-
 
         public void ActivateSword(bool active)
         {

@@ -259,7 +259,6 @@ namespace Player_Scripts
             }
             catch
             {
-                Debug.LogWarning("Some Error occured");
             }
         }
 
