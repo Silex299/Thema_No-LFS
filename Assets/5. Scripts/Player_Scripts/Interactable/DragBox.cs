@@ -11,13 +11,17 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private bool restrictX;
         [SerializeField, BoxGroup("Proximity")] private bool restrictZ;
 
+        [SerializeField, BoxGroup("Proximity")]
+        private float defaultY;
+        
         [SerializeField, BoxGroup("Proximity")] private Vector3 bounds;
         [SerializeField, BoxGroup("Proximity")] private float proximity;
         [SerializeField, BoxGroup("Proximity")] private LayerMask proximityMask;
 
         [SerializeField, BoxGroup("Visual")] protected VisualEffect[] effects;
         [SerializeField, BoxGroup("Visual")] protected AudioSource soundSource;
-
+        
+        
         private Vector3 _dragOffset;
         protected bool _isMoving;
         private Vector3 _lastPosition;
@@ -144,7 +148,7 @@ namespace Player_Scripts.Interactables
                     }
                 }
 
-                desiredLocalPosition.y = 0;
+                desiredLocalPosition.y = defaultY;
                 transform.localPosition = desiredLocalPosition;
 
                 return interactionType;
