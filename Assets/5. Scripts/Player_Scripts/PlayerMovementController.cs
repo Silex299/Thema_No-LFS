@@ -85,6 +85,9 @@ namespace Player_Scripts
 
         public void DisablePlayerMovement(bool disable)
         {
+            
+            print("Enabling Player Movement : " + disable);
+            
             player.DisabledPlayerMovement = disable;
             
             Invoke(nameof(ResetAnimator), 0.1f);

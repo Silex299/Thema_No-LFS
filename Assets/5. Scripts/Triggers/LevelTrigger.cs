@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 
 [RequireComponent(typeof(Collider))]
+// ReSharper disable once CheckNamespace
 public class LevelTrigger : MonoBehaviour
 {
 
@@ -76,11 +77,11 @@ public class LevelTrigger : MonoBehaviour
         if (!_playerIsInTrigger) return;
 
 
-        if (Input.GetButtonUp("e"))
+        if (Input.GetButtonUp("e") )
         {
             if (_lastTriggerTime + 0.8f > Time.time)
             {
-                Invoke("Reset", _lastTriggerTime + 0.8f - Time.time);
+                Invoke(nameof(Reset), _lastTriggerTime + 0.8f - Time.time);
             }
             else
             {
@@ -172,7 +173,7 @@ public class LevelTrigger : MonoBehaviour
     {
         if (oneTime && triggerPulled) return;
 
-        if (_triggerEngaged)
+        if (_triggerEngaged && PlayerMovementController.Instance.player.CController.enabled)
         {
             var player = PlayerMovementController.Instance;
             if (_forwardDirection)
@@ -198,7 +199,6 @@ public class LevelTrigger : MonoBehaviour
     private IEnumerator Trigger()
     {
 
-        print("Jello");
         if (!canPull)
         {
             yield return new WaitUntil(() => !_triggerEngaged);
@@ -242,11 +242,14 @@ public class LevelTrigger : MonoBehaviour
         
     }
 
-    private void Reset()
+    public void Reset()
     {
         _triggerEngaged = false;
-        PlayerMovementController.Instance.PlayAnimation("Default", 0.5f, 1);
-        PlayerMovementController.Instance.DisablePlayerMovement(false);
+        if (PlayerMovementController.Instance.player.CController.enabled)
+        {
+            PlayerMovementController.Instance.PlayAnimation("Default", 0.5f, 1);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
+        }
     }
 
     private bool CheckPlayerDirection()

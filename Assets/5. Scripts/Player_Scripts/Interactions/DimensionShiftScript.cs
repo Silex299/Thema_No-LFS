@@ -34,26 +34,6 @@ namespace Player_Scripts.Interactions
             player.AnimationController.CrossFade("ShiftDimension", 0.5f, 1);
             player.MovementController.DisablePlayerMovement(true);
         }
-
-        public void ChangeDimension()
-        {
-            if (shiftParticleEffect)
-            {
-                shiftParticleEffect.Play();
-            }
-
-            _isInRealDimension = !_isInRealDimension;
-
-            if (_isInRealDimension)
-            {
-                PlayerSceneAnimatonManager.Instance?.PlayPlayerSceneAnimation(0);
-            }
-            else
-            {
-                PlayerSceneAnimatonManager.Instance?.PlayPlayerSceneAnimation(1);
-            }
-        }
-
         public void DimensionShiftEnd()
         {
             _isTransitioning = false;

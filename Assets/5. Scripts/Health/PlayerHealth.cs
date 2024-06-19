@@ -42,7 +42,20 @@ namespace Health
             }
         }
 
+        public void TakeDamage(float damage, string deathOverrideString)
+        {
+            if (_currentHealth < 0) return;
 
+            _currentHealth -= damage;
+
+            OnTakingDamage?.Invoke(_currentHealth / maximumHealth);
+
+            if (_currentHealth <= 0)
+            {
+                Kill(deathOverrideString);
+            }
+
+        }
 
         public override void TakeDamage(float damage)
         {
