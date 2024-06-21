@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Weapons;
 
+// ReSharper disable once CheckNamespace
 namespace Player_Scripts.States
 {
 
@@ -65,7 +66,7 @@ namespace Player_Scripts.States
             #endregion
 
             #region Boost
-            if (player.canBoost && Input.GetButton("Sprint"))
+            if (player.CanBoost && Input.GetButton("Sprint"))
             {
                 Debug.Log("Sprint");
                 vertical *= 2;
@@ -186,12 +187,12 @@ namespace Player_Scripts.States
             if (_boostResetCoroutine != null)
                 yield break;
 
-            player.canBoost = false;
+            player.CanBoost = false;
             _canAttack = false;
             
             yield return new WaitForSeconds(1f);
 
-            player.canBoost = true;
+            player.CanBoost = true;
             _canAttack = true;
             _boostResetCoroutine = null;
         }

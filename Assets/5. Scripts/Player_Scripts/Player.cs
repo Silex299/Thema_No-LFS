@@ -3,43 +3,58 @@ using UnityEngine;
 using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
-using UnityEngine.Video;
-using System.Data;
 
 namespace Player_Scripts
 {
-
-
     [RequireComponent(typeof(CharacterController))]
     public class Player : MonoBehaviour
     {
-
-
         #region Variables
 
-        [SerializeField, BoxGroup("References")] private Animator animator;
-        [SerializeField, BoxGroup("References")] private PlayerMovementController movementController;
-        [SerializeField, BoxGroup("References")] private CharacterController characterController;
-        [SerializeField, BoxGroup("References")] private PlayerEffectsManager effectsManager;
-        [SerializeField, BoxGroup("References")] private PlayerHealth health;
+        [SerializeField, BoxGroup("References")]
+        private Animator animator;
 
-        [SerializeField, BoxGroup("Player Movement")] private bool useHorizontal = true;
-        [SerializeField, BoxGroup("Player Movement")] private float rotationSmoothness = 10f;
-        [SerializeField, BoxGroup("Player Movement")] private float jumpVelocity = 6f;
-        [SerializeField, BoxGroup("Player Movement")] private float jumpingForwardVelocity = 6f;
+        [SerializeField, BoxGroup("References")]
+        private PlayerMovementController movementController;
 
-        [SerializeField, BoxGroup("Player Movement")] internal bool enabledDirectionInput;
-        [SerializeField, BoxGroup("Player Movement")] private bool canJump;
+        [SerializeField, BoxGroup("References")]
+        private CharacterController characterController;
+
+        [SerializeField, BoxGroup("References")]
+        private PlayerEffectsManager effectsManager;
+
+        [SerializeField, BoxGroup("References")]
+        private PlayerHealth health;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        private bool useHorizontal = true;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        private float rotationSmoothness = 10f;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        private float jumpVelocity = 6f;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        private float jumpingForwardVelocity = 6f;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        internal bool enabledDirectionInput;
+
+        [SerializeField, BoxGroup("Player Movement")]
+        private bool canJump;
+
         /// <summary>
         /// Used for sprint and other boosting mechanisms
         /// </summary>
-        [BoxGroup("Player Movement")] public bool canBoost;
+        [SerializeField, BoxGroup("Player Movement")]
+        private bool canBoost;
 
         /// <summary>
         /// Resets the direction only to forward direction if not moving
         /// </summary>
-        [SerializeField, BoxGroup("Player Movement")] internal bool oneWayRotation;
-
+        [SerializeField, BoxGroup("Player Movement")]
+        internal bool oneWayRotation;
 
 
         [SerializeField, BoxGroup("PlayerRaycast")]
@@ -50,9 +65,9 @@ namespace Player_Scripts
 
         [SerializeField, BoxGroup("PlayerRaycast")]
         internal float sphereCastOffset;
+
         [SerializeField, BoxGroup("PlayerRaycast")]
         internal float groundOffset;
-
 
 
         //MARKER : States
@@ -60,17 +75,28 @@ namespace Player_Scripts
         /// NOT AN ENUM. Abstract class for current State
         /// </summary>
         internal PlayerBaseStates currentState;
-        [SerializeField, BoxGroup("Player States")] internal BasicMovementSate basicMovementState = new BasicMovementSate();
-        [SerializeField, BoxGroup("Player States")] internal LadderMovementState ladderMovementState = new LadderMovementState();
-        [SerializeField, BoxGroup("Player States")] internal WaterMovement waterMovement = new WaterMovement();
-        [SerializeField, BoxGroup("Player States")] internal RopeMovement ropeMovement = new RopeMovement();
-        [SerializeField, BoxGroup("Player States"), Space(10)] internal FreeBasicMovement freeBasicMovement = new FreeBasicMovement();
+
+        [SerializeField, BoxGroup("Player States")]
+        internal BasicMovementSate basicMovementState = new BasicMovementSate();
+
+        [SerializeField, BoxGroup("Player States")]
+        internal LadderMovementState ladderMovementState = new LadderMovementState();
+
+        [SerializeField, BoxGroup("Player States")]
+        internal WaterMovement waterMovement = new WaterMovement();
+
+        [SerializeField, BoxGroup("Player States")]
+        internal RopeMovement ropeMovement = new RopeMovement();
+
+        [SerializeField, BoxGroup("Player States"), Space(10)]
+        internal FreeBasicMovement freeBasicMovement = new FreeBasicMovement();
 
 
         /// <summary>
         /// ENUM for current movement state
         /// </summary>
         [SerializeField, BoxGroup] internal PlayerMovementState e_currentState = PlayerMovementState.BasicMovement;
+
         [SerializeField, BoxGroup] internal int previousStateIndex = -1;
         [SerializeField, BoxGroup] internal int currentStateIndex = -1;
 
@@ -81,8 +107,6 @@ namespace Player_Scripts
         internal bool IsInteracting;
         internal float verticalAcceleration;
         internal Vector3 playerVelocity = Vector3.zero;
-
-
 
         #endregion
 
@@ -97,7 +121,17 @@ namespace Player_Scripts
 
         public bool IsGrounded { get; set; }
 
-        public bool CanJump => canJump;
+        public bool CanJump
+        {
+            get => canJump;
+            set => canJump = value;
+        }
+
+        public bool CanBoost
+        {
+            get => canBoost;
+            set => canBoost = value;
+        }
 
 
         public bool DisabledPlayerMovement
@@ -106,18 +140,28 @@ namespace Player_Scripts
             set => disablePlayerMovement = value;
         }
 
-        public bool UseHorizontal { get => useHorizontal; }
+        public bool UseHorizontal
+        {
+            get => useHorizontal;
+        }
 
-        public float JumpVelocity { get => jumpVelocity; }
-        public float JumpForwardVelocity { get => jumpingForwardVelocity; }
-        public float RotationSmoothness { get => rotationSmoothness; }
+        public float JumpVelocity
+        {
+            get => jumpVelocity;
+        }
 
+        public float JumpForwardVelocity
+        {
+            get => jumpingForwardVelocity;
+        }
 
+        public float RotationSmoothness
+        {
+            get => rotationSmoothness;
+        }
 
         #endregion
-
     }
-
 
 
     [System.Serializable]
@@ -140,5 +184,4 @@ namespace Player_Scripts
         NONE,
         PUSH,
     }
-
 }
