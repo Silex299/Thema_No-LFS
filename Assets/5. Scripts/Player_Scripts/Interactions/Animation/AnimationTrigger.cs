@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Data;
 using Misc;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -34,8 +35,14 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField, BoxGroup("State")] private bool overrideAnimation;
         [SerializeField, BoxGroup("State"), ShowIf("overrideAnimation")] private string overrideAnimationName;
 
+        
+        [SerializeField, BoxGroup("Misc")] private bool resetPlayerAfterAction = true;
+        [SerializeField, BoxGroup("Misc")] private float transitionTime = 0.3f;
+        
 
         [SerializeField, BoxGroup("Events")] private UnityEvent onActionComplete;
+        
+        
         
         private bool _isExecuting;
 
@@ -114,11 +121,13 @@ namespace Player_Scripts.Interactions.Animation
         {
 
             _isExecuting = true;
-            PlayerMovementController.Instance.PlayAnimation(animationName, 0.2f, 1);
             
             yield return PlayerMover.MoveCoroutine(initialPointOfAction, initialDelay, true, false, false);
             
 
+            
+            PlayerMovementController.Instance.PlayAnimation(animationName, transitionTime, 1);
+            
             yield return new WaitForSeconds(animationDelay);
 
             
@@ -143,16 +152,17 @@ namespace Player_Scripts.Interactions.Animation
                 yield return PlayerMover.MoveCoroutine(finalPointOfAction, finalDelay, true, true, true);
             }
 
-            
-            PlayerMovementController.Instance.DisablePlayerMovement(false);
-            PlayerMovementController.Instance.player.CController.enabled = true;
-            PlayerMovementController.Instance.ResetAnimator();
+            if (resetPlayerAfterAction)
+            {
+                PlayerMovementController.Instance.DisablePlayerMovement(false);
+                PlayerMovementController.Instance.player.CController.enabled = true;
+                PlayerMovementController.Instance.ResetAnimator();
+            }
             
             //RESET
             _isExecuting = false;
-            
             onActionComplete.Invoke();
-
+            
         }
 
     }

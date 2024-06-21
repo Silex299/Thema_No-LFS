@@ -1,6 +1,7 @@
 using System.Collections;
 using Player_Scripts;
 using UnityEngine;
+using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
@@ -20,6 +21,9 @@ namespace Misc.Items
         public float movementSpeed = 0.1f;
 
 
+        [Space(10)] public bool overrideEndExit;
+        public UnityEvent endExitEvent;
+        
         private float _playerAt;
         private Vector3 _playerPosition;
         [HideInInspector] public bool engaged;
@@ -42,7 +46,14 @@ namespace Misc.Items
 
             if (_playerAt == 1 && input > 0)
             {
-                DisEngage(false);
+                if (overrideEndExit)
+                {
+                    endExitEvent.Invoke();
+                }
+                else
+                {
+                    DisEngage(false);
+                }
             }
         }
 

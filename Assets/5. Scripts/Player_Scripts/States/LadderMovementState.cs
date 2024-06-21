@@ -13,7 +13,7 @@ namespace Player_Scripts.States
         private static readonly int Jump = Animator.StringToHash("Jump");
         
         private bool _isJumped;
-        [HideInInspector] public Ladder connectedLadder;
+        public Ladder connectedLadder;
         
         #region Unused Methods
 
@@ -32,11 +32,13 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.CController.enabled = false;
-            _isJumped = false;
             player.MovementController.ResetAnimator();
+            player.IsGrounded = false;
+            _isJumped = false;
         }
         public override void UpdateState(Player player)
         {
+            Debug.Log("updating ladder movement");
             if (_isJumped) return;
 
             var input = Input.GetAxis("Vertical");
@@ -70,9 +72,27 @@ namespace Player_Scripts.States
         {
             _isJumped = true;
             player.AnimationController.SetTrigger(Jump);
-            yield return new WaitForSeconds(0.1f);
+
+            yield return Fall(player);
+        }
+
+        private IEnumerator Fall(Player player)
+        {
+            
+            player.playerVelocity = Vector3.zero;
+            
+            while (!player.IsGrounded)
+            {
+                player.MovementController.ApplyGravity();
+                player.MovementController.GroundCheck();
+                player.CController.Move(player.playerVelocity * Time.deltaTime);
+                
+                yield return null;
+            }
+
             PlayerMovementController.Instance.RollBack();
         }
+        
 
         #endregion
 
