@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using NPCs.Weapons;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Thema_Camera;

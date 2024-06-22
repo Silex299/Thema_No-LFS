@@ -1,5 +1,6 @@
 ﻿using Player_Scripts;
 using UnityEngine;
+using Weapons;
 
 [System.Serializable]
 // ReSharper disable once CheckNamespace
@@ -10,7 +11,7 @@ public class GuardNpcChaseState : GuardNpcState
     public float attackDistance;
 
     public NpcPathFinder pathFinder;
-    public NPCs.Weapons.FireArm weapon;
+    public FireArm weapon;
     
     private static readonly int Chase = Animator.StringToHash("Chase");
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -80,7 +81,7 @@ public class GuardNpcChaseState : GuardNpcState
         
         if (weapon)
         {
-            weapon.FireBullet();
+            weapon.Fire();
         }
     }
     

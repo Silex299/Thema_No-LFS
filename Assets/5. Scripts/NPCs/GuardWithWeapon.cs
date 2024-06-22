@@ -1,8 +1,8 @@
 using Misc;
-using NPCs.Weapons;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Weapons;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs
@@ -186,7 +186,7 @@ namespace NPCs
             var parentGuard = guard as GuardWithWeapon;
             
             // ReSharper disable once PossibleNullReferenceException
-            parentGuard.rifle.FireBullet();
+            parentGuard.rifle.Fire();
 
         }
 
