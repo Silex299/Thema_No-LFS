@@ -76,7 +76,7 @@ namespace Weapons
                     print(hit.collider.gameObject.name);
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
-                        PlayerMovementController.Instance.player.Health.TakeDamage(101);
+                        PlayerMovementController.Instance.player.Health.TakeDamage(damage);
                     }
 
                     SpawnEffects(hit.collider.tag, hit.point);
