@@ -52,6 +52,7 @@ namespace Misc.Items
 
         [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
+        private Vector3 _initialRotation;
         private bool _connected;
         private float _closestIndex;
         private float _closestDistance = 100f;
@@ -216,7 +217,13 @@ namespace Misc.Items
                         newOffset.z * playerInstanceTransform.forward;
 
             playerInstanceTransform.position = GetDesiredPosition() + newOffset;
-            playerInstanceTransform.rotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
+            var newRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
+            //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
+            newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, _initialRotation.y, newRotation.eulerAngles.z);
+            
+            playerInstanceTransform.rotation = newRotation;
+            
+            
         }
 
         /// <summary>
@@ -229,7 +236,15 @@ namespace Misc.Items
             if (_connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
-                rb.AddForce(0, 0, swingForce * input * Time.deltaTime);
+
+                if (PlayerMovementController.Instance.transform.rotation.eulerAngles.y > 90 || PlayerMovementController.Instance.transform.rotation.eulerAngles.y < -90)
+                {
+                    rb.AddForce(0, 0, swingForce * -input * Time.deltaTime);
+                }
+                else
+                {
+                    rb.AddForce(0, 0, swingForce * input * Time.deltaTime);
+                }
             }
         }
 
@@ -309,6 +324,9 @@ namespace Misc.Items
                 StartCoroutine(InitialConnect());
                 _lastAttachedTime = Time.time;
             }
+
+            _initialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
+
         }
 
         /// <summary>

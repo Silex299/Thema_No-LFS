@@ -121,17 +121,14 @@ namespace Triggers
 
                 foreach (TriggerCondition condition in conditions)
                 {
-                    result = result && condition.Condition(_interactCollider);
+                    result = condition.Condition(_interactCollider);
                     if (!result)
                     {
                         return;
                     }
                 }
 
-                if (result)
-                {
-                    exitAction?.Invoke();
-                }
+                exitAction?.Invoke();
             }
             else
             {

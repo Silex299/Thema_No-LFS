@@ -190,7 +190,14 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
+            if(player.transform.rotation.eulerAngles.y > 90 || player.transform.rotation.eulerAngles.y < -90)
+            {
+                player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
+            }
+            else
+            {
+                player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
+            }
             
 
             // While the player is not grounded, apply the calculated velocity
