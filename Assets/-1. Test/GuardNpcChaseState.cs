@@ -71,7 +71,8 @@ public class GuardNpcChaseState : GuardNpcState
     private float startAttackTime;
     protected void Attack()
     {
-        if (!isAttacking)
+        //h 
+        if (!isAttacking) 
         {
             isAttacking = true;
             startAttackTime = Time.time;
