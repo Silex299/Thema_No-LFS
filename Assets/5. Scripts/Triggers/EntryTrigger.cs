@@ -77,21 +77,16 @@ namespace Triggers
 
             if (conditions.Length > 0)
             {
-                bool result = true;
-
                 foreach(TriggerCondition condition in conditions)
                 {
-                    result = result && condition.Condition(_interactCollider);
+                    var result = condition.Condition(_interactCollider);
                     if (!result)
                     {
                         return;
                     }
                 }
 
-                if (result)
-                {
-                    Execute();
-                }
+                Execute();
             }
             else
             {

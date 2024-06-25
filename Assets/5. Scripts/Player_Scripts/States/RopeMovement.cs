@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Misc.Items;
 using UnityEngine;
-using UnityEngine.Video;
 
 // ReSharper disable once CheckNamespace
 namespace Player_Scripts.States
@@ -49,7 +48,6 @@ namespace Player_Scripts.States
             attachedRope.Detached();
             attachedRope = null;
             _isAttached = false;
-            player.AnimationController.SetFloat(Speed, 0);
             player.MovementController.ResetAnimator();
             ResetPlayerRotation(player);
         }
@@ -107,11 +105,13 @@ namespace Player_Scripts.States
             if (!_isAttached) return;
 
             var input = Input.GetAxis("Horizontal");
-            player.AnimationController.SetFloat(Speed, input);
+            player.AnimationController.SetFloat(Speed,
+                attachedRope.InitialRotation.y is > 90 or < -90 ? input : -input);
 
             if (Mathf.Abs(input) > 0.2f)
             {
                 attachedRope.SwingRope(Input.GetAxis("Horizontal"));
+                
                 if (!_isSwinging)
                 {
                     player.AnimationController.SetBool(Action, true);
@@ -178,7 +178,7 @@ namespace Player_Scripts.States
         /// </summary>
         /// <param name="player">The player to detach.</param>
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
-        private IEnumerator DetachPlayer(Player player, float horizontal = 0)
+        private IEnumerator DetachPlayer(Player player)
         {
             // Set the attachment status to false
             _isAttached = false;
@@ -190,14 +190,7 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            if(player.transform.rotation.eulerAngles.y > 90 || player.transform.rotation.eulerAngles.y < -90)
-            {
-                player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
-            }
-            else
-            {
-                player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
-            }
+            player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
             
 
             // While the player is not grounded, apply the calculated velocity

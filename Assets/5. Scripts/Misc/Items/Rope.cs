@@ -3,6 +3,7 @@ using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.Serialization;
 using WireBuilder;
 
 // ReSharper disable once CheckNamespace
@@ -52,12 +53,12 @@ namespace Misc.Items
 
         [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
-        private Vector3 _initialRotation;
+        public Vector3 InitialRotation{get; private set;}
         private bool _connected;
         private float _closestIndex;
         private float _closestDistance = 100f;
         private float _lastAttachedTime;
-
+        
         #endregion
 
         #region Editor Specific
@@ -219,7 +220,7 @@ namespace Misc.Items
             playerInstanceTransform.position = GetDesiredPosition() + newOffset;
             var newRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
             //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
-            newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, _initialRotation.y, newRotation.eulerAngles.z);
+            newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, InitialRotation.y, newRotation.eulerAngles.z);
             
             playerInstanceTransform.rotation = newRotation;
             
@@ -236,15 +237,8 @@ namespace Misc.Items
             if (_connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
-
-                if (PlayerMovementController.Instance.transform.rotation.eulerAngles.y > 90 || PlayerMovementController.Instance.transform.rotation.eulerAngles.y < -90)
-                {
-                    rb.AddForce(0, 0, swingForce * -input * Time.deltaTime);
-                }
-                else
-                {
-                    rb.AddForce(0, 0, swingForce * input * Time.deltaTime);
-                }
+                
+                rb.AddForce(0, 0, swingForce * -input * Time.deltaTime);
             }
         }
 
@@ -325,7 +319,7 @@ namespace Misc.Items
                 _lastAttachedTime = Time.time;
             }
 
-            _initialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
+            InitialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
 
         }
 

@@ -168,6 +168,7 @@ namespace Player_Scripts.States
                 else if (player.CanJump && player.IsGrounded)
                 {
                     player.AnimationController.SetTrigger(Jump);
+                    
                 }
             }
             //Update Speed in animator

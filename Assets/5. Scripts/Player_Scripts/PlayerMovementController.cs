@@ -86,8 +86,6 @@ namespace Player_Scripts
         public void DisablePlayerMovement(bool disable)
         {
             
-            print("Enabling Player Movement : " + disable);
-            
             player.DisabledPlayerMovement = disable;
             
             Invoke(nameof(ResetAnimator), 0.1f);
@@ -279,16 +277,16 @@ namespace Player_Scripts
         public void PlayJump(int forward)
         {
              if (forward == 1)
-            {
-                Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
+             {
+                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 
-                player.playerVelocity += velocityChange;
+                 player.playerVelocity += velocityChange;
 
-            }
+             }
 
-            player.playerVelocity.y = player.JumpVelocity;
+             player.playerVelocity.y = player.JumpVelocity;
 
-            print(player.playerVelocity.y);
+             print(player.playerVelocity.y);
         }
 
 
@@ -336,7 +334,6 @@ namespace Player_Scripts
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
         public void ResetAnimator()
         {
-            print("Fuck me");
             player.AnimationController.SetFloat(Speed, 0);
 
             player.AnimationController.SetBool(IsGrounded, true);
