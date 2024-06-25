@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,7 +8,6 @@ namespace Misc
 
     public class BreakBarrier : MonoBehaviour
     {
-
         [SerializeField] public Transform forceTransform;
         [SerializeField] public float breakForce;
 
