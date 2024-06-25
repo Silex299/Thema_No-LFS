@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -46,7 +45,6 @@ namespace Misc
 
         public void BreakBarrier(float breakForce, Transform forceTransform)
         {
-            Debug.Log("Fuck me dady");
             foreach (var rb in rigidBody)
             {
                 rb.useGravity = true;

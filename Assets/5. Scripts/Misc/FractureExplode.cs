@@ -21,9 +21,6 @@ namespace Misc
             bodyParts = GetComponentsInChildren<Rigidbody>();
         }
 
-
-
-
         private void Start()
         {
             Explode();
