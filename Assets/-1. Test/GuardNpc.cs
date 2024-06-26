@@ -12,6 +12,7 @@ public class GuardNpc : MonoBehaviour
     
     public GuardNpcSurveillanceState surveillanceState = new GuardNpcSurveillanceState();
     public GuardNpcChaseState chaseState = new GuardNpcChaseState();
+    public GuardNpcAfterPlayerDeathState afterPlayerDeathState = new GuardNpcAfterPlayerDeathState();
     private GuardNpcState _currentState;
 
 
@@ -45,30 +46,30 @@ public class GuardNpc : MonoBehaviour
         }
 
         stateEnum = newState;
-        switch (newState)
-        {
-            case GuardNpcStateType.Surveillance:
-                _currentState = surveillanceState;
-                break;
-            case GuardNpcStateType.Chase:
-                _currentState = chaseState;
-                break;
-        }
         
+        _currentState = newState switch
+        {
+            GuardNpcStateType.Surveillance => surveillanceState,
+            GuardNpcStateType.Chase => chaseState,
+            GuardNpcStateType.AfterDeath => afterPlayerDeathState,
+            _ => _currentState
+        };
+
         // ReSharper disable once PossibleNullReferenceException
         _currentState.Enter(this);
     }
     
     private void OnPlayerDeath()
     {
-        ChangeState(GuardNpcStateType.Surveillance);
+        ChangeState(GuardNpcStateType.AfterDeath);
     }
     
     [System.Serializable]
     public enum  GuardNpcStateType
     {
         Surveillance,
-        Chase
+        Chase,
+        AfterDeath
     }
     
 }
