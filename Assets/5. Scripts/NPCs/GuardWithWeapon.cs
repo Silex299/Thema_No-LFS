@@ -3,6 +3,7 @@ using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Weapons;
+using Weapons.NPC_Weapon;
 
 // ReSharper disable once CheckNamespace
 namespace NPCs

@@ -1,6 +1,7 @@
 ﻿using Player_Scripts;
 using UnityEngine;
 using Weapons;
+using Weapons.NPC_Weapon;
 
 [System.Serializable]
 // ReSharper disable once CheckNamespace
@@ -65,17 +66,17 @@ public class GuardNpcChaseState : GuardNpcState
     }
 
 
-    private float startAttackTime;
+    private float _startAttackTime;
 
     protected void Attack()
     {
         if (!_isAttacking)
         {
             _isAttacking = true;
-            startAttackTime = Time.time;
+            _startAttackTime = Time.time;
         }
 
-        if (Time.time < startAttackTime + 0.5f) return;
+        if (Time.time < _startAttackTime + 0.5f) return;
 
         if (weapon)
         {
