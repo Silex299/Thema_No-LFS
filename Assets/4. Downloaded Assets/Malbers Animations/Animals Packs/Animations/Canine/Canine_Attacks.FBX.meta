@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 21dca43632daf184ebf40841bbac665f
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 22200
   internalIDToNameTable:
   - first:
       1: 100000
@@ -465,7 +465,7 @@ ModelImporter:
       loopBlend: 1
       loopBlendOrientation: 1
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 0
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
@@ -708,6 +708,8 @@ ModelImporter:
         weight: 1
       - path: CG/Pelvis/Spine/L Thigh/L Calf/L HorseLink/L Foot
         weight: 1
+      - path: CG/Pelvis/Spine/L Thigh/L Calf/L HorseLink/L Foot/ L Toe0
+        weight: 1
       - path: CG/Pelvis/Spine/R Thigh
         weight: 1
       - path: CG/Pelvis/Spine/R Thigh/R Calf
@@ -715,6 +717,8 @@ ModelImporter:
       - path: CG/Pelvis/Spine/R Thigh/R Calf/R HorseLink
         weight: 1
       - path: CG/Pelvis/Spine/R Thigh/R Calf/R HorseLink/R Foot
+        weight: 1
+      - path: CG/Pelvis/Spine/R Thigh/R Calf/R HorseLink/R Foot/ R Toe0
         weight: 1
       - path: CG/Pelvis/Spine/Spine1
         weight: 1
@@ -749,6 +753,9 @@ ModelImporter:
       - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/L Clavicle/L UpperArm/L Forearm/L
           Hand
         weight: 1
+      - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/L Clavicle/L UpperArm/L Forearm/L
+          Hand/ L Finger0
+        weight: 1
       - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/R Clavicle
         weight: 1
       - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/R Clavicle/R UpperArm
@@ -758,6 +765,9 @@ ModelImporter:
       - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/R Clavicle/R UpperArm/R Forearm/R
           Hand
         weight: 1
+      - path: CG/Pelvis/Spine/Spine1/Spine2/Neck/R Clavicle/R UpperArm/R Forearm/R
+          Hand/ R Finger0
+        weight: 1
       - path: CG/Pelvis/Spine/Tail
         weight: 1
       - path: CG/Pelvis/Spine/Tail/Tail1
@@ -766,7 +776,7 @@ ModelImporter:
         weight: 1
       - path: CG/Pelvis/Spine/Tail/Tail1/Tail2/Tail3
         weight: 1
-      - path: M
+      - path: W
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
@@ -962,6 +972,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 0
     importBlendShapes: 0
     importCameras: 0
@@ -989,6 +1000,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 2
@@ -1022,6 +1034,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 

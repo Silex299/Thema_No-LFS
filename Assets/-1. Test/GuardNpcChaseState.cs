@@ -6,17 +6,19 @@ using Weapons;
 // ReSharper disable once CheckNamespace
 public class GuardNpcChaseState : GuardNpcState
 {
-
     public float stopDistance;
     public float attackDistance;
 
-    public NpcPathFinder pathFinder;
+    [Space(10)] public bool randomAttack;
+    public int attackCount;
+
+    [Space(10)] public NpcPathFinder pathFinder;
     public FireArm weapon;
-    
+
     private static readonly int Chase = Animator.StringToHash("Chase");
     private static readonly int Speed = Animator.StringToHash("Speed");
     private static readonly int Attack1 = Animator.StringToHash("Attack");
-    private bool isAttacking;
+    private bool _isAttacking;
 
     public override void Enter(GuardNpc npc)
     {
@@ -25,15 +27,13 @@ public class GuardNpcChaseState : GuardNpcState
 
     public override void Update(GuardNpc npc)
     {
-        
         Vector3 guardPos = npc.transform.position + Vector3.up * 1.3f;
         Vector3 playerPos = PlayerMovementController.Instance.transform.position + Vector3.up * 1.3f;
         Vector3 destination = pathFinder.GetNextPoint(guardPos, playerPos);
-        
-        Rotate(npc.transform, destination, npc.rotationSpeed*10);
-        
-        
-                
+
+        Rotate(npc.transform, destination, npc.rotationSpeed * 10);
+
+
         //distance between npc and player
         float distance = Vector3.Distance(npc.transform.position, PlayerMovementController.Instance.transform.position);
 
@@ -54,36 +54,32 @@ public class GuardNpcChaseState : GuardNpcState
         else
         {
             npc.animator.SetBool(Attack1, false);
-            isAttacking = false;
+            _isAttacking = false;
         }
-
-
-
     }
 
     public override void Exit(GuardNpc npc)
     {
         npc.animator.SetBool(Chase, false);
-        isAttacking = false;
+        _isAttacking = false;
     }
 
 
     private float startAttackTime;
+
     protected void Attack()
     {
-        //h 
-        if (!isAttacking) 
+        if (!_isAttacking)
         {
-            isAttacking = true;
+            _isAttacking = true;
             startAttackTime = Time.time;
         }
-        
-        if(Time.time < startAttackTime + 0.5f) return;
-        
+
+        if (Time.time < startAttackTime + 0.5f) return;
+
         if (weapon)
         {
             weapon.Fire();
         }
     }
-    
 }
