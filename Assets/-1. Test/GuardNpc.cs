@@ -1,5 +1,6 @@
 ﻿using Player_Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 public class GuardNpc : MonoBehaviour
@@ -9,12 +10,19 @@ public class GuardNpc : MonoBehaviour
 
     public float rotationSpeed;
     public GuardNpcStateType stateEnum;
+    [SerializeField] private NpcPathFinder pathFinder;
+   
     
     public GuardNpcSurveillanceState surveillanceState = new GuardNpcSurveillanceState();
     public GuardNpcChaseState chaseState = new GuardNpcChaseState();
     public GuardNpcAfterPlayerDeathState afterPlayerDeathState = new GuardNpcAfterPlayerDeathState();
-    private GuardNpcState _currentState;
 
+    private GuardNpcState _currentState;
+    public NpcPathFinder PathFinder
+    {
+        get => pathFinder;
+        set => pathFinder = value;
+    }
 
     private void Start()
     {

@@ -1,6 +1,5 @@
 ﻿using Player_Scripts;
 using UnityEngine;
-using Weapons;
 using Weapons.NPC_Weapon;
 
 [System.Serializable]
@@ -13,7 +12,6 @@ public class GuardNpcChaseState : GuardNpcState
     [Space(10)] public bool randomAttack;
     public int attackCount;
 
-    [Space(10)] public NpcPathFinder pathFinder;
     public FireArm weapon;
 
     private static readonly int Chase = Animator.StringToHash("Chase");
@@ -30,7 +28,7 @@ public class GuardNpcChaseState : GuardNpcState
     {
         Vector3 guardPos = npc.transform.position + Vector3.up * 1.3f;
         Vector3 playerPos = PlayerMovementController.Instance.transform.position + Vector3.up * 1.3f;
-        Vector3 destination = pathFinder.GetNextPoint(guardPos, playerPos);
+        Vector3 destination = npc.PathFinder.GetNextPoint(guardPos, playerPos, npc.GetInstanceID());
 
         Rotate(npc.transform, destination, npc.rotationSpeed * 10);
 
@@ -38,14 +36,7 @@ public class GuardNpcChaseState : GuardNpcState
         //distance between npc and player
         float distance = Vector3.Distance(npc.transform.position, PlayerMovementController.Instance.transform.position);
 
-        if (distance < stopDistance)
-        {
-            npc.animator.SetFloat(Speed, 0, 0.03f, Time.deltaTime);
-        }
-        else
-        {
-            npc.animator.SetFloat(Speed, 1, 0.03f, Time.deltaTime);
-        }
+        npc.animator.SetFloat(Speed, distance < stopDistance ? 0 : 1, 0.03f, Time.deltaTime);
 
         if (distance < attackDistance)
         {

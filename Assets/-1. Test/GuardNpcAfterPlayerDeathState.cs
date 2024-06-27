@@ -33,7 +33,7 @@ public class GuardNpcAfterPlayerDeathState : GuardNpcState
         //distance between npc and player
         float distance = Vector3.Distance(npc.transform.position, PlayerMovementController.Instance.transform.position);
 
-        Rotate(npc.transform, PlayerMovementController.Instance.transform.position, npc.rotationSpeed * 5);
+        Rotate(npc.transform, PlayerMovementController.Instance.transform.position, npc.rotationSpeed * 15);
 
         if (distance > distanceThreshold)
         {
