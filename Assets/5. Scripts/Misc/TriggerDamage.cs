@@ -11,7 +11,6 @@ namespace Misc
         private void OnTriggerEnter(Collider other)
         {
 
-            Debug.LogError("Working");
             if (!enable) return;
             if (other.gameObject.CompareTag("Player_Main") || other.gameObject.CompareTag("Player"))
             {

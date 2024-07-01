@@ -25,6 +25,7 @@ namespace Health
         public Action OnRevive;
         public Action<float> OnTakingDamage;
         private float _dissolveTimeElapsed = 0;
+        private static readonly int VerticalAcceleration = Animator.StringToHash("VerticalAcceleration");
 
         private void Start()
         {
@@ -91,26 +92,26 @@ namespace Health
         {
             if (message == "RAY")
             {
-                DisableCompoents();
+                DisableComponents();
                 PlayerMovementController.Instance.PlayAnimation("Float Death", 0.5f, 1); //Play Death  Animation
             }
             else if (message == "RAGDOLL DEATH")
             {
                 player.AnimationController.enabled = false;
                 player.EffectsManager.PlayGeneralSoundDefaultRandom("Death");
-                DisableCompoents();
+                DisableComponents();
                 Death();
             }
             else if (message == "FALL")
             {
                 player.AnimationController.enabled = false;
                 player.EffectsManager.PlayGeneralSoundDefaultRandom("Fall Death");
-                DisableCompoents();
+                DisableComponents();
                 Death();
             }
             else
             {
-                DisableCompoents();
+                DisableComponents();
                 Death(message);
                 PlayerMovementController.Instance.PlayAnimation(message, 0.2f, 1); //Play Death  Animation
             }
@@ -150,7 +151,7 @@ namespace Health
         }
 
 
-        public void DisableCompoents()
+        public void DisableComponents()
         {
             player.CController.enabled = false;
             player.MovementController.enabled = false;
@@ -166,7 +167,7 @@ namespace Health
             player.EffectsManager.enabled = true;
             player.AnimationController.enabled = true;
 
-            player.AnimationController.SetFloat("VerticalAcceleration", 0);
+            player.AnimationController.SetFloat(VerticalAcceleration, 0);
             OnRevive.Invoke();
             Start();
         }

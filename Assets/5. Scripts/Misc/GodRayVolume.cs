@@ -70,7 +70,6 @@ namespace Misc
             {
                 if (_objectCoroutines.Count == 0)
                 {
-                    print(_objectCoroutines.Count);
                     return;
                 }
 

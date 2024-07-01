@@ -1,4 +1,7 @@
-﻿ using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Health;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,72 +14,92 @@ namespace Misc
         [SerializeField] private Mover mover;
         [SerializeField] private LayerMask rayCastMask;
 
-        private bool _isPlayerInTrigger = false;
-        private bool _objectFound = false;
 
         [SerializeField] private SurveillanceVisuals visuals;
 
+        private int _objectCount;
+        private readonly Dictionary<int, Coroutine> _objectsTracking = new();
+
         private void OnTriggerEnter(Collider other)
         {
+            
             if (!isMachineOn) return;
-            if (!other.CompareTag("Player_Main")) return;
+            if(!other.CompareTag("NPC")) return;
+            
+            print(other.name);
+            
+            if (other.TryGetComponent(out HealthBaseClass health))
+            {
+                print("Has Health");
 
-            _isPlayerInTrigger = true;
-            StartCoroutine(CheckForPlayer());
+                if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
+                
+                //FIX THIS
+                
+                Coroutine newCoroutine = StartCoroutine(CheckForNpc(other, health));
+                _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
+                
+            }
+            
+            
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (!isMachineOn) return;
-            if (!other.CompareTag("Player_Main")) return;
-
-            _isPlayerInTrigger = false;
-            StopCoroutine(CheckForPlayer());
+            
+            if(!other.CompareTag("Player_Main") || other.CompareTag("NPC")) return;
+            
+            if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine))
+            {
+                StopCoroutine(coroutine);
+                _objectsTracking.Remove(other.GetInstanceID());
+            }
         }
 
-        /// <summary>
-        /// Checks for the player while the player is in the trigger. If the player is found, it triggers the object found sequence.
-        /// </summary>
-        private IEnumerator CheckForPlayer()
+        private IEnumerator CheckForNpc(Collider other, HealthBaseClass health)
         {
-            while (isMachineOn && _isPlayerInTrigger)
+            while (isMachineOn)
             {
-                var playerTransform = PlayerMovementController.Instance.transform;
-                Vector3 direction = (playerTransform.position + Vector3.up * 0.5f) - transform.position;
+                var otherTransform = other.transform;
+                Vector3 direction = (otherTransform.position + Vector3.up * 0.5f) - transform.position;
                 Ray ray = new Ray(transform.position, direction);
 
                 if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.red);
-                    ObjectFound(hit.collider.tag);
+                    ObjectFound(health);
+                    try
+                    {
+
+                        StopCoroutine(_objectsTracking[other.GetInstanceID()]);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log(e);
+                    }
+                    StopCoroutine(_objectsTracking[other.GetInstanceID()]);
+                    _objectsTracking.Remove(other.GetInstanceID());
                 }
 
                 yield return null;
             }
         }
-
+        
 
         /// <summary>
         /// Handles the actions to be taken when an object is found. If the object is the player, it triggers the player found sequence.
         /// </summary>
-        /// <param name="tag">The tag of the found object.</param>
-        private void ObjectFound(string tag)
+        /// <param name="health">The found object health</param>
+        private void ObjectFound(HealthBaseClass health)
         {
-            if (_objectFound) return;
-
-            if (tag == "Player_Main")
-            {
-                PlayerFound();
-                _objectFound = true;
-                mover.enabled = false;
-                visuals.PowerUp(this);
-            }
+            DamageObject(health);
+            if (mover) mover.enabled = false;
+            visuals.PowerUp(this);
         }
 
-        private void PlayerFound()
-        {
-            PlayerMovementController.Instance.player.Health.Kill("RAY");
-        }
+        private void DamageObject(HealthBaseClass health) => health.Kill("RAY");
+
 
         /// <summary>
         /// Toggles the state of the machine and its visuals based on the provided boolean value.
@@ -85,7 +108,7 @@ namespace Misc
         private void TurnOffMachine(bool turnOff)
         {
             isMachineOn = !turnOff;
-            mover.StopMover(turnOff);
+            if (mover) mover.StopMover(turnOff);
 
             if (turnOff)
                 visuals.PowerDown(this);

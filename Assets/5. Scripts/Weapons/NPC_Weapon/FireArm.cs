@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace Weapons.NPC_Weapon
         private bool _autoFire;
         private float _lastFireTime;
 
+        
+        
         // ReSharper disable once MemberCanBePrivate.Global
         public override void Fire()
         {
@@ -80,7 +83,7 @@ namespace Weapons.NPC_Weapon
                     }
 
                     SpawnEffects(hit.collider.tag, hit.point);
-                    yield break;
+                    break;
                 }
 
                 yield return null;
@@ -112,11 +115,17 @@ namespace Weapons.NPC_Weapon
 
         public void AutomaticFire(bool autoFire)
         {
+            
             if (autoFire == true)
             {
                 PlayerMovementController.Instance.player.Health.OnDeath += ResetWeapon;
             }
-
+            else
+            {
+                PlayerMovementController.Instance.player.Health.OnDeath -= ResetWeapon;
+            }
+            
+            Debug.LogError(_autoFire);
             _autoFire = autoFire;
         }
 
