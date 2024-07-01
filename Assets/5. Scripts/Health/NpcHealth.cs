@@ -1,5 +1,6 @@
 using Health;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class npcHealth : HealthBaseClass
 {
@@ -7,27 +8,28 @@ public class npcHealth : HealthBaseClass
     public CharacterController characterController;
     public Animator animator;
 
+    public UnityEvent onKill;
+    
     private bool _isDead;
     
     public override void Kill(string message)
     {
-        if(_isDead) return;
-
-        _isDead = true;
-        
+        onKill?.Invoke();
         if (message == "RAY")
         {
             AnimationDeath("Float");
         }
         else
         {
-            Death(message);
+            TakeDamage(101);
         }
     }
 
 
     protected override void Death(string message = "")
     {
+        if(_isDead) return;
+        
         base.Death(message);
         _isDead = true;
         RagdollDeath();
@@ -35,6 +37,7 @@ public class npcHealth : HealthBaseClass
 
     private void RagdollDeath()
     {
+        print("Ragdoll");
         animator.enabled = false;
         characterController.enabled = false;
     }

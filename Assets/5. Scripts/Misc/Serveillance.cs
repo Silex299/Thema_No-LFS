@@ -10,6 +10,7 @@ namespace Misc
 {
     public class Serveillance : MonoBehaviour
     {
+        [SerializeField] private bool continuousCheck = false;
         [SerializeField] private bool isMachineOn = true;
         [SerializeField] private Mover mover;
         [SerializeField] private LayerMask rayCastMask;
@@ -18,15 +19,14 @@ namespace Misc
         [SerializeField] private SurveillanceVisuals visuals;
 
         private int _objectCount;
-        private readonly Dictionary<int, Coroutine> _objectsTracking = new();
+        private Dictionary<int, Coroutine> _objectsTracking = new Dictionary<int, Coroutine>();
 
         private void OnTriggerEnter(Collider other)
         {
-            
+            if(continuousCheck) return;
             if (!isMachineOn) return;
-            if(!other.CompareTag("NPC")) return;
             
-            print(other.name);
+            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
             
             if (other.TryGetComponent(out HealthBaseClass health))
             {
@@ -34,21 +34,37 @@ namespace Misc
 
                 if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
                 
-                //FIX THIS
+                //FIX THISjk
                 
-                Coroutine newCoroutine = StartCoroutine(CheckForNpc(other, health));
+                Coroutine newCoroutine = StartCoroutine(CheckForObject(other, health));
                 _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
                 
             }
             
+        }
+        
+        private void OnTriggerStay(Collider other)
+        {
+            if(!continuousCheck) return;
+            if (!isMachineOn) return;
             
+            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
+            
+            if (other.TryGetComponent(out HealthBaseClass health))
+            {
+                if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
+                
+                Coroutine newCoroutine = StartCoroutine(CheckForObject(other, health));
+                _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
+                
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (!isMachineOn) return;
             
-            if(!other.CompareTag("Player_Main") || other.CompareTag("NPC")) return;
+            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
             
             if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine))
             {
@@ -57,7 +73,7 @@ namespace Misc
             }
         }
 
-        private IEnumerator CheckForNpc(Collider other, HealthBaseClass health)
+        private IEnumerator CheckForObject(Collider other, HealthBaseClass health)
         {
             while (isMachineOn)
             {
@@ -67,19 +83,23 @@ namespace Misc
 
                 if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
                 {
-                    Debug.DrawLine(transform.position, hit.point, Color.red);
-                    ObjectFound(health);
-                    try
-                    {
+                    Debug.DrawLine(transform.position, hit.point, Color.red, 10);
 
-                        StopCoroutine(_objectsTracking[other.GetInstanceID()]);
-                    }
-                    catch (Exception e)
+                    if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC"))
                     {
-                        Debug.Log(e);
+                        
+                        ObjectFound(health);
+                        try
+                        {
+                            StopCoroutine(_objectsTracking[other.GetInstanceID()]);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log(e);
+                        }
+                        StopCoroutine(_objectsTracking[other.GetInstanceID()]);
+                        _objectsTracking.Remove(other.GetInstanceID());
                     }
-                    StopCoroutine(_objectsTracking[other.GetInstanceID()]);
-                    _objectsTracking.Remove(other.GetInstanceID());
                 }
 
                 yield return null;
@@ -105,7 +125,7 @@ namespace Misc
         /// Toggles the state of the machine and its visuals based on the provided boolean value.
         /// </summary>
         /// <param name="turnOff">If true, the machine will be turned off. If false, the machine will be turned on.</param>
-        private void TurnOffMachine(bool turnOff)
+        public void TurnOffMachine(bool turnOff)
         {
             isMachineOn = !turnOff;
             if (mover) mover.StopMover(turnOff);
@@ -140,7 +160,7 @@ namespace Misc
         private IEnumerator PowerChange(float lightIntensity, float beamIntensity)
         {
             float currentLightIntensity = targetLight.intensity;
-            float currentBeamIntensity = volumetricLightBeam.intensityInside;
+            float currentBeamIntensity = volumetricLightBeam? volumetricLightBeam.intensityInside : 0;
 
             float timeElapsed = 0;
             while (timeElapsed < transitionTime)
@@ -149,7 +169,10 @@ namespace Misc
                 float fraction = timeElapsed / transitionTime;
 
                 targetLight.intensity = Mathf.Lerp(currentLightIntensity, lightIntensity, fraction);
-                volumetricLightBeam.intensityGlobal = Mathf.Lerp(currentBeamIntensity, beamIntensity, fraction);
+                if (volumetricLightBeam)
+                {
+                    volumetricLightBeam.intensityGlobal = Mathf.Lerp(currentBeamIntensity, beamIntensity, fraction);
+                }
                 yield return null;
             }
         }

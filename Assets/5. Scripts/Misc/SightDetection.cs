@@ -34,6 +34,9 @@ namespace Misc
 
         private void Update()
         {
+            
+            if(!enabled) return;
+            
             if (_bodyCount <= 0) return;
 
 
