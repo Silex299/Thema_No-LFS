@@ -139,7 +139,7 @@ namespace Player_Scripts
             }
             catch
             {
-                print("Step sound not found for : " + _currentEffectVolume);
+                //print("Step sound not found for : " + _currentEffectVolume);
             }
         }
 

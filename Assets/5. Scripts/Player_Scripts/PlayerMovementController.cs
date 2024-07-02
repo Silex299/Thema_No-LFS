@@ -159,7 +159,6 @@ namespace Player_Scripts
         //MARKER: State
         public void ChangeState(PlayerMovementState newState, int stateIndex)
         {
-            print(stateIndex);
 
             if (stateIndex == player.currentStateIndex) return;
 
