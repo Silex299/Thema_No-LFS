@@ -112,7 +112,6 @@ namespace Player_Scripts.Interactions.Animation
         public void Execute()
         {
             if (_isExecuting) return;
-
             StartCoroutine(ExecuteAnimation());
         }
 
@@ -122,8 +121,6 @@ namespace Player_Scripts.Interactions.Animation
             _isExecuting = true;
             
             yield return PlayerMover.MoveCoroutine(initialPointOfAction, initialDelay, true, false, false);
-            
-
             
             PlayerMovementController.Instance.PlayAnimation(animationName, transitionTime, 1);
             
