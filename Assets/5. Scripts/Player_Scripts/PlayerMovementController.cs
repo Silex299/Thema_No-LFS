@@ -121,6 +121,8 @@ namespace Player_Scripts
                 {
                     player.playerVelocity = new Vector3(0, -10, 0);
                 }
+
+                player.verticalAcceleration = 0;
             }
             else
             {

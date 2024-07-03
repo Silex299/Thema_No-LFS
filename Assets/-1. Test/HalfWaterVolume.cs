@@ -1,26 +1,42 @@
-using NP_Interactions;
 using Player_Scripts;
 using UnityEngine;
 
 public class HalfWaterVolume : MonoBehaviour
 {
-
     public GameObject splashPrefab;
     public GameObject dragPrefab;
-    
+
     public Vector3 offset;
-    
+    public bool varyingTerrain;
+    public float surfaceHeight = 0.7f;
+
     private bool _playerInTrigger;
     private GameObject _spawnedEffect;
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player_Main"))
         {
+            if (_playerInTrigger) return;
+
+            if (splashPrefab)
+            {
+                if (!PlayerMovementController.Instance.player.IsGrounded)
+                {
+                    GameObject splash = Instantiate(splashPrefab, transform, true);
+                    var playerTransform = PlayerMovementController.Instance.transform;
+                    var newPos = playerTransform.position;
+                    newPos.y = surfaceHeight;
+                    splash.transform.position = newPos;
+                    
+                }
+            }
+
             if (!_spawnedEffect)
             {
                 _spawnedEffect = Instantiate(dragPrefab, transform, true);
             }
+
             _playerInTrigger = true;
         }
     }
@@ -44,10 +60,14 @@ public class HalfWaterVolume : MonoBehaviour
             if (_spawnedEffect)
             {
                 var playerTransform = PlayerMovementController.Instance.transform;
-                _spawnedEffect.transform.position = playerTransform.position + offset.z * playerTransform.forward + offset.y * playerTransform.up + offset.x * playerTransform.right; 
+                Vector3 playerPos = playerTransform.position;
+                if (!varyingTerrain)
+                {
+                    playerPos.y = surfaceHeight;
+                }
+                _spawnedEffect.transform.position = playerPos + offset.z * playerTransform.forward +
+                                                    offset.y * playerTransform.up + offset.x * playerTransform.right;
             }
         }
     }
-    
-    
 }
