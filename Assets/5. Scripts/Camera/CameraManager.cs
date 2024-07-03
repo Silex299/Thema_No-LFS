@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 namespace Thema_Camera
@@ -18,7 +19,7 @@ namespace Thema_Camera
         [SerializeField, BoxGroup("Camera Movement Effectors")] private float minimumThresold;
 
         private bool _isMainCameraActive = true;
-        [SerializeField] private bool _shake;
+        [SerializeField] private bool shake;
         private bool _focus;
         private float _startFOV;
         private float _targetFOV;
@@ -28,14 +29,7 @@ namespace Thema_Camera
 
         private static CameraManager instance;
 
-        public static CameraManager Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
-
+        public static CameraManager Instance => instance;
 
 
         private void Awake()
@@ -142,9 +136,9 @@ namespace Thema_Camera
 
         public void StartShaking(bool shake)
         {
-            _shake = shake;
+            this.shake = shake;
 
-            if (_shake)
+            if (this.shake)
             {
                 _shakeInitialPosition = transform.position;
 
@@ -175,21 +169,21 @@ namespace Thema_Camera
         private void Update()
         {
             if (_focus) { Focus(); }
-            if (_shake) { ShakeCamera(defaultShakeParameters); }
+            if (shake) { ShakeCamera(defaultShakeParameters); }
         }
 
         
 
         public Transform GetCurrentTarget(out bool canShake)
         {
-            canShake = !_shake && !_focus;
+            canShake = !shake && !_focus;
             return _isMainCameraActive ? mainCamera.followTarget : cinematicCamera.target;
         }
 
         public void Reset()
         {
             _focus = false;
-            _shake = false;
+            shake = false;
             SwitchToMainCamera();
         }
 

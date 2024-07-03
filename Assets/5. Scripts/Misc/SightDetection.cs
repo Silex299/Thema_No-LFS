@@ -50,11 +50,12 @@ namespace Misc
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
             {
                 Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
-                print(hit.collider.gameObject.name);
+                
                 if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                 {
                     if (!_inSight)
                     {
+                        if(PlayerMovementController.Instance.player.Health.IsDead) return;
                         _inSight = true;
                         onPlayerInSight.Invoke();
                     }

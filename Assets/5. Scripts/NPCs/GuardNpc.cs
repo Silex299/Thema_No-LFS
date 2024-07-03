@@ -1,6 +1,5 @@
 ﻿using Player_Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 public class GuardNpc : MonoBehaviour
@@ -53,18 +52,29 @@ public class GuardNpc : MonoBehaviour
             _currentState.Exit(this);
         }
 
-        stateEnum = newState;
+        print("Changing state to " + newState);
         
-        _currentState = newState switch
+        stateEnum = newState;
+
+        switch (stateEnum)
         {
-            GuardNpcStateType.Surveillance => surveillanceState,
-            GuardNpcStateType.Chase => chaseState,
-            GuardNpcStateType.AfterDeath => afterPlayerDeathState,
-            _ => _currentState
-        };
+            case GuardNpcStateType.Chase:
+                _currentState = chaseState;
+                break;
+            case GuardNpcStateType.Surveillance:
+                _currentState = surveillanceState;
+                break;
+            case GuardNpcStateType.AfterDeath:
+                _currentState = afterPlayerDeathState;
+                break;
+        }
+        
 
         // ReSharper disable once PossibleNullReferenceException
         _currentState.Enter(this);
+        
+        
+        print("changed state " + _currentState);
     }
     
     private void OnPlayerDeath()

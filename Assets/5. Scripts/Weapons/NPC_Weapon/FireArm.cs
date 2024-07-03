@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Player_Scripts;
@@ -35,7 +36,7 @@ namespace Weapons.NPC_Weapon
                 return;
             }
 
-            Vector3 direction = (PlayerMovementController.Instance.transform.position + new Vector3(0, 0.5f, 0)) - transform.position;
+            Vector3 direction = (PlayerMovementController.Instance.transform.position + new Vector3(0, 1f, 0)) - muzzle.transform.position;
             direction = direction.normalized;
 
             if (bulletPrefab)
@@ -76,6 +77,7 @@ namespace Weapons.NPC_Weapon
                 if (Physics.Linecast(muzzleSocket.position, tracer.transform.position, out RaycastHit hit, fireMask))
                 {
                     print(hit.collider.gameObject.name);
+                    hitPose.Add(hit.point);
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
                         PlayerMovementController.Instance.player.Health.TakeDamage(damage);
@@ -89,6 +91,17 @@ namespace Weapons.NPC_Weapon
             }
 
             Destroy(tracer);
+        }
+
+        
+        private List<Vector3> hitPose = new List<Vector3>();
+        private void OnDrawGizmos()
+        {
+            if(hitPose.Count == 0) return;
+            foreach (var pos in hitPose)
+            {
+                Gizmos.DrawSphere(pos, 0.1f);
+            }
         }
 
 

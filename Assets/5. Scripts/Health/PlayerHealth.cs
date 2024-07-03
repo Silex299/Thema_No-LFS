@@ -15,7 +15,7 @@ namespace Health
         [SerializeField, TabGroup("Player Health")] private float dissolveTime = 3;
 
 
-        private bool _isDead;
+        public bool IsDead { get; private set; }
         private bool _dissolveDeath;
 
 
@@ -31,7 +31,7 @@ namespace Health
         {
             dissolveMaterial.SetFloat(Dissolve1, -1);
             _currentHealth = maximumHealth;
-            _isDead = false;
+            IsDead = false;
             _dissolveDeath = false;
         }
 
@@ -81,9 +81,10 @@ namespace Health
 
 
         protected override void Death(string message = "")
-        {
+        { 
+            
             base.Death(message);
-            _isDead = true;
+            IsDead = true;
             OnDeath.Invoke();
         }
 
@@ -137,7 +138,7 @@ namespace Health
 
                 dissolveMaterial.SetFloat(Dissolve1, value);
 
-                if (!_isDead && fraction >= 0.5f)
+                if (!IsDead && fraction >= 0.5f)
                 {
                     Death();
                 }
