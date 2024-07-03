@@ -11,11 +11,7 @@ namespace Player_Scripts.Volumes
     [RequireComponent(typeof(Collider))]
     public class StateChangeVolume : MonoBehaviour
     {
-
-
         
-        
-        [SerializeField, BoxGroup("ENTRY STATE")] private float reTriggerDelay;
         [SerializeField, BoxGroup("ENTRY STATE")] private int entryStateIndex;
         [SerializeField, BoxGroup("ENTRY STATE")] private bool enableEntryDirection;
         [SerializeField, BoxGroup("ENTRY STATE")] private bool entryOneWayRotation;
