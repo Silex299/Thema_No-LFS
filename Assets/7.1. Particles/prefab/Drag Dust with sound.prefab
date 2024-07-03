@@ -205,7 +205,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.735
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -258,7 +258,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 491336647551353190}
-  maximumVelocity: 3
+  maximumVelocity: 10
+  velocityUpdateInterval: 0.2
+  volumeUpdateSpeed: 10
 --- !u!164 &2686111865124753771
 AudioReverbFilter:
   m_ObjectHideFlags: 0

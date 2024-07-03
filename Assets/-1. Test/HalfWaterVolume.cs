@@ -32,7 +32,7 @@ public class HalfWaterVolume : MonoBehaviour
             _playerInTrigger = false;
             if (_spawnedEffect)
             {
-                Destroy(_spawnedEffect);
+                Destroy(_spawnedEffect, 1);
             }
         }
     }

@@ -140,7 +140,8 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                     player.MovementController.ChangeState(stateIndex);
                 }
             }
-            
+
+            _playerInTrigger = false;
             yield return null;
         }
 
