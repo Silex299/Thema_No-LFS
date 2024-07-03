@@ -10,7 +10,6 @@ namespace Player_Scripts.Interactions
         [SerializeField] private ParticleSystem shiftParticleEffect;
 
 
-        private bool _isInRealDimension = true;
         private bool _isTransitioning = false;
 
         private void Update()

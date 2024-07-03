@@ -25,7 +25,7 @@ namespace Misc
         
             float timeElapsed = 0;
         
-            PlayerMovementController.Instance.DisablePlayerMovement(true);
+            PlayerMovementController.Instance.DisablePlayerMovement(true, false);
             PlayerMovementController.Instance.player.CController.enabled = false;
         
             var playerTransform = PlayerMovementController.Instance.transform;

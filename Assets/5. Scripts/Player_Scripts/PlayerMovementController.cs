@@ -83,12 +83,14 @@ namespace Player_Scripts
             }
         }
 
-        public void DisablePlayerMovement(bool disable)
+        public void DisablePlayerMovement(bool disable, bool invokeReset = true)
         {
-            
+            if (invokeReset)
+            {
+                ResetAnimator();
+            }
             player.DisabledPlayerMovement = disable;
-            
-            Invoke(nameof(ResetAnimator), 0.1f);
+
         }
 
         public void DisablePlayerMovementInt(int disable)
@@ -285,7 +287,6 @@ namespace Player_Scripts
 
              player.playerVelocity.y = player.JumpVelocity;
 
-             print(player.playerVelocity.y);
         }
 
 
