@@ -17,6 +17,7 @@ namespace Triggers
         [SerializeField, BoxGroup("Actions")] private UnityEvent entryAction;
         [SerializeField, BoxGroup("Actions")] private UnityEvent exitAction;
 
+
         private bool _playerIsInTrigger;
         private bool _executed;
         private Coroutine _triggerReset;
@@ -25,12 +26,10 @@ namespace Triggers
 
         private void OnTriggerEnter(Collider other)
         {
-
-            if (other.CompareTag(triggerTag))
-            {
-                _playerIsInTrigger = true;
-                _interactCollider = other;
-            }
+            if (!other.CompareTag(triggerTag)) return;
+            
+            _playerIsInTrigger = true;
+            _interactCollider = other;
         }
 
 
@@ -38,18 +37,15 @@ namespace Triggers
         {
             
             if(!continuousCheck) return;
+
+            if (!other.CompareTag(triggerTag)) return;
             
-
-            if (other.CompareTag(triggerTag))
+            if (_triggerReset != null)
             {
-                if (_triggerReset != null)
-                {
-                    StopCoroutine(_triggerReset);
-                }
-
-                _triggerReset = StartCoroutine(ResetTrigger());
-
+                StopCoroutine(_triggerReset);
             }
+
+            _triggerReset = StartCoroutine(ResetTrigger());
         }
 
         private void OnTriggerExit(Collider other)
@@ -63,7 +59,7 @@ namespace Triggers
         private IEnumerator ResetTrigger()
         {
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
 
             Reset();
         }

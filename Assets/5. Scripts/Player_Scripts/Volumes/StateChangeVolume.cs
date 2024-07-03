@@ -1,6 +1,8 @@
+using System;
 using Path_Scripts;
 using Sirenix.OdinInspector;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 
@@ -11,68 +13,92 @@ namespace Player_Scripts.Volumes
     {
 
 
-        [SerializeField, BoxGroup("ENTRY STATE")] private PlayerMovementState entryState;
+        
+        
         [SerializeField, BoxGroup("ENTRY STATE")] private float reTriggerDelay;
         [SerializeField, BoxGroup("ENTRY STATE")] private int entryStateIndex;
-        [SerializeField, BoxGroup("ENTRY STATE")] private bool enableDirection;
-        [SerializeField, BoxGroup("ENTRY STATE")] private bool oneWayRotation;
+        [SerializeField, BoxGroup("ENTRY STATE")] private bool enableEntryDirection;
+        [SerializeField, BoxGroup("ENTRY STATE")] private bool entryOneWayRotation;
 
-        [SerializeField, BoxGroup("EXIT STATE")] private PlayerMovementState exitState;
         [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
-
-
-        private bool _playerIsInTrigger;
-        private Coroutine triggerReset;
+        [SerializeField, BoxGroup("EXIT STATE")] private bool enableExitDirection;
+        [SerializeField, BoxGroup("EXIT STATE")] private bool exitOneWayRotation;
+        
+        [BoxGroup("Misc")] public bool continuousCheck = true;
+        [BoxGroup("Misc")] public float recheckTime = 0.2f;
+        
+        
+        private bool _triggered;
+        private Coroutine _resetCoroutine;
+        
 
         private void OnTriggerStay(Collider other)
         {
-            if (!enabled) return;
-
-            if (other.CompareTag("Player_Main"))
+            if (continuousCheck)
             {
-                if (!_playerIsInTrigger)
-                {
-                    _playerIsInTrigger = true;
-                    var playerController = PlayerMovementController.Instance;
-                    playerController.ChangeState(entryState, entryStateIndex);
 
-                    playerController.player.enabledDirectionInput = enableDirection;
-                    playerController.player.oneWayRotation = oneWayRotation;
+                if (other.CompareTag("Player_Main"))
+                {
+                    if (!_triggered)
+                    {
+                        PlayerMovementController.Instance.ChangeState(entryStateIndex);
+                        PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
+                        PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
+                        _triggered = true;
+                    }
+                    else
+                    {
+                        if (_resetCoroutine == null)
+                        {
+                            _resetCoroutine = StartCoroutine(ResetTrigger());
+                        }
+                        else
+                        {
+                            StopCoroutine(_resetCoroutine);
+                            _resetCoroutine = null;
+                        }
+                    }
                 }
                 
-                if (triggerReset != null)
-                {
-                    StopCoroutine(triggerReset);
-                }
-
-                triggerReset = StartCoroutine(ResetTrigger());
             }
-
-            
         }
-
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if(continuousCheck) return;
+            
+            if (other.CompareTag("Player_Main"))
+            {
+                PlayerMovementController.Instance.ChangeState(entryStateIndex);
+                PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
+                PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
+                _triggered = true;
+            }
+        }
 
         private void OnTriggerExit(Collider other)
         {
-            if (!_playerIsInTrigger) return;
-            
+
             if (other.CompareTag("Player_Main"))
             {
-                triggerReset = StartCoroutine(ResetTrigger());
-            }
+                
+                PlayerMovementController.Instance.ChangeState(exitStateIndex);
+                PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
+                PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
+                _triggered = false;
 
+            }
         }
 
         private IEnumerator ResetTrigger()
         {
-            yield return new WaitForSeconds(0.2f);
-            var playerController = PlayerMovementController.Instance;
-            playerController.ChangeState(exitState, exitStateIndex);
-            playerController.player.enabledDirectionInput = false;
-            playerController.player.oneWayRotation = false;
-
-            yield return new WaitForSeconds(reTriggerDelay);
-            _playerIsInTrigger = false;
+            yield return new WaitForSeconds(recheckTime);
+            
+            PlayerMovementController.Instance.ChangeState(exitStateIndex);
+            PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
+            PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
+            _triggered = false;
+            _resetCoroutine = null;
         }
 
 
