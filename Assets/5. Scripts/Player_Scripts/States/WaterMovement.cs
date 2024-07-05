@@ -118,17 +118,17 @@ namespace Player_Scripts.States
 
             #region Interaction
 
-            if (player.Interactable)
+            if (player.interactable)
             {
-                PlayerInteractionType interaction = player.Interactable.Interact();
+                PlayerInteractionType interaction = player.interactable.Interact();
 
                 switch (interaction)
                 {
                     case PlayerInteractionType.NONE:
-                        if (player.IsInteracting)
+                        if (player.isInteracting)
                         {
                             _speedMultiplier = 1;
-                            player.IsInteracting = false;
+                            player.isInteracting = false;
                             player.AnimationController.SetBool(Push, false);
                             player.enabledDirectionInput = false;
                         }
@@ -139,11 +139,11 @@ namespace Player_Scripts.States
 
                         if (!atSurface) break;
 
-                        if (!player.IsInteracting)
+                        if (!player.isInteracting)
                         {
                             _speedMultiplier = 0.5f;
                             player.enabledDirectionInput = true;
-                            player.IsInteracting = true;
+                            player.isInteracting = true;
                             player.AnimationController.SetBool(Push, true);
                         }
 
@@ -156,9 +156,9 @@ namespace Player_Scripts.States
                 //TODO: MAKE IT CALL ONLY ONCE
                 _speedMultiplier = 1;
 
-                if (player.IsInteracting)
+                if (player.isInteracting)
                 {
-                    player.IsInteracting = false;
+                    player.isInteracting = false;
                     player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
                 }

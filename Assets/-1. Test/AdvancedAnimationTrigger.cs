@@ -83,11 +83,16 @@ public class AdvancedAnimationTrigger : MonoBehaviour
         {
             if (Input.GetButtonDown(inputString))
             {
-                StartCoroutine(TriggerAnimation());
+                Trigger();
             }
         }
     }
 
+
+    public void Trigger()
+    {
+        StartCoroutine(TriggerAnimation());
+    }
 
     private IEnumerator TriggerAnimation()
     {

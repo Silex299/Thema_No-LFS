@@ -3,6 +3,7 @@ using UnityEngine;
 using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
+using UnityEngine.Serialization;
 
 namespace Player_Scripts
 {
@@ -44,6 +45,8 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player Movement")]
         private bool canJump;
 
+        [SerializeField, BoxGroup("Player Movement")]
+        private bool canRotate;
         /// <summary>
         /// Used for sprint and other boosting mechanisms
         /// </summary>
@@ -95,7 +98,7 @@ namespace Player_Scripts
         /// <summary>
         /// ENUM for current movement state
         /// </summary>
-        [SerializeField, BoxGroup] internal PlayerMovementState e_currentState = PlayerMovementState.BasicMovement;
+        [SerializeField, BoxGroup] internal PlayerMovementState eCurrentState = PlayerMovementState.BasicMovement;
 
         [SerializeField, BoxGroup] internal int previousStateIndex = -1;
         [SerializeField, BoxGroup] internal int currentStateIndex = -1;
@@ -103,8 +106,8 @@ namespace Player_Scripts
 
         [SerializeField] private bool disablePlayerMovement;
 
-        internal Interactable Interactable;
-        internal bool IsInteracting;
+        internal Interactable interactable;
+        internal bool isInteracting;
         internal float verticalAcceleration;
         internal Vector3 playerVelocity = Vector3.zero;
 
@@ -133,6 +136,11 @@ namespace Player_Scripts
             set => canBoost = value;
         }
 
+        public bool CanRotate
+        {
+            get => canRotate;
+            set => canRotate = value;
+        }
 
         public bool DisabledPlayerMovement
         {

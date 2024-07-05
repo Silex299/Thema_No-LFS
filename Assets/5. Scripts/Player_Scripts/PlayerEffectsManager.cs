@@ -1,8 +1,11 @@
+using System;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Thema_Type;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Player_Scripts
 {
@@ -116,8 +119,7 @@ namespace Player_Scripts
 
             }
         }
-
-
+        
         public void PlaySteps(Object footInfo)
         {
             var step = footInfo as Step;
@@ -143,6 +145,16 @@ namespace Player_Scripts
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(leftFootSocket.position, 0.1f);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(rightFootSocket.position, 0.1f);
+        }
+
+
         private IEnumerator SpawnSteps(WhichStep step)
         {
 
@@ -158,31 +170,35 @@ namespace Player_Scripts
                     {
                         case WhichStep.LEFT:
 
-                            if (Physics.Raycast(leftFootSocket.position + Vector3.up, Vector3.down, out RaycastHit hit1, 1.5f, raycastMask))
+                            //Not sure its acting weird, so added 100f to raycast
+                            
+                            Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                            Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
+                            if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
                             {
-                                Debug.DrawLine(leftFootSocket.position + Vector3.up, hit1.point, Color.yellow, 5f);
-
                                 Instantiate(pref, hit1.point, Quaternion.LookRotation(transform.forward));
                             }
 
                             break;
                         case WhichStep.RIGHT:
-
-                            if (Physics.Raycast(rightFootSocket.position + Vector3.up, Vector3.down, out RaycastHit hit2, 1.5f, raycastMask))
+                            
+                            Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                            Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
+                            if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
                             {
-                                Debug.DrawLine(rightFootSocket.position + Vector3.up, hit2.point, Color.yellow, 5f);
                                 Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
                             }
                             break;
                         default:
+                            print("fuck");
                             break;
                     }
 
                 }
             }
-            catch
+            catch (System.Exception e)
             {
-                Debug.LogWarning("No step effect found for :" + _currentEffectVolume);
+                Debug.LogWarning(e);
             }
 
 

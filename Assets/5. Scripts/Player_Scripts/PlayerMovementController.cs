@@ -33,7 +33,7 @@ namespace Player_Scripts
 
             player.AnimationController.SetInteger(StateIndex, player.currentStateIndex);
             //MARKER : states
-            switch (player.e_currentState)
+            switch (player.eCurrentState)
             {
                 case PlayerMovementState.BasicMovement:
                     player.currentState = player.basicMovementState;
@@ -105,7 +105,7 @@ namespace Player_Scripts
 
         internal void SetIntractable(Interactable item)
         {
-            player.Interactable = item;
+            player.interactable = item;
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Player_Scripts
 
         public bool VerifyState(PlayerMovementState state)
         {
-            return state == player.e_currentState;
+            return state == player.eCurrentState;
         }
 
 
@@ -171,13 +171,13 @@ namespace Player_Scripts
 
             player.AnimationController.SetInteger(StateIndex, stateIndex);
 
-            if (newState != player.e_currentState)
+            if (newState != player.eCurrentState)
             {
                 player.currentState.ExitState(player);
             }
 
 
-            player.e_currentState = newState;
+            player.eCurrentState = newState;
 
             switch (newState)
             {
@@ -225,24 +225,24 @@ namespace Player_Scripts
             switch (index)
             {
                 case <= 0:
-                    player.e_currentState = PlayerMovementState.BasicMovement;
+                    player.eCurrentState = PlayerMovementState.BasicMovement;
                     player.currentState = player.basicMovementState;
                     break;
 
                 case 1:
-                    player.e_currentState = PlayerMovementState.Ladder;
+                    player.eCurrentState = PlayerMovementState.Ladder;
                     player.currentState = player.ladderMovementState;
                     break;
                 case 2:
-                    player.e_currentState = PlayerMovementState.Water;
+                    player.eCurrentState = PlayerMovementState.Water;
                     player.currentState = player.waterMovement;
                     break;
                 case 3:
-                    player.e_currentState = PlayerMovementState.Rope;
+                    player.eCurrentState = PlayerMovementState.Rope;
                     player.currentState = player.ropeMovement;
                     break;
                 case 11:
-                    player.e_currentState = PlayerMovementState.FreeBasicMovement;
+                    player.eCurrentState = PlayerMovementState.FreeBasicMovement;
                     player.currentState = player.freeBasicMovement;
                     break;
             }
@@ -271,7 +271,7 @@ namespace Player_Scripts
 
         public void LadderExit()
         {
-            if (player.e_currentState == PlayerMovementState.Ladder)
+            if (player.eCurrentState == PlayerMovementState.Ladder)
             {
                 StartCoroutine(player.ladderMovementState.LeaveLadder(player));
             }
@@ -296,7 +296,7 @@ namespace Player_Scripts
 
         public void WaterSurfaceHit(bool atSurface)
         {
-            if (player.e_currentState == PlayerMovementState.Water)
+            if (player.eCurrentState == PlayerMovementState.Water)
             {
                 player.waterMovement.PlayerAtSurfact(player, atSurface);
             }
@@ -304,7 +304,7 @@ namespace Player_Scripts
 
         public void WaterBottomHit(bool atBottom)
         {
-            if (player.e_currentState == PlayerMovementState.Water)
+            if (player.eCurrentState == PlayerMovementState.Water)
             {
                 player.waterMovement.PlayerAtBottom(player, atBottom);
             }

@@ -1,13 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 
 namespace Thema_Camera
 {
-
     public class CameraFollow : MonoBehaviour
     {
-
         [SerializeField] private float m_followSmoothness;
         [SerializeField] internal Transform followTarget;
         [SerializeField] private Vector3 m_Offset;
@@ -16,19 +16,13 @@ namespace Thema_Camera
 
         [SerializeField] internal Camera myCamera;
         private static CameraFollow instance;
+
         public static CameraFollow Instance
         {
             get => instance;
         }
 
-        private bool _changeOffset;
-
-        private CameraFollowInfo _initialCameraInfo;
-        private CameraFollowInfo _cameraInfo;
-
-        private float _transitionTime;
-        private float _timeElapsed;
-
+        private Coroutine _transitionOffsetTrigger;
 
         [Button("GetOffset")]
         public void GetOffset()
@@ -36,7 +30,6 @@ namespace Thema_Camera
             if (followTarget == null) return;
 
             m_Offset = transform.position - followTarget.position;
-
         }
 
 
@@ -50,13 +43,6 @@ namespace Thema_Camera
             {
                 CameraFollow.instance = this;
             }
-
-            _cameraInfo = new CameraFollowInfo()
-            {
-                offset = m_Offset,
-                rotation = transform.rotation.eulerAngles,
-                FOV = myCamera.fieldOfView
-            };
         }
 
         private void Update()
@@ -64,8 +50,6 @@ namespace Thema_Camera
             if (!followTarget) return;
 
             FollowTarget();
-
-            if (_changeOffset) { TransitionOffset(); }
         }
 
         private void FollowTarget()
@@ -81,60 +65,64 @@ namespace Thema_Camera
         }
 
 
-        private void TransitionOffset()
-        {
-
-            _timeElapsed += Time.deltaTime;
-
-            float fraction = _timeElapsed / _transitionTime;
-
-            m_Offset = Vector3.Lerp(_initialCameraInfo.offset, _cameraInfo.offset, fraction);
-            transform.rotation = Quaternion.Slerp(Quaternion.Euler(_initialCameraInfo.rotation), Quaternion.Euler(_cameraInfo.rotation), fraction);
-            myCamera.fieldOfView = Mathf.LerpAngle(_initialCameraInfo.FOV, _cameraInfo.FOV, fraction);
-            myCamera.lensShift = Vector2.Lerp(_initialCameraInfo.lenseShift, _cameraInfo.lenseShift, fraction);
-
-            if (fraction >= 1)
-            {
-                _changeOffset = false;
-            }
-        }
-
         public void TransitionInstant(CameraFollowInfo info)
         {
-
             if (m_AudioListener)
             {
                 m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
             }
 
-            _cameraInfo = info;
             m_Offset = info.offset;
 
             transform.position = followTarget.position + m_Offset;
             transform.rotation = Quaternion.Euler(info.rotation);
             myCamera.fieldOfView = info.FOV;
             myCamera.lensShift = info.lenseShift;
-
         }
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
+            if (_transitionOffsetTrigger != null)
+                StopCoroutine(_transitionOffsetTrigger);
 
-
-            _initialCameraInfo = _cameraInfo;
-            _cameraInfo = info;
-
-            if (m_AudioListener)
-            {
-                m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
-            }
-            _transitionTime = transitionTime;
-
-            _timeElapsed = 0f;
-            _changeOffset = true;
+            _transitionOffsetTrigger = StartCoroutine(TransitionOffset(info, transitionTime));
         }
 
 
-    }
+        private IEnumerator TransitionOffset(CameraFollowInfo info, float transitionTime)
+        {
+            float timeElapsed = 0;
 
+            Vector3 initialOffset = m_Offset;
+            Quaternion initialRot = transform.rotation;
+            float initialFOV = myCamera.fieldOfView;
+            Vector2 initialLensShift = myCamera.lensShift;
+            
+            Vector3 audioListenerPos = Vector3.zero;
+            if (m_AudioListener)
+            {
+                audioListenerPos = m_AudioListener.transform.localPosition;
+            }
+
+
+            while (timeElapsed < transitionTime)
+            {
+                timeElapsed += Time.deltaTime;
+
+                m_Offset = Vector3.Lerp(initialOffset, info.offset, timeElapsed / transitionTime);
+                transform.rotation = Quaternion.Lerp(initialRot, Quaternion.Euler(info.rotation),
+                    timeElapsed / transitionTime);
+                myCamera.fieldOfView = Mathf.Lerp(initialFOV, info.FOV, timeElapsed / transitionTime);
+                myCamera.lensShift = Vector2.Lerp(initialLensShift, info.lenseShift, timeElapsed / transitionTime);
+
+                if (m_AudioListener)
+                {
+                    m_AudioListener.transform.localPosition = Vector3.Lerp(audioListenerPos,
+                        info.audioListenerLocalPosition, timeElapsed / transitionTime);
+                }
+
+                yield return null;
+            }
+        }
+    }
 }

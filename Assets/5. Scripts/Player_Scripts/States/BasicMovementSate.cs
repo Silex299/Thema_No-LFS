@@ -98,10 +98,10 @@ namespace Player_Scripts.States
 
             #region PLAYER INTERACTION
             //Interact
-            if (player.Interactable)
+            if (player.interactable)
             {
                 //I need Directions while interacting like if its pushing left or right
-                var interactionType = player.Interactable.Interact();
+                var interactionType = player.interactable.Interact();
 
 
                 switch (interactionType)
@@ -110,9 +110,9 @@ namespace Player_Scripts.States
 
                         //input =  Mathf.Lerp(input, input * multiplier, Time.deltaTime * 0.001f);
 
-                        if (!player.IsInteracting)
+                        if (!player.isInteracting)
                         {
-                            player.IsInteracting = true;
+                            player.isInteracting = true;
                             player.AnimationController.SetBool(Push, true);
                         }
 
@@ -122,9 +122,9 @@ namespace Player_Scripts.States
 
                     case PlayerInteractionType.NONE:
 
-                        if (player.IsInteracting)
+                        if (player.isInteracting)
                         {
-                            player.IsInteracting = false;
+                            player.isInteracting = false;
                             player.AnimationController.SetBool(Push, false);
                         }
                         player.enabledDirectionInput = false;
@@ -134,9 +134,9 @@ namespace Player_Scripts.States
             }
             else
             {
-                if (player.IsInteracting)
+                if (player.isInteracting)
                 {
-                    player.IsInteracting = false;
+                    player.isInteracting = false;
                     player.AnimationController.SetBool(Push, false);
                     player.enabledDirectionInput = false;
                 }
@@ -179,11 +179,12 @@ namespace Player_Scripts.States
         #endregion
 
 
-
         #region Custom Methods
 
         private void Rotate(Player player, Vector3 rotateTowards)
         {
+            if(!player.CanRotate) return;
+            
             var transform = player.transform;
             var pos = transform.position;
             rotateTowards.y = pos.y;
