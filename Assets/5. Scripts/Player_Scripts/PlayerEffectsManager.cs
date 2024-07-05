@@ -204,7 +204,7 @@ namespace Player_Scripts
 
         }
 
-        //For playing Steps (volume devpendent only for sound volume)
+        //For playing Steps (volume dependent only for sound volume)
         public void PlayStepsIndependent(string soundKey)
         {
 
@@ -225,7 +225,7 @@ namespace Player_Scripts
 
 
         /// <summary>
-        /// For playing Gneral Sound 
+        /// For playing Interaction Sound 
         /// Current Volume Depedent
         /// e.g. Land Jump
         /// </summary>
@@ -253,7 +253,7 @@ namespace Player_Scripts
         }
 
         /// <summary>
-        /// For playing general Default Sounds
+        /// For playing Player Default Sounds
         /// Not current volume dependent
         /// e.g, moan, shout, hurt
         /// </summary>

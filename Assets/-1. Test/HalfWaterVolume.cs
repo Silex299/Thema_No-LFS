@@ -6,6 +6,7 @@ public class HalfWaterVolume : MonoBehaviour
     public GameObject splashPrefab;
     public GameObject dragPrefab;
 
+    public float playerVelocityThreshold = -2f;
     public Vector3 offset;
     public bool varyingTerrain;
     public float surfaceHeight = 0.7f;
@@ -21,7 +22,7 @@ public class HalfWaterVolume : MonoBehaviour
 
             if (splashPrefab)
             {
-                if (!PlayerMovementController.Instance.player.IsGrounded)
+                if (PlayerVelocityCalculator.Instance.velocity.y < playerVelocityThreshold)
                 {
                     GameObject splash = Instantiate(splashPrefab, transform, true);
                     var playerTransform = PlayerMovementController.Instance.transform;
