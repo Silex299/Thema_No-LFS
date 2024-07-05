@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Player_Scripts;
 using System;
 using Managers.Checkpoints;
+using TMPro;
 
 namespace Managers
 {
@@ -21,6 +22,9 @@ namespace Managers
         [SerializeField, BoxGroup("Player Health")] private Image damageImage;
 
 
+        [BoxGroup("Fields")] public TextMeshProUGUI sceneTitle;
+        
+        
         private bool _isFadingIn;
         private bool _isFadingOut;
         private float _fadeTimeElapsed;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.Validation;
 
 namespace Thema_Camera
 {
@@ -8,16 +9,14 @@ namespace Thema_Camera
     {
 
         [SerializeField, BoxGroup] private CameraFollowInfo info;
-
         [SerializeField, BoxGroup] private float transitionTime;
-
-
+        
 #if UNITY_EDITOR
 
         [SerializeField, BoxGroup("Setup")] private Camera previewCamera;
         [SerializeField, BoxGroup("Setup")] private Transform previewTarget;
 
-        [Button("Setup Offse", ButtonSizes.Large)]
+        [Button("Setup Offset", ButtonSizes.Large)]
         public void SetOffset()
         {
             var _offset = previewCamera.transform.position - previewTarget.position;
@@ -33,15 +32,7 @@ namespace Thema_Camera
         }
 
 #endif
-
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player_Main"))
-            {
-                ChangeCameraOffset();
-            }
-        }
+        
 
         public void ChangeCameraOffset()
         {

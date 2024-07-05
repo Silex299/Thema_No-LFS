@@ -30,7 +30,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        musicAudio.volume = maximumMusicVolume;
+        //musicAudio.volume = maximumMusicVolume;
     }
 
     private IEnumerator TransitionMusic(AudioClip newClip, float transitionTime)
