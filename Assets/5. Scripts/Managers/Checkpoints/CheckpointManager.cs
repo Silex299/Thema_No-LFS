@@ -17,6 +17,9 @@ namespace Managers.Checkpoints
 
         [SerializeField, BoxGroup("Checkpoints")] private CheckPoint[] checkpoints;
 
+        [SerializeField, BoxGroup("Trackers")] private PlayerCheckpointTracker playerTracker;
+        [SerializeField, BoxGroup("Trackers")] private Tracker[] trackers;
+
 
 #if UNITY_EDITOR
         [BoxGroup("Checkpoints"), Button("Get Checkpoints", ButtonSizes.Large), GUIColor(0.1f, 1f, 0.2f)]
@@ -33,14 +36,6 @@ namespace Managers.Checkpoints
             }
         }
 
-#endif
-
-
-        [SerializeField, BoxGroup("Trackers")] private PlayerCheckpointTracker playerTracker;
-        [SerializeField, BoxGroup("Trackers")] private Tracker[] trackers;
-
-#if UNITY_EDITOR
-
         [BoxGroup("Trackers"), Button("Get Trackers", ButtonSizes.Large), GUIColor(0.1f, 1f, 1f)]
         public void GetTrackers()
         {
@@ -54,14 +49,14 @@ namespace Managers.Checkpoints
         public int CurrentCheckpoint => currentCheckpoint;
 
 
-        private static CheckpointManager instance;
-        public static CheckpointManager Instance => instance;
+        private static CheckpointManager _instance;
+        public static CheckpointManager Instance => _instance;
 
         private void Awake()
         {
             if (CheckpointManager.Instance == null)
             {
-                CheckpointManager.instance = this;
+                CheckpointManager._instance = this;
             }
             else if (CheckpointManager.Instance != this)
             {
@@ -90,7 +85,7 @@ namespace Managers.Checkpoints
         }
 
 
-        public void SetTrackers(bool initialSetup)
+        private void SetTrackers(bool initialSetup)
         {
             foreach (Tracker tracker in trackers)
             {

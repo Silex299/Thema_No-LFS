@@ -8,7 +8,7 @@ namespace Managers.Checkpoints
     {
 
         [SerializeField] private Player player;
-
+        
         public void ResetItem(CheckPoint checkpoint)
         {
 

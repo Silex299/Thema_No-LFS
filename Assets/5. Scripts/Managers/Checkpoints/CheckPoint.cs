@@ -8,10 +8,9 @@ namespace Managers.Checkpoints
 {
     public class CheckPoint : MonoBehaviour
     {
-        [SerializeField, BoxGroup("Player Info")] private Player_Scripts.PlayerMovementState playerState;
-        [SerializeField, BoxGroup("Player Info")] private int playerStateIndex;
-        [SerializeField, BoxGroup("Player Info")] private int nextPathPointIndex;
-        [SerializeField, BoxGroup("Player Info")] private int prevPathPointIndex;
+        [BoxGroup("Player Info")] public int playerStateIndex;
+        [BoxGroup("Player Info")] public int nextPathPointIndex;
+        [BoxGroup("Player Info")] public int prevPathPointIndex;
 
         [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
@@ -29,7 +28,7 @@ namespace Managers.Checkpoints
         public void LoadThisCheckpoint()
         {
             cameraOffsetInfo.ChangeCameraOffsetInstantaneous();
-            PlayerMovementController.Instance.ChangeState(playerState, playerStateIndex);
+            PlayerMovementController.Instance.ChangeState(playerStateIndex);
             PlayerMovementController.Instance.player.Health.ResetHealth();
 
             CameraManager.Instance.Reset();

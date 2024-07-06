@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Managers.Checkpoints
 {
@@ -17,14 +18,14 @@ namespace Managers.Checkpoints
         /// </summary>
         [SerializeField] private bool trackTransform = true;
         [SerializeField, TabGroup("States", "InitialState"), ShowIf(nameof(trackTransform))] private Vector3 initialPosition;
-        [SerializeField, TabGroup("States", "InitialState"), ShowIf(nameof(trackTransform))] private Vector3 initialEualrRotation;
+        [SerializeField, TabGroup("States", "InitialState"), ShowIf(nameof(trackTransform))] private Vector3 initialEulerRotation;
         [SerializeField, TabGroup("States", "FinalState"), ShowIf(nameof(trackTransform))] private Vector3 finalPosition;
-        [SerializeField, TabGroup("States", "FinalState"), ShowIf(nameof(trackTransform))] private Vector3 finalEularRotation;
+        [SerializeField, TabGroup("States", "FinalState"), ShowIf(nameof(trackTransform))] private Vector3 finalEulerRotation;
 
 
 
-        [SerializeField, Space(10), InfoBox("Called when checkpoint is less than or equal to thresold checkpoint")] private UnityEvent initialStateAction;
-        [SerializeField, InfoBox("Called when checkpoint is greater than thresold checkpoint")] private UnityEvent finalStateAction;
+        [SerializeField, Space(10), InfoBox("Called when checkpoint is less than or equal to threshold checkpoint")] private UnityEvent initialStateAction;
+        [SerializeField, InfoBox("Called when checkpoint is greater than threshold checkpoint")] private UnityEvent finalStateAction;
 
 
         public override void InitialSetup(CheckPoint checkPoint)
@@ -44,7 +45,7 @@ namespace Managers.Checkpoints
                 if (trackTransform)
                 {
                     this.transform.localPosition = finalPosition;
-                    this.transform.localRotation = Quaternion.Euler(finalEularRotation);
+                    this.transform.localRotation = Quaternion.Euler(finalEulerRotation);
                 }
                 finalStateAction?.Invoke();
             }
@@ -53,7 +54,7 @@ namespace Managers.Checkpoints
                 if (trackTransform)
                 {
                     this.transform.localPosition = initialPosition;
-                    this.transform.localRotation = Quaternion.Euler(initialEualrRotation);
+                    this.transform.localRotation = Quaternion.Euler(initialEulerRotation);
                 }
                 initialStateAction?.Invoke();
             }
