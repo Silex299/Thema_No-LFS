@@ -67,5 +67,10 @@ namespace Scene_Scripts
             
             yield return null;
         }
+
+        public void FadeOutBlack()
+        {
+            UIManager.Instance.FadeOut();
+        }
     }
 }

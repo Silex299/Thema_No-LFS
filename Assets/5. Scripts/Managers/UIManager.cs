@@ -80,7 +80,9 @@ namespace Managers
 
         }
 
+        
         private Action FadeInCallback;
+       
         public void FadeIn()
         {
             if (!_isFadingIn)
@@ -133,6 +135,7 @@ namespace Managers
 
             }
         }
+        
 
         private void RestartLastCheckPointView()
         {

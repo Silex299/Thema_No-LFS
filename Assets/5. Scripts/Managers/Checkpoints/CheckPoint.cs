@@ -8,6 +8,9 @@ namespace Managers.Checkpoints
 {
     public class CheckPoint : MonoBehaviour
     {
+        
+        public bool ignoreThisCheckpoint;
+        
         [BoxGroup("Player Info")] public int playerStateIndex;
         [BoxGroup("Player Info")] public int nextPathPointIndex;
         [BoxGroup("Player Info")] public int prevPathPointIndex;
@@ -27,12 +30,13 @@ namespace Managers.Checkpoints
 
         public void LoadThisCheckpoint()
         {
+            if(ignoreThisCheckpoint) return;
+            //camera
             cameraOffsetInfo.ChangeCameraOffsetInstantaneous();
-            PlayerMovementController.Instance.ChangeState(playerStateIndex);
-            PlayerMovementController.Instance.player.Health.ResetHealth();
-
             CameraManager.Instance.Reset();
 
+            //Player
+            PlayerMovementController.Instance.ChangeState(playerStateIndex);
             PlayerPathController path = PlayerPathController.Instance;
             path.nextDestination = nextPathPointIndex;
             path.previousDestination = prevPathPointIndex;
