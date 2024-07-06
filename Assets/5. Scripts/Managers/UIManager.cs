@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Player_Scripts;
 using System;
+using System.Collections;
 using Managers.Checkpoints;
 using TMPro;
 
 namespace Managers
 {
-
     public class UIManager : MonoBehaviour
     {
         [SerializeField, BoxGroup("UI")] private Animator animator;
@@ -17,22 +17,24 @@ namespace Managers
         [SerializeField, BoxGroup("Params")] private float fadeTransitionTime;
 
 
-        [SerializeField, BoxGroup("Player Health"), Space(10)] private GameObject healthBar;
-        [SerializeField, BoxGroup("Player Health")] private Image healthFill;
-        [SerializeField, BoxGroup("Player Health")] private Image damageImage;
+        [SerializeField, BoxGroup("Player Health"), Space(10)]
+        private GameObject healthBar;
+
+        [SerializeField, BoxGroup("Player Health")]
+        private Image healthFill;
+
+        [SerializeField, BoxGroup("Player Health")]
+        private Image damageImage;
 
 
         [BoxGroup("Fields")] public TextMeshProUGUI sceneTitle;
-        
-        
-        private bool _isFadingIn;
-        private bool _isFadingOut;
-        private float _fadeTimeElapsed;
-        private bool isLCPViewOpen;
 
 
-        private static UIManager instance;
-        public static UIManager Instance => instance;
+        private bool _isLcpViewOpen;
+
+
+        private static UIManager _instance;
+        public static UIManager Instance => _instance;
 
 
         private void Awake()
@@ -46,7 +48,7 @@ namespace Managers
             }
             else
             {
-                UIManager.instance = this;
+                UIManager._instance = this;
             }
         }
 
@@ -55,8 +57,8 @@ namespace Managers
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
 
-            controller.player.Health.OnDeath += RestartLastCheckPointView;
-            controller.player.Health.OnRevive += CloseLastCheckpointView;
+            controller.player.Health.OnDeath += RestartOrExitView;
+            controller.player.Health.OnRevive += CloseRestartOrExitView;
             controller.player.Health.OnTakingDamage += TakeDamage;
         }
 
@@ -66,95 +68,84 @@ namespace Managers
 
             if (controller)
             {
-                controller.player.Health.OnDeath -= RestartLastCheckPointView;
-                controller.player.Health.OnRevive -= CloseLastCheckpointView;
+                controller.player.Health.OnDeath -= RestartOrExitView;
+                controller.player.Health.OnRevive -= CloseRestartOrExitView;
                 controller.player.Health.OnTakingDamage -= TakeDamage;
             }
         }
 
 
-        private void Update()
-        {
-            if (_isFadingIn) FadeIn();
-            if (_isFadingOut) FadeOut();
+        private Coroutine _fadingCoroutine;
 
+        public void FadeIn(float transitionTime = 0.2f)
+        {
+            if (_fadingCoroutine != null)
+            {
+                StopCoroutine(_fadingCoroutine);
+            }
+
+            _fadingCoroutine = StartCoroutine(FadeEnumerator(1, transitionTime));
         }
 
-        
-        private Action FadeInCallback;
-       
-        public void FadeIn()
+        private void FadeIn(Action action, float transitionTime = 0.2f)
         {
-            if (!_isFadingIn)
             {
-                _isFadingIn = true;
-                _fadeTimeElapsed = 0;
-            }
-            else
-            {
-                _fadeTimeElapsed += Time.deltaTime;
-                float fraction = _fadeTimeElapsed / fadeTransitionTime;
-
-                float a = Mathf.Lerp(0, 1, fraction);
-                Color color = fader.color;
-                color.a = a;
-
-                fader.color = color;
-
-                if (fraction >= 1)
+                if (_fadingCoroutine != null)
                 {
-                    _isFadingIn = false;
-                    FadeInCallback?.Invoke();
-                    FadeInCallback = null;
-                }
-            }
-        }
-
-        public void FadeOut()
-        {
-            if (!_isFadingOut)
-            {
-                _isFadingOut = true;
-                _fadeTimeElapsed = 0;
-            }
-            else
-            {
-                _fadeTimeElapsed += Time.deltaTime;
-                float fraction = _fadeTimeElapsed / fadeTransitionTime;
-
-                float a = Mathf.Lerp(255, 0, fraction);
-                Color color = fader.color;
-                color.a = a;
-
-                fader.color = color;
-
-                if (fraction >= 1)
-                {
-                    _isFadingOut = false;
+                    StopCoroutine(_fadingCoroutine);
                 }
 
+                _fadingCoroutine = StartCoroutine(FadeEnumerator(1, transitionTime, action));
             }
         }
-        
 
-        private void RestartLastCheckPointView()
+        private IEnumerator FadeEnumerator( float endAlpha,float transitionTime = 0.2f, Action action = null)
         {
-            if (isLCPViewOpen) return;
+            float timeElapsed = 0;
+            Color faderColor = fader.color;
 
-            FadeInCallback = () =>
+            while (timeElapsed < transitionTime)
+            {
+                timeElapsed += Time.deltaTime;
+
+                float alpha = Mathf.Lerp(faderColor.a, endAlpha, timeElapsed / transitionTime);
+                fader.color = new Color(faderColor.r, faderColor.g, faderColor.b, alpha);
+
+                yield return null;
+            }
+
+            action?.Invoke();
+            _fadingCoroutine = null;
+        }
+
+        public void FadeOut(float transitionTime = 0.2f)
+        {
+            if (_fadingCoroutine != null)
+            {
+                StopCoroutine(_fadingCoroutine);
+            }
+
+            _fadingCoroutine = StartCoroutine(FadeEnumerator(0, transitionTime));
+        }
+
+        private void RestartOrExitView()
+        {
+            if (_isLcpViewOpen) return;
+
+            void Action()
             {
                 animator.Play("LCP_View");
-                isLCPViewOpen = true;
-            };
+                _isLcpViewOpen = true;
+            }
 
-            FadeIn();
+            FadeIn(Action);
         }
 
-        private void CloseLastCheckpointView()
+        private void CloseRestartOrExitView()
         {
-            if (!isLCPViewOpen) return;
+            if (!_isLcpViewOpen) return;
 
-            isLCPViewOpen = false;
+            _isLcpViewOpen = false;
             animator.Play("EXIT_LCP_VIEW");
             FadeOut();
         }
@@ -162,6 +153,7 @@ namespace Managers
 
         private void TakeDamage(float fraction)
         {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (fraction == 1)
             {
                 healthBar.SetActive(false);
@@ -172,6 +164,7 @@ namespace Managers
                 {
                     healthBar.SetActive(true);
                 }
+
                 healthFill.fillAmount = fraction;
             }
 
@@ -179,11 +172,9 @@ namespace Managers
             color.a = 1 - fraction;
 
             damageImage.color = color;
-
         }
 
         #region Button Methods
-
 
         public void OnLoadLastCheckpointButtonClicked()
         {
@@ -192,7 +183,5 @@ namespace Managers
         }
 
         #endregion
-
     }
-
 }
