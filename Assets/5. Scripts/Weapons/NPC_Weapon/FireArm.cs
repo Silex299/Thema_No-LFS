@@ -135,8 +135,6 @@ namespace Weapons.NPC_Weapon
             {
                 PlayerMovementController.Instance.player.Health.OnDeath -= ResetWeapon;
             }
-            
-            Debug.LogError(_autoFire);
         }
 
         private void ResetWeapon()

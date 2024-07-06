@@ -18,6 +18,7 @@ namespace Triggers
 
     public class ContinuousActionTrigger : MonoBehaviour
     {
+        [InfoBox("User for things like pushing barriers and all")]
 
         [SerializeField, BoxGroup("Trigger")] private string activationInput;
         [SerializeField, BoxGroup("Trigger")] private string actionInput;

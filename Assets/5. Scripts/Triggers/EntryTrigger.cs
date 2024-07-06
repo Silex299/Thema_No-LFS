@@ -45,23 +45,23 @@ namespace Triggers
                 StopCoroutine(_triggerReset);
             }
 
-            _triggerReset = StartCoroutine(ResetTrigger());
+            _triggerReset = StartCoroutine(ResetTriggerCoroutine());
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag(triggerTag))
             {
-                Reset();
+                ResetTrigger();
             }
         }
 
-        private IEnumerator ResetTrigger()
+        private IEnumerator ResetTriggerCoroutine()
         {
 
             yield return new WaitForSeconds(0.2f);
 
-            Reset();
+            ResetTrigger();
         }
 
 
@@ -98,7 +98,7 @@ namespace Triggers
         }
 
 
-        private void Reset()
+        private void ResetTrigger()
         {
 
             _triggerReset = null;
