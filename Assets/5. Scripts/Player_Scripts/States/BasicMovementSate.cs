@@ -84,8 +84,17 @@ namespace Player_Scripts.States
             #endregion
 
             #region PLAYER MOVEMENT
+
+            float multiplier = 1;
             //Sprint
-            float multiplier = player.CanBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
+            if (player.ForceBoost)
+            {
+                multiplier = 2;
+            }
+            else
+            {
+                multiplier = player.CanBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
+            }
 
             //Apply gravity and ground check
             player.MovementController.GroundCheck();

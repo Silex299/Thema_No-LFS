@@ -10,6 +10,7 @@ namespace Weapons.NPC_Weapon
 {
     public sealed class FireArm : WeaponBase
     {
+        [SerializeField, BoxGroup("Fire Property")] private bool canFire = true;
         [SerializeField, BoxGroup("Fire Property")] private float tracerLifetime;
         [SerializeField, BoxGroup("Fire Property")] internal float bulletSpeed;
         [SerializeField, BoxGroup("Fire Property")] private float fireRate = 60;
@@ -25,12 +26,20 @@ namespace Weapons.NPC_Weapon
 
         private bool _autoFire;
         private float _lastFireTime;
-
+        
+        
+        public bool CanFire
+        {
+            get => canFire;
+            set => canFire = value;
+        }
         
         
         // ReSharper disable once MemberCanBePrivate.Global
         public override void Fire()
         {
+            if(!canFire) return;
+            
             if (Time.time < _lastFireTime + (1 / fireRate))
             {
                 return;
@@ -77,7 +86,6 @@ namespace Weapons.NPC_Weapon
                 if (Physics.Linecast(muzzleSocket.position, tracer.transform.position, out RaycastHit hit, fireMask))
                 {
                     print(hit.collider.gameObject.name);
-                    hitPose.Add(hit.point);
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
                         PlayerMovementController.Instance.player.Health.TakeDamage(damage);
@@ -92,18 +100,7 @@ namespace Weapons.NPC_Weapon
 
             Destroy(tracer);
         }
-
         
-        private List<Vector3> hitPose = new List<Vector3>();
-        private void OnDrawGizmos()
-        {
-            if(hitPose.Count == 0) return;
-            foreach (var pos in hitPose)
-            {
-                Gizmos.DrawSphere(pos, 0.1f);
-            }
-        }
-
 
         private void SpawnEffects(string hitTag, Vector3 hitPoint)
         {
@@ -128,6 +125,8 @@ namespace Weapons.NPC_Weapon
         public void AutomaticFire(bool autoFire)
         {
             
+            _autoFire = autoFire;
+            
             if (autoFire == true)
             {
                 PlayerMovementController.Instance.player.Health.OnDeath += ResetWeapon;
@@ -138,7 +137,6 @@ namespace Weapons.NPC_Weapon
             }
             
             Debug.LogError(_autoFire);
-            _autoFire = autoFire;
         }
 
         private void ResetWeapon()
@@ -148,6 +146,7 @@ namespace Weapons.NPC_Weapon
 
         private void Update()
         {
+            
             if (_autoFire)
             {
                 Fire();

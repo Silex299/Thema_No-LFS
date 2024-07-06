@@ -52,6 +52,13 @@ namespace Player_Scripts
         /// </summary>
         [SerializeField, BoxGroup("Player Movement")]
         private bool canBoost;
+        
+        
+        /// <summary>
+        /// Used for sprint and other boosting mechanisms
+        /// </summary>
+        [SerializeField, BoxGroup("Player Movement")]
+        private bool forceBoost;
 
         /// <summary>
         /// Resets the direction only to forward direction if not moving
@@ -140,6 +147,12 @@ namespace Player_Scripts
         {
             get => canRotate;
             set => canRotate = value;
+        }
+
+        public bool ForceBoost
+        {
+            get => forceBoost;
+            set => forceBoost = value;
         }
 
         public bool DisabledPlayerMovement

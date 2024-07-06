@@ -12,10 +12,10 @@ namespace Player_Scripts
     {
         [SerializeField, BoxGroup("References")] internal Player player;
 
-        private static PlayerMovementController instance;
+        private static PlayerMovementController _instance;
         public static PlayerMovementController Instance
         {
-            get => instance;
+            get => _instance;
         }
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -28,7 +28,7 @@ namespace Player_Scripts
             }
             else
             {
-                PlayerMovementController.instance = this;
+                PlayerMovementController._instance = this;
             }
 
             player.AnimationController.SetInteger(StateIndex, player.currentStateIndex);
