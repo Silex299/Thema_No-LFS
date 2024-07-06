@@ -22,6 +22,9 @@ public class NpcPredefinedPathFinder : NpcPathFinder
     {
         if (InSight(origin, destination))
         {
+            if(_npcId.ContainsKey(instanceId))
+                _npcId.Remove(instanceId);
+
             return destination;
         }
 

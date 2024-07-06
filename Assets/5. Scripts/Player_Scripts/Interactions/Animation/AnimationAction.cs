@@ -12,7 +12,7 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField] private string input;
         [SerializeField] private bool disablePlayerMovment = true;
 
-
+        public float exitActionDelay = 2f;
         [SerializeField, Space(10)] private UnityEvent entryAction;
         [SerializeField] private UnityEvent exitAction;
         private bool _playerEngaged;
@@ -58,9 +58,10 @@ namespace Player_Scripts.Interactions.Animation
         private IEnumerator ExitAction()
         {
             PlayerMovementController.Instance.PlayAnimation(exitAnimation, 0.4f, 1);
-            yield return new WaitForSeconds(3.5f);
-            PlayerMovementController.Instance.DisablePlayerMovement(false);
+            yield return new WaitForSeconds(exitActionDelay);
             exitAction?.Invoke();
+            yield return new WaitForSeconds(1f);
+            PlayerMovementController.Instance.DisablePlayerMovement(false);
         }
     }
     
