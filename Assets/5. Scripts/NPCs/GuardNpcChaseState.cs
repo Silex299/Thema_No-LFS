@@ -40,7 +40,7 @@ public class GuardNpcChaseState : GuardNpcState
         //distance between npc and player
         float distance = Vector3.Distance(npc.transform.position, PlayerMovementController.Instance.transform.position);
 
-        npc.animator.SetFloat(Speed, distance < stopDistance ? 0 : 1, 0.01f, Time.deltaTime);
+        //npc.animator.SetFloat(Speed, distance < stopDistance ? 0 : 1, 0.01f, Time.deltaTime);
 
         if (distance < attackDistance)
         {

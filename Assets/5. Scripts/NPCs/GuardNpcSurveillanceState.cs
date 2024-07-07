@@ -27,7 +27,7 @@ public class GuardNpcSurveillanceState : GuardNpcState
     public override void Update(GuardNpc npc)
     {
         //if there are more than one waypoint
-        if (wayPoints.Length > 1)
+        if (wayPoints.Length > 0)
         {
            
             //rotate the npc towards the current waypoint
