@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Player_Scripts.Volumes
 {
@@ -15,6 +16,7 @@ namespace Player_Scripts.Volumes
 
         private bool _changeVolume;
         private float _transitionTimeElapsed;
+        private bool _triggered;
 
 
         private void OnTriggerEnter(Collider other)
@@ -24,6 +26,8 @@ namespace Player_Scripts.Volumes
                 VolumeAction();
             }
         }
+        
+        
 
         public void VolumeAction()
         {
@@ -56,7 +60,7 @@ namespace Player_Scripts.Volumes
 
                 foreach (var source in sources)
                 {
-                    source.source.volume = Mathf.Lerp(source.initialVolume, source.preferedVolume, fraction);
+                    source.source.volume = Mathf.Lerp(source.initialVolume, source.preferredVolume, fraction);
                 }
 
                 if (fraction >= 1)
@@ -72,7 +76,7 @@ namespace Player_Scripts.Volumes
         public struct AudioSettings
         {
             public AudioSource source;
-            public float preferedVolume;
+            public float preferredVolume;
             [HideInInspector] public float initialVolume;
         }
     }

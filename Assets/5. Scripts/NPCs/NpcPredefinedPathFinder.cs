@@ -6,12 +6,12 @@ public class NpcPredefinedPathFinder : NpcPathFinder
     [Space(10)] public Transform[] waypoints;
     public float thresholdDistance;
 
-    [SerializeField] private bool inverted;
+    private bool _inverted;
 
     public bool Inverted
     {
-        get => inverted;
-        set => inverted = value;
+        get => _inverted;
+        set => _inverted = value;
     }
 
 
@@ -36,7 +36,7 @@ public class NpcPredefinedPathFinder : NpcPathFinder
             //If the distance is less than the threshold distance, move to the next waypoint
             if (distance < thresholdDistance)
             {
-                _currentWaypoint = inverted ? _currentWaypoint - 1 : _currentWaypoint + 1;
+                _currentWaypoint = _inverted ? _currentWaypoint - 1 : _currentWaypoint + 1;
 
                 if (_currentWaypoint >= waypoints.Length)
                 {
