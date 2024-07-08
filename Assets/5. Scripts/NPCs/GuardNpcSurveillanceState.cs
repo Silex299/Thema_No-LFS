@@ -10,9 +10,10 @@ public class GuardNpcSurveillanceState : GuardNpcState
     public float stopTime = 2f;
 
 
-    private int currentWayPointIndex;
-    private static readonly int Speed = Animator.StringToHash("Speed");
+    private int _currentWayPointIndex;
     private Coroutine _changeWayPointCoroutine;
+    
+    private static readonly int Speed = Animator.StringToHash("Speed");
     private static readonly int Chase = Animator.StringToHash("Chase");
     private static readonly int Attack = Animator.StringToHash("Attack");
 
@@ -31,10 +32,10 @@ public class GuardNpcSurveillanceState : GuardNpcState
         {
            
             //rotate the npc towards the current waypoint
-            Rotate(npc.transform, wayPoints[currentWayPointIndex].position, npc.rotationSpeed);
+            Rotate(npc.transform, wayPoints[_currentWayPointIndex].position, npc.rotationSpeed);
 
 
-            float distance = Vector3.Distance(npc.transform.position, wayPoints[currentWayPointIndex].position);
+            float distance = Vector3.Distance(npc.transform.position, wayPoints[_currentWayPointIndex].position);
             
             if(distance < stopDistance)
             {
@@ -76,11 +77,16 @@ public class GuardNpcSurveillanceState : GuardNpcState
             yield return null;
         }
         
-        currentWayPointIndex = (currentWayPointIndex + 1) % wayPoints.Length;
+        _currentWayPointIndex = (_currentWayPointIndex + 1) % wayPoints.Length;
         _changeWayPointCoroutine = null;
     }
 
     public override void Exit(GuardNpc npc)
     {
+        if (_changeWayPointCoroutine != null)
+        {
+            npc.StopCoroutine(_changeWayPointCoroutine);
+            _changeWayPointCoroutine = null;
+        }
     }
 }

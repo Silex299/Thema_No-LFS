@@ -40,13 +40,12 @@ public class AdvancedAnimationTrigger : MonoBehaviour
 
     [BoxGroup("Misc")] public TriggerCondition[] conditions;
 
-    [BoxGroup("Event")] public UnityEvent onTriggerEnter;
-    [BoxGroup("Event")] public UnityEvent onTriggerExit;
+
     [BoxGroup("Event")] public UnityEvent onActionStart;
     [BoxGroup("Event")] public UnityEvent onActionEnd;
 
 
-    private Coroutine _playerInTriggerCoroutine;
+    private Coroutine _triggerActionCoroutine;
 
     #region Editor
 
@@ -68,56 +67,9 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     #endregion
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player_Main"))
-        {
-            onTriggerEnter.Invoke();
-            _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player_Main"))
-        {
-            onTriggerExit.Invoke();
-
-            if (_playerInTriggerCoroutine != null)
-            {
-                StopCoroutine(_playerInTriggerCoroutine);
-                _playerInTriggerCoroutine = null;
-            }
-        }
-    }
-
-
-    private IEnumerator PlayerInTrigger(Collider other)
-    {
-        bool result = false;
-        foreach (var condition in conditions)
-        {
-            result = condition.Condition(other);
-
-            if (!result)
-            {
-                break;
-            }
-
-            yield return null;
-        }
-
-
-        if (result)
-        {
-            Trigger();
-        }
-    }
-
-
     public void Trigger()
     {
-        StartCoroutine(TriggerAnimation());
+        _triggerActionCoroutine ??= StartCoroutine(TriggerAnimation());
     }
 
     private IEnumerator TriggerAnimation()
@@ -170,6 +122,7 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                     player.MovementController.ChangeState(stateIndex);
                 }
             }
+
             yield return null;
         }
 
@@ -183,7 +136,7 @@ public class AdvancedAnimationTrigger : MonoBehaviour
         #endregion
 
         StopAllCoroutines();
-        _playerInTriggerCoroutine = null;
+        _triggerActionCoroutine = null;
         onActionEnd.Invoke();
     }
 }

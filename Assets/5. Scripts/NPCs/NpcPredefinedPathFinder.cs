@@ -22,8 +22,11 @@ public class NpcPredefinedPathFinder : NpcPathFinder
     {
         if (InSight(origin, destination))
         {
-            if(_npcId.ContainsKey(instanceId))
+            Debug.DrawLine(origin, destination, Color.green, 0.5f);
+            if (_npcId.ContainsKey(instanceId))
+            {
                 _npcId.Remove(instanceId);
+            }
 
             return destination;
         }
@@ -49,11 +52,13 @@ public class NpcPredefinedPathFinder : NpcPathFinder
                     Inverted = !Inverted;
                 }
             }
-
+            
+            Debug.DrawLine(origin, waypoints[_currentWaypoint].position, Color.magenta, 3);
             return waypoints[_currentWaypoint].position;
         }
         else
         {
+            Debug.DrawLine(origin, waypoints[_currentWaypoint].position, Color.magenta, 3);
             SetInitialWaypoint(origin, instanceId);
             return waypoints[_currentWaypoint].position;
         }

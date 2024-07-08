@@ -1,0 +1,108 @@
+using System.Collections;
+using Triggers;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class BetterTrigger : MonoBehaviour
+{
+
+    public string triggerTag;
+    public bool continuousCheck;
+    public float resetAfterActionDelay;
+    public TriggerCondition[] conditions;
+    
+
+    public UnityEvent action;
+    
+    private Coroutine _playerInTriggerCoroutine;
+    private Coroutine _resetTriggerCoroutine;
+
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if(!enabled) return;
+        if(other.CompareTag(triggerTag))
+        {
+            _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag(triggerTag))
+        {
+            if (_playerInTriggerCoroutine != null)
+            {
+                StopCoroutine(_playerInTriggerCoroutine);
+                _playerInTriggerCoroutine = null;
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(!enabled) return;
+        
+        if(!continuousCheck) return;
+
+        if (other.CompareTag(triggerTag))
+        {
+            _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
+            
+            if(_resetTriggerCoroutine != null)
+            {
+                StopCoroutine(_resetTriggerCoroutine);
+            }
+            _resetTriggerCoroutine = StartCoroutine(ResetTriggerCoroutine());
+
+        }
+    }
+
+
+    private IEnumerator PlayerInTrigger(Collider other)
+    {
+        if(!enabled) yield break;
+
+        while (true)
+        {
+            bool result = true;
+            
+            foreach (var condition in conditions)
+            {
+                result = condition.Condition(other);
+
+                if (!result)
+                {
+                    break;
+                }
+            }
+
+            if (result)
+            {
+                action.Invoke();
+                break;
+            }
+            
+            yield return null;
+        }
+
+        
+        yield return new WaitForSeconds(resetAfterActionDelay);
+        
+        StopCoroutine(_playerInTriggerCoroutine);
+        _playerInTriggerCoroutine = null;
+
+    }
+
+    private IEnumerator ResetTriggerCoroutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (_playerInTriggerCoroutine!=null)
+        {
+            StopCoroutine(_playerInTriggerCoroutine);
+            _playerInTriggerCoroutine = null;
+        }
+    }
+
+
+}

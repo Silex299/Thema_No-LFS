@@ -16,7 +16,7 @@ public class GuardNpc : MonoBehaviour
     public GuardNpcChaseState chaseState = new GuardNpcChaseState();
     public GuardNpcAfterPlayerDeathState afterPlayerDeathState = new GuardNpcAfterPlayerDeathState();
 
-    private GuardNpcState _currentState;
+    public GuardNpcState currentState;
     public NpcPathFinder PathFinder
     {
         get => pathFinder;
@@ -37,7 +37,7 @@ public class GuardNpc : MonoBehaviour
 
     private void Update()
     {
-        _currentState.Update(this);
+        currentState.Update(this);
     }
  
 
@@ -47,9 +47,9 @@ public class GuardNpc : MonoBehaviour
     }
     public void ChangeState(GuardNpcStateType newState)
     {
-        if (_currentState != null)
+        if (currentState != null)
         {
-            _currentState.Exit(this);
+            currentState.Exit(this);
         }
 
         print("Changing state to " + newState);
@@ -59,22 +59,22 @@ public class GuardNpc : MonoBehaviour
         switch (stateEnum)
         {
             case GuardNpcStateType.Chase:
-                _currentState = chaseState;
+                currentState = chaseState;
                 break;
             case GuardNpcStateType.Surveillance:
-                _currentState = surveillanceState;
+                currentState = surveillanceState;
                 break;
             case GuardNpcStateType.AfterDeath:
-                _currentState = afterPlayerDeathState;
+                currentState = afterPlayerDeathState;
                 break;
         }
         
 
         // ReSharper disable once PossibleNullReferenceException
-        _currentState.Enter(this);
+        currentState.Enter(this);
         
         
-        print("changed state " + _currentState);
+        print("changed state " + currentState);
     }
     
     private void OnPlayerDeath()

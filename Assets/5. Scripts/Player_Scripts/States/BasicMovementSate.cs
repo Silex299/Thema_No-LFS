@@ -169,12 +169,7 @@ namespace Player_Scripts.States
 
             if (Input.GetButtonDown("Jump"))
             {
-                if (player.currentStateIndex == -5)
-                {
-                    //WHILE SLIDING
-                    player.AnimationController.SetTrigger(Jump);
-                }
-                else if (player.CanJump && player.IsGrounded)
+                if (player.CanJump && player.IsGrounded)
                 {
                     player.AnimationController.SetTrigger(Jump);
                     
