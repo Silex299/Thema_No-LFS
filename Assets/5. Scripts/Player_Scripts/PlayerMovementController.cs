@@ -161,52 +161,12 @@ namespace Player_Scripts
 
 
         //MARKER: State
-        public void ChangeState(PlayerMovementState newState, int stateIndex)
-        {
-
-            if (stateIndex == player.currentStateIndex) return;
-
-            player.previousStateIndex = player.currentStateIndex;
-            player.currentStateIndex = stateIndex;
-
-            player.AnimationController.SetInteger(StateIndex, stateIndex);
-
-            if (newState != player.eCurrentState)
-            {
-                player.currentState.ExitState(player);
-            }
-
-
-            player.eCurrentState = newState;
-
-            switch (newState)
-            {
-                case PlayerMovementState.BasicMovement:
-                    player.currentState = player.basicMovementState;
-                    break;
-                case PlayerMovementState.Ladder:
-                    player.currentState = player.ladderMovementState;
-                    break;
-                case PlayerMovementState.Water:
-                    player.currentState = player.waterMovement;
-                    break;
-                case PlayerMovementState.Rope:
-                    player.currentState = player.ropeMovement;
-                    break;
-                case PlayerMovementState.FreeBasicMovement:
-                    player.currentState = player.freeBasicMovement;
-                    break;
-            }
-
-
-            player.currentState.EnterState(player);
-        }
 
         //MARKER: State
         //TODO : switch case to change state directly
         public void ChangeState(int index)
         {
-            print("Changing State : " + index);
+            if(player.OverrideFlags)  return;
 
             //if (player.DisablePlayerMovement) return;
 
@@ -251,6 +211,8 @@ namespace Player_Scripts
 
         public void ChangeState(int index, string animationName)
         {
+            if(player.OverrideFlags)  return;
+            
             ChangeState(index);
             PlayAnimation(animationName, 0.3f, 0);
         }
@@ -348,7 +310,9 @@ namespace Player_Scripts
         public void Reset()
         {
             player.AnimationController.Play("Default", 1);
+            player.CController.enabled = true;
             player.DisabledPlayerMovement = false;
+            player.OverrideFlags = false;
         }
 
 

@@ -54,6 +54,7 @@ namespace Misc
             {
                 if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
                 
+                //TODO: Fix it
                 Coroutine newCoroutine = StartCoroutine(CheckForObject(other, health));
                 _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
                 

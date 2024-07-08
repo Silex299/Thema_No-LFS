@@ -22,7 +22,6 @@ namespace Managers.Checkpoints
             player.Health.Reset();
             player.Health.ResetHealth();
             player.MovementController.Reset();
-            player.CController.enabled = true;
 
         }
 
@@ -35,7 +34,7 @@ namespace Managers.Checkpoints
             Transform checkpointTransform = checkPoint.transform;
             player.transform.position = checkpointTransform.position;
             player.transform.rotation = checkpointTransform.rotation;
-            player.CController.enabled = true;
+            player.MovementController.Reset();
         }
 
     }

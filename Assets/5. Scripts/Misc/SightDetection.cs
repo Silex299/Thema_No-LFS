@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using Player_Scripts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,69 +15,78 @@ namespace Misc
         [SerializeField, Space(10)] private UnityEvent onPlayerInSight;
         [SerializeField] private UnityEvent onPlayerOutOfSight;
 
-        private int _bodyCount;
         private bool _inSight;
-
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
-            {
-                _bodyCount++;
-            }
-        }
-
+        private Coroutine _triggerCoroutine;
+        
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player_Main") || other.CompareTag("Player"))
+            if (other.CompareTag("Player_Main"))
             {
-                _bodyCount = Mathf.Clamp(_bodyCount - 1, 0, 99);
+                if (_triggerCoroutine != null)
+                {
+                    StopCoroutine(_triggerCoroutine);
+                    _triggerCoroutine = null;
+                }
             }
         }
 
-        private void Update()
+        private void OnTriggerStay(Collider other)
         {
-            
-            if(!enabled) return;
-            
-            if (_bodyCount <= 0) return;
-
-
-            var position = transform.position;
-            
-            Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
-
-            Ray ray = new Ray(position, direction);
-            
-
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
+            if (other.CompareTag("Player_Main"))
             {
-                Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
-                
-                if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
+                _triggerCoroutine ??= StartCoroutine(CheckForPlayer());
+            }
+        }
+
+        private IEnumerator CheckForPlayer()
+        {
+            while (true)
+            {
+                print("Calling");
+                var position = transform.position;
+            
+                Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
+
+                Ray ray = new Ray(position, direction);
+            
+                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
                 {
-                    if (!_inSight)
+                    Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                
+                    if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                     {
-                        if(PlayerMovementController.Instance.player.Health.IsDead) return;
-                        _inSight = true;
-                        onPlayerInSight.Invoke();
+                        if (!_inSight)
+                        {
+                            if (PlayerMovementController.Instance.player.Health.IsDead)
+                            {
+                                _triggerCoroutine = null;
+                                yield break;
+                            }
+                            
+                            _inSight = true;
+                            onPlayerInSight.Invoke();
+                        }
+                    }
+                    else
+                    {
+                        _inSight = false;
+                        onPlayerOutOfSight.Invoke();
                     }
                 }
                 else
                 {
-                    _inSight = false;
-                    onPlayerOutOfSight.Invoke();
+                    Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
+                    if (_inSight)
+                    {
+                        _inSight = false;
+                        onPlayerOutOfSight.Invoke();
+                    }
                 }
+
+                yield return null;
             }
-            else
-            {
-                Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
-                if (_inSight)
-                {
-                    _inSight = false;
-                    onPlayerOutOfSight.Invoke();
-                }
-            }
+            
         }
+
     }
 }

@@ -129,30 +129,56 @@ namespace Player_Scripts
         public PlayerHealth Health => health;
         public PlayerEffectsManager EffectsManager => effectsManager;
 
+        public bool OverrideFlags { get; set; }
+        
         public bool IsGrounded { get; set; }
 
         public bool CanJump
         {
             get => canJump;
-            set => canJump = value;
+            set
+            {
+                if (!OverrideFlags)
+                {
+                    canJump = value;
+                }
+            }
         }
 
         public bool CanBoost
         {
             get => canBoost;
-            set => canBoost = value;
+            set
+            {
+                if (!OverrideFlags)
+                {
+                    canBoost = value;
+                }
+            }
         }
 
         public bool CanRotate
         {
             get => canRotate;
-            set => canRotate = value;
+            set
+            {
+                if (!OverrideFlags)
+                {
+                    canRotate = value;
+                }
+            }
         }
 
         public bool ForceBoost
         {
             get => forceBoost;
-            set => forceBoost = value;
+            set
+            {
+                if(!OverrideFlags)
+                {
+                    forceBoost = value;
+                }
+            }
         }
 
         public bool DisabledPlayerMovement

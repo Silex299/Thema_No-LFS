@@ -6,7 +6,6 @@ namespace Player_Scripts.Volumes
     public class StateChangePlayer : MonoBehaviour
     {
         
-        [SerializeField] private PlayerMovementState state;
         [SerializeField] private int stateIndex;
         
         [SerializeField] private bool enableDirection;
@@ -18,7 +17,7 @@ namespace Player_Scripts.Volumes
         {
             if (other.CompareTag("Player_Main"))
             {
-                PlayerMovementController.Instance.ChangeState(state, stateIndex);
+                PlayerMovementController.Instance.ChangeState(stateIndex);
                 
                 PlayerMovementController.Instance.player.enabledDirectionInput = enableDirection;
                 PlayerMovementController.Instance.player.oneWayRotation = oneWayRotation;
