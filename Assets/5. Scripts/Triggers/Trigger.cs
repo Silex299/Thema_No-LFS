@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
@@ -33,6 +34,13 @@ namespace Triggers
         private bool _playerIsInTrigger;
         private Collider _interactCollider;
         private Coroutine _reset;
+
+        public bool IsEnabled
+        {
+            get => isEnabled;
+            set => isEnabled = value;
+        }
+        
 
         protected virtual void OnTriggerStay(Collider other)
         {
@@ -81,22 +89,17 @@ namespace Triggers
 
             if (conditionComponent.Length > 0)
             {
-                bool result_ = true;
-
                 foreach (var component in conditionComponent)
                 {
-                    result_ = result_ && component.Condition(_interactCollider);
+                    var result = component.Condition(_interactCollider);
 
-                    if (!result_)
+                    if (!result)
                     {
                         return;
                     }
                 }
 
-                if (result_)
-                {
-                    PerformAction();
-                }
+                PerformAction();
             }
             else
             {
@@ -118,5 +121,6 @@ namespace Triggers
         {
             isEnabled = status;
         }
+        
     }
 }
