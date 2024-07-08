@@ -1,6 +1,7 @@
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Triggers;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,21 +30,29 @@ public class AdvancedAnimationTrigger : MonoBehaviour
 
 
     [BoxGroup("State")] public bool changeState;
-    [BoxGroup("State"), ShowIf(nameof(changeState))] public int stateIndex;
-    [BoxGroup("State"), ShowIf(nameof(changeState))] public float overrideTime;
 
+    [BoxGroup("State"), ShowIf(nameof(changeState))]
+    public int stateIndex;
+
+    [BoxGroup("State"), ShowIf(nameof(changeState))]
+    public float overrideTime;
+
+
+    [BoxGroup("Misc")] public TriggerCondition[] conditions;
 
     [BoxGroup("Event")] public UnityEvent onTriggerEnter;
     [BoxGroup("Event")] public UnityEvent onTriggerExit;
     [BoxGroup("Event")] public UnityEvent onActionStart;
     [BoxGroup("Event")] public UnityEvent onActionEnd;
 
-    private bool _playerInTrigger;
-    
+
+    private Coroutine _playerInTriggerCoroutine;
+
     #region Editor
 
     [Range(0, 1), OnValueChanged(nameof(SetNormalisedTime)), BoxGroup("Movement")]
     public float normalisedTime;
+
     public void SetNormalisedTime()
     {
         animator.Play(animationName, 1, normalisedTime);
@@ -63,8 +72,8 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player_Main"))
         {
-            _playerInTrigger = true;
             onTriggerEnter.Invoke();
+            _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
         }
     }
 
@@ -72,19 +81,36 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player_Main"))
         {
-            _playerInTrigger = false;
             onTriggerExit.Invoke();
+
+            if (_playerInTriggerCoroutine != null)
+            {
+                StopCoroutine(_playerInTriggerCoroutine);
+                _playerInTriggerCoroutine = null;
+            }
         }
     }
 
-    private void Update()
+
+    private IEnumerator PlayerInTrigger(Collider other)
     {
-        if (_playerInTrigger)
+        bool result = false;
+        foreach (var condition in conditions)
         {
-            if (Input.GetButtonDown(inputString))
+            result = condition.Condition(other);
+
+            if (!result)
             {
-                Trigger();
+                break;
             }
+
+            yield return null;
+        }
+
+
+        if (result)
+        {
+            Trigger();
         }
     }
 
@@ -97,7 +123,7 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     private IEnumerator TriggerAnimation()
     {
         onActionStart.Invoke();
-        
+
         Player player = PlayerMovementController.Instance.player;
 
         #region Player Movement
@@ -115,12 +141,10 @@ public class AdvancedAnimationTrigger : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < animationTime)
         {
-
             timeElapsed += Time.deltaTime;
 
             if (timeElapsed < transitionTime)
             {
-
                 var repos = transform.position +
                             transform.forward * (distanceCurve.Evaluate(0.2f) * animationDistance) +
                             transform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
@@ -130,36 +154,36 @@ public class AdvancedAnimationTrigger : MonoBehaviour
             else
             {
                 var repos = transform.position +
-                            transform.forward * (distanceCurve.Evaluate(Mathf.Clamp01(timeElapsed/animationTime)) * animationDistance) +
-                            transform.up * (heightCurve.Evaluate(Mathf.Clamp01(timeElapsed/animationTime)) * animationHeight);
+                            transform.forward * (distanceCurve.Evaluate(Mathf.Clamp01(timeElapsed / animationTime)) *
+                                                 animationDistance) +
+                            transform.up * (heightCurve.Evaluate(Mathf.Clamp01(timeElapsed / animationTime)) *
+                                            animationHeight);
                 player.transform.position = repos;
-
             }
 
 
             if (changeState)
             {
-                if (timeElapsed/animationTime > overrideTime)
+                if (timeElapsed / animationTime > overrideTime)
                 {
                     player.MovementController.ResetAnimator();
                     player.MovementController.ChangeState(stateIndex);
                 }
             }
-
-            _playerInTrigger = false;
             yield return null;
         }
 
 
         #region Player Movement
-        
+
         player.MovementController.ResetAnimator();
         player.DisabledPlayerMovement = false;
         player.CController.enabled = true;
 
         #endregion
-        
+
+        StopAllCoroutines();
+        _playerInTriggerCoroutine = null;
         onActionEnd.Invoke();
-        
     }
 }

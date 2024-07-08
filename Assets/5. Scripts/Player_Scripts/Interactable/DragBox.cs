@@ -17,15 +17,10 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private Vector3 bounds;
         [SerializeField, BoxGroup("Proximity")] private float proximity;
         [SerializeField, BoxGroup("Proximity")] private LayerMask proximityMask;
-
-        [SerializeField, BoxGroup("Visual")] protected VisualEffect[] effects;
-        [SerializeField, BoxGroup("Visual")] protected AudioSource soundSource;
+        
         
         
         private Vector3 _dragOffset;
-        protected bool _isMoving;
-        private Vector3 _lastPosition;
-        protected bool _movingForward;
 
         private void OnDrawGizmos()
         {
@@ -88,8 +83,8 @@ namespace Player_Scripts.Interactables
 
                 var desiredLocalPosition = transform.parent.InverseTransformPoint(desiredPosition);
 
-                /** INFO ::: Forward is Z and Right is X **/
-
+                // INFO ::: Forward is Z and Right is X 
+                
                 if (restrictX)
                 {
                     desiredLocalPosition.x = 0;
@@ -155,82 +150,7 @@ namespace Player_Scripts.Interactables
             }
 
         }
-
-
-        protected virtual void FixedUpdate()
-        {
-            if (!canInteract) return;
-
-            if (_isInteracting)
-            {
-                GetMoving();
-
-                if (_isMoving)
-                {
-
-                    if (!soundSource.isPlaying)
-                    {
-                        soundSource.Play();
-                        foreach (var effect in effects)
-                        {
-                            effect.Play();
-                        }
-                    }
-
-                }
-                else
-                {
-
-                    if (soundSource.isPlaying)
-                    {
-                        print("STOP");
-                        soundSource.Pause();
-
-                        foreach (var effect in effects)
-                        {
-                            effect.Stop();
-                        }
-                    }
-
-                }
-            }
-            else
-            {
-                if (soundSource.isPlaying)
-                {
-                    soundSource.Stop();
-                    foreach (var effect in effects)
-                    {
-                        effect.Stop();
-                    }
-                }
-
-
-            }
-
-        }
-
-
-
-        private float _lastCallTime;
-
-        protected virtual void GetMoving()
-        {
-
-            if (_lastCallTime + 0.2f < Time.time)
-            {
-                var _currentPosition = transform.position;
-                _isMoving = (Vector3.Distance(_lastPosition, _currentPosition) != 0);
-                
-                _movingForward = _lastPosition.x < _currentPosition.x;
-
-                _lastPosition = transform.position;
-                
-
-            }
-
-        }
-
+        
 
     }
 }

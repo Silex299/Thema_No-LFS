@@ -27,12 +27,6 @@ namespace Health
                 director.Stop();
                 cartAnimator.Play("explode cart");
                 print("Calling EXPLODE");
-
-                if (draggable)
-                {
-                    draggable.OverrideEffects(false);
-                }
-
             }
         }
 
