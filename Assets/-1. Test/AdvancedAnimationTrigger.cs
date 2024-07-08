@@ -2,6 +2,7 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Triggers;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,7 +11,6 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     //TODO: REMOVE
     public Animator animator;
 
-    [BoxGroup("Input")] public string inputString;
     [BoxGroup("Animation")] public string animationName;
     [BoxGroup("Animation")] public float animationTime = 1;
 
@@ -62,8 +62,9 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                         transform.up * heightCurve.Evaluate(normalisedTime) * animationHeight;
 
         animator.transform.position = repos;
+        animator.transform.rotation = transform.rotation;
     }
-
+    
     #endregion
 
 
@@ -90,6 +91,8 @@ public class AdvancedAnimationTrigger : MonoBehaviour
 
 
         Vector3 initialPlayerPos = player.transform.position;
+        Quaternion initialPlayerRot = player.transform.rotation;
+        
         float timeElapsed = 0;
         while (timeElapsed < animationTime)
         {
@@ -102,6 +105,8 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                             transform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
 
                 player.transform.position = Vector3.Lerp(initialPlayerPos, repos, timeElapsed / transitionTime);
+                player.transform.rotation =
+                    Quaternion.Lerp(initialPlayerRot, transform.rotation, timeElapsed / transitionTime);
             }
             else
             {
