@@ -34,12 +34,12 @@ namespace NPCs.FlyingBot
         {
             ChangeState(state);
             _currentState.StateEnter(this);
-            PlayerMovementController.Instance.player.Health.OnDeath += PlayerDeathCallback;
+            PlayerMovementController.Instance.player.Health.onDeath += PlayerDeathCallback;
         }
 
         private void OnDisable()
         {
-            PlayerMovementController.Instance.player.Health.OnDeath -= PlayerDeathCallback;
+            PlayerMovementController.Instance.player.Health.onDeath -= PlayerDeathCallback;
         }
 
         private void Update()

@@ -73,12 +73,12 @@ namespace Player_Scripts
             }
 
 
-            player.Health.OnTakingDamage += PlayHeartBeat;
+            player.Health.onTakingDamage += PlayHeartBeat;
         }
 
         private void OnDisable()
         {
-            player.Health.OnTakingDamage -= PlayHeartBeat;
+            player.Health.onTakingDamage -= PlayHeartBeat;
         }
 
 

@@ -38,14 +38,14 @@ namespace Player_Scripts.Interactions
         {
             if (PlayerMovementController.Instance)
             {
-                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+                PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             }
         }
         private void Start()
         {
             if (PlayerMovementController.Instance)
             {
-                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+                PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             }
         }
 
@@ -54,7 +54,7 @@ namespace Player_Scripts.Interactions
         #region This is unsubscribed to the player's death event
         private void OnDisable()
         {
-            PlayerMovementController.Instance.player.Health.OnDeath -= OnPlayerDeath;
+            PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
         }
         #endregion
 

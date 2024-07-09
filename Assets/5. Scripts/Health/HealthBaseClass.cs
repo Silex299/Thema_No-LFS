@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,7 @@ namespace Health
         [SerializeField, FoldoutGroup("Base Health")] protected UnityEvent deathAction;
 
         protected float _currentHealth;
+        public Action onDeath;
 
         private void Start()
         {
@@ -40,6 +42,7 @@ namespace Health
 
         protected virtual void Death(string message = "")
         {
+            onDeath.Invoke();
             deathAction?.Invoke();
         }
 

@@ -215,7 +215,7 @@ namespace NPCs
             
             guard.animator.CrossFade("Chase", 0.2f);
             target = PlayerMovementController.Instance.transform;
-            PlayerMovementController.Instance.player.Health.OnDeath += StopChasing;
+            PlayerMovementController.Instance.player.Health.onDeath += StopChasing;
         }
 
         
@@ -318,7 +318,7 @@ namespace NPCs
         private void StopChasing()
         {
             playerDead = true;
-            PlayerMovementController.Instance.player.Health.OnDeath -= StopChasing;
+            PlayerMovementController.Instance.player.Health.onDeath -= StopChasing;
         }
 
         protected IEnumerator StopChaseAnimationUpdate(Guard guard)

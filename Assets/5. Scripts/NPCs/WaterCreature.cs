@@ -75,7 +75,7 @@ namespace NPCs
             
             if (PlayerMovementController.Instance)
             {
-                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+                PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             }
         }
 
@@ -83,13 +83,13 @@ namespace NPCs
         {
             if (PlayerMovementController.Instance)
             {
-                PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+                PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             }
         }
 
         private void OnDisable()
         {
-            PlayerMovementController.Instance.player.Health.OnDeath -= OnPlayerDeath;
+            PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
         }
 
         public void OnCollisionEnter(Collision other)

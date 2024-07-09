@@ -26,12 +26,12 @@ public class GuardNpc : MonoBehaviour
     private void Start()
     {
         ChangeState(stateEnum);
-        PlayerMovementController.Instance.player.Health.OnDeath += OnPlayerDeath;
+        PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
     }
 
     private void OnDisable()
     {
-        PlayerMovementController.Instance.player.Health.OnDeath -= OnPlayerDeath;
+        PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
     }
 
 

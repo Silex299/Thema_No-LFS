@@ -1,56 +1,58 @@
-using Health;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class npcHealth : HealthBaseClass
+namespace Health
 {
-    
-    public CharacterController characterController;
-    public Animator animator;
-
-    public UnityEvent onKill;
-    
-    private bool _isDead;
-    
-    public override void Kill(string message)
+    public class NpcHealth : HealthBaseClass
     {
-        onKill?.Invoke();
-        if (message == "RAY")
+    
+        public CharacterController characterController;
+        public Animator animator;
+
+        public UnityEvent onKill;
+    
+        private bool _isDead;
+    
+        public override void Kill(string message)
         {
-            AnimationDeath("Float");
+            onKill?.Invoke();
+            if (message == "RAY")
+            {
+                AnimationDeath("Float");
+            }
+            else
+            {
+                TakeDamage(101);
+            }
         }
-        else
-        {
-            TakeDamage(101);
-        }
-    }
 
 
-    protected override void Death(string message = "")
-    {
-        if(_isDead) return;
+        protected override void Death(string message = "")
+        {
+            if(_isDead) return;
         
-        base.Death(message);
-        _isDead = true;
-        RagdollDeath();
-    }
+            base.Death(message);
+            _isDead = true;
+            RagdollDeath();
+        }
 
-    private void RagdollDeath()
-    {
-        print("Ragdoll");
-        animator.enabled = false;
-        characterController.enabled = false;
-    }
+        private void RagdollDeath()
+        {
+            print("Ragdoll");
+            animator.enabled = false;
+            characterController.enabled = false;
+        }
 
-    private void AnimationDeath(string animationName)
-    {
-        animator.CrossFade(animationName, 0.2f, 1);
-    }
+        private void AnimationDeath(string animationName)
+        {
+            animator.CrossFade(animationName, 0.2f, 1);
+        }
 
-    private void Reset()
-    {
-        animator.enabled = true;
-        characterController.enabled = true;
-        _isDead = false;
+        private void Reset()
+        {
+            animator.enabled = true;
+            characterController.enabled = true;
+            _isDead = false;
+        }
     }
 }

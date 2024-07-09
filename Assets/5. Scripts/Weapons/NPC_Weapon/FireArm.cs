@@ -119,7 +119,7 @@ namespace Weapons.NPC_Weapon
 
         public void OnDisable()
         {
-            PlayerMovementController.Instance.player.Health.OnDeath -= ResetWeapon;
+            PlayerMovementController.Instance.player.Health.onDeath -= ResetWeapon;
         }
 
         public void AutomaticFire(bool autoFire)
@@ -129,11 +129,11 @@ namespace Weapons.NPC_Weapon
             
             if (autoFire == true)
             {
-                PlayerMovementController.Instance.player.Health.OnDeath += ResetWeapon;
+                PlayerMovementController.Instance.player.Health.onDeath += ResetWeapon;
             }
             else
             {
-                PlayerMovementController.Instance.player.Health.OnDeath -= ResetWeapon;
+                PlayerMovementController.Instance.player.Health.onDeath -= ResetWeapon;
             }
         }
 

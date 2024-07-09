@@ -21,9 +21,9 @@ namespace Health
 
         private static readonly int Dissolve1 = Shader.PropertyToID("_Dissolve");
 
-        public Action OnDeath;
-        public Action OnRevive;
-        public Action<float> OnTakingDamage;
+        //public Action onDeath;
+        public Action onRevive;
+        public Action<float> onTakingDamage;
         private float _dissolveTimeElapsed = 0;
         private static readonly int VerticalAcceleration = Animator.StringToHash("VerticalAcceleration");
 
@@ -49,7 +49,7 @@ namespace Health
 
             _currentHealth -= damage;
 
-            OnTakingDamage?.Invoke(_currentHealth / maximumHealth);
+            onTakingDamage?.Invoke(_currentHealth / maximumHealth);
 
             if (_currentHealth <= 0)
             {
@@ -64,7 +64,7 @@ namespace Health
 
             _currentHealth -= damage;
 
-            OnTakingDamage?.Invoke(_currentHealth / maximumHealth);
+            onTakingDamage?.Invoke(_currentHealth / maximumHealth);
 
             if (_currentHealth <= 0)
             {
@@ -76,7 +76,7 @@ namespace Health
         public override void ResetHealth()
         {
             base.ResetHealth();
-            OnTakingDamage?.Invoke(1);
+            onTakingDamage?.Invoke(1);
         }
 
 
@@ -85,7 +85,7 @@ namespace Health
             
             base.Death(message);
             IsDead = true;
-            OnDeath.Invoke();
+            onDeath.Invoke();
         }
 
 
@@ -169,7 +169,7 @@ namespace Health
             player.AnimationController.enabled = true;
 
             player.AnimationController.SetFloat(VerticalAcceleration, 0);
-            OnRevive.Invoke();
+            onRevive.Invoke();
             Start();
         }
 
