@@ -32,7 +32,7 @@ namespace Misc
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag("Player_Main"))
+            if (other.CompareTag("Player_Main") && enabled)
             {
                 _triggerCoroutine ??= StartCoroutine(CheckForPlayer());
             }
@@ -40,6 +40,8 @@ namespace Misc
 
         private IEnumerator CheckForPlayer()
         {
+            if(!enabled) yield break;
+            
             while (true)
             {
                 print("Calling");
@@ -88,5 +90,18 @@ namespace Misc
             
         }
 
+        
+        public void EnableSightDetection()
+        {
+            enabled = true;
+        }
+
+        public void DisableSightDetection()
+        {
+            enabled = false;
+            StopAllCoroutines();
+        }
+        
+        
     }
 }

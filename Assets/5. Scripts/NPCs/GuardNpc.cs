@@ -1,22 +1,30 @@
-﻿using Player_Scripts;
+﻿using Health;
+using Misc;
+using Player_Scripts;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Weapons.NPC_Weapon;
 
 // ReSharper disable once CheckNamespace
 public class GuardNpc : MonoBehaviour
 {
+    [BoxGroup("References")] public Animator animator;
+    [BoxGroup("References")] public NpcPathFinder pathFinder;
+    [BoxGroup("References")] public HealthBaseClass health;
+    [BoxGroup("References")] public SightDetection sight;
+    [BoxGroup("References")] public WeaponBase weapon;
 
-    public Animator animator;
+    [BoxGroup("Properties")] public float rotationSpeed;
 
-    public float rotationSpeed;
-    public GuardNpcStateType stateEnum;
-    [SerializeField] private NpcPathFinder pathFinder;
-   
-    
-    public GuardNpcSurveillanceState surveillanceState = new GuardNpcSurveillanceState();
-    public GuardNpcChaseState chaseState = new GuardNpcChaseState();
+    [FoldoutGroup("States")] public GuardNpcStateType stateEnum;
+    [FoldoutGroup("States")] public GuardNpcSurveillanceState surveillanceState = new GuardNpcSurveillanceState();
+    [FoldoutGroup("States")] public GuardNpcChaseState chaseState = new GuardNpcChaseState();
+
+    [FoldoutGroup("States")]
     public GuardNpcAfterPlayerDeathState afterPlayerDeathState = new GuardNpcAfterPlayerDeathState();
 
-    public GuardNpcState currentState;
+    private GuardNpcState _currentState;
+
     public NpcPathFinder PathFinder
     {
         get => pathFinder;
@@ -27,76 +35,101 @@ public class GuardNpc : MonoBehaviour
     {
         ChangeState(stateEnum);
         PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
+
+        if (sight)
+        {
+            health.onDeath += sight.DisableSightDetection;
+        }
+
+        if (weapon)
+        {
+            health.onDeath += weapon.ResetWeapon;
+        }
     }
 
     private void OnDisable()
     {
         PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
+
+        if (sight)
+        {
+            health.onDeath -= sight.DisableSightDetection;
+        }
+
+        if (weapon)
+        {
+            health.onDeath -= weapon.ResetWeapon;
+        }
     }
 
 
     private void Update()
     {
-        currentState.Update(this);
+        _currentState.Update(this);
     }
- 
 
     public void ChangeState(int index)
     {
-        ChangeState((GuardNpcStateType) index);
+        ChangeState((GuardNpcStateType)index);
     }
+
     public void ChangeState(GuardNpcStateType newState)
     {
-        if (currentState != null)
+        if (_currentState != null)
         {
-            currentState.Exit(this);
+            _currentState.Exit(this);
         }
 
         print("Changing state to " + newState);
-        
+
         stateEnum = newState;
 
         switch (stateEnum)
         {
             case GuardNpcStateType.Chase:
-                currentState = chaseState;
+                _currentState = chaseState;
                 break;
             case GuardNpcStateType.Surveillance:
-                currentState = surveillanceState;
+                _currentState = surveillanceState;
                 break;
             case GuardNpcStateType.AfterDeath:
-                currentState = afterPlayerDeathState;
+                _currentState = afterPlayerDeathState;
                 break;
         }
-        
+
 
         // ReSharper disable once PossibleNullReferenceException
-        currentState.Enter(this);
-        
-        
-        print("changed state " + currentState);
+        _currentState.Enter(this);
+
+
+        print("changed state " + _currentState);
     }
-    
+
     private void OnPlayerDeath()
     {
         ChangeState(GuardNpcStateType.AfterDeath);
     }
 
-
     public void StopChasing(bool status)
     {
-        if(stateEnum == GuardNpcStateType.Chase)
+        if (stateEnum == GuardNpcStateType.Chase)
         {
             chaseState.StopChasing(status, this);
         }
     }
-    
+
+    public void ResetNpc()
+    {
+        health.ResetHealth();
+        sight.EnableSightDetection();
+        weapon.ResetWeapon();
+    }
+
     [System.Serializable]
-    public enum  GuardNpcStateType
+    public enum GuardNpcStateType
     {
         Surveillance,
         Chase,
         AfterDeath
     }
-    
 }

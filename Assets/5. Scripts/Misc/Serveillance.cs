@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Health;
 using Player_Scripts;
@@ -10,7 +9,6 @@ namespace Misc
 {
     public class Serveillance : MonoBehaviour
     {
-        [SerializeField] private bool continuousCheck = false;
         [SerializeField] private bool isMachineOn = true;
         [SerializeField] private Mover mover;
         [SerializeField] private LayerMask rayCastMask;
@@ -19,58 +17,41 @@ namespace Misc
         [SerializeField] private SurveillanceVisuals visuals;
 
         private int _objectCount;
+
         private Dictionary<int, Coroutine> _objectsTracking = new Dictionary<int, Coroutine>();
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if(continuousCheck) return;
-            if (!isMachineOn) return;
-            
-            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
-            
-            if (other.TryGetComponent(out HealthBaseClass health))
-            {
-                print("Has Health");
 
-                if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
-                
-                //FIX THISjk
-                
-                Coroutine newCoroutine = StartCoroutine(CheckForObject(other, health));
-                _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
-                
-            }
-            
-        }
-        
         private void OnTriggerStay(Collider other)
         {
-            if(!continuousCheck) return;
             if (!isMachineOn) return;
-            
-            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
-            
-            if (other.TryGetComponent(out HealthBaseClass health))
+
+            if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
-                if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine)) return;
-                
-                //TODO: Fix it
-                Coroutine newCoroutine = StartCoroutine(CheckForObject(other, health));
-                _objectsTracking.Add(other.GetInstanceID(), newCoroutine);
-                
+                if (!_objectsTracking.ContainsKey(other.GetInstanceID()))
+                {
+                    var health = other.GetComponent<HealthBaseClass>();
+                    if (health)
+                    {
+                        _objectsTracking.Add(other.GetInstanceID(), StartCoroutine(CheckForObject(other, health)));
+                    }
+                }
+                else
+                {
+                    StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
+                }
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        private IEnumerator ResetTriggerCoroutine(int instanceId)
         {
-            if (!isMachineOn) return;
-            
-            if(!(other.CompareTag("Player_Main") || other.CompareTag("NPC"))) return;
-            
-            if (_objectsTracking.TryGetValue(other.GetInstanceID(), out var coroutine))
+            yield return new WaitForSeconds(0.2f);
+            if (_objectsTracking.TryGetValue(instanceId, out Coroutine coroutine))
             {
-                StopCoroutine(coroutine);
-                _objectsTracking.Remove(other.GetInstanceID());
+                if (coroutine != null)
+                {
+                    StopCoroutine(_objectsTracking[instanceId]);
+                }
+                _objectsTracking.Remove(instanceId);
             }
         }
 
@@ -88,25 +69,15 @@ namespace Misc
 
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC"))
                     {
-                        
                         ObjectFound(health);
-                        try
-                        {
-                            StopCoroutine(_objectsTracking[other.GetInstanceID()]);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log(e);
-                        }
-                        StopCoroutine(_objectsTracking[other.GetInstanceID()]);
-                        _objectsTracking.Remove(other.GetInstanceID());
+                        yield break; // Breaks the coroutine if the object is found
                     }
                 }
 
                 yield return null;
             }
         }
-        
+
 
         /// <summary>
         /// Handles the actions to be taken when an object is found. If the object is the player, it triggers the player found sequence.
@@ -132,9 +103,15 @@ namespace Misc
             if (mover) mover.StopMover(turnOff);
 
             if (turnOff)
+            {
+                StopAllCoroutines();
+                _objectsTracking = null;
                 visuals.PowerDown(this);
+            }
             else
+            {
                 visuals.PowerDefault(this);
+            }
         }
     }
 
@@ -161,7 +138,7 @@ namespace Misc
         private IEnumerator PowerChange(float lightIntensity, float beamIntensity)
         {
             float currentLightIntensity = targetLight.intensity;
-            float currentBeamIntensity = volumetricLightBeam? volumetricLightBeam.intensityInside : 0;
+            float currentBeamIntensity = volumetricLightBeam ? volumetricLightBeam.intensityInside : 0;
 
             float timeElapsed = 0;
             while (timeElapsed < transitionTime)
@@ -174,6 +151,7 @@ namespace Misc
                 {
                     volumetricLightBeam.intensityGlobal = Mathf.Lerp(currentBeamIntensity, beamIntensity, fraction);
                 }
+
                 yield return null;
             }
         }

@@ -11,6 +11,11 @@ namespace Weapons.NPC_Weapon
         {
             
         }
+        
+        public virtual void ResetWeapon()
+        {
+            
+        }
 
     }
 }

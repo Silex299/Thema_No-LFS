@@ -42,7 +42,7 @@ namespace Health
 
         protected virtual void Death(string message = "")
         {
-            onDeath.Invoke();
+            onDeath?.Invoke();
             deathAction?.Invoke();
         }
 

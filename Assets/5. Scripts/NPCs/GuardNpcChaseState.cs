@@ -9,11 +9,6 @@ public class GuardNpcChaseState : GuardNpcState
     public float stopDistance;
     public float attackDistance;
 
-    [Space(10)] public bool randomAttack;
-    public int attackCount;
-
-    public FireArm weapon;
-
     private static readonly int Chase = Animator.StringToHash("Chase");
     private static readonly int Speed = Animator.StringToHash("Speed");
     private static readonly int Attack1 = Animator.StringToHash("Attack");
@@ -45,7 +40,7 @@ public class GuardNpcChaseState : GuardNpcState
         if (distance < attackDistance)
         {
             npc.animator.SetBool(Attack1, true);
-            Attack();
+            Attack(npc);
         }
         else
         {
@@ -63,7 +58,7 @@ public class GuardNpcChaseState : GuardNpcState
 
     private float _startAttackTime;
 
-    protected void Attack()
+    protected void Attack(GuardNpc npc)
     {
         if (!_isAttacking)
         {
@@ -73,9 +68,9 @@ public class GuardNpcChaseState : GuardNpcState
 
         if (Time.time < _startAttackTime + 0.5f) return;
 
-        if (weapon)
+        if (npc.weapon)
         {
-            weapon.Fire();
+            npc.weapon.Fire();
         }
     }
 

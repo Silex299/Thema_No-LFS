@@ -48,7 +48,7 @@ namespace Health
             animator.CrossFade(animationName, 0.2f, 1);
         }
 
-        private void Reset()
+        public void Reset()
         {
             animator.enabled = true;
             characterController.enabled = true;

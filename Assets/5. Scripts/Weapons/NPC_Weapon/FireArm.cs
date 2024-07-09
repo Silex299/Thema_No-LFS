@@ -137,10 +137,11 @@ namespace Weapons.NPC_Weapon
             }
         }
 
-        private void ResetWeapon()
+        public override void ResetWeapon()
         {
             AutomaticFire(false);
         }
+        
 
         private void Update()
         {
