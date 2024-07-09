@@ -121,8 +121,8 @@ public class GuardNpc : MonoBehaviour
     public void ResetNpc()
     {
         health.ResetHealth();
-        sight.EnableSightDetection();
-        weapon.ResetWeapon();
+        if (sight) sight.EnableSightDetection();
+        if (weapon) weapon.ResetWeapon();
     }
 
     [System.Serializable]

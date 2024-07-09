@@ -9,7 +9,6 @@ namespace Misc
 {
     public class Serveillance : MonoBehaviour
     {
-        [SerializeField] private bool isMachineOn = true;
         [SerializeField] private Mover mover;
         [SerializeField] private LayerMask rayCastMask;
 
@@ -23,7 +22,7 @@ namespace Misc
 
         private void OnTriggerStay(Collider other)
         {
-            if (!isMachineOn) return;
+            if (!enabled) return;
 
             if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
@@ -57,7 +56,7 @@ namespace Misc
 
         private IEnumerator CheckForObject(Collider other, HealthBaseClass health)
         {
-            while (isMachineOn)
+            while (enabled)
             {
                 var otherTransform = other.transform;
                 Vector3 direction = (otherTransform.position + Vector3.up * 0.5f) - transform.position;
@@ -99,7 +98,7 @@ namespace Misc
         /// <param name="turnOff">If true, the machine will be turned off. If false, the machine will be turned on.</param>
         public void TurnOffMachine(bool turnOff)
         {
-            isMachineOn = !turnOff;
+            enabled = !turnOff;
             if (mover) mover.StopMover(turnOff);
 
             if (turnOff)

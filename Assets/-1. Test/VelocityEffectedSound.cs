@@ -13,6 +13,12 @@ public class VelocityEffectedSound : MonoBehaviour
     private Vector3 _lastPos;
     private float _lastUpdateTime;
 
+    //Some odd sounds at start
+    private void Start()
+    {
+        _lastPos = transform.position;
+        _lastUpdateTime = Time.time;
+    }
 
     private void Update()
     {
