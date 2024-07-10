@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Net.NetworkInformation;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,7 +12,6 @@ namespace Triggers
     {
 
         [SerializeField, BoxGroup("Trigger Params")] private bool triggerPulled;
-        [SerializeField, BoxGroup("Trigger Params")] private bool oneTime;
         [SerializeField, BoxGroup("Trigger Params")] private Animator leverAnimator;
 
         [SerializeField, BoxGroup("Trigger Params")]
@@ -33,6 +33,11 @@ namespace Triggers
 
         [Space(10)] public bool canPull = true;
 
+        public bool CanPull
+        {
+            get => canPull;
+            set=> canPull = value;
+        }
         private bool _playerIsInTrigger;
         private bool _triggerEngaged;
         private float _lastTriggerTime;
@@ -42,11 +47,14 @@ namespace Triggers
         /// </summary>
 
         private bool _forwardDirection;
+
+        private bool _defaultPull;
         private Coroutine _trigger;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (oneTime && triggerPulled) return;
+            if(!CanPull) return;
+            
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
@@ -66,6 +74,7 @@ namespace Triggers
         {
             //Set Initial State
             leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+            _defaultPull = triggerPulled;
         }
 
         private void Update()
@@ -87,7 +96,7 @@ namespace Triggers
             
             if (Input.GetButton("e"))
             {
-                if (oneTime && triggerPulled) return;
+                if (!CanPull) return;
 
                 var player = PlayerMovementController.Instance;
 
@@ -142,7 +151,7 @@ namespace Triggers
 
         private void LateUpdate()
         {
-            if (oneTime && triggerPulled) return;
+            if (!canPull) return;
 
             if (_triggerEngaged && PlayerMovementController.Instance.player.CController.enabled)
             {
@@ -238,16 +247,18 @@ namespace Triggers
             return angle < 90;
         }
 
-        public void DeActiveTrigger(bool status)
-        {
-            canPull = !status;
-        }
         public void ChangeState(bool pulled)
         {
             if (triggerPulled == pulled) return;
-
             triggerPulled = pulled;
             leverAnimator.Play(pulled ? "Trigger" : "Trigger Inverse");
+        }
+        
+        public void ResetTrigger()
+        {
+            CanPull = true;
+            triggerPulled = _defaultPull;
+            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
         }
 
     }

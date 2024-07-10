@@ -48,9 +48,11 @@ namespace Health
             animator.CrossFade(animationName, 0.2f, 1);
         }
 
-        public void Reset()
+        public override void ResetHealth()
         {
+            base.ResetHealth();
             animator.enabled = true;
+            animator.Play("Default", 1);
             characterController.enabled = true;
             _isDead = false;
         }
