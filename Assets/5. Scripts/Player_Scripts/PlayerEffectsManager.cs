@@ -10,56 +10,72 @@ namespace Player_Scripts
 {
     public class PlayerEffectsManager : SerializedMonoBehaviour
     {
+        [SerializeField, TabGroup("References", "Player")]
+        private Player player;
+
+        [SerializeField, TabGroup("References", "Audio Source")]
+        private AudioSource interactionSource;
+
+        [SerializeField, TabGroup("References", "Audio Source", Order = 0)]
+        private AudioSource playerSoundSource;
+
+        [SerializeField, TabGroup("References", "Audio Source")]
+        private AudioSource otherSoundSource;
+
+        [SerializeField, TabGroup("Steps", "Step Sockets"), Space(5f)]
+        private Transform leftFootSocket;
+
+        [SerializeField, TabGroup("Steps", "Step Sockets")]
+        private Transform rightFootSocket;
+
+        [SerializeField, TabGroup("Steps", "Step Sockets")]
+        private LayerMask raycastMask;
+
+        [SerializeField, TabGroup("Steps", "Step Effects"), Space(5f)]
+        // ReSharper disable once InconsistentNaming
+        private Dictionary<string, GameObject> stepEffects;
+
+        [SerializeField, TabGroup("Steps", "Step Audio Clips"), Space(5f)]
+        // ReSharper disable once InconsistentNaming
+        private Dictionary<string, List<AudioClip>> stepSounds;
 
 
-        [SerializeField, TabGroup("References", "Player")] private Player player;
-
-        [SerializeField, TabGroup("References", "Audio Source")] private AudioSource interactionSource;
-        [SerializeField, TabGroup("References", "Audio Source", Order = 0)] private AudioSource playerSoundSource;
-        [SerializeField, TabGroup("References", "Audio Source")] private AudioSource otherSoundSource;
-
-        [SerializeField, TabGroup("Effects", "Step Sockets"), Space(5f)] private Transform leftFootSocket;
-        [SerializeField, TabGroup("Effects", "Step Sockets")] private Transform rightFootSocket;
-        [SerializeField, TabGroup("Effects", "Step Sockets")] private LayerMask raycastMask;
-        [SerializeField, TabGroup("Effects", "Step Effects"), Space(5f)] private Dictionary<string, GameObject> stepEffects;
-        [SerializeField, TabGroup("Effects", "Step Audio Clips"), Space(5f)] private Dictionary<string, List<AudioClip>> stepSounds;
+        [SerializeField, TabGroup("Other Sounds", "Interaction Sounds"), Space(5f),
+         InfoBox(
+             "This dictionary contains, Ground Layer as key= { Sound Name as key = {List of sounds(that will be chose at random)} }")]
+        // ReSharper disable once InconsistentNaming
+        private Dictionary<string, Dictionary<string, List<AudioClip>>> interactionSounds;
 
 
-        [SerializeField, TabGroup("Effects", "General Sounds"), Space(5f), InfoBox("This dictionary contains, Ground Layer as key= { Sound Name as key = {List of sounds(that will be chosed at random)} }")]
-        private Dictionary<string, Dictionary<string, List<AudioClip>>> generalSounds;
+        [SerializeField, TabGroup("Other Sounds", "Player Sounds")]
+        // ReSharper disable once InconsistentNaming
+        private Dictionary<string, List<AudioClip>> playerSounds;
 
-        [SerializeField, TabGroup("Effects", "Other Sounds")]
+        [SerializeField, TabGroup("Other Sounds", "Other Sounds")]
+        // ReSharper disable once InconsistentNaming
         private Dictionary<string, AudioClip> otherSounds;
 
 
-
-
-
         private string _currentEffectVolume = default;
+
         public string CurrentEffectVolume
         {
-            set
-            {
-                _currentEffectVolume = value;
-            }
+            set => _currentEffectVolume = value;
         }
+
         private float _volumeMultiplier = 1;
+
         public float VolumeMultiplier
         {
-            set
-            {
-                _volumeMultiplier = value;
-            }
+            set => _volumeMultiplier = value;
         }
 
 
         private static PlayerEffectsManager _instance;
 
-        public static PlayerEffectsManager Instance
-        {
-            get => _instance;
-        }
+        public static PlayerEffectsManager Instance => _instance;
 
+        private Coroutine _playerMovementCoroutine;
 
         private void Start()
         {
@@ -81,13 +97,14 @@ namespace Player_Scripts
             player.Health.onTakingDamage -= PlayHeartBeat;
         }
 
-
-
+        /// <summary>
+        /// Plays on taking damage
+        /// </summary>
+        /// <param name="fraction">higher the damage more the volume</param>
         private void PlayHeartBeat(float fraction)
         {
             if (otherSoundSource)
             {
-
                 if (fraction > 0.5f)
                 {
                     otherSoundSource.Stop();
@@ -96,7 +113,8 @@ namespace Player_Scripts
                 {
                     if (!otherSoundSource.isPlaying)
                     {
-                        otherSoundSource.Play(); AudioClip clip;
+                        otherSoundSource.Play();
+                        AudioClip clip;
 
                         if (otherSounds.TryGetValue("heartbeat", out clip))
                         {
@@ -113,12 +131,18 @@ namespace Player_Scripts
                     otherSoundSource.volume = 1 - fraction;
 
                     otherSoundSource.pitch = Mathf.Clamp(fraction + 0.5f, 0, 1.2f);
-
                 }
-
             }
         }
-        
+
+        #region Interactions
+
+        #region For Steps
+
+        /// <summary>
+        /// Plays step sound and spawns Step effect if there's any
+        /// </summary>
+        /// <param name="footInfo"></param>
         public void PlaySteps(Object footInfo)
         {
             var step = footInfo as Step;
@@ -126,37 +150,19 @@ namespace Player_Scripts
             if (!player.IsGrounded || player.DisabledPlayerMovement) return;
 
             //Call for Spawn Steps
+            // ReSharper disable once PossibleNullReferenceException
             StartCoroutine(SpawnSteps(step.whichStep));
-
             float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
             float volume = Mathf.Abs(rawInput) * step.volume * _volumeMultiplier;
 
-            try
+            if (stepSounds.TryGetValue(_currentEffectVolume, out var clips))
             {
-                if (stepSounds.TryGetValue(_currentEffectVolume, out var clips))
-                {
-                    interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
-                }
-            }
-            catch
-            {
-                //print("Step sound not found for : " + _currentEffectVolume);
+                interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
             }
         }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(leftFootSocket.position, 0.1f);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(rightFootSocket.position, 0.1f);
-        }
-
 
         private IEnumerator SpawnSteps(WhichStep step)
         {
-
             yield return new WaitForSeconds(0.3f);
             //Left Foot
 
@@ -164,13 +170,12 @@ namespace Player_Scripts
             {
                 if (stepEffects.TryGetValue(_currentEffectVolume, out GameObject pref))
                 {
-
                     switch (step)
                     {
                         case WhichStep.LEFT:
 
                             //Not sure its acting weird, so added 100f to raycast
-                            
+
                             Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
                             Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
                             if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
@@ -180,130 +185,114 @@ namespace Player_Scripts
 
                             break;
                         case WhichStep.RIGHT:
-                            
+
                             Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
                             Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
                             if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
                             {
                                 Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
                             }
+
                             break;
                         default:
                             print("fuck");
                             break;
                     }
-
                 }
             }
             catch (System.Exception e)
             {
                 Debug.LogWarning(e);
             }
-
-
         }
 
-        //For playing Steps (volume dependent only for sound volume)
-        public void PlayStepsIndependent(string soundKey)
-        {
-
-            if (player.DisabledPlayerMovement) return;
-
-            try
-            {
-                if (stepSounds.TryGetValue(soundKey, out var clips))
-                {
-                    interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], _volumeMultiplier);
-                }
-            }
-            catch
-            {
-                Debug.LogWarning("Sound Error with loading Independent step sounds");
-            }
-        }
-
+        #endregion
 
         /// <summary>
         /// For playing Interaction Sound 
-        /// Current Volume Depedent
+        /// Current Volume Dependent
         /// e.g. Land Jump
         /// </summary>
-        /// <param name="soundKey"> action name </param>
-        public void PlayGeneralSoundRandom(string soundKey)
+        /// <param name="soundKey"> interaction name, e.g. Land, Jump </param>
+        public void PlayInteractionSound(string soundKey)
         {
-            if (player.DisabledPlayerMovement) return;
-            try
+            if (interactionSounds.TryGetValue(_currentEffectVolume, out var sounds))
             {
-                if (generalSounds.TryGetValue(_currentEffectVolume, out var sounds))
+                if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                 {
-                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
-                    {
-                        var randomIndex = Random.Range(0, clips.Count);
-                        interactionSource.PlayOneShot(clips[randomIndex], 0.7f);
-                    }
+                    var randomIndex = Random.Range(0, clips.Count);
+                    interactionSource.PlayOneShot(clips[randomIndex], 0.7f);
                 }
-
             }
-            catch
-            {
-                Debug.LogWarning("Some Error occured");
-            }
-
         }
 
+        #endregion
+
+        #region Player Sounds
+
+        
         /// <summary>
-        /// For playing Player Default Sounds
-        /// Not current volume dependent
+        /// For playing Player Sounds
         /// e.g, moan, shout, hurt
         /// </summary>
         /// <param name="soundKey">action name</param>
-        public void PlayGeneralSoundDefaultRandom(string soundKey)
+        public void PlayPlayerSound(string soundKey)
         {
-
-            try
+            if (playerSounds.TryGetValue(soundKey, out List<AudioClip> clips))
             {
-                if (generalSounds.TryGetValue("Default", out var sounds))
-                {
-                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
-                    {
-                        var randomIndex = Random.Range(0, clips.Count);
-                        playerSoundSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
-                    }
-                }
-
+                var randomIndex = Random.Range(0, clips.Count);
+                playerSoundSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
             }
-            catch
+        }
+        
+        public void PlayPlayerMovementSound(string soundKey)
+        {
+            if (playerSounds.TryGetValue(soundKey, out List<AudioClip> clips))
             {
+                var randomIndex = Random.Range(0, clips.Count);
+                playerSoundSource.PlayOneShot(clips[randomIndex]);
+                float clipLength = clips[randomIndex].length;
+                _playerMovementCoroutine ??= StartCoroutine(SetVelocityEffectedVolume(clipLength));
             }
         }
 
-        public void PlayGeneralSoundDefaultRandom(string soundKey, float volume)
+        private IEnumerator SetVelocityEffectedVolume(float time)
         {
-            if (player.DisabledPlayerMovement) return;
+            float timeElapsed = 0;
 
-            try
+            while (timeElapsed < time)
             {
-                if (generalSounds.TryGetValue("Default", out var sounds))
-                {
-                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
-                    {
-                        var randomIndex = Random.Range(0, clips.Count);
-                        playerSoundSource.PlayOneShot(clips[randomIndex], volume);
-                    }
-                }
+                timeElapsed += Time.deltaTime;
+                float newVolume = Mathf.Clamp(PlayerVelocityCalculator.Instance.velocity.magnitude / 1, 0,
+                    _volumeMultiplier);
+                playerSoundSource.volume = newVolume;
+                yield return null;
+            }
 
-            }
-            catch
-            {
-                Debug.LogWarning("Some Error occured");
-            }
+            _playerMovementCoroutine = null;
         }
 
+
+        #endregion
+
+        
+        public void PlayOtherSounds(string soundKey, float volume = 0.5f)
+        {
+            if (otherSounds.TryGetValue(soundKey, out AudioClip clip))
+            {
+                otherSoundSource.PlayOneShot(clip, volume);
+            }
+        }
+        
+        #region Obosolette
+
+        //Remove this
         public void SetInteractionSound(float value)
         {
             interactionSource.volume = value;
         }
 
+        //REMOVE THIS
         public void PlayLoopInteraction(string soundKey, bool play)
         {
             if (!play)
@@ -315,7 +304,7 @@ namespace Player_Scripts
             {
                 try
                 {
-                    if (generalSounds.TryGetValue("Default", out var sounds))
+                    if (interactionSounds.TryGetValue("Default", out var sounds))
                     {
                         if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                         {
@@ -329,23 +318,22 @@ namespace Player_Scripts
                             }
                         }
                     }
-
                 }
                 catch
                 {
                     Debug.LogWarning("Some Error occured");
                 }
             }
-
-
         }
 
 
+        //Remove this
         public GameObject SpawnEffect(string key, Vector3 overridePosition)
         {
-            return Instantiate(stepEffects[key], transform.position + overridePosition, Quaternion.identity, this.transform);
+            return Instantiate(stepEffects[key], transform.position + overridePosition, Quaternion.identity,
+                this.transform);
         }
 
-
+        #endregion
     }
 }

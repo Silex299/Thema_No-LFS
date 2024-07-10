@@ -98,6 +98,7 @@ public class AdvancedAnimationTrigger : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
 
+            
             if (timeElapsed < transitionTime)
             {
                 var repos = transform.position +
@@ -105,8 +106,6 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                             transform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
 
                 player.transform.position = Vector3.Lerp(initialPlayerPos, repos, timeElapsed / transitionTime);
-                player.transform.rotation =
-                    Quaternion.Lerp(initialPlayerRot, transform.rotation, timeElapsed / transitionTime);
             }
             else
             {
@@ -117,20 +116,19 @@ public class AdvancedAnimationTrigger : MonoBehaviour
                                             animationHeight);
                 player.transform.position = repos;
             }
-
-
-            if (changeState)
-            {
-                if (timeElapsed / animationTime > overrideTime)
-                {
-                    player.MovementController.ResetAnimator();
-                    player.MovementController.ChangeState(stateIndex);
-                }
-            }
-
+            player.transform.rotation = Quaternion.Lerp(initialPlayerRot, transform.rotation, Mathf.Clamp01(timeElapsed / transitionTime));
+            
             yield return null;
         }
-
+        
+        if (changeState)
+        {
+            if (timeElapsed / animationTime > overrideTime)
+            {
+                player.MovementController.ResetAnimator();
+                player.MovementController.ChangeState(stateIndex);
+            }
+        }
 
         #region Player Movement
 

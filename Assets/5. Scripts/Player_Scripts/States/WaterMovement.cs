@@ -236,7 +236,8 @@ namespace Player_Scripts.States
             if (status)
             {
                 player.Health.ResetHealth();
-                player.EffectsManager.PlayGeneralSoundDefaultRandom("DiveOut", 0.1f);
+                //TODO: Play interaction sound instead
+                player.EffectsManager.PlayPlayerSound("DiveOut");
             }
 
             //play swim sound

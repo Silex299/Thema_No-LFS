@@ -55,16 +55,9 @@ namespace Weapons.NPC_Weapon
                 StartCoroutine(MoveTracer(obj, direction));
             }
 
-            if (muzzle)
-            {
-                muzzle.Play();
-            }
-
-
-            if (source)
-            {
-                source.PlayOneShot(firingSound);
-            }
+            
+            muzzle.Play();
+            source.PlayOneShot(firingSound);
 
             _lastFireTime = Time.time;
         }
