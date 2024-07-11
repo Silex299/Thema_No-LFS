@@ -7,7 +7,6 @@ namespace Player_Scripts.States
     [System.Serializable]
     public class WaterMovement : PlayerBaseStates
     {
-
         [SerializeField] private float swimSpeed = 10;
         [SerializeField] private float lostBreathSpeed = 10;
         public float restrictedYPosition = 7.1f;
@@ -27,7 +26,7 @@ namespace Player_Scripts.States
 
         private static readonly int Horizontal = Animator.StringToHash("Speed");
         private static readonly int Vertical = Animator.StringToHash("Direction");
-        private static readonly int onSurface = Animator.StringToHash("onSurface");
+        private static readonly int OnSurface = Animator.StringToHash("onSurface");
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Push = Animator.StringToHash("Push");
 
@@ -37,7 +36,7 @@ namespace Player_Scripts.States
         {
             Debug.Log("Entering Water");
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
-            
+
             //TODO: REMOVE THIS STATE INDEX??
             player.AnimationController.SetInteger(StateIndex, 2);
 
@@ -103,8 +102,7 @@ namespace Player_Scripts.States
 
             Vector3 movementVector = new Vector3(0, verticalInput, -horizontalInput);
 
-            player.CController.Move((atSurface ? 0.8f : 1) * _speedMultiplier * movementVector * swimSpeed *
-                                    Time.deltaTime);
+            player.CController.Move(movementVector * ((atSurface ? 0.8f : 1) * _speedMultiplier * swimSpeed * Time.deltaTime));
 
 
             player.AnimationController.SetFloat(Horizontal,
@@ -228,7 +226,7 @@ namespace Player_Scripts.States
         {
             atSurface = status;
 
-            player.AnimationController.SetBool(onSurface, status);
+            player.AnimationController.SetBool(OnSurface, status);
 
 
             //Play single shot of dive out
