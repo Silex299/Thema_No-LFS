@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using Player_Scripts;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,35 +13,13 @@ namespace Misc
         [SerializeField] private UnityEvent onPlayerOutOfSight;
 
         private bool _inSight;
-        private Coroutine _triggerCoroutine;
-        
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Player_Main"))
-            {
-                if (_triggerCoroutine != null)
-                {
-                    StopCoroutine(_triggerCoroutine);
-                    _triggerCoroutine = null;
-                }
-            }
-        }
+     
 
         private void OnTriggerStay(Collider other)
         {
             if (other.CompareTag("Player_Main") && enabled)
             {
-                _triggerCoroutine ??= StartCoroutine(CheckForPlayer());
-            }
-        }
-
-        private IEnumerator CheckForPlayer()
-        {
-            if(!enabled) yield break;
-            
-            while (true)
-            {
-                print("Calling");
+                
                 var position = transform.position;
             
                 Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
@@ -59,12 +34,6 @@ namespace Misc
                     {
                         if (!_inSight)
                         {
-                            if (PlayerMovementController.Instance.player.Health.IsDead)
-                            {
-                                _triggerCoroutine = null;
-                                yield break;
-                            }
-                            
                             _inSight = true;
                             onPlayerInSight.Invoke();
                         }
@@ -84,12 +53,11 @@ namespace Misc
                         onPlayerOutOfSight.Invoke();
                     }
                 }
-
-                yield return null;
+                
             }
-            
         }
 
+        
         
         public void EnableSightDetection()
         {
