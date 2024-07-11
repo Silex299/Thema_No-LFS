@@ -110,9 +110,12 @@ namespace Thema_Camera
                 timeElapsed += Time.deltaTime;
 
                 m_Offset = Vector3.Lerp(initialOffset, info.offset, timeElapsed / transitionTime);
+                
                 transform.rotation = Quaternion.Lerp(initialRot, Quaternion.Euler(info.rotation),
                     timeElapsed / transitionTime);
+                
                 myCamera.fieldOfView = Mathf.Lerp(initialFOV, info.FOV, timeElapsed / transitionTime);
+                
                 myCamera.lensShift = Vector2.Lerp(initialLensShift, info.lenseShift, timeElapsed / transitionTime);
 
                 if (m_AudioListener)

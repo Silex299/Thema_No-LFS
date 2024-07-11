@@ -19,15 +19,15 @@ namespace Thema_Camera
         [Button("Setup Offset", ButtonSizes.Large)]
         public void SetOffset()
         {
-            var _offset = previewCamera.transform.position - previewTarget.position;
-            var _rotation = previewCamera.transform.rotation.eulerAngles;
-            var _FOV = previewCamera.fieldOfView;
+            var offset = previewCamera.transform.position - previewTarget.position;
+            var rotation = previewCamera.transform.rotation.eulerAngles;
+            var fov = previewCamera.fieldOfView;
 
             info = new CameraFollowInfo
             {
-                offset = _offset,
-                rotation = _rotation,
-                FOV = _FOV
+                offset = offset,
+                rotation = rotation,
+                FOV = fov
             };
         }
 
