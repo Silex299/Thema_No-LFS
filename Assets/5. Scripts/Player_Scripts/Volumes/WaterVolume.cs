@@ -56,7 +56,7 @@ namespace Player_Scripts.Volumes
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(new Vector3(playerX, surfaceLevel, transform.position.z),
-                new Vector3(transform.position.x, bottomLevel, transform.position.z));
+                new Vector3(playerX, bottomLevel, transform.position.z));
             
             Gizmos.color =Color.red;
             Gizmos.DrawWireSphere(new Vector3(playerX, surfaceLevel, transform.position.z), 0.2f);

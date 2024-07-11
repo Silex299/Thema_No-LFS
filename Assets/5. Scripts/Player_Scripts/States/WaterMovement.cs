@@ -21,10 +21,12 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
+            player.CController.height = 0.34f;
         }
 
         public override void ExitState(Player player)
         {
+            player.CController.height = 1.91f;
         }
 
         public override void UpdateState(Player player)
@@ -84,7 +86,11 @@ namespace Player_Scripts.States
 
             #region Interaction
 
-            if(!onSurface) return;
+            if (!onSurface)
+            {
+                _speedMultiplier = 1;
+                return;
+            }
             
             if (player.interactable)
             {
