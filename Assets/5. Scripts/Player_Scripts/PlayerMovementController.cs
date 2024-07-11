@@ -252,27 +252,7 @@ namespace Player_Scripts
              player.playerVelocity.y = player.JumpVelocity;
 
         }
-
-
-        //WATER MOVEMENT
-
-        public void WaterSurfaceHit(bool atSurface)
-        {
-            if (player.eCurrentState == PlayerMovementState.Water)
-            {
-                player.waterMovement.PlayerAtSurfact(player, atSurface);
-            }
-        }
-
-        public void WaterBottomHit(bool atBottom)
-        {
-            if (player.eCurrentState == PlayerMovementState.Water)
-            {
-                player.waterMovement.PlayerAtBottom(player, atBottom);
-            }
-        }
-
-
+        
         #endregion
 
         #region Animations
