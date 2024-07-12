@@ -2,15 +2,11 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Triggers;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class AdvancedAnimationTrigger : MonoBehaviour
 {
-    //TODO: REMOVE
-    public Animator animator;
-
     [BoxGroup("Animation")] public string animationName;
     [BoxGroup("Animation")] public float animationTime = 1;
 
@@ -34,12 +30,14 @@ public class AdvancedAnimationTrigger : MonoBehaviour
     [BoxGroup("State"), ShowIf(nameof(changeState))]
     public int stateIndex;
 
-    [BoxGroup("State"), ShowIf(nameof(changeState))]
+    [BoxGroup("State"), ShowIf(nameof(changeState)), Range(0,1)]
     public float overrideTime;
+    
+    [BoxGroup("State"), ShowIf(nameof(changeState))]
+    public bool overrideAnimation;
 
-
-    [BoxGroup("Misc")] public TriggerCondition[] conditions;
-
+    [BoxGroup("State"), ShowIf(nameof(overrideAnimation))]
+    public string overrideAnimationName;
 
     [BoxGroup("Event")] public UnityEvent onActionStart;
     [BoxGroup("Event")] public UnityEvent onActionEnd;
@@ -54,6 +52,9 @@ public class AdvancedAnimationTrigger : MonoBehaviour
 
     public void SetNormalisedTime()
     {
+
+        Animator animator = FindObjectOfType<Player>().GetComponent<Animator>();
+        
         animator.Play(animationName, 1, normalisedTime);
         animator.Update(0);
 
@@ -127,6 +128,11 @@ public class AdvancedAnimationTrigger : MonoBehaviour
             {
                 player.MovementController.ResetAnimator();
                 player.MovementController.ChangeState(stateIndex);
+
+                if (overrideAnimation)
+                {
+                    player.AnimationController.Play(overrideAnimationName);
+                }
             }
         }
 

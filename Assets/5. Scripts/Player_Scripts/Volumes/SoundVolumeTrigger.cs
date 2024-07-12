@@ -1,13 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Player_Scripts.Volumes
 {
     //[RequireComponent(typeof(BoxCollider))]
     public class SoundVolumeTrigger : MonoBehaviour
     {
-
-
+        
+        
         [SerializeField] private string volumeName;
         [SerializeField] private float volumeMultiplier = 1;
 
@@ -15,23 +16,40 @@ namespace Player_Scripts.Volumes
         [SerializeField] private float volumeTransitionTime;
 
         private bool _changeVolume;
+        private bool _playerInTrigger;
         private float _transitionTimeElapsed;
-        private bool _triggered;
-
+        private Coroutine _triggerCoroutine;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") || other.CompareTag("Player_Main"))
+            if (other.CompareTag("Player_Main"))
             {
+                if (_triggerCoroutine != null)
+                {
+                    StopCoroutine(_triggerCoroutine);
+                }
+                _triggerCoroutine = StartCoroutine(ResetTrigger());
+                
+                if (_playerInTrigger) return;
+                
+                _playerInTrigger = true;
                 VolumeAction();
             }
         }
-        
+
+
+        private IEnumerator ResetTrigger()
+        {
+            yield return new WaitForSeconds(0.2f);
+            _playerInTrigger = false;
+            _triggerCoroutine = null;
+        }
         
 
         public void VolumeAction()
         {
-            var playerEffects = Player_Scripts.PlayerEffectsManager.Instance;
+            print("ohh daddy");
+            var playerEffects = PlayerEffectsManager.Instance;
             playerEffects.CurrentEffectVolume = volumeName;
             playerEffects.VolumeMultiplier = volumeMultiplier;
             ApplyAudioVolume();

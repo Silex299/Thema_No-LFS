@@ -216,12 +216,14 @@ namespace Player_Scripts
         /// <param name="soundKey"> interaction name, e.g. Land, Jump </param>
         public void PlayInteractionSound(string soundKey)
         {
+            print(soundKey);
+            
             if (interactionSounds.TryGetValue(_currentEffectVolume, out var sounds))
             {
                 if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                 {
                     var randomIndex = Random.Range(0, clips.Count);
-                    interactionSource.PlayOneShot(clips[randomIndex], 0.7f);
+                    interactionSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
                 }
             }
         }
