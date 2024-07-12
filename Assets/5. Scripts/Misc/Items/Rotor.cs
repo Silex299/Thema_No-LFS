@@ -25,13 +25,10 @@ namespace Misc
 
         public bool Running
         {
-            set
-            {
-                running = value;
-            }
+            set => running = value;
         }
 
-        private void Start()
+        private void Awake()
         {
             _currentSpeed = speed;
             _transition = false;
@@ -39,7 +36,6 @@ namespace Misc
 
         private void Update()
         {
-
 
             if (_transition)
             {
@@ -156,13 +152,13 @@ namespace Misc
 
         public void ToggleRotor(bool start)
         {
-            if (!start)
+            if (start)
             {
-                StopRotor();
+                _currentSpeed = speed;
             }
             else
             {
-                StartRotor();
+                _currentSpeed = 0;
             }
         }
     }

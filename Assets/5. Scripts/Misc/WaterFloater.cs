@@ -19,7 +19,6 @@ namespace Misc
 
         void OnEnable()
         {
-            print("Starting");
             startPos = transform.position;
             startRot = transform.rotation;
             noiseOffset = Random.Range(0f, 10000f); // Large range to ensure variety

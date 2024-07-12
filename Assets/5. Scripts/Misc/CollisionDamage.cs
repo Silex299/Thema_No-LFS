@@ -7,14 +7,11 @@ namespace Misc
     {
 
         [SerializeField] private float maximumDamage;
-        [SerializeField] private bool enable = true;
-
 
         private void OnCollisionEnter(Collision collision)
         {
 
-            Debug.LogError("Working");
-            if (!enable) return;
+            if (!enabled) return;
             if (collision.gameObject.CompareTag("Player_Main") || collision.gameObject.CompareTag("Player"))
             {
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(maximumDamage);
@@ -22,11 +19,6 @@ namespace Misc
             
         }
 
-
-        public void Enable(bool status)
-        {
-            enable = status;
-        }
        
     }
 

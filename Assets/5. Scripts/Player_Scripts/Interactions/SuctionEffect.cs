@@ -38,16 +38,15 @@ namespace Player_Scripts.Interactions
         [BoxGroup("Suction Params"), SerializeField] private float maximumThresoldDistance;
         [BoxGroup("Suction Params"), SerializeField] private float minimumThresoldDistance;
 
-        private Coroutine _tiggerExit;
+        private Coroutine _triggerExit;
         private bool _playerIsInTrigger;
-        private bool disable;
 
         private Player_Scripts.PlayerMovementController _playerController;
 
 
         private void OnTriggerEnter(Collider other)
         {
-            if (disable) return;
+            if (!enabled) return;
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
@@ -57,15 +56,15 @@ namespace Player_Scripts.Interactions
 
         private void OnTriggerStay(Collider other)
         {
-            if (disable) return;
+            if (!enabled) return;
             if (other.CompareTag("Player_Main"))
             {
-                if (_tiggerExit != null)
+                if (_triggerExit != null)
                 {
-                    StopCoroutine(_tiggerExit);
+                    StopCoroutine(_triggerExit);
                 }
 
-                _tiggerExit = StartCoroutine(TriggerExit());
+                _triggerExit = StartCoroutine(TriggerExit());
             }
         }
 
@@ -78,7 +77,7 @@ namespace Player_Scripts.Interactions
 
         private void LateUpdate()
         {
-            if (disable) return;
+            if (!enabled) return;
             if (_playerIsInTrigger)
             {
                 Vector3 targetPosition = _playerController.transform.position;
@@ -89,7 +88,7 @@ namespace Player_Scripts.Interactions
                 float distance = Vector3.Distance(targetPosition, pos);
                 float fraction = Mathf.Clamp01((maximumSuction - distance) / (maximumSuction - minimumThresoldDistance));
 
-                Vector3 pullVector = fraction * maximumSuction * pullDirection * Time.deltaTime;
+                Vector3 pullVector = pullDirection * (fraction * maximumSuction * Time.deltaTime);
 
                 _playerController.player.CController.Move(pullVector);
 

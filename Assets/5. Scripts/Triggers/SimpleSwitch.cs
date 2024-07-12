@@ -7,14 +7,9 @@ namespace Triggers
     [RequireComponent(typeof(BoxCollider))]
     public class SimpleSwitch : MonoBehaviour
     {
-
-
-        [SerializeField, BoxGroup("Trigger")] private bool isEnabled;
-        [SerializeField, BoxGroup("Trigger")] private bool oneTime;
+        
         [SerializeField, BoxGroup("Trigger")] private string triggerString;
         [SerializeField, BoxGroup("Trigger")] private float secondActionDelay;
-        [SerializeField, BoxGroup("Trigger")] private UnityEvent<bool> action;
-
 
         [SerializeField, BoxGroup("Visual")] private int materialIndex;
         [SerializeField, BoxGroup("Visual")] private Material triggeredMaterial;
@@ -25,13 +20,23 @@ namespace Triggers
         [SerializeField, BoxGroup("Sound")] private AudioClip triggerClip;
 
 
+        [BoxGroup("Events")] public UnityEvent triggeredEvents;
+        [BoxGroup("Events")] public UnityEvent unTriggeredEvents;
+
+
         private bool _playerIsInTrigger;
         private bool _triggered;
         private float _lastTriggerTime;
 
+        public bool Triggered
+        {
+            get => _triggered;
+            set => _triggered = value;
+        }
+        
         private void OnTriggerEnter(Collider other)
         {
-            if (!isEnabled) return;
+            if (!enabled) return;
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
@@ -51,40 +56,44 @@ namespace Triggers
         {
             if (!_playerIsInTrigger) return;
 
-            if (!isEnabled) return;
+            if (!enabled) return;
 
             if (Input.GetButtonDown(triggerString))
             {
-                if (_lastTriggerTime + secondActionDelay < Time.time)
-                {
-                    action?.Invoke(_triggered);
-
-                    if (oneTime)
-                    {
-                        isEnabled = false;
-                    }
-
-                    _lastTriggerTime = Time.time;
-                    _triggered = !_triggered;
-
-                    UpdateSwitch(_triggered);
-                    TriggerSound();
-                }
+                Trigger(!Triggered);
             }
         }
 
+
+        private void Trigger(bool triggered)
+        {
+            print("fuck me");
+            if (!(_lastTriggerTime + secondActionDelay < Time.time)) return;
+            
+            if(Triggered == triggered) return;
+            
+            Triggered = triggered;
+                
+            if (_triggered)
+            {
+                triggeredEvents.Invoke();
+            }
+            else
+            {
+                unTriggeredEvents.Invoke();
+            }
+                
+            UpdateSwitch(Triggered);
+            TriggerSound();
+            
+            _lastTriggerTime = Time.time;
+        }
+        
+        
         public void UpdateSwitch(bool status)
         {
-            _triggered = status;
-
-
-            if(oneTime && status)
-            {
-                isEnabled = false;
-            }
-
-            var renderer = GetComponent<MeshRenderer>();
-            var materials = renderer.materials;
+            var component = GetComponent<MeshRenderer>();
+            var materials = component.materials;
 
             if (status)
             {
@@ -95,10 +104,10 @@ namespace Triggers
                 materials[materialIndex] = defaultMaterial;
             }
 
-            renderer.materials = materials;
+            component.materials = materials;
         }
 
-        public void TriggerSound()
+        private void TriggerSound()
         {
             if (source)
             {
