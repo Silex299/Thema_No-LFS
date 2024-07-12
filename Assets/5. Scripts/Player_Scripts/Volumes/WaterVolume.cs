@@ -35,9 +35,11 @@ namespace Player_Scripts.Volumes
             if (other.CompareTag("Player_Main"))
             {
                 _playerInTrigger = true;
+                
                 if (PlayerMovementController.Instance.player.currentStateIndex != 2)
                 {
                     PlayerMovementController.Instance.ChangeState(2);
+                    PlayerMovementController.Instance.player.waterMovement.waterVolume = this;
                 }
                 else
                 {
@@ -66,14 +68,14 @@ namespace Player_Scripts.Volumes
 
         public void UnderWater()
         {
-            underWaterOffset.ChangeCameraOffset();
-            underWaterSound.ApplyAudioVolume();
+            underWaterOffset?.ChangeCameraOffset();
+            underWaterSound?.ApplyAudioVolume();
         }
 
         public void OnSurface()
         {
-            surfaceOffset.ChangeCameraOffset();
-            surfaceSound.ApplyAudioVolume();
+            surfaceOffset?.ChangeCameraOffset();
+            surfaceSound?.ApplyAudioVolume();
         }
     }
 }

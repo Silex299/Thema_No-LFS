@@ -29,7 +29,6 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
-            player.EffectsManager.PlayInteractionSound("Dive In");
             player.CController.height = 0.34f;
 
             //Spawn effects
@@ -44,6 +43,8 @@ namespace Player_Scripts.States
                 _underWaterEffect =
                     player.EffectsManager.SpawnEffects("UnderWater", player.transform.position, player.transform);
             }
+
+            player.EffectsManager.PlayInteractionSound(_atSurface ? "Dive In" : "Dive In Muffled");
 
             //disable Surface effect
             _surfaceEffect.SetActive(_atSurface);
