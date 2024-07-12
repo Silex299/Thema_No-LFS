@@ -32,27 +32,23 @@ namespace Player_Scripts.Volumes
             _triggerCoroutine = StartCoroutine(ResetTrigger());
 
             if (_playerInTrigger) return;
+            
             if (other.CompareTag("Player_Main"))
             {
                 _playerInTrigger = true;
-                
                 if (PlayerMovementController.Instance.player.currentStateIndex != 2)
                 {
                     PlayerMovementController.Instance.ChangeState(2);
-                    PlayerMovementController.Instance.player.waterMovement.waterVolume = this;
                 }
-                else
-                {
-                    PlayerMovementController.Instance.player.waterMovement.waterVolume = this;
-                }
+                PlayerMovementController.Instance.player.waterMovement.waterVolume = this;
             }
         }
 
         private IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.2f);
-            _triggerCoroutine = null;
             _playerInTrigger = false;
+            _triggerCoroutine = null;
         }
 
         private void OnDrawGizmos()
