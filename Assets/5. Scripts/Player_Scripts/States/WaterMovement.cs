@@ -15,6 +15,9 @@ namespace Player_Scripts.States
         private float _speedMultiplier = 1;
         private bool _atSurface;
 
+        private GameObject _surfaceEffect;
+        private GameObject _underWaterEffect;
+
 
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
@@ -26,14 +29,41 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
+            player.EffectsManager.PlayInteractionSound("Dive In");
             player.CController.height = 0.34f;
+
+            //Spawn effects
+            if (!_surfaceEffect)
+            {
+                _surfaceEffect =
+                    player.EffectsManager.SpawnEffects("SurfaceWater", player.transform.position, player.transform.parent);
+            }
+
+            if (!_underWaterEffect)
+            {
+                _underWaterEffect =
+                    player.EffectsManager.SpawnEffects("UnderWater", player.transform.position, player.transform);
+            }
+
+            //disable Surface effect
+            _surfaceEffect.SetActive(_atSurface);
+            _underWaterEffect.SetActive(!_atSurface);
         }
 
         public override void ExitState(Player player)
         {
             player.CController.height = 1.91f;
+            if (_surfaceEffect)
+            {
+                _surfaceEffect.SetActive(false);
+            }
+
+            if (_underWaterEffect)
+            {
+                _underWaterEffect.SetActive(false);
+            }
         }
-        
+
         public override void UpdateState(Player player)
         {
             #region Input Check
@@ -62,7 +92,7 @@ namespace Player_Scripts.States
             #region Player depth, interaction & health
 
             CheckDepth(player, SurfaceChangeAction);
-            
+
             if (_atSurface)
             {
                 #region Interaction
@@ -119,11 +149,13 @@ namespace Player_Scripts.States
                 PlayerMovementController.Instance.player.Health.TakeDamage(waterVolume.damageSpeed * Time.deltaTime);
 
                 #endregion
+
                 _speedMultiplier = 1;
             }
 
             #endregion
-            
+
+            UpdateSurfaceEffect(player);
         }
 
         public override void LateUpdateState(Player player)
@@ -148,7 +180,6 @@ namespace Player_Scripts.States
             #endregion
         }
 
-
         #endregion
 
         #region Usused Methods
@@ -158,9 +189,9 @@ namespace Player_Scripts.States
         }
 
         #endregion
-        
+
         #region Custom methods
-        
+
         private void CheckDepth(Player player, Action<Player, bool> surfaceChangeAction)
         {
             var transform = player.transform;
@@ -179,17 +210,33 @@ namespace Player_Scripts.States
 
             if (atSurface)
             {
+                if (_surfaceEffect) _surfaceEffect.SetActive(true);
+                if (_underWaterEffect) _underWaterEffect.SetActive(false);
+
                 waterVolume.OnSurface();
-                
+
                 player.Health.ResetHealth();
                 player.EffectsManager.PlayInteractionSound("Dive Out");
-                
             }
             else
             {
+                if (_surfaceEffect) _surfaceEffect.SetActive(false);
+                if (_underWaterEffect) _underWaterEffect.SetActive(true);
+
                 waterVolume.UnderWater();
-                player.EffectsManager.PlayInteractionSound("Dive In");
+                player.EffectsManager.PlayInteractionSound("Dive In Muffled");
             }
+        }
+
+        private void UpdateSurfaceEffect(Player player)
+        {
+            if (!_atSurface) return;
+
+            Vector3 effectPos = player.transform.position;
+
+            effectPos.y = (waterVolume.surfaceLevel + 0.01f);
+            effectPos += player.transform.forward * 0.5f;
+            _surfaceEffect.transform.position = effectPos;
         }
 
         private void Rotate(Player player, float horizontalInput)
@@ -200,9 +247,7 @@ namespace Player_Scripts.States
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, newRotation,
                 Time.deltaTime * player.RotationSmoothness / 4);
         }
-        
+
         #endregion
-        
-        
     }
 }

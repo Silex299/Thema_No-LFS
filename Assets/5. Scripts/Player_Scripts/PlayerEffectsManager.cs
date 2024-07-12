@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using Thema_Type;
 using Object = UnityEngine.Object;
@@ -56,11 +57,11 @@ namespace Player_Scripts
         private Dictionary<string, AudioClip> otherSounds;
 
 
-        private string _currentEffectVolume = default;
+        public string currentEffectVolume = default;
 
         public string CurrentEffectVolume
         {
-            set => _currentEffectVolume = value;
+            set => currentEffectVolume = value;
         }
 
         private float _volumeMultiplier = 1;
@@ -155,7 +156,9 @@ namespace Player_Scripts
             float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
             float volume = Mathf.Abs(rawInput) * step.volume * _volumeMultiplier;
 
-            if (stepSounds.TryGetValue(_currentEffectVolume, out var clips))
+            if (!stepSounds.ContainsKey(currentEffectVolume)) return;
+
+            if (stepSounds.TryGetValue(currentEffectVolume, out var clips))
             {
                 interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
             }
@@ -166,43 +169,38 @@ namespace Player_Scripts
             yield return new WaitForSeconds(0.3f);
             //Left Foot
 
-            try
+            if (!stepEffects.ContainsKey(currentEffectVolume)) yield break;
+
+            if (stepEffects.TryGetValue(currentEffectVolume, out GameObject pref))
             {
-                if (stepEffects.TryGetValue(_currentEffectVolume, out GameObject pref))
+                switch (step)
                 {
-                    switch (step)
-                    {
-                        case WhichStep.LEFT:
+                    case WhichStep.LEFT:
 
-                            //Not sure its acting weird, so added 100f to raycast
+                        //Not sure its acting weird, so added 100f to raycast
 
-                            Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                            Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
-                            if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
-                            {
-                                Instantiate(pref, hit1.point, Quaternion.LookRotation(transform.forward));
-                            }
+                        Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                        Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
+                        if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
+                        {
+                            Instantiate(pref, hit1.point, Quaternion.LookRotation(transform.forward));
+                        }
 
-                            break;
-                        case WhichStep.RIGHT:
+                        break;
+                    case WhichStep.RIGHT:
 
-                            Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                            Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
-                            if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
-                            {
-                                Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
-                            }
+                        Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                        Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
+                        if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
+                        {
+                            Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
+                        }
 
-                            break;
-                        default:
-                            print("fuck");
-                            break;
-                    }
+                        break;
+                    default:
+                        print("fuck");
+                        break;
                 }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning(e);
             }
         }
 
@@ -216,10 +214,12 @@ namespace Player_Scripts
         /// <param name="soundKey"> interaction name, e.g. Land, Jump </param>
         public void PlayInteractionSound(string soundKey)
         {
-            print(soundKey);
-            
-            if (interactionSounds.TryGetValue(_currentEffectVolume, out var sounds))
+            if (!interactionSounds.ContainsKey(currentEffectVolume)) return;
+
+            if (interactionSounds.TryGetValue(currentEffectVolume, out var sounds))
             {
+                if (!sounds.ContainsKey(soundKey)) return;
+
                 if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
                 {
                     var randomIndex = Random.Range(0, clips.Count);
@@ -232,7 +232,6 @@ namespace Player_Scripts
 
         #region Player Sounds
 
-        
         /// <summary>
         /// For playing Player Sounds
         /// e.g, moan, shout, hurt
@@ -240,15 +239,19 @@ namespace Player_Scripts
         /// <param name="soundKey">action name</param>
         public void PlayPlayerSound(string soundKey)
         {
+            if(!playerSounds.ContainsKey(soundKey)) return;
+            
             if (playerSounds.TryGetValue(soundKey, out List<AudioClip> clips))
             {
                 var randomIndex = Random.Range(0, clips.Count);
                 playerSoundSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
             }
         }
-        
+
         public void PlayPlayerMovementSound(string soundKey)
         {
+            if(!playerSounds.ContainsKey(soundKey)) return;
+            
             if (playerSounds.TryGetValue(soundKey, out List<AudioClip> clips))
             {
                 var randomIndex = Random.Range(0, clips.Count);
@@ -274,16 +277,28 @@ namespace Player_Scripts
             _playerMovementCoroutine = null;
         }
 
-
         #endregion
 
-        
         public void PlayOtherSounds(string soundKey, float volume = 0.5f)
         {
+            if(!otherSounds.ContainsKey(soundKey)) return;
+            
             if (otherSounds.TryGetValue(soundKey, out AudioClip clip))
             {
                 otherSoundSource.PlayOneShot(clip, volume);
             }
+        }
+
+        public GameObject SpawnEffects(string key, Vector3 overridePos, Transform parent)
+        {
+            if (!stepEffects.ContainsKey(key)) return null;
+
+            if (stepEffects.TryGetValue(key, out GameObject pref))
+            {
+                return Instantiate(pref, overridePos, Quaternion.LookRotation(transform.forward), parent);
+            }
+
+            return null;
         }
         
         #region Obosolette
@@ -327,14 +342,7 @@ namespace Player_Scripts
                 }
             }
         }
-
-
-        //Remove this
-        public GameObject SpawnEffect(string key, Vector3 overridePosition)
-        {
-            return Instantiate(stepEffects[key], transform.position + overridePosition, Quaternion.identity,
-                this.transform);
-        }
+        
 
         #endregion
     }

@@ -2443,9 +2443,7 @@ MonoBehaviour:
     connectedLadder: {fileID: 0}
   waterMovement:
     swimSpeed: 3
-    lostBreathSpeed: 10
-    restrictedYPosition: 7.2
-    restrictedXPosition: -5.76
+    waterVolume: {fileID: 0}
   ropeMovement:
     attachedRope: {fileID: 0}
     handSocket: {fileID: 0}
@@ -2545,6 +2543,9 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f85e18b3e969dac4bbfc7f6b18139932, type: 3}
     - {fileID: 8300000, guid: caceea3cf407e1b47a4024a755887675, type: 3}
     - {fileID: 8300000, guid: 8420cf17e21d6354a98e6ef6d19dc9cc, type: 3}
+    - {fileID: 8300000, guid: 27a5f175be2ed96409d9d802310e3c67, type: 3}
+    - {fileID: 8300000, guid: c7202e4e9e391e04ebededd990b78619, type: 3}
+    - {fileID: 8300000, guid: b511f72eb1d4d754cb828d24db388ba5, type: 3}
     - {fileID: 8300000, guid: 8f88920100ba001438c984498c467f5f, type: 3}
     - {fileID: 8300000, guid: f1ada3506afc83042b4ac8d23e3631a1, type: 3}
     - {fileID: 8300000, guid: 48d258673d8a8ff4a98b256f4bdaa237, type: 3}
@@ -2854,7 +2855,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -3001,12 +3002,12 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 13
+      Entry: 7
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: playerSounds
+    - Name: $k
+      Entry: 1
+      Data: Water
+    - Name: $v
       Entry: 7
       Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
         UnityEngine.AudioModule]], mscorlib]], mscorlib
@@ -3025,7 +3026,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Jump
+      Data: Dive In
     - Name: $v
       Entry: 7
       Data: 20|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
@@ -3050,7 +3051,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Land
+      Data: Dive Out
     - Name: $v
       Entry: 7
       Data: 21|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
@@ -3075,7 +3076,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: HeavyBreath
+      Data: Dive In Muffled
     - Name: $v
       Entry: 7
       Data: 22|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
@@ -3101,13 +3102,117 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: otherSounds
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: playerSounds
       Entry: 7
-      Data: 23|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib
+      Data: 23|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
+        UnityEngine.AudioModule]], mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 24|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Jump
+    - Name: $v
+      Entry: 7
+      Data: 25|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 43
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Land
+    - Name: $v
+      Entry: 7
+      Data: 26|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 44
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: HeavyBreath
+    - Name: $v
+      Entry: 7
+      Data: 27|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 45
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: otherSounds
+      Entry: 7
+      Data: 28|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.AudioClip,
+        UnityEngine.AudioModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 29|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
@@ -3123,7 +3228,7 @@ MonoBehaviour:
       Data: heartbeat
     - Name: $v
       Entry: 10
-      Data: 43
+      Data: 46
     - Name: 
       Entry: 8
       Data: 
@@ -3135,7 +3240,7 @@ MonoBehaviour:
       Data: Death
     - Name: $v
       Entry: 10
-      Data: 44
+      Data: 47
     - Name: 
       Entry: 8
       Data: 
