@@ -167,10 +167,11 @@ namespace Player_Scripts
 
                     //Not sure its acting weird, so added 100f to raycast
 
-                    Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                    Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
+                    Ray ray1 = new Ray(transform.position + Vector3.up, (leftFootSocket.position - transform.position).normalized);
                     
-                    if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
+                    Debug.DrawRay(ray1.origin, ray1.direction * 10f, Color.red, 1f);
+                    
+                    if (Physics.Raycast(ray1, out RaycastHit hit1, 100f, raycastMask))
                     {
                         var hitSurface = hit1.collider.tag;
                         print(hit1.collider.name);
@@ -191,9 +192,11 @@ namespace Player_Scripts
                     break;
                 case WhichStep.RIGHT:
 
-                    Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                    Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
-                    if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
+                    Ray ray2 = new Ray(transform.position + Vector3.up, (rightFootSocket.position - transform.position).normalized);
+                    
+                    Debug.DrawRay(ray2.origin, ray2.direction * 10f, Color.yellow, 1f);
+                    
+                    if (Physics.Raycast(ray2, out RaycastHit hit2, 100f, raycastMask))
                     {
                         var hitSurface = hit2.collider.tag;
                         
