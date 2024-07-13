@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using Thema_Type;
+using UnityEditor.Rendering;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -150,58 +151,86 @@ namespace Player_Scripts
 
             if (!player.IsGrounded || player.DisabledPlayerMovement) return;
 
-            //Call for Spawn Steps
-            // ReSharper disable once PossibleNullReferenceException
-            StartCoroutine(SpawnSteps(step.whichStep));
-            float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
-            float volume = Mathf.Abs(rawInput) * step.volume * _volumeMultiplier;
-
-            if (!stepSounds.ContainsKey(currentEffectVolume)) return;
-
-            if (stepSounds.TryGetValue(currentEffectVolume, out var clips))
-            {
-                interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
-            }
+            StartCoroutine(SpawnSteps(step));
         }
 
-        private IEnumerator SpawnSteps(WhichStep step)
+        private IEnumerator SpawnSteps(Step stepInfo)
         {
             yield return new WaitForSeconds(0.3f);
-            //Left Foot
 
-            if (!stepEffects.ContainsKey(currentEffectVolume)) yield break;
-
-            if (stepEffects.TryGetValue(currentEffectVolume, out GameObject pref))
+            var step = stepInfo.whichStep;
+            
+            
+            switch (step)
             {
-                switch (step)
-                {
-                    case WhichStep.LEFT:
+                case WhichStep.LEFT:
 
-                        //Not sure its acting weird, so added 100f to raycast
+                    //Not sure its acting weird, so added 100f to raycast
 
-                        Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                        Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
-                        if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
+                    Ray ray1 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                    Debug.DrawRay(ray1.origin, ray1.direction * 200f, Color.red, 1f);
+                    
+                    if (Physics.Raycast(ray1, out RaycastHit hit1, 200f, raycastMask))
+                    {
+                        var hitSurface = hit1.collider.tag;
+                        print(hit1.collider.name);
+                        //Spawn Effects
+                        if (stepEffects.ContainsKey(hitSurface))
                         {
-                            Instantiate(pref, hit1.point, Quaternion.LookRotation(transform.forward));
+                            if (stepEffects.TryGetValue(hitSurface, out var pref))
+                            {
+                                Instantiate(pref, hit1.point, Quaternion.LookRotation(transform.forward));
+                            }
+                            
                         }
+                        
+                        PlayStepSound(hitSurface);
+                        
+                    }
 
-                        break;
-                    case WhichStep.RIGHT:
+                    break;
+                case WhichStep.RIGHT:
 
-                        Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
-                        Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
-                        if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
+                    Ray ray2 = new Ray(leftFootSocket.position + Vector3.up * 100f, Vector3.down);
+                    Debug.DrawRay(ray2.origin, ray2.direction * 200f, Color.yellow, 1f);
+                    if (Physics.Raycast(ray2, out RaycastHit hit2, 200f, raycastMask))
+                    {
+                        var hitSurface = hit2.collider.tag;
+                        
+                        print(hit2.collider.name);
+                        //Spawn Effects
+                        if (stepEffects.ContainsKey(hitSurface))
                         {
-                            Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
+                            if (stepEffects.TryGetValue(hitSurface, out var pref))
+                            {
+                                Instantiate(pref, hit2.point, Quaternion.LookRotation(transform.forward));
+                            }
                         }
+                        
+                        PlayStepSound(hitSurface);
+                        
+                    }
 
-                        break;
-                    default:
-                        print("fuck");
-                        break;
-                }
+                    break;
+                default:
+                    print("fuck");
+                    break;
             }
+
+            yield break;
+
+
+            void PlayStepSound(string hitSurface)
+            {
+                //Play Sounds
+                if (!stepSounds.ContainsKey(hitSurface)) return;
+                if (!stepSounds.TryGetValue(hitSurface, out List<AudioClip> clips)) return;
+                
+                float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
+                float volume = Mathf.Abs(rawInput) * stepInfo.volume * _volumeMultiplier;
+                interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
+            }
+            
         }
 
         #endregion

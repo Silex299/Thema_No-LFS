@@ -50,6 +50,7 @@ namespace Player_Scripts.Volumes
         {
             print("ohh daddy");
             var playerEffects = PlayerEffectsManager.Instance;
+            
             playerEffects.CurrentEffectVolume = volumeName;
             playerEffects.VolumeMultiplier = volumeMultiplier;
             ApplyAudioVolume();
