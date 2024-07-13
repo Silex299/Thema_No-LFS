@@ -19,13 +19,13 @@ public class Door : MonoBehaviour
 
 
 #if UNITY_EDITOR
-    [SerializeField, Button("Set Closed Postion", ButtonSizes.Large)]
+    [SerializeField, Button("Set Closed Position", ButtonSizes.Large)]
     public void SetClosedPosition()
     {
         closedPosition = transform.localPosition;
     }
 
-    [SerializeField, Button("Set Open Postion", ButtonSizes.Large)]
+    [SerializeField, Button("Set Open Position", ButtonSizes.Large)]
     public void SetOpenOpen()
     {
         openPosition = transform.localPosition;
@@ -56,7 +56,7 @@ public class Door : MonoBehaviour
         if (open != isOpen)
         {
             Vector3 destination = open ? openPosition : closedPosition;
-            Vector3 initialPos = transform.position;
+            Vector3 initialPos = transform.localPosition;
             
             float timeElapsed = 0;
             
@@ -65,8 +65,9 @@ public class Door : MonoBehaviour
             {
                 timeElapsed += Time.deltaTime;
                 float fraction = timeElapsed / transitionTime;
-
+                
                 transform.localPosition = Vector3.Lerp(initialPos, destination, fraction);
+                
                 yield return null;
             }
             
