@@ -35,13 +35,16 @@ namespace Player_Scripts.States
             if (!_surfaceEffect)
             {
                 _surfaceEffect =
-                    player.EffectsManager.SpawnEffects("SurfaceWater", player.transform.position, player.transform.parent);
+                    player.EffectsManager.SpawnEffects("SurfaceWater", player.transform.position,
+                        player.transform.parent);
             }
 
             if (!_underWaterEffect)
             {
                 _underWaterEffect =
-                    player.EffectsManager.SpawnEffects("UnderWater", player.transform.position, player.transform);
+                    player.EffectsManager.SpawnEffects("UnderWater",
+                        player.transform.position + player.transform.forward * 0.5f + player.transform.up,
+                        player.transform);
             }
 
             player.EffectsManager.PlayInteractionSound(_atSurface ? "Dive In" : "Dive In Muffled");

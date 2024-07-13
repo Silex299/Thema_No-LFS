@@ -1,7 +1,8 @@
-using UnityEngine;
+using System.Collections;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
-namespace Misc
+namespace Misc.Items
 {
 
     public class Rotor : MonoBehaviour
@@ -18,52 +19,25 @@ namespace Misc
         [SerializeField, BoxGroup("Sounds")] private AudioClip startSound;
         [SerializeField, BoxGroup("Sounds")] private AudioClip stopSound;
 
-        [SerializeField] private bool running = true;
-        private bool _transition;
+        
         private float _currentSpeed;
-        private float _transitionTimeElapsed;
-
-        public bool Running
-        {
-            set => running = value;
-        }
-
+        private Coroutine _speedCoroutine;
+      
         private void Awake()
         {
             _currentSpeed = speed;
-            _transition = false;
         }
 
         private void Update()
         {
+            Rotate();
 
-            if (_transition)
-            {
-                if (running)
-                {
-                    StopRotor();
-                }
-                else
-                {
-                    StartRotor();
-                }
-            }
-            else if(running)
-            {
-                Rotate();
-
-                if (source)
-                {
-                    if (!source.isPlaying)
-                    {
-                        source.clip = machineSound;
-                        source.loop = true;
-                        source.Play();
-                    }
-                }
-                
-            }
-
+            if (!source) return;
+            if (source.isPlaying) return;
+            
+            source.clip = machineSound;
+            source.loop = true;
+            source.Play();
         }
 
         private void Rotate()
@@ -73,79 +47,38 @@ namespace Misc
             transform.Rotate(rotationAxis, rotationAngle, Space.Self);
         }
 
-        [SerializeField, Button("Stop Rotor", ButtonSizes.Medium), GUIColor(1f,0f,0f)]
+        [Button("Stop Rotor", ButtonSizes.Medium), GUIColor(1f,0f,0f)]
         public void StopRotor()
         {
-            if (!running) return;
-
-
-            if (!_transition)
+            if (source)
             {
-                _transition = true;
-                _transitionTimeElapsed = 0;
-                if (source)
-                {
-                    source.PlayOneShot(stopSound);
-                }
+                source.PlayOneShot(stopSound);
             }
-            else
-            {
-
-                Rotate();
-                _transitionTimeElapsed += Time.deltaTime;
-
-                float fraction = _transitionTimeElapsed / accelerationTime;
-
-                _currentSpeed = Mathf.Lerp(speed, 0, fraction);
-
-                if (fraction >= 1)
-                {
-                    _transition = false;
-                    running = false;
-                    if (source)
-                    {
-                        source.Stop();
-                    }
-                }
-            }
+            if(_speedCoroutine!=null) StopCoroutine(_speedCoroutine);
+            _speedCoroutine = StartCoroutine(ChangeRotorSpeed(0));
         }
         
-        [SerializeField, Button("Start Rotor", ButtonSizes.Medium), GUIColor(0.2f, 1f, 0.2f)]
+        [Button("Start Rotor", ButtonSizes.Medium), GUIColor(0.2f, 1f, 0.2f)]
         public void StartRotor()
         {
-            if (running) return;
-
-            if (!_transition)
+            if (source)
             {
-                _transition = true;
-                _transitionTimeElapsed = 0;
-
-                if (source)
-                {
-                    source.PlayOneShot(startSound);
-                }
+                source.PlayOneShot(startSound);
             }
-            else
+            if(_speedCoroutine!=null) StopCoroutine(_speedCoroutine);
+            _speedCoroutine = StartCoroutine(ChangeRotorSpeed(speed));    
+        }
+
+        private IEnumerator ChangeRotorSpeed(float overrideSpeed)
+        {
+            float timeElapsed = 0;
+            float startSpeed = _currentSpeed;
+
+            while (timeElapsed < accelerationTime)
             {
-                Rotate();
-
-                _transitionTimeElapsed += Time.deltaTime;
-
-                float fraction = _transitionTimeElapsed / accelerationTime;
-
-                _currentSpeed = Mathf.Lerp(0, speed, fraction);
-
-                if (fraction >= 1)
-                {
-                    _transition = false;
-                    running = true;
-                    if (source)
-                    {
-                        source.clip = machineSound;
-                        source.loop = true;
-                    }
-                }
-
+                timeElapsed += Time.deltaTime;
+                _currentSpeed = Mathf.Lerp(startSpeed, overrideSpeed, timeElapsed / accelerationTime);
+                yield return null;
             }
         }
 
