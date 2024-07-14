@@ -11,8 +11,8 @@ namespace Health
 
         [SerializeField, FoldoutGroup("Components")] private Player player;
 
-        [SerializeField, TabGroup("Player Health")] private Material dissolveMaterial;
-        [SerializeField, TabGroup("Player Health")] private float dissolveTime = 3;
+        [SerializeField, BoxGroup("Player Health")] private Material dissolveMaterial;
+        [SerializeField, BoxGroup("Player Health")] private float dissolveTime = 3;
 
 
         public bool IsDead { get; private set; }

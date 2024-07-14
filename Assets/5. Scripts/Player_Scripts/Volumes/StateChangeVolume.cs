@@ -19,6 +19,7 @@ namespace Player_Scripts.Volumes
         [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
         [SerializeField, BoxGroup("EXIT STATE")] private bool enableExitDirection;
         [SerializeField, BoxGroup("EXIT STATE")] private bool exitOneWayRotation;
+
         
         [BoxGroup("Misc")] public bool continuousCheck = true;
         [BoxGroup("Misc")] public float recheckTime = 0.2f;

@@ -23,7 +23,22 @@ namespace Player_Scripts.States
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int OnSurface = Animator.StringToHash("onSurface");
         private static readonly int Push = Animator.StringToHash("Push");
-
+        public WaterVolume PlayerWaterVolume
+        {
+            set
+            {
+                waterVolume = value;
+                if (_atSurface)
+                {
+                    waterVolume.OnSurface();
+                }
+                else
+                {
+                    waterVolume.UnderWater();
+                }
+            }
+        }
+        
         #region Overriden Methods
 
         public override void EnterState(Player player)

@@ -24,24 +24,15 @@ namespace Player_Scripts.Volumes
 
         private void OnTriggerStay(Collider other)
         {
+            if(!other.CompareTag("Player_Main")) return;
             if (_triggerCoroutine != null)
             {
                 StopCoroutine(_triggerCoroutine);
             }
-
             _triggerCoroutine = StartCoroutine(ResetTrigger());
 
             if (_playerInTrigger) return;
-            
-            if (other.CompareTag("Player_Main"))
-            {
-                _playerInTrigger = true;
-                if (PlayerMovementController.Instance.player.currentStateIndex != 2)
-                {
-                    PlayerMovementController.Instance.ChangeState(2);
-                }
-                PlayerMovementController.Instance.player.waterMovement.waterVolume = this;
-            }
+            TriggerWaterVolume();
         }
 
         private IEnumerator ResetTrigger()
@@ -49,6 +40,18 @@ namespace Player_Scripts.Volumes
             yield return new WaitForSeconds(0.2f);
             _playerInTrigger = false;
             _triggerCoroutine = null;
+        }
+
+        private void TriggerWaterVolume()
+        {
+            _playerInTrigger = true;
+            
+            if (PlayerMovementController.Instance.player.currentStateIndex != 2)
+            {
+                PlayerMovementController.Instance.ChangeState(2);
+            }
+
+            PlayerMovementController.Instance.player.waterMovement.PlayerWaterVolume = this;
         }
 
         private void OnDrawGizmos()
@@ -64,12 +67,14 @@ namespace Player_Scripts.Volumes
 
         public void UnderWater()
         {
+            print("Changing");
             underWaterOffset?.ChangeCameraOffset();
             underWaterSound?.ApplyAudioVolume();
         }
 
         public void OnSurface()
         {
+            print("Changing to surface");
             surfaceOffset?.ChangeCameraOffset();
             surfaceSound?.ApplyAudioVolume();
         }
