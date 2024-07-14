@@ -1,9 +1,9 @@
 using System.Collections;
+using System.Collections.Specialized;
 using UnityEngine;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine.Events;
-using System;
 using Thema_Camera;
 using UnityEngine.UI;
 using TMPro;
@@ -16,51 +16,46 @@ using UnityEditor;
 
 namespace Triggers
 {
-
     public class ContinuousActionTrigger : MonoBehaviour
     {
-        [InfoBox("User for things like pushing barriers and all")]
+        [InfoBox("User for things like pushing barriers and all")] [SerializeField, BoxGroup("Trigger")]
+        private string activationInput;
 
-        [SerializeField, BoxGroup("Trigger")] private string activationInput;
         [SerializeField, BoxGroup("Trigger")] private string actionInput;
+        [SerializeField, BoxGroup("Trigger")] private float engageTime;
         [SerializeField, BoxGroup("Trigger")] private float timeToTrigger;
 
 
-        [SerializeField, BoxGroup("Animation")] private string engageActionName;
-        [SerializeField, BoxGroup("Animation")] private string actionName;
+        [SerializeField, BoxGroup("Animation")]
+        private string engageActionName;
 
+        [SerializeField, BoxGroup("Animation")]
+        private string actionName;
+
+        [SerializeField, BoxGroup("Animation")]
+        private float actionAnimationTime = 1;
+
+        [SerializeField, BoxGroup("UI")] private string actionString;
         [SerializeField, BoxGroup("UI")] private Image progressBar;
         [SerializeField, BoxGroup("UI")] private TextMeshProUGUI actionText;
         [SerializeField, BoxGroup("UI")] private Vector3 visualOffset;
 
 
         [SerializeField, BoxGroup("Action")] private Transform pointOfAction;
-        [SerializeField, BoxGroup("Action")] private bool careRotation = true;
+
+        [FormerlySerializedAs("maxiumActionCount")] [SerializeField, BoxGroup("Action")]
+        private int maximumActionCount;
+
         [SerializeField, BoxGroup("Action")] private float actionDelay;
-        [SerializeField, BoxGroup("Action")] private float[] timings = { 0.8f, 0.5f, 1.8f };
-        [SerializeField, BoxGroup("Action"), Space(10)] private UnityEvent action;
+
+        [SerializeField, BoxGroup("Action"), Space(10)]
+        private UnityEvent action;
 
 
-
-        private Transform _target;
-
-        private bool _playerIsInTrigger;
-        private bool _movePlayer;
-        private bool _playerEngaged;
-        [SerializeField] private bool triggered;
-
-        private float _actionTriggerTime;
+        private bool _playerInTrigger;
+        private int _actionCounter;
         private Coroutine _resetTrigger;
-
-
-        private Vector3 _initialPos;
-        private Quaternion _initialRot;
-        private float _timeElapsed;
-
-        public bool Triggered
-        {
-            set => triggered = value;
-        }
+        private bool _engaged;
 
 
         #region Editor
@@ -71,7 +66,7 @@ namespace Triggers
         //TODO: REMOVE ALL
 
         private bool _preview;
-        private PlayerMovementController player;
+        private PlayerMovementController _player;
         private Vector3 _initialPlayerPos;
         private Vector3 _initialPlayerRot;
 
@@ -82,12 +77,12 @@ namespace Triggers
             {
                 EditorApplication.update += Preview;
 
-                player = FindObjectOfType<PlayerMovementController>();
-                player.player.AnimationController.Play(engageActionName, 1, 0);
+                _player = FindObjectOfType<PlayerMovementController>();
+                _player.player.AnimationController.Play(engageActionName, 1, 0);
                 _preview = true;
 
 
-                var tran = player.transform;
+                var tran = _player.transform;
 
                 _initialPlayerPos = tran.position;
                 _initialPlayerRot = tran.eulerAngles;
@@ -99,7 +94,7 @@ namespace Triggers
             }
             else
             {
-                player.player.AnimationController.Update(Time.deltaTime);
+                _player.player.AnimationController.Update(Time.deltaTime);
             }
         }
 
@@ -108,13 +103,12 @@ namespace Triggers
         {
             EditorApplication.update -= Preview;
             _preview = false;
-            Transform trans = player.transform;
+            Transform trans = _player.transform;
             trans.position = _initialPlayerPos;
             trans.eulerAngles = _initialPlayerRot;
 
-            player.PlayAnimation("Default", 1);
-            player.player.AnimationController.Update(0);
-
+            _player.PlayAnimation("Default", 1);
+            _player.player.AnimationController.Update(0);
         }
 
 
@@ -122,299 +116,164 @@ namespace Triggers
 
         #endregion
 
-        #region Built-in methods
-
         private void OnTriggerStay(Collider other)
         {
-            if (triggered) return;
-            if (other.CompareTag("Player_Main"))
+            if (!other.CompareTag("Player_Main")) return;
+
+            if (_resetTrigger != null)
             {
-                print(other.tag);
-                _playerIsInTrigger = true;
-
-                if (_resetTrigger != null)
-                {
-
-                    StopCoroutine(_resetTrigger);
-                }
-
-
-                _resetTrigger = StartCoroutine(ResetTrigger());
-
+                StopCoroutine(_resetTrigger);
             }
 
-        }
+            _resetTrigger = StartCoroutine(ResetTrigger());
 
-        private void Update()
-        {
-
-            if (triggered) return;
-            if (!_playerIsInTrigger) return;
-
-
-
-            if (Input.GetButtonDown(activationInput))
-            {
-                //Engage player
-                Engage();
-            }
-
-            if (Input.GetButtonUp(activationInput))
-            {
-                _actionTriggerTime = 0;
-                Disengage();
-            }
-
-
-            if (!_playerEngaged || _movePlayer) return;
-
-
-
-            if (Input.GetButton(actionInput))
-            {
-                VisualUI((Time.time - _actionTriggerTime) / timeToTrigger);
-
-                if (_actionTriggerTime == 0)
-                {
-                    _actionTriggerTime = Time.time;
-                }
-
-
-                if (_actionTriggerTime + timeToTrigger < Time.time)
-                {
-                    //Play Trigger;
-                    Debug.Log("I want to masterbater so bad");
-                    _actionTriggerTime = Time.time;
-                    StartCoroutine(Trigger());
-
-                }
-
-            }
-            else
-            {
-                VisualUI(0);
-            }
-
-            if (Input.GetButtonUp(actionInput))
-            {
-                _actionTriggerTime = 0;
-            }
-
-
-        }
-
-        private void LateUpdate()
-        {
-            if (!triggered)
-            {
-                if (_movePlayer && !_playerEngaged)
-                {
-                    Engage();
-                }
-                else if (_movePlayer && _playerEngaged)
-                {
-                    Disengage(() =>
-                    {
-                        PlayerMovementController.Instance.DisablePlayerMovement(false);
-                    });
-                }
-            }
-            else
-            {
-                if (_movePlayer)
-                {
-                    ResetRotation();
-                }
-            }
-
-        }
-
-        #endregion
-
-        #region Custom Methods
-
-        private void Engage()
-        {
-            if (!_movePlayer)
-            {
-                _movePlayer = true;
-                _target = PlayerMovementController.Instance.transform;
-
-                _initialPos = _target.position;
-                _initialRot = _target.rotation;
-                _timeElapsed = 0;
-
-                PlayerMovementController.Instance.DisablePlayerMovement(true);
-                PlayerMovementController.Instance.PlayAnimation(engageActionName, 0.4f, 1);
-            }
-
-            else
-            {
-                _timeElapsed += Time.deltaTime;
-
-                float fraction = _timeElapsed / 0.4f;
-
-                _target.position = Vector3.Lerp(_initialPos, pointOfAction.position, fraction);
-
-                _target.rotation = Quaternion.Slerp(_initialRot, pointOfAction.rotation, fraction);
-
-                if (fraction >= 1)
-                {
-                    _movePlayer = false;
-                    _playerEngaged = true;
-                }
-
-            }
-        }
-
-        private void Disengage(Action action = null)
-        {
-
-            if (!careRotation)
-            {
-                _movePlayer = false;
-                _playerEngaged = false;
-                PlayerMovementController.Instance.PlayAnimation("Default", 0.3f, 1);
-                PlayerMovementController.Instance.DisablePlayerMovement(false);
-                return;
-            }
-
-
-            if (!_movePlayer)
-            {
-                _movePlayer = true;
-                _timeElapsed = 0;
-                _initialRot = _target.rotation;
-                PlayerMovementController.Instance.PlayAnimation("Default", 1f, 1);
-            }
-            else
-            {
-                ResetRotation(() =>
-                {
-                    PlayerMovementController.Instance.DisablePlayerMovement(false);
-                });
-
-            }
-        }
-
-
-        private void ResetRotation(Action action = null)
-        {
-            if (!_movePlayer)
-            {
-                _movePlayer = true;
-                _timeElapsed = 0;
-                _initialRot = _target.rotation;
-            }
-
-            else
-            {
-                _timeElapsed += Time.deltaTime;
-
-                float fraction = _timeElapsed / 0.5f;
-
-                _target.rotation = Quaternion.Slerp(_initialRot, new Quaternion(0, 0, 0, 1), fraction);
-
-                if (fraction >= 1)
-                {
-                    _movePlayer = false;
-                    _playerEngaged = false;
-                    action?.Invoke();
-                }
-
-            }
+            if (!_playerInTrigger) _playerInTrigger = true;
         }
 
         private IEnumerator ResetTrigger()
         {
-
-            yield return new WaitForSeconds(0.1f);
-
-            _playerIsInTrigger = false;
-            _playerEngaged = false;
-            _actionTriggerTime = 0;
+            yield return new WaitForSeconds(0.2f);
+            _playerInTrigger = false;
+            _resetTrigger = null;
         }
 
+
+        private void Update()
+        {
+            if (!_playerInTrigger) return;
+
+            if (_actionCounter >= maximumActionCount) return;
+
+            if (Input.GetButton(activationInput))
+            {
+                if (!_engaged) StartCoroutine(EngageAction());
+            }
+        }
+
+
+        private IEnumerator EngageAction()
+        {
+            _engaged = true;
+
+            var movementController = PlayerMovementController.Instance;
+            movementController.player.DisabledPlayerMovement = true;
+            movementController.player.CController.enabled = false;
+
+            Vector3 initialPos = movementController.player.transform.position;
+            Quaternion initialRot = movementController.player.transform.rotation;
+
+
+            float timeElapsed = 0;
+
+            movementController.PlayAnimation(engageActionName, 0.2f, 1);
+            while (timeElapsed < engageTime)
+            {
+                timeElapsed += Time.deltaTime;
+
+                movementController.player.transform.position =
+                    Vector3.Lerp(initialPos, pointOfAction.position, timeElapsed / engageTime);
+                movementController.player.transform.rotation =
+                    Quaternion.Lerp(initialRot, pointOfAction.rotation, timeElapsed / engageTime);
+
+                yield return null;
+            }
+
+
+            timeElapsed = 0;
+
+            while (Input.GetButton(activationInput))
+            {
+                movementController.player.transform.position = pointOfAction.position;
+                movementController.player.transform.rotation = pointOfAction.rotation;
+
+
+                if (Input.GetButton(actionInput))
+                {
+                    VisualUI(timeElapsed / timeToTrigger);
+                    timeElapsed += Time.deltaTime;
+                }
+                else
+                {
+                    timeElapsed = 0;
+                }
+
+                if (timeElapsed >= timeToTrigger)
+                {
+                    yield return Trigger();
+                    break;
+                }
+
+                yield return null;
+            }
+
+            yield return DisEngage(initialPos, initialRot);
+        }
 
         private IEnumerator Trigger()
         {
-
-            if (triggered)
-            {
-                yield break;
-            }
-
+            _actionCounter++;
+            PlayerMovementController.Instance.PlayAnimation(actionName, 0.2f, 1);
 
             yield return new WaitForSeconds(actionDelay);
+            ResetVisualUI();
 
-            triggered = true;
-            PlayerMovementController.Instance.DisablePlayerMovement(true);
-            PlayerMovementController.Instance.PlayAnimation(actionName, 1);
+            action.Invoke();
+            yield return new WaitForSeconds(actionAnimationTime - actionDelay);
+        }
 
-            yield return new WaitForSeconds(timings[0]);
+        private IEnumerator DisEngage(Vector3 initialPos, Quaternion initialRot)
+        {
+            _engaged = false;
 
-            action?.Invoke();
+            var movementController = PlayerMovementController.Instance;
+            movementController.player.DisabledPlayerMovement = false;
+            movementController.player.CController.enabled = true;
+            movementController.PlayAnimation("Default", 0.2f, 1);
+            
+            float timeElapsed = 0;
 
-            //TODO: make the time delay dynamic if needed;
-            yield return new WaitForSeconds(timings[1]);
-
-            if (careRotation)
+            Vector3 initPos = movementController.player.transform.position;
+            Quaternion initRot = movementController.player.transform.rotation;
+            
+            while (timeElapsed < 0.5f)
             {
-                ResetRotation();
+                timeElapsed += Time.deltaTime;
+
+                movementController.player.transform.position =
+                    Vector3.Lerp(initPos, initialPos, timeElapsed / 0.5f);
+                movementController.player.transform.rotation =
+                    Quaternion.Lerp(initRot, initialRot, timeElapsed / 0.5f);
+
+                yield return null;
             }
-
-            yield return new WaitForSeconds(timings[2]);
-
-
-            PlayerMovementController.Instance.DisablePlayerMovement(false);
-
         }
 
 
-
-        private Coroutine UICoroutine;
         private void VisualUI(float fill)
         {
-            var camera = CameraFollow.Instance.myCamera;
+            var myCamera = CameraFollow.Instance.myCamera;
 
-            var pos = camera.WorldToScreenPoint(transform.position + visualOffset);
+            var pos = myCamera.WorldToScreenPoint(transform.position + visualOffset);
             progressBar.rectTransform.position = pos;
             progressBar.fillAmount = fill;
 
             if (!progressBar.gameObject.activeInHierarchy)
             {
                 progressBar.gameObject.SetActive(true);
-
-                //TODO: CHANGE IT
-                actionText.text = ">";
+                actionText.text = actionString;
             }
-
-            if (UICoroutine != null)
-            {
-                StopCoroutine(UICoroutine);
-            }
-
-            UICoroutine = StartCoroutine(ResetUI());
-
-
         }
 
-        private IEnumerator ResetUI()
+        private void ResetVisualUI()
         {
-            yield return new WaitForSeconds(0.1f);
-
             progressBar.gameObject.SetActive(false);
-
+            progressBar.fillAmount = 0;
         }
 
-        public void ReActivate()
+
+        public void ResetTracker()
         {
-            triggered = false;
+            _actionCounter = 0;
         }
-
-        #endregion 
-
-
-
     }
 }

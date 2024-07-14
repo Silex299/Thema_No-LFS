@@ -14,11 +14,11 @@ namespace Misc
         [SerializeField] private Barrier[] barriers;
 
 
-        private int currentIndex;
+        private int _currentIndex;
         public void Break()
         {
             print("calling babe");
-            Barrier barrier = barriers[currentIndex];
+            Barrier barrier = barriers[_currentIndex];
 
             barrier.BreakBarrier(breakForce, forceTransform);
 
@@ -28,8 +28,8 @@ namespace Misc
 
         private void BreakableAction()
         {
-            barriers[currentIndex].action?.Invoke();
-            currentIndex++;
+            barriers[_currentIndex].action?.Invoke();
+            _currentIndex++;
         }
     }
 

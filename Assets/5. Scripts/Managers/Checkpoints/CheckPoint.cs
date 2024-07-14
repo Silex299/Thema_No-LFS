@@ -46,6 +46,8 @@ namespace Managers.Checkpoints
             player.CanRotate = canRotate;
             
             PlayerMovementController.Instance.ChangeState(playerStateIndex);
+            
+            
             PlayerPathController path = PlayerPathController.Instance;
             path.nextDestination = nextPathPointIndex;
             path.previousDestination = prevPathPointIndex;
