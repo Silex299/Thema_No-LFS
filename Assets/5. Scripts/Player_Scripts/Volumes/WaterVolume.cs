@@ -24,6 +24,8 @@ namespace Player_Scripts.Volumes
 
         private void OnTriggerStay(Collider other)
         {
+            if(!enabled) return;
+            
             if(!other.CompareTag("Player_Main")) return;
             if (_triggerCoroutine != null)
             {
@@ -44,6 +46,7 @@ namespace Player_Scripts.Volumes
 
         private void TriggerWaterVolume()
         {
+            if(!enabled) return;
             _playerInTrigger = true;
             
             if (PlayerMovementController.Instance.player.currentStateIndex != 2)

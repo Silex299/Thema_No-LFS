@@ -15,6 +15,10 @@ namespace Managers.Checkpoints
         [BoxGroup("Player Info")] public int nextPathPointIndex;
         [BoxGroup("Player Info")] public int prevPathPointIndex;
 
+        [BoxGroup("Player Movement")] public bool canRotate = true;
+        [BoxGroup("Player Movement")] public bool canJump;
+        [BoxGroup("Player Movement")] public bool canBoost;
+        
         [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
         public int checkpointIndex;
@@ -36,6 +40,11 @@ namespace Managers.Checkpoints
             CameraManager.Instance.Reset();
 
             //Player
+            Player player = PlayerMovementController.Instance.player;
+            player.CanBoost = canBoost;
+            player.CanJump = canJump;
+            player.CanRotate = canRotate;
+            
             PlayerMovementController.Instance.ChangeState(playerStateIndex);
             PlayerPathController path = PlayerPathController.Instance;
             path.nextDestination = nextPathPointIndex;

@@ -1,7 +1,7 @@
 using Player_Scripts;
 using UnityEngine;
 
-public class HalfWaterVolume : MonoBehaviour
+public class InteractionEffectVolume : MonoBehaviour
 {
     public GameObject splashPrefab;
     public GameObject dragPrefab;
@@ -11,6 +11,7 @@ public class HalfWaterVolume : MonoBehaviour
     public bool varyingTerrain;
     public float surfaceHeight = 0.7f;
 
+    public float destroyEffectDelay = 1f;
     private bool _playerInTrigger;
     private GameObject _spawnedEffect;
 
@@ -49,7 +50,7 @@ public class HalfWaterVolume : MonoBehaviour
             _playerInTrigger = false;
             if (_spawnedEffect)
             {
-                Destroy(_spawnedEffect, 1);
+                Destroy(_spawnedEffect, destroyEffectDelay);
             }
         }
     }

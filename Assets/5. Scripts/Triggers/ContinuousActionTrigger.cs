@@ -7,6 +7,7 @@ using System;
 using Thema_Camera;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 
 #if UNITY_EDITOR
@@ -46,7 +47,7 @@ namespace Triggers
         private bool _playerIsInTrigger;
         private bool _movePlayer;
         private bool _playerEngaged;
-        [SerializeField] private bool _triggerd;
+        [SerializeField] private bool triggered;
 
         private float _actionTriggerTime;
         private Coroutine _resetTrigger;
@@ -55,6 +56,11 @@ namespace Triggers
         private Vector3 _initialPos;
         private Quaternion _initialRot;
         private float _timeElapsed;
+
+        public bool Triggered
+        {
+            set => triggered = value;
+        }
 
 
         #region Editor
@@ -120,7 +126,7 @@ namespace Triggers
 
         private void OnTriggerStay(Collider other)
         {
-            if (_triggerd) return;
+            if (triggered) return;
             if (other.CompareTag("Player_Main"))
             {
                 print(other.tag);
@@ -142,7 +148,7 @@ namespace Triggers
         private void Update()
         {
 
-            if (_triggerd) return;
+            if (triggered) return;
             if (!_playerIsInTrigger) return;
 
 
@@ -199,7 +205,7 @@ namespace Triggers
 
         private void LateUpdate()
         {
-            if (!_triggerd)
+            if (!triggered)
             {
                 if (_movePlayer && !_playerEngaged)
                 {
@@ -333,7 +339,7 @@ namespace Triggers
         private IEnumerator Trigger()
         {
 
-            if (_triggerd)
+            if (triggered)
             {
                 yield break;
             }
@@ -341,7 +347,7 @@ namespace Triggers
 
             yield return new WaitForSeconds(actionDelay);
 
-            _triggerd = true;
+            triggered = true;
             PlayerMovementController.Instance.DisablePlayerMovement(true);
             PlayerMovementController.Instance.PlayAnimation(actionName, 1);
 
@@ -403,7 +409,7 @@ namespace Triggers
 
         public void ReActivate()
         {
-            _triggerd = false;
+            triggered = false;
         }
 
         #endregion 
