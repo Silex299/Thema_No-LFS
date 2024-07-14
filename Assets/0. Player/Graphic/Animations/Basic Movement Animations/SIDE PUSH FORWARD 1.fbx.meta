@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 74eaeed8d748d3e448c12d5418af1e07
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 22200
   internalIDToNameTable:
   - first:
       74: -623603649343465320
@@ -59,23 +59,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.22142857
-        functionName: PlaySteps
-        data: 
-        objectReferenceParameter: {fileID: 11400000, guid: 171091aad3764964a876095768cfcd5f,
-          type: 2}
-        floatParameter: 0.6
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.7214286
-        functionName: PlaySteps
-        data: 
-        objectReferenceParameter: {fileID: 11400000, guid: 8cfa7ecce7ba6fa4fb4e10a70a238624,
-          type: 2}
-        floatParameter: 0.6
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -88,6 +72,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -115,6 +100,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -1084,6 +1070,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 

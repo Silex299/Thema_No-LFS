@@ -167,14 +167,13 @@ namespace Player_Scripts
 
                     //Not sure its acting weird, so added 100f to raycast
 
-                    Ray ray1 = new Ray(transform.position + Vector3.up, (leftFootSocket.position - transform.position).normalized);
+                    Ray ray1 = new Ray(transform.position + Vector3.up, (leftFootSocket.position - transform.position -  Vector3.up).normalized);
                     
                     Debug.DrawRay(ray1.origin, ray1.direction * 10f, Color.red, 1f);
                     
                     if (Physics.Raycast(ray1, out RaycastHit hit1, 100f, raycastMask))
                     {
                         var hitSurface = hit1.collider.tag;
-                        print(hit1.collider.name);
                         //Spawn Effects
                         if (stepEffects.ContainsKey(hitSurface))
                         {
@@ -192,7 +191,7 @@ namespace Player_Scripts
                     break;
                 case WhichStep.RIGHT:
 
-                    Ray ray2 = new Ray(transform.position + Vector3.up, (rightFootSocket.position - transform.position).normalized);
+                    Ray ray2 = new Ray(transform.position + Vector3.up, (rightFootSocket.position - transform.position - Vector3.up).normalized);
                     
                     Debug.DrawRay(ray2.origin, ray2.direction * 10f, Color.yellow, 1f);
                     
@@ -200,7 +199,6 @@ namespace Player_Scripts
                     {
                         var hitSurface = hit2.collider.tag;
                         
-                        print(hit2.collider.name);
                         //Spawn Effects
                         if (stepEffects.ContainsKey(hitSurface))
                         {
@@ -232,6 +230,7 @@ namespace Player_Scripts
                 float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
                 float volume = Mathf.Abs(rawInput) * stepInfo.volume * _volumeMultiplier;
                 interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
+                Debug.Log("playing " + hitSurface + volume);
             }
             
         }
@@ -246,18 +245,27 @@ namespace Player_Scripts
         /// <param name="soundKey"> interaction name, e.g. Land, Jump </param>
         public void PlayInteractionSound(string soundKey)
         {
-            if (!interactionSounds.ContainsKey(currentEffectVolume)) return;
+            Ray ray2 = new Ray(transform.position + 2*Vector3.up, -Vector3.up);
+                    
+            Debug.DrawRay(ray2.origin, ray2.direction * 10f, Color.blue, 1f);
 
-            if (interactionSounds.TryGetValue(currentEffectVolume, out var sounds))
+            if (Physics.Raycast(ray2, out RaycastHit hit, 100f, raycastMask))
             {
-                if (!sounds.ContainsKey(soundKey)) return;
-
-                if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
+                string effectSurface = hit.collider.tag; 
+                
+                if (!interactionSounds.ContainsKey(effectSurface)) return;
+                if (interactionSounds.TryGetValue(effectSurface, out var sounds))
                 {
-                    var randomIndex = Random.Range(0, clips.Count);
-                    interactionSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
+                    if (!sounds.ContainsKey(soundKey)) return;
+
+                    if (sounds.TryGetValue(soundKey, out List<AudioClip> clips))
+                    {
+                        var randomIndex = Random.Range(0, clips.Count);
+                        interactionSource.PlayOneShot(clips[randomIndex], _volumeMultiplier);
+                    }
                 }
             }
+            
         }
 
         #endregion
