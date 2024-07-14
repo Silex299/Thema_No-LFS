@@ -230,7 +230,6 @@ namespace Player_Scripts
                 float rawInput = Input.GetAxis(player.UseHorizontal ? "Horizontal" : "Vertical");
                 float volume = Mathf.Abs(rawInput) * stepInfo.volume * _volumeMultiplier;
                 interactionSource.PlayOneShot(clips[Random.Range(0, clips.Count)], volume);
-                Debug.Log("playing " + hitSurface + volume);
             }
             
         }
