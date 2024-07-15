@@ -2,9 +2,6 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.Serialization;
-using WireBuilder;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items

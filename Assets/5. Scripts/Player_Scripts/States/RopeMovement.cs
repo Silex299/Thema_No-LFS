@@ -84,10 +84,6 @@ namespace Player_Scripts.States
                     Debug.LogError("You pressed Jump");
                     _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
                 }
-                else
-                {
-                    Debug.Log("You can't dettach");
-                }
 
             }
 
