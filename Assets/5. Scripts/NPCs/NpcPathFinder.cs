@@ -6,7 +6,7 @@ public class NpcPathFinder : MonoBehaviour
     [InfoBox("raycast has to hit nothing in order to get direct player position")]
     public LayerMask layerMask;
 
-    public virtual Vector3 GetNextPoint(Vector3 origin, Vector3 destination, int instanceId = 0)
+    public virtual Vector3 GetNextPoint( GuardNpc npc, Vector3 destination)
     {
         return Vector3.zero;
     }

@@ -25,9 +25,8 @@ public class GuardNpcChaseState : GuardNpcState
     {
         if(!_canChase) return;
         
-        Vector3 guardPos = npc.transform.position + Vector3.up * 1.3f;
         Vector3 playerPos = PlayerMovementController.Instance.transform.position + Vector3.up * 1.3f;
-        Vector3 destination = npc.PathFinder.GetNextPoint(guardPos, playerPos, npc.GetInstanceID());
+        Vector3 destination = npc.PathFinder.GetNextPoint(npc, playerPos);
 
         Rotate(npc.transform, destination, npc.rotationSpeed * 10);
 

@@ -16,10 +16,14 @@ public class NpcPredefinedPathFinder : NpcPathFinder
 
 
     private readonly Dictionary<int, bool> _npcId = new Dictionary<int, bool>();
+    //NEEDS TO BE UPDATED
     private int _currentWaypoint;
 
-    public override Vector3 GetNextPoint(Vector3 origin, Vector3 destination, int instanceId)
+    public override Vector3 GetNextPoint(GuardNpc npc, Vector3 destination)
     {
+        Vector3 origin = npc.transform.position + Vector3.up * 1.3f;
+        int instanceId = npc.GetInstanceID();
+        
         if (InSight(origin, destination))
         {
             Debug.DrawLine(origin, destination, Color.green, 0.5f);
@@ -31,7 +35,7 @@ public class NpcPredefinedPathFinder : NpcPathFinder
             return destination;
         }
 
-        if (_npcId.TryGetValue(instanceId, out var value))
+        if (_npcId.ContainsKey(instanceId))
         {
             //Get distance between origin and current waypoint
             float distance = Vector3.Distance(origin, waypoints[_currentWaypoint].position);

@@ -6,8 +6,10 @@ public class NpcBasicPathFinder : NpcPathFinder
     private int _closestWayPoint;
 
 
-    public override Vector3 GetNextPoint(Vector3 origin, Vector3 destination, int instanceId = 0)
+    public override Vector3 GetNextPoint(GuardNpc npc, Vector3 destination)
     {
+        Vector3 origin = npc.transform.position + Vector3.up * 1.3f;
+        
         //return the point of the destination if raycast from origin to destination hits a collider with tag
         if (InSight(origin, destination))
         {
