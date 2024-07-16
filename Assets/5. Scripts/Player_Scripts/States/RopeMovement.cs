@@ -51,6 +51,8 @@ namespace Player_Scripts.States
             {
                 player.StartCoroutine(DetachPlayer(player));
             }
+            
+            attachedRope = null;
         }
 
         /// <summary>
@@ -203,7 +205,6 @@ namespace Player_Scripts.States
                 player.CController.Move(player.playerVelocity * Time.deltaTime);
                 player.MovementController.GroundCheck();
                 player.AnimationController.SetFloat(Speed, horizontalInput);
-
                 yield return null;
             }
 

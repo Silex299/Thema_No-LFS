@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace Triggers
 {
@@ -41,10 +42,10 @@ namespace Triggers
             {
                 bool result = moveDirection switch
                 {
-                    MoveDirection.Forward => Input.GetAxis("Horizontal") > threshold,
-                    MoveDirection.Backward => Input.GetAxis("Horizontal") < threshold,
-                    MoveDirection.Left => Input.GetAxis("Vertical") < threshold,
-                    MoveDirection.Right => Input.GetAxis("Vertical") > threshold,
+                    MoveDirection.Right => Input.GetAxis("Horizontal") > threshold,
+                    MoveDirection.Left => Input.GetAxis("Horizontal") < threshold,
+                    MoveDirection.Down => Input.GetAxis("Vertical") < threshold,
+                    MoveDirection.Up => Input.GetAxis("Vertical") > threshold,
                     _ => false
                 };
                 
@@ -66,12 +67,9 @@ namespace Triggers
                 }
             }
         }
-
-
-        [Serializable]
-        public enum MoveDirection
-        {
-            Forward,Backward,Left,Right
-        }
+        
     }
 }
+
+
+//TODO: IMPORTANT:: FIX MOVE DIRECTION IN PLAYER DIRECTION TRIGGER

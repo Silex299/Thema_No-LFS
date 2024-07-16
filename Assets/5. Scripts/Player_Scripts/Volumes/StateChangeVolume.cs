@@ -1,9 +1,11 @@
-using System;
-using Path_Scripts;
+
 using Sirenix.OdinInspector;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
+using System.Linq;
+using Triggers;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace Player_Scripts.Volumes
@@ -12,13 +14,19 @@ namespace Player_Scripts.Volumes
     public class StateChangeVolume : MonoBehaviour
     {
         
+        [BoxGroup("Conditions")] public List<TriggerCondition> conditions;
+        
         [SerializeField, BoxGroup("ENTRY STATE")] private int entryStateIndex;
         [SerializeField, BoxGroup("ENTRY STATE")] private bool enableEntryDirection;
         [SerializeField, BoxGroup("ENTRY STATE")] private bool entryOneWayRotation;
+        [SerializeField, BoxGroup("ENTRY STATE")] private UnityEvent entryAction;
 
         [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
         [SerializeField, BoxGroup("EXIT STATE")] private bool enableExitDirection;
         [SerializeField, BoxGroup("EXIT STATE")] private bool exitOneWayRotation;
+
+        [SerializeField, BoxGroup("EXIT STATE")]
+        private UnityEvent exitAction;
 
         
         [BoxGroup("Misc")] public bool continuousCheck = true;
@@ -38,10 +46,7 @@ namespace Player_Scripts.Volumes
                 {
                     if (!_triggered)
                     {
-                        PlayerMovementController.Instance.ChangeState(entryStateIndex);
-                        PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
-                        PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
-                        _triggered = true;
+                        EntryAction(other);
                     }
                     else
                     {
@@ -66,10 +71,7 @@ namespace Player_Scripts.Volumes
             
             if (other.CompareTag("Player_Main"))
             {
-                PlayerMovementController.Instance.ChangeState(entryStateIndex);
-                PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
-                PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
-                _triggered = true;
+                EntryAction(other);
             }
         }
 
@@ -79,10 +81,7 @@ namespace Player_Scripts.Volumes
             if (other.CompareTag("Player_Main"))
             {
                 
-                PlayerMovementController.Instance.ChangeState(exitStateIndex);
-                PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
-                PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
-                _triggered = false;
+               ExitAction(other);
 
             }
         }
@@ -98,6 +97,31 @@ namespace Player_Scripts.Volumes
             _resetCoroutine = null;
         }
 
+        
+        private void EntryAction(Collider other)
+        {
+            if (conditions.Any(condition => !condition.Condition(other))) return;
+                        
+            PlayerMovementController.Instance.ChangeState(entryStateIndex);
+            PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
+            PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
+            _triggered = true;
+            
+            entryAction?.Invoke();
+        }
+
+        private void ExitAction(Collider other)
+        {
+            if (conditions.Any(condition => !condition.Condition(other))) return;
+                
+            PlayerMovementController.Instance.ChangeState(exitStateIndex);
+            PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
+            PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
+            _triggered = false;
+            
+            exitAction?.Invoke();
+        }
+        
 
     }
 
