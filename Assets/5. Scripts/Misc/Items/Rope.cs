@@ -2,6 +2,7 @@ using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
@@ -50,7 +51,7 @@ namespace Misc.Items
 
         [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
-        public Vector3 InitialRotation{get; private set;}
+        public Vector3 initialRotation;
         private bool _connected;
         private float _closestIndex;
         private float _closestDistance = 100f;
@@ -230,9 +231,9 @@ namespace Misc.Items
             var newRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
 
             //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
-            newRotation.eulerAngles = InitialRotation.y is > 90 or < -90 ? new Vector3(-newRotation.eulerAngles.x, InitialRotation.y, -newRotation.eulerAngles.z) :
+            newRotation.eulerAngles = initialRotation.y is > 90 or < -90 ? new Vector3(-newRotation.eulerAngles.x, initialRotation.y, -newRotation.eulerAngles.z) :
                 //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
-                new Vector3(newRotation.eulerAngles.x, InitialRotation.y, newRotation.eulerAngles.z);
+                new Vector3(newRotation.eulerAngles.x, initialRotation.y, newRotation.eulerAngles.z);
             
             playerInstanceTransform.rotation = newRotation;
             
@@ -250,7 +251,7 @@ namespace Misc.Items
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
                 
-                rb.AddForce(0, 0, swingForce * -input * Time.deltaTime);
+                rb.AddForce(0, 0, swingForce * -input * Time.fixedDeltaTime);
             }
         }
 
@@ -331,7 +332,11 @@ namespace Misc.Items
                 _lastAttachedTime = Time.time;
             }
 
-            InitialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
+            initialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
+            if (initialRotation.y > 180)
+            {
+                initialRotation.y -= 360;
+            }
 
         }
 

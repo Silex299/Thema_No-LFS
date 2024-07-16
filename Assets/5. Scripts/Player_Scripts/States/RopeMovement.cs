@@ -102,7 +102,7 @@ namespace Player_Scripts.States
 
             var input = Input.GetAxis("Horizontal");
 
-            float adjustedInput = (attachedRope.InitialRotation.y is > 90 or < -90) ? -input : input;
+            float adjustedInput = (attachedRope.initialRotation.y is > 90 or < -90) ? -input : input;
             player.AnimationController.SetFloat(Speed, invertedAxis ? -adjustedInput : adjustedInput);
 
             if (Mathf.Abs(input) > 0.2f)
@@ -187,7 +187,7 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            player.playerVelocity = new Vector3(0, attachedRope.exitForce,
+            player.playerVelocity = new Vector3(0, Mathf.Abs(attachedRope.CurrentRopeSegment().velocity.y),
                 attachedRope.exitForce * (invertedAxis? Input.GetAxis("Horizontal") : -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z));
 
 

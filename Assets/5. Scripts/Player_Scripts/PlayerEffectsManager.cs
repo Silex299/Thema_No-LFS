@@ -278,7 +278,11 @@ namespace Player_Scripts
         /// <param name="soundKey">action name</param>
         public void PlayPlayerSound(string soundKey)
         {
-            if(!playerSounds.ContainsKey(soundKey)) return;
+            if (!playerSounds.ContainsKey(soundKey))
+            {
+                Debug.LogWarning("fuck me daddy");
+                return;
+            }
             
             if (playerSounds.TryGetValue(soundKey, out List<AudioClip> clips))
             {
