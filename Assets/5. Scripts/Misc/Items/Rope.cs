@@ -55,6 +55,17 @@ namespace Misc.Items
         private float _closestIndex;
         private float _closestDistance = 100f;
         private float _lastAttachedTime;
+
+
+        public bool Connected
+        {
+            get=>  _connected;
+            set
+            {
+                print("Fuck me dumbass");
+                _connected = value;
+            }
+        }
         
         #endregion
 
@@ -191,7 +202,7 @@ namespace Misc.Items
         /// <param name="input">The vertical input from the player.</param>
         public void MovePlayer(float input)
         {
-            if (!_connected) return;
+            if (!Connected) return;
 
             // If the player is moving upwards along the rope
             if (input > 0.2f)
@@ -215,9 +226,13 @@ namespace Misc.Items
                         newOffset.z * playerInstanceTransform.forward;
 
             playerInstanceTransform.position = GetDesiredPosition() + newOffset;
+            
             var newRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
+
             //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
-            newRotation.eulerAngles = new Vector3(newRotation.eulerAngles.x, InitialRotation.y, newRotation.eulerAngles.z);
+            newRotation.eulerAngles = InitialRotation.y is > 90 or < -90 ? new Vector3(-newRotation.eulerAngles.x, InitialRotation.y, -newRotation.eulerAngles.z) :
+                //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
+                new Vector3(newRotation.eulerAngles.x, InitialRotation.y, newRotation.eulerAngles.z);
             
             playerInstanceTransform.rotation = newRotation;
             
@@ -231,7 +246,7 @@ namespace Misc.Items
         /// <param name="input">The horizontal input from the player.</param>
         public void SwingRope(float input)
         {
-            if (_connected)
+            if (Connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
                 
@@ -291,7 +306,7 @@ namespace Misc.Items
             ropeSegments[(int)Mathf.Floor(_closestIndex)]
                 .AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
             // Once all segments have been checked, set the rope as connected
-            _connected = true;
+            Connected = true;
         }
 
         public Rigidbody CurrentRopeSegment()
@@ -325,12 +340,13 @@ namespace Misc.Items
         /// </summary>
         public void Detached()
         {
+            print("Fuck me");
             // Record the time of detachment
             _lastAttachedTime = Time.time;
             // Reset the closest distance to a large value
             _closestDistance = 100;
             // Set the connection status to false
-            _connected = false;
+            Connected = false;
         }
 
         #endregion

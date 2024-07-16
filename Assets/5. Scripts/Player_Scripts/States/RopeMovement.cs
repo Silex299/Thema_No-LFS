@@ -13,6 +13,7 @@ namespace Player_Scripts.States
         [SerializeField] private Rope attachedRope;
         public Transform handSocket;
         public Vector3 offset;
+        public bool invertedAxis;
 
         #endregion
 
@@ -79,12 +80,11 @@ namespace Player_Scripts.States
 
             if (Input.GetButtonDown("Jump"))
             {
-                if (Time.time - _attachTime > 1)
+                if (Time.time - _attachTime > 0.5f)
                 {
                     Debug.LogError("You pressed Jump");
                     _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
                 }
-
             }
 
             if (_isSwinging) return;
@@ -101,13 +101,14 @@ namespace Player_Scripts.States
             if (!_isAttached) return;
 
             var input = Input.GetAxis("Horizontal");
-            player.AnimationController.SetFloat(Speed,
-                attachedRope.InitialRotation.y is > 90 or < -90 ? input : -input);
+
+            float adjustedInput = (attachedRope.InitialRotation.y is > 90 or < -90) ? -input : input;
+            player.AnimationController.SetFloat(Speed, invertedAxis ? -adjustedInput : adjustedInput);
 
             if (Mathf.Abs(input) > 0.2f)
             {
-                attachedRope.SwingRope(Input.GetAxis("Horizontal"));
-                
+                attachedRope.SwingRope((invertedAxis ? -1 : 1) * Input.GetAxis("Horizontal"));
+
                 if (!_isSwinging)
                 {
                     player.AnimationController.SetBool(Action, true);
@@ -186,8 +187,9 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            player.playerVelocity  = new Vector3(0, attachedRope.exitForce, attachedRope.exitForce * -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z );
-            
+            player.playerVelocity = new Vector3(0, attachedRope.exitForce,
+                attachedRope.exitForce * (invertedAxis? Input.GetAxis("Horizontal") : -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z));
+
 
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)

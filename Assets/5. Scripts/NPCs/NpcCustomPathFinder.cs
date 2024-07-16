@@ -14,8 +14,11 @@ namespace NPCs
 
         public override Vector3 GetNextPoint(GuardNpc npc, Vector3 destination)
         {
+            
+            
             int instanceId = npc.GetInstanceID();
             Vector3 origin = npc.transform.position;
+            
             
             if (!_npcInstance.ContainsKey(instanceId))
             {
@@ -35,7 +38,6 @@ namespace NPCs
                 {
                     if (waypoints[_npcInstance[instanceId]].name.Substring(0, 4) != "Point")
                     {
-                        //Change
                         npc.animator.CrossFade(waypoints[_npcInstance[instanceId]].name, 0.2f, 1);
                     }
 
@@ -43,21 +45,12 @@ namespace NPCs
                     {
                         _npcInstance[instanceId] = _npcInstance[instanceId] + 1;
                     }
-                    
                 }
-
-                if (InSight(origin, destination))
+                
+                if (InSight(origin + Vector3.up * 1f, destination + Vector3.up * 1f))
                 {
-                    float distanceToDestination = Vector3.Distance(origin, destination);
-                    if (distanceToDestination < destinationThreshold)
-                    {
-                    
-                    }
-
-                    if (InSight(origin, destination))
-                    {
-                        return destination;
-                    }
+                    Debug.DrawLine(origin + Vector3.up * 1f, destination + Vector3.up * 1f, Color.red);
+                    return destination;
                 }
             }
 

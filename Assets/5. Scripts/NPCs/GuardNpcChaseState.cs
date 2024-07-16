@@ -25,18 +25,21 @@ public class GuardNpcChaseState : GuardNpcState
     {
         if(!_canChase) return;
         
-        Vector3 playerPos = PlayerMovementController.Instance.transform.position + Vector3.up * 1.3f;
-        Vector3 destination = npc.PathFinder.GetNextPoint(npc, playerPos);
-
-        Rotate(npc.transform, destination, npc.rotationSpeed * 10);
-
-
-        //distance between npc and player
-        float distance = Vector3.Distance(npc.transform.position, PlayerMovementController.Instance.transform.position);
-
-        npc.animator.SetFloat(Speed, distance < stopDistance ? 0 : 1, 0.01f, Time.deltaTime);
+        Vector3 playerPos = PlayerMovementController.Instance.transform.position;
+        Vector3 npcPos = npc.transform.position;
         
-        if (distance < attackDistance)
+        Vector3 destination = npc.PathFinder.GetNextPoint(npc, playerPos);
+        Rotate(npc.transform, destination + Vector3.up * 1.3f, npc.rotationSpeed * 10);
+        
+        float destinationDistance = Vector3.Distance(npc.transform.position, destination);
+        float playerOriginalDistance =  Vector3.Distance(npc.transform.position, playerPos);
+        float planerDistance = Vector3.Distance(playerPos, new Vector3(npcPos.x, playerPos.y, npcPos.z));
+        
+
+        npc.animator.SetFloat(Speed, destinationDistance < stopDistance ? 0 : 1, 0.01f, Time.deltaTime);
+        
+        
+        if (playerOriginalDistance < attackDistance)
         {
             npc.animator.SetBool(Attack1, true);
             Attack(npc);
@@ -45,6 +48,15 @@ public class GuardNpcChaseState : GuardNpcState
         {
             npc.animator.SetBool(Attack1, false);
             _isAttacking = false;
+        }
+
+        if (planerDistance < stopDistance && playerOriginalDistance>attackDistance)
+        {
+            npc.animator.SetBool(Unreachable, true);
+        }
+        else
+        {
+            npc.animator.SetBool(Unreachable, false);
         }
     }
 
@@ -56,6 +68,7 @@ public class GuardNpcChaseState : GuardNpcState
 
 
     private float _startAttackTime;
+    private static readonly int Unreachable = Animator.StringToHash("Unreachable");
 
     protected void Attack(GuardNpc npc)
     {

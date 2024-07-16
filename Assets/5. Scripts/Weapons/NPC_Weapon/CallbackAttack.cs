@@ -79,6 +79,10 @@ namespace Weapons.NPC_Weapon
             {
                 PlayerMovementController.Instance.player.Health.TakeDamage(101);
             }
+            
         }
+        
+        
+        
     }
 }
