@@ -36,33 +36,29 @@ namespace NPCs
                     if (waypoints[_npcInstance[instanceId]].name.Substring(0, 4) != "Point")
                     {
                         //Change
-                        npc.animator.CrossFade(waypoints[_npcInstance[instanceId]].name, 0.2f);
+                        npc.animator.CrossFade(waypoints[_npcInstance[instanceId]].name, 0.2f, 1);
                     }
-                    
-                    _npcInstance[instanceId] = inverted ? _npcInstance[instanceId] - 1 : _npcInstance[instanceId] + 1;
 
-                    if (_npcInstance[instanceId] >= waypoints.Length)
+                    if (_npcInstance[instanceId] < waypoints.Length - 1)
                     {
-                        _npcInstance[instanceId] = waypoints.Length - 1;
-                        inverted = !inverted;
-                    }
-                    else if (_npcInstance[instanceId] < 0)
-                    {
-                        _npcInstance[instanceId] = 0;
-                        inverted = !inverted;
+                        _npcInstance[instanceId] = _npcInstance[instanceId] + 1;
                     }
                     
                 }
-                
-                float distanceToDestination = Vector3.Distance(origin, destination);
-                if (distanceToDestination < destinationThreshold)
+
+                if (InSight(origin, destination))
                 {
+                    float distanceToDestination = Vector3.Distance(origin, destination);
+                    if (distanceToDestination < destinationThreshold)
+                    {
+                    
+                    }
+
                     if (InSight(origin, destination))
                     {
                         return destination;
                     }
                 }
-                
             }
 
             return waypoints[_npcInstance[instanceId]].position;

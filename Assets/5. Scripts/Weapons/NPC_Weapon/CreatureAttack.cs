@@ -10,12 +10,12 @@ namespace Weapons.NPC_Weapon
 
         public void StartAttack()
         {
-            triggerDamage.Enable(true);
+            triggerDamage.enabled = true;
         }
         
         public void EndAttack()
         {
-            triggerDamage.Enable(false);
+            triggerDamage.enabled = false;
         }
 
     }
