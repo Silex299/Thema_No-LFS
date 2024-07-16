@@ -179,9 +179,6 @@ namespace Player_Scripts
             player.AnimationController.SetInteger(StateIndex, index);
 
             player.currentState.ExitState(player);
-
-            ResetAnimator();
-
             switch (index)
             {
                 case <= 0:
@@ -278,6 +275,7 @@ namespace Player_Scripts
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
         public void ResetAnimator()
         {
+            print("Resetting animator");
             player.AnimationController.SetFloat(Speed, 0);
 
             player.AnimationController.SetBool(IsGrounded, true);

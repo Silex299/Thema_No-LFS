@@ -43,7 +43,7 @@ namespace Misc.Items
         [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
         [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
         [SerializeField, BoxGroup("Movement")] private float entryForce = 10;
-        [SerializeField, BoxGroup("Movement")] internal float exitForce = 3;
+        [SerializeField, BoxGroup("Movement")] internal Vector3 exitForce = new Vector3(0, 5, 5);
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace Misc.Items
             get=>  _connected;
             set
             {
-                print("Fuck me dumbass");
+                Debug.LogWarning("fuck me dad" + _connected);
                 _connected = value;
             }
         }
@@ -283,7 +283,7 @@ namespace Misc.Items
         /// Calculates the distance from the player to each rope segment to find the closest one.
         /// </summary>
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
-        private IEnumerator InitialConnect()
+        private void InitialConnect()
         {
             for (int i = 1; i < ropeResolution; i++)
             {
@@ -297,17 +297,21 @@ namespace Misc.Items
                     _closestDistance = distance;
                     _closestIndex = i;
                 }
-
-                yield return null;
             }
 
             //direction of the current closest rope segment from player
 
-            //apply an impulse force in that direction
-            ropeSegments[(int)Mathf.Floor(_closestIndex)]
-                .AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
+            Rigidbody currentSegment = ropeSegments[(int)Mathf.Floor(_closestIndex)];
+
+            if (Mathf.Abs(currentSegment.velocity.magnitude) < 1f)
+            {
+                //apply an impulse force in that direction
+                currentSegment.AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
+            }
+            
             // Once all segments have been checked, set the rope as connected
             Connected = true;
+            
         }
 
         public Rigidbody CurrentRopeSegment()
@@ -326,10 +330,13 @@ namespace Misc.Items
             // If the player can be attached to the rope
             if (PlayerMovementController.Instance.player.ropeMovement.AttachRope(this))
             {
-                print("Fuck Passed");
                 // Start the initial connection process
-                StartCoroutine(InitialConnect());
+                InitialConnect();
                 _lastAttachedTime = Time.time;
+            }
+            else
+            {
+                return;
             }
 
             initialRotation = PlayerMovementController.Instance.transform.rotation.eulerAngles;
@@ -345,7 +352,6 @@ namespace Misc.Items
         /// </summary>
         public void Detached()
         {
-            print("Fuck me");
             // Record the time of detachment
             _lastAttachedTime = Time.time;
             // Reset the closest distance to a large value
