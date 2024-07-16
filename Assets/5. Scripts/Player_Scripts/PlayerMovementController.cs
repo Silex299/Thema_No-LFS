@@ -277,7 +277,6 @@ namespace Player_Scripts
         {
             print("Resetting animator");
             player.AnimationController.SetFloat(Speed, 0);
-
             player.AnimationController.SetBool(IsGrounded, true);
             player.AnimationController.ResetTrigger($"Jump");
         }

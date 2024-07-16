@@ -59,6 +59,7 @@ namespace Player_Scripts.States
         /// </summary>
         public override void EnterState(Player player)
         {
+            player.MovementController.ResetAnimator();
             player.AnimationController.CrossFade("Rope", 0.1f, 0);
             player.IsGrounded = false;
             player.AnimationController.SetBool(IsGrounded, false);
@@ -81,7 +82,7 @@ namespace Player_Scripts.States
 
             if (Input.GetButtonDown("Jump"))
             {
-                if (Time.time - _attachTime > 0.5f)
+                if (Time.time - _attachTime > 0.1f)
                 {
                     _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
                 }
@@ -190,17 +191,18 @@ namespace Player_Scripts.States
             // Detach the rope
             attachedRope.Detached();
 
-            player.playerVelocity = new Vector3(attachedRope.exitForce.x, attachedRope.exitForce.y,  attachedRope.exitForce.z * (invertedAxis? Input.GetAxis("Horizontal") : -Input.GetAxis("Horizontal") + attachedRope.CurrentRopeSegment().velocity.z));
+            var horizontalInput = Input.GetAxis("Horizontal");
+            
+            player.playerVelocity = new Vector3(attachedRope.exitForce.x, attachedRope.exitForce.y,  attachedRope.exitForce.z * (invertedAxis? horizontalInput : -horizontalInput + attachedRope.CurrentRopeSegment().velocity.z));
 
 
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)
             {
                 player.MovementController.ApplyGravity();
-
                 player.CController.Move(player.playerVelocity * Time.deltaTime);
-
                 player.MovementController.GroundCheck();
+                player.AnimationController.SetFloat(Speed, horizontalInput);
 
                 yield return null;
             }
@@ -208,6 +210,7 @@ namespace Player_Scripts.States
             // If the player is in the Rope state, change the player's state to Ground
             if (player.MovementController.VerifyState(PlayerMovementState.Rope))
             {
+                attachedRope = null;
                 player.MovementController.ChangeState(0);
             }
         }
