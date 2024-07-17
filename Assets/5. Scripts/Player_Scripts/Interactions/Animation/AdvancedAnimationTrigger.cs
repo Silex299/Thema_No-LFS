@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -30,9 +32,9 @@ namespace Player_Scripts.Interactions.Animation
         [BoxGroup("State"), ShowIf(nameof(changeState))]
         public int stateIndex;
 
-        [BoxGroup("State"), ShowIf(nameof(changeState)), Range(0,1)]
+        [BoxGroup("State"), ShowIf(nameof(changeState)), Range(0, 1)]
         public float overrideTime;
-    
+
         [BoxGroup("State"), ShowIf(nameof(changeState))]
         public bool overrideAnimation;
 
@@ -52,9 +54,8 @@ namespace Player_Scripts.Interactions.Animation
 
         public void SetNormalisedTime()
         {
-
             Animator animator = FindObjectOfType<Player>().GetComponent<Animator>();
-        
+
             animator.Play(animationName, 1, normalisedTime);
             animator.Update(0);
 
@@ -65,7 +66,7 @@ namespace Player_Scripts.Interactions.Animation
             animator.transform.position = repos;
             animator.transform.rotation = transform.rotation;
         }
-    
+
         #endregion
 
 
@@ -93,13 +94,32 @@ namespace Player_Scripts.Interactions.Animation
 
             Vector3 initialPlayerPos = player.transform.position;
             Quaternion initialPlayerRot = player.transform.rotation;
-        
+
             float timeElapsed = 0;
             while (timeElapsed < animationTime)
             {
                 timeElapsed += Time.deltaTime;
 
-            
+
+                #region GetNormalized Time
+
+                var currentClip = player.AnimationController.GetCurrentAnimatorStateInfo(1);
+                var nextClip = player.AnimationController.GetNextAnimatorStateInfo(1);
+
+                float normalizedTime = 0;
+                
+                if (currentClip.IsName(animationName))
+                {
+                    normalizedTime = currentClip.normalizedTime;
+                }
+                else if (nextClip.IsName(animationName))
+                {
+                    normalizedTime = nextClip.normalizedTime;
+                }
+
+                #endregion
+                
+
                 if (timeElapsed < transitionTime)
                 {
                     var repos = transform.position +
@@ -110,18 +130,28 @@ namespace Player_Scripts.Interactions.Animation
                 }
                 else
                 {
-                    var repos = transform.position +
-                                transform.forward * (distanceCurve.Evaluate(Mathf.Clamp01(timeElapsed / animationTime)) *
-                                                     animationDistance) +
-                                transform.up * (heightCurve.Evaluate(Mathf.Clamp01(timeElapsed / animationTime)) *
-                                                animationHeight);
-                    player.transform.position = repos;
+
+                    if (normalizedTime != 0)
+                    {
+                        var repos = transform.position +
+                                 transform.forward *
+                                 (distanceCurve.Evaluate(normalizedTime) *
+                                  animationDistance) +
+                                 transform.up * (heightCurve.Evaluate(normalizedTime) *
+                                                 animationHeight);
+
+                        player.transform.position = repos;
+                    }
+                    
                 }
-                player.transform.rotation = Quaternion.Lerp(initialPlayerRot, transform.rotation, Mathf.Clamp01(timeElapsed / transitionTime));
-            
+
+
+                player.transform.rotation = Quaternion.Lerp(initialPlayerRot, transform.rotation,
+                    Mathf.Clamp01(timeElapsed / transitionTime));
+
                 yield return null;
             }
-        
+
             if (changeState)
             {
                 if (timeElapsed / animationTime > overrideTime)
@@ -147,6 +177,7 @@ namespace Player_Scripts.Interactions.Animation
             StopAllCoroutines();
             _triggerActionCoroutine = null;
             onActionEnd.Invoke();
+            
         }
     }
 }
