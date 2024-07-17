@@ -11,6 +11,12 @@ namespace Triggers
     public class LevelTrigger : MonoBehaviour
     {
 
+
+        [BoxGroup("Animation Params")] public string trigger_Pull_Enter = "Trigger_Pull_Enter";
+        [BoxGroup("Animation Params")] public string trigger_Push_Enter = "Trigger_Push_Enter";
+        [BoxGroup("Animation Params")] public string trigger_Pull_Enter_Inverse="Trigger_Pull_Enter_Inv";
+        [BoxGroup("Animation Params")] public string trigger_Push_Enter_Inverse = "Trigger_Push_Enter_Inv";
+        
         [SerializeField, BoxGroup("Trigger Params")] private bool triggerPulled;
         [SerializeField, BoxGroup("Trigger Params")] private Animator leverAnimator;
 
