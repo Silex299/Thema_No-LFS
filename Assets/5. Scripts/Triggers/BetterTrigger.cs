@@ -14,8 +14,8 @@ namespace Triggers
     
 
         public UnityEvent action;
-        private UnityEvent entryAction;
-        private UnityEvent exitAction;
+        public UnityEvent entryAction;
+        public UnityEvent exitAction;
     
         private Coroutine _playerInTriggerCoroutine;
         private Coroutine _resetTriggerCoroutine;

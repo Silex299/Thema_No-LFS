@@ -63,7 +63,7 @@ namespace Triggers
 #if UNITY_EDITOR
 
 
-        //TODO: REMOVE ALL
+        //REMOVE ALL
 
         private bool _preview;
         private PlayerMovementController _player;

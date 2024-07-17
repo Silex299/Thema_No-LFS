@@ -83,7 +83,7 @@ namespace Player_Scripts.Interactables
 
                     if (Physics.Raycast(xRay, out RaycastHit info, proximity, proximityMask))
                     {
-                        //TODO REMOVE
+                        //REMOVE
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = localPosition.x;
                     }
@@ -100,7 +100,7 @@ namespace Player_Scripts.Interactables
 
                     if (Physics.Raycast(xRay, out RaycastHit info, proximity, proximityMask))
                     {
-                        //TODO REMOVE
+                        //REMOVE
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = localPosition.x;
                     }
@@ -124,7 +124,7 @@ namespace Player_Scripts.Interactables
 
                     if (Physics.Raycast(zRay, out RaycastHit info, proximity, proximityMask))
                     {
-                        //TODO REMOVE
+                        //REMOVE
                         Debug.DrawLine(zRay.origin, info.point, Color.green);
                         desiredLocalPosition.z = localPosition.z;
                     }
@@ -140,7 +140,7 @@ namespace Player_Scripts.Interactables
 
                     if (Physics.Raycast(zRay, out RaycastHit info, proximity, proximityMask))
                     {
-                        //TODO REMOVE
+                        //REMOVE
                         Debug.DrawLine(zRay.origin, info.point, Color.green);
                         desiredLocalPosition.z = localPosition.z;
                     }

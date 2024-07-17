@@ -67,7 +67,6 @@ namespace Player_Scripts.Volumes
         
         private void OnTriggerEnter(Collider other)
         {
-            if(continuousCheck) return;
             
             if (other.CompareTag("Player_Main"))
             {
