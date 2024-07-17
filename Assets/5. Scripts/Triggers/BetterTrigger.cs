@@ -14,6 +14,8 @@ namespace Triggers
     
 
         public UnityEvent action;
+        private UnityEvent entryAction;
+        private UnityEvent exitAction;
     
         private Coroutine _playerInTriggerCoroutine;
         private Coroutine _resetTriggerCoroutine;
@@ -36,6 +38,7 @@ namespace Triggers
                 {
                     StopCoroutine(_playerInTriggerCoroutine);
                     _playerInTriggerCoroutine = null;
+                    exitAction.Invoke();
                 }
             }
         }
@@ -64,6 +67,8 @@ namespace Triggers
         {
             if(!enabled) yield break;
 
+            entryAction.Invoke();
+            
             while (true)
             {
                 bool result = true;
@@ -86,8 +91,7 @@ namespace Triggers
             
                 yield return null;
             }
-
-        
+            
             yield return new WaitForSeconds(resetAfterActionDelay);
         
             StopCoroutine(_playerInTriggerCoroutine);
@@ -103,6 +107,7 @@ namespace Triggers
                 StopCoroutine(_playerInTriggerCoroutine);
                 _playerInTriggerCoroutine = null;
             }
+            exitAction.Invoke();
         }
 
 

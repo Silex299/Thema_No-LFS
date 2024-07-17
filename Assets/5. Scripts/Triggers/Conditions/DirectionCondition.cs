@@ -7,7 +7,7 @@ namespace Triggers
     {
 #if UNITY_EDITOR
         public Mesh visualisationMesh;
-        public Vector3 visualisationScale;
+        public Vector3 visualisationScale = Vector3.one * 10f;
 #endif
 
         public override bool Condition(Collider other)
