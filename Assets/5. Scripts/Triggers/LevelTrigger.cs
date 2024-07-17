@@ -116,11 +116,11 @@ namespace Triggers
                 
                     if (_forwardDirection)
                     {
-                        player.PlayAnimation(!triggerPulled ? "Trigger_Pull_Enter" : "Trigger_Push_Enter", 0.2f, 1);
+                        player.PlayAnimation(!triggerPulled ? trigger_Pull_Enter : trigger_Push_Enter, 0.2f, 1);
                     }
                     else
                     {
-                        player.PlayAnimation(!triggerPulled ? "Trigger_Pull_Enter_Inv" : "Trigger_Push_Enter_Inv", 0.2f, 1);
+                        player.PlayAnimation(!triggerPulled ? trigger_Pull_Enter_Inverse : trigger_Push_Enter_Inverse, 0.2f, 1);
                     }
 
                 }
