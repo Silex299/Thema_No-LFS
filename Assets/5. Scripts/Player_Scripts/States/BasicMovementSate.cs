@@ -211,14 +211,14 @@ namespace Player_Scripts.States
             {
                 newRotation = Quaternion.LookRotation((rotateTowards - pos), transform.up);
                 //Rotate newRotation by 90degrees in Y axis
-                newRotation *= Quaternion.Euler(0, 90, 0);
+                //newRotation *= Quaternion.Euler(0, 90, 0);
 
             }
             else
             {
                 newRotation = Quaternion.LookRotation((pos - rotateTowards), transform.up);
                 //Rotate newRotation by 90degrees in Y axis
-                newRotation *= Quaternion.Euler(0, 90, 0);
+                //newRotation *= Quaternion.Euler(0, 90, 0);
             }
 
 

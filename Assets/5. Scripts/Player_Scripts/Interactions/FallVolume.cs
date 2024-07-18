@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -34,7 +33,6 @@ namespace Player_Scripts.Interactions
                     if (velocity > velocityThreshold)
                     {
                         onThresholdExceeded.Invoke();
-                        print("triggering");
                     }
                 }
                 else
@@ -42,7 +40,6 @@ namespace Player_Scripts.Interactions
                     if (velocity < velocityThreshold)
                     {
                         onThresholdExceeded.Invoke();
-                        print("triggering");
                     }
                 }
             }

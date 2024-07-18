@@ -1,8 +1,7 @@
-using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Triggers;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Misc.Items
@@ -25,6 +24,9 @@ namespace Misc.Items
 
         [SerializeField, BoxGroup("Rope Properties")]
         private int breakIndex;
+        
+        [SerializeField, BoxGroup("Rope Properties")]
+        private Vector3 breakForce;
 
         [Tooltip(
             "TIt determines how strongly the joint will try to maintain its position. A higher spring value will make the joint stiffer and more resistant to rotational movement")]
@@ -56,6 +58,7 @@ namespace Misc.Items
         private float _closestIndex;
         private float _closestDistance = 100f;
         private float _lastAttachedTime;
+        private bool _canAttach = true;
 
 
         public bool Connected
@@ -63,7 +66,6 @@ namespace Misc.Items
             get=>  _connected;
             set
             {
-                Debug.LogWarning("fuck me dad" + _connected);
                 _connected = value;
             }
         }
@@ -166,14 +168,24 @@ namespace Misc.Items
 
         
         [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
-        public void BreakRope()
+        public void BreakRope(bool exitFall = true)
         {
             Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
             Destroy(lineRenderers[breakIndex]);
-            broken = true;
+            
+            ropeSegments[breakIndex+1].AddForce(breakForce, ForceMode.Impulse);
+            
+            _broken = true;
+            _canAttach = false;
+
+            if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
+            {
+                StartCoroutine(PlayerMovementController.Instance.player.ropeMovement.BrokRope(this, exitFall));
+            }
+            
         }
 
-        private bool broken;
+        private bool _broken;
         
         #endregion
 
@@ -184,7 +196,7 @@ namespace Misc.Items
             //for each line render segment set the 2nd position to the previous segment position and 1st position to current segment position
             for (int i = 1; i < ropeResolution; i++)
             {
-                if (broken && i == breakIndex)
+                if (_broken && i == breakIndex)
                 {
                     continue;
                 }
@@ -324,6 +336,8 @@ namespace Misc.Items
         /// </summary>
         public void AttachPlayer()
         {
+            if(!_canAttach) return;
+            
             // If the last attachment was less than 1.5 seconds ago, do not attach again
             if (Time.time - _lastAttachedTime < 1.5f) return;
 

@@ -10,7 +10,7 @@ namespace Player_Scripts.States
     {
         #region Serialized Fields
 
-        [SerializeField] private Rope attachedRope;
+        public Rope attachedRope;
         public Transform handSocket;
         public Vector3 offset;
         public bool invertedAxis;
@@ -49,6 +49,7 @@ namespace Player_Scripts.States
         {
             if (_isAttached)
             {
+                player.AnimationController.SetTrigger(Jump);
                 player.StartCoroutine(DetachPlayer(player));
             }
             
@@ -82,10 +83,11 @@ namespace Player_Scripts.States
         {
             if (!_isAttached) return;
 
-            if (Input.GetButtonDown("Jump"))
+            if (player.CanJump && Input.GetButtonDown("Jump"))
             {
                 if (Time.time - _attachTime > 0.1f)
                 {
+                    player.AnimationController.SetTrigger(Jump);
                     _detachCoroutine = player.StartCoroutine(DetachPlayer(player));
                 }
             }
@@ -178,26 +180,20 @@ namespace Player_Scripts.States
         /// </summary>
         /// <param name="player">The player to detach.</param>
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
-        private IEnumerator DetachPlayer(Player player)
+        public IEnumerator DetachPlayer(Player player)
         {
             
             Debug.Log("Detaching");
             
             // Set the attachment status to false
             _isAttached = false;
-
-            // Trigger the Jump animation
-            player.AnimationController.SetTrigger(Jump);
-            // Reset the player's rotation
             ResetPlayerRotation(player);
             // Detach the rope
             attachedRope.Detached();
-
             var horizontalInput = Input.GetAxis("Horizontal");
-            
             player.playerVelocity = new Vector3(attachedRope.exitForce.x, attachedRope.exitForce.y,  attachedRope.exitForce.z * (invertedAxis? horizontalInput : -horizontalInput + attachedRope.CurrentRopeSegment().velocity.z));
-
-
+            
+            
             // While the player is not grounded, apply the calculated velocity
             while (!player.IsGrounded)
             {
@@ -215,7 +211,44 @@ namespace Player_Scripts.States
                 player.MovementController.ChangeState(0);
             }
         }
+        
+        public IEnumerator BrokRope(Rope rope, bool exitFall)
+        {
+            if (rope != attachedRope)
+            {
+                yield break;
+            }
+            
+            var player = PlayerMovementController.Instance.player;
 
+            player.AnimationController.CrossFade("Falling Back", 0.2f, 0);
+            
+            player.oneWayRotation = true;
+            player.CanJump = true;
+            player.enabledDirectionInput = true;
+            
+            yield return DetachPlayer(player);
+
+            if (!exitFall)
+            {
+                yield break;
+            }
+            
+            player.CanRotate = false;
+            
+            yield return new WaitForSeconds(1f);
+            
+            player.AnimationController.CrossFade("Standing up", 0.2f, 1);
+            player.AnimationController.Play("Land To Idle", 0);
+            
+            yield return new WaitForSeconds(2f);
+            
+            player.CanRotate = true;
+            player.oneWayRotation = false;
+            player.enabledDirectionInput = false;
+        }
+        
+        
         /// <summary>
         /// Resets the player's rotation.
         /// </summary>

@@ -110,7 +110,6 @@ namespace Triggers
 
         private void PerformAction()
         {
-            print("Triggered");
             actions?.Invoke();
 
             _isTriggered = true;

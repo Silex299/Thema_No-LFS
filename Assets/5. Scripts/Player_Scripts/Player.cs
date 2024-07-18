@@ -181,6 +181,11 @@ namespace Player_Scripts
             }
         }
 
+        public bool OneWayRotation
+        {
+            set => oneWayRotation = value;
+        }
+
         public bool DisabledPlayerMovement
         {
             get => disablePlayerMovement;

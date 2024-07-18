@@ -168,7 +168,7 @@ namespace Player_Scripts
         {
             if(player.OverrideFlags)  return;
 
-            //if (player.DisablePlayerMovement) return;
+            Debug.Log("Changing StATE" + index);
 
             if (index == player.currentStateIndex) return;
 
@@ -266,13 +266,10 @@ namespace Player_Scripts
         {
             player.AnimationController.CrossFade(animationName, 0.25f, 1);
         }
-        public void SetAnimationTrigger(string triggerName)
-        {
-            player.AnimationController.SetTrigger(triggerName);
-        }
-
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
+        
+        
         public void ResetAnimator()
         {
             print("Resetting animator");
@@ -281,6 +278,15 @@ namespace Player_Scripts
             player.AnimationController.ResetTrigger($"Jump");
         }
 
+
+        public void ResetMovement()
+        {
+            DisablePlayerMovement(false);
+            player.CanRotate = true;
+            player.oneWayRotation = false;
+            player.enabledDirectionInput = false;
+        }
+        
         #endregion
 
 
