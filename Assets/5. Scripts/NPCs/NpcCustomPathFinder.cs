@@ -16,45 +16,61 @@ namespace NPCs
         {
             
             
+            
             int instanceId = npc.GetInstanceID();
             Vector3 origin = npc.transform.position;
+            float destinationDistance = Vector3.Distance(origin, destination);
             
             
+            
+            if (destinationDistance < destinationThreshold)
+            {
+                if(InSight(origin + Vector3.up * 1f, destination + Vector3.up * 1f))
+                {
+                    Debug.DrawLine(origin + Vector3.up * 1f, destination + Vector3.up * 1f, Color.red);
+
+                    if (_npcInstance.ContainsKey(instanceId))
+                    {
+                        _npcInstance.Remove(instanceId);
+                    }
+                
+                    return destination;
+                }
+                
+            }
+            
+                
             if (!_npcInstance.ContainsKey(instanceId))
             {
                 GetInitialWaypoint(origin, instanceId);
             }
-            else
+            
+            Debug.DrawLine(origin + Vector3.up * 1f, waypoints[_npcInstance[instanceId]].position, Color.blue);
+            
+            var npcPos = origin;
+            var currentWaypoint = waypoints[_npcInstance[instanceId]].position;
+            npcPos.y = currentWaypoint.y;
+                
+            //Get distance between origin and current waypoint
+            float distance = Vector3.Distance(npcPos, currentWaypoint);
+
+            //If the distance is less than the threshold distance, move to the next waypoint
+            if (distance < waypointThreshold)
             {
-                var npcPos = origin;
-                var currentWaypoint = waypoints[_npcInstance[instanceId]].position;
-                npcPos.y = currentWaypoint.y;
-                
-                //Get distance between origin and current waypoint
-                float distance = Vector3.Distance(npcPos, currentWaypoint);
-
-                //If the distance is less than the threshold distance, move to the next waypoint
-                if (distance < waypointThreshold)
+                if (waypoints[_npcInstance[instanceId]].name.Substring(0, 4) != "Point")
                 {
-                    if (waypoints[_npcInstance[instanceId]].name.Substring(0, 4) != "Point")
-                    {
-                        npc.animator.CrossFade(waypoints[_npcInstance[instanceId]].name, 0.2f, 1);
-                    }
-
-                    if (_npcInstance[instanceId] < waypoints.Length - 1)
-                    {
-                        _npcInstance[instanceId] = _npcInstance[instanceId] + 1;
-                    }
+                    npc.animator.CrossFade(waypoints[_npcInstance[instanceId]].name, 0.2f, 1); 
                 }
-                
-                if (InSight(origin + Vector3.up * 1f, destination + Vector3.up * 1f))
+
+                if (_npcInstance[instanceId] < waypoints.Length - 1)
                 {
-                    Debug.DrawLine(origin + Vector3.up * 1f, destination + Vector3.up * 1f, Color.red);
-                    return destination;
+                    _npcInstance[instanceId] = _npcInstance[instanceId] + 1;
                 }
             }
-
+                
             return waypoints[_npcInstance[instanceId]].position;
+            
+            
         }
 
         private void GetInitialWaypoint(Vector3 npcPos, int instanceId)
