@@ -1,5 +1,7 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Misc
 {
@@ -40,9 +42,12 @@ namespace Misc
                 Destroy(gameObject, 5);
             }
         }
-        
 
-
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, explodeDirection.normalized * force);
+        }
     }
 
 

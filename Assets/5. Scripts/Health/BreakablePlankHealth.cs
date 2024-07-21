@@ -1,16 +1,21 @@
-using Health;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class BreakablePlankHealth : HealthBaseClass
+namespace Health
 {
-    
-    [SerializeField, BoxGroup("Prefab")] private GameObject brokenPlankPrefab;
-    
-    protected override void Death(string message = "")
+    public class BreakablePlankHealth : HealthBaseClass
     {
-        Instantiate(brokenPlankPrefab, transform.position, transform.rotation);
-        deathAction?.Invoke();
-        Destroy(this.gameObject, 0.1f);
+    
+        [SerializeField, BoxGroup("Prefab")] private GameObject brokenPlankPrefab;
+    
+        [Button("Break", ButtonSizes.Gigantic)]
+        protected override void Death(string message = "")
+        {
+            GameObject obj = Instantiate(brokenPlankPrefab, transform.position, transform.rotation, transform.parent);
+            obj.transform.localScale = this.transform.localScale;
+
+            gameObject.SetActive(false);
+            deathAction?.Invoke();
+        }
     }
 }
