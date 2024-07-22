@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.Android;
 
 
 namespace NavMesh_NPCs
@@ -17,15 +16,15 @@ namespace NavMesh_NPCs
         [BoxGroup("References")] public Animator animator;
 
 
-        [BoxGroup("Surveillance")] public float surveillanceThreshold;
-        [BoxGroup("Surveillance")] public Vector3[] surveillancePoints;
-
-
-        [BoxGroup("Movement")] public float walkSpeed;
-        [BoxGroup("Movement")] public float runSpeed;
-        [BoxGroup("Movement")] public float waitTime = 1f;
         [BoxGroup("Movement")] public float velocityThreshold;
+        [BoxGroup("Movement")] public float rotationSmoothness = 10f;
 
+        [BoxGroup("Movement"), Space(10)] public float waitTime = 1f;
+        [BoxGroup("Movement")] public float surveillanceThreshold;
+
+        [TabGroup("State", "Surveillance")] public Vector3[] surveillancePoints;
+
+        [TabGroup("State", "Chase")] public float attackDistance;
 
 #if UNITY_EDITOR
 
@@ -40,57 +39,80 @@ namespace NavMesh_NPCs
         }
 
 #endif
-
-
-        private bool _isJumping;
-        private bool _unreachable;
+        
+        private bool  _playedDead;
         private int _currentSurveillancePoint;
-        private bool _hasTarget;
         private Coroutine _changeSurveillancePointCoroutine;
+        private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int Chase = Animator.StringToHash("Chase");
+        private static readonly int AfterDeath = Animator.StringToHash("AfterDeath");
+        private static readonly int Unreachable = Animator.StringToHash("Unreachable");
 
-
-        //REMOVE NOW
-        public float currentVelocity;
 
         public Transform Target
         {
             set
             {
                 target = value;
-                if (target && !_hasTarget)
-                {
-                    _hasTarget = true;
-                    agent.speed = runSpeed;
-                }
-                else if (!target && _hasTarget)
-                {
-                    _hasTarget = false;
-                    agent.speed = walkSpeed;
-                }
+                animator.SetBool(Chase, target);
             }
-            get => target;
+        }
+
+        private void Start()
+        {
+            animator.SetBool(Chase, target);
+            agent.updateRotation = false;
+            agent.speed = velocityThreshold;
+            agent.SetDestination(surveillancePoints[_currentSurveillancePoint]);
+
+            PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
+        }
+        private void OnDisable()
+        {
+            PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
         }
 
         public void Update()
         {
+            
+            var velocityFraction = agent.velocity.magnitude / velocityThreshold;
+            animator.SetFloat(Speed, velocityFraction, 0.2f, Time.deltaTime);
+            Rotate(agent.desiredVelocity);
+            
             if (target)
             {
-                //some function
-                agent.SetDestination(Target.position);
+                agent.SetDestination(target.position);
+                
+                float realDistance = Vector3.Distance(transform.position, target.position);
+                animator.SetBool(Attack, (realDistance < attackDistance && !_playedDead));
+                
             }
             else
             {
-                //some function
                 if (PlannerDistance(transform.position, surveillancePoints[_currentSurveillancePoint]) <
                     surveillanceThreshold)
                 {
                     _changeSurveillancePointCoroutine ??= StartCoroutine(ChangeSurveillancePoint(waitTime));
                 }
-
-                currentVelocity = agent.velocity.magnitude;
             }
         }
 
+
+        
+        private void OnPlayerDeath()
+        {
+            if (target)
+            {
+                _playedDead = true;
+                animator.SetBool(AfterDeath, true);
+            }
+            else
+            {
+                //Don't change anything
+            }
+        }
+        
         private IEnumerator ChangeSurveillancePoint(float delay = 0)
         {
             yield return new WaitForSeconds(delay);
@@ -105,6 +127,24 @@ namespace NavMesh_NPCs
             pos2.y = 0;
             pos1.y = 0;
             return Vector3.Distance(pos1, pos2);
+        }
+
+        private void Rotate(Vector3 desiredVelocity)
+        {
+            desiredVelocity.y = 0;
+            
+            if (desiredVelocity.magnitude > 0 )
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredVelocity),
+                    Time.deltaTime * rotationSmoothness);
+            }
+            else if (target)
+            {
+                var direction = target.position - transform.position;
+                direction.y = 0;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
+                    Time.deltaTime * rotationSmoothness);
+            }
         }
 
 
