@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 685e0317235f16c45b8cf32a13bca523
 ModelImporter:
-  serializedVersion: 21202
+  serializedVersion: 22200
   internalIDToNameTable:
   - first:
       74: 7210734351622154706
@@ -46,7 +46,7 @@ ModelImporter:
       name: IP_End_Jump_01
       takeName: Take 002
       internalID: 0
-      firstFrame: 0
+      firstFrame: 8.7
       lastFrame: 22
       wrapMode: 0
       orientationOffsetY: 0
@@ -54,7 +54,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
@@ -79,6 +79,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -106,6 +107,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -979,17 +981,20 @@ ModelImporter:
     - name: Character 1_Ctrl:RightArm
       parentName: Character 1_Ctrl:RightShoulder
       position: {x: 0.10707249, y: 0.000001373291, z: 0.000000057220458}
-      rotation: {x: -0.0000000037674783, y: 0.0000004041471, z: 0.00000039252882, w: 1}
+      rotation: {x: -0.0000000037674783, y: 0.0000004041471, z: 0.00000039252882,
+        w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Character 1_Ctrl:RightForeArm
       parentName: Character 1_Ctrl:RightArm
       position: {x: 0.3337971, y: 0.000009808751, z: 0.000001972115}
-      rotation: {x: -0.000000055887977, y: -0.0000032734874, z: -0.00000043348567, w: 1}
+      rotation: {x: -0.000000055887977, y: -0.0000032734874, z: -0.00000043348567,
+        w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Character 1_Ctrl:RightHand
       parentName: Character 1_Ctrl:RightForeArm
       position: {x: 0.30836573, y: -0.000010655892, z: -0.00000019605115}
-      rotation: {x: 0.000000059555962, y: 0.000000025623876, z: 0.000000040962078, w: 1}
+      rotation: {x: 0.000000059555962, y: 0.000000025623876, z: 0.000000040962078,
+        w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Character 1_Ctrl:RightHandThumb1
       parentName: Character 1_Ctrl:RightHand
@@ -1119,7 +1124,8 @@ ModelImporter:
     - name: Character 1_Ctrl:RightElbowEffector
       parentName: Character 1_Ctrl:Reference
       position: {x: 0.5108696, y: 1.4641153, z: 0.02137012}
-      rotation: {x: -0.00000005965435, y: -0.0000028693403, z: -0.00000004095682, w: 1}
+      rotation: {x: -0.00000005965435, y: -0.0000028693403, z: -0.00000004095682,
+        w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Character 1_Ctrl:ChestOriginEffector
       parentName: Character 1_Ctrl:Reference
@@ -1139,7 +1145,8 @@ ModelImporter:
     - name: Character 1_Ctrl:RightShoulderEffector
       parentName: Character 1_Ctrl:Reference
       position: {x: 0.17707253, y: 1.4641052, z: 0.021368418}
-      rotation: {x: -0.0000000037674783, y: 0.00000040414707, z: 0.00000039252882, w: 1}
+      rotation: {x: -0.0000000037674783, y: 0.00000040414707, z: 0.00000039252882,
+        w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Character 1_Ctrl:HeadEffector
       parentName: Character 1_Ctrl:Reference
@@ -1218,12 +1225,15 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 50a28883ed8ad814ba23ca5c27f2faf4, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 50a28883ed8ad814ba23ca5c27f2faf4,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
   avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

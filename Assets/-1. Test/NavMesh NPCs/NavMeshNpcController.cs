@@ -1,6 +1,7 @@
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Unity.SharpZipLib;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +15,12 @@ namespace NavMesh_NPCs
 
         [BoxGroup("References")] public NavMeshAgent agent;
         [BoxGroup("References")] public Animator animator;
-
+        
+        
+        [BoxGroup("GroundCheck")] public float sphereCastRadius;
+        [BoxGroup("GroundCheck")] public float sphereCastOffset;
+        [BoxGroup("GroundCheck")] public float groundOffset;
+        [BoxGroup("GroundCheck")] public LayerMask layerMask;
 
         [BoxGroup("Movement")] public float velocityThreshold;
         [BoxGroup("Movement")] public float rotationSmoothness = 10f;
@@ -23,7 +29,6 @@ namespace NavMesh_NPCs
         [BoxGroup("Movement")] public float surveillanceThreshold;
 
         [TabGroup("State", "Surveillance")] public Vector3[] surveillancePoints;
-
         [TabGroup("State", "Chase")] public float attackDistance;
 
 #if UNITY_EDITOR
@@ -48,6 +53,7 @@ namespace NavMesh_NPCs
         private static readonly int Chase = Animator.StringToHash("Chase");
         private static readonly int AfterDeath = Animator.StringToHash("AfterDeath");
         private static readonly int Unreachable = Animator.StringToHash("Unreachable");
+        private static readonly int Grounded = Animator.StringToHash("IsGrounded");
 
 
         public Transform Target
@@ -96,6 +102,8 @@ namespace NavMesh_NPCs
                     _changeSurveillancePointCoroutine ??= StartCoroutine(ChangeSurveillancePoint(waitTime));
                 }
             }
+            
+            GroundCheck();
         }
 
 
@@ -147,14 +155,26 @@ namespace NavMesh_NPCs
             }
         }
 
-
-        [System.Serializable]
-        public enum NpcStates
+        
+        public void GroundCheck()
         {
-            Surveillance,
-            Chase,
-            Attack,
-            AfterAttack
+
+            Ray ray = new Ray(transform.position + Vector3.up * sphereCastOffset, Vector3.down);
+
+            bool isGrounded = false;
+            
+            if (Physics.SphereCast(ray, sphereCastRadius, out RaycastHit hit, 2f, layerMask))
+            {
+                isGrounded = hit.distance < groundOffset + sphereCastOffset;
+            }
+            else
+            {
+                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 2f, Color.red);
+            }
+            
+            animator.SetBool(Grounded, isGrounded);
+            
         }
+        
     }
 }
