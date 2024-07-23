@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using Unity.SharpZipLib;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.Android;
 
 
 namespace NavMesh_NPCs
@@ -52,7 +53,6 @@ namespace NavMesh_NPCs
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Chase = Animator.StringToHash("Chase");
         private static readonly int AfterDeath = Animator.StringToHash("AfterDeath");
-        private static readonly int Unreachable = Animator.StringToHash("Unreachable");
         private static readonly int Grounded = Animator.StringToHash("IsGrounded");
 
 
@@ -70,8 +70,12 @@ namespace NavMesh_NPCs
             animator.SetBool(Chase, target);
             agent.updateRotation = false;
             agent.speed = velocityThreshold;
-            agent.SetDestination(surveillancePoints[_currentSurveillancePoint]);
-
+            
+            if (surveillancePoints.Length > 0)
+            {
+                agent.SetDestination(surveillancePoints[_currentSurveillancePoint]);
+            }
+            
             PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
         }
         private void OnDisable()
@@ -83,6 +87,8 @@ namespace NavMesh_NPCs
         {
             
             var velocityFraction = agent.velocity.magnitude / velocityThreshold;
+            
+     
             animator.SetFloat(Speed, velocityFraction, 0.2f, Time.deltaTime);
             Rotate(agent.desiredVelocity);
             
@@ -91,11 +97,14 @@ namespace NavMesh_NPCs
                 agent.SetDestination(target.position);
                 
                 float realDistance = Vector3.Distance(transform.position, target.position);
+                
                 animator.SetBool(Attack, (realDistance < attackDistance && !_playedDead));
                 
             }
             else
             {
+                if(surveillancePoints.Length == 0) return;
+                
                 if (PlannerDistance(transform.position, surveillancePoints[_currentSurveillancePoint]) <
                     surveillanceThreshold)
                 {
