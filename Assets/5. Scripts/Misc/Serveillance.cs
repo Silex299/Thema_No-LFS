@@ -16,6 +16,7 @@ namespace Misc
         [SerializeField] private SurveillanceVisuals visuals;
 
         private int _objectCount;
+        public new bool enabled = true;
 
         private Dictionary<int, Coroutine> _objectsTracking = new Dictionary<int, Coroutine>();
 
@@ -26,6 +27,7 @@ namespace Misc
 
             if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
+                print("InTrigger");
                 if (!_objectsTracking.ContainsKey(other.GetInstanceID()))
                 {
                     var health = other.GetComponent<HealthBaseClass>();
@@ -62,6 +64,8 @@ namespace Misc
                 Vector3 direction = (otherTransform.position + Vector3.up * 0.5f) - transform.position;
                 Ray ray = new Ray(transform.position, direction);
 
+                
+                
                 if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.red, 10);
@@ -71,6 +75,11 @@ namespace Misc
                         ObjectFound(health);
                         yield break; // Breaks the coroutine if the object is found
                     }
+                }
+                else
+                {
+                    
+                    Debug.DrawRay(transform.position, direction * 20f, Color.green, 0.1f);
                 }
 
                 yield return null;
