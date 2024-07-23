@@ -279,12 +279,13 @@ namespace Player_Scripts
         }
 
 
-        public void ResetMovement()
+        public void ResetMovement(string defaultAnim = "Basic Movement")
         {
             DisablePlayerMovement(false);
             player.CanRotate = true;
             player.oneWayRotation = false;
             player.enabledDirectionInput = false;
+            player.AnimationController.CrossFade(defaultAnim, 0.2f, 0);
         }
         
         #endregion

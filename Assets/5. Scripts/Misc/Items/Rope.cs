@@ -166,6 +166,10 @@ namespace Misc.Items
             Gizmos.DrawWireSphere(_giz, 0.3f);
         }
 
+        /// <summary>
+        /// Breaks the rope
+        /// </summary>
+        /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
         
         [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
         public void BreakRope(bool exitFall = true)
