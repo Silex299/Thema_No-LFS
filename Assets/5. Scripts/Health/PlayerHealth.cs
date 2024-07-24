@@ -30,7 +30,7 @@ namespace Health
         private void Start()
         {
             dissolveMaterial.SetFloat(Dissolve1, -1);
-            _currentHealth = maximumHealth;
+            currentHealth = maximumHealth;
             IsDead = false;
             _dissolveDeath = false;
         }
@@ -45,13 +45,13 @@ namespace Health
 
         public void TakeDamage(float damage, string deathOverrideString)
         {
-            if (_currentHealth < 0) return;
+            if (currentHealth < 0) return;
 
-            _currentHealth -= damage;
+            currentHealth -= damage;
 
-            onTakingDamage?.Invoke(_currentHealth / maximumHealth);
+            onTakingDamage?.Invoke(currentHealth / maximumHealth);
 
-            if (_currentHealth <= 0)
+            if (currentHealth <= 0)
             {
                 Kill(deathOverrideString);
             }
@@ -60,13 +60,13 @@ namespace Health
 
         public override void TakeDamage(float damage)
         {
-            if (_currentHealth < 0) return;
+            if (currentHealth < 0) return;
 
-            _currentHealth -= damage;
+            currentHealth -= damage;
 
-            onTakingDamage?.Invoke(_currentHealth / maximumHealth);
+            onTakingDamage?.Invoke(currentHealth / maximumHealth);
 
-            if (_currentHealth <= 0)
+            if (currentHealth <= 0)
             {
                 Kill("RAGDOLL DEATH");
             }

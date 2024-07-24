@@ -12,24 +12,24 @@ namespace Health
         [SerializeField, FoldoutGroup("Base Health")] protected float maximumHealth = 100;
         [SerializeField, FoldoutGroup("Base Health")] protected UnityEvent deathAction;
 
-        protected float _currentHealth;
+        protected float currentHealth;
         public Action onDeath;
 
         private void Start()
         {
-            _currentHealth = maximumHealth;
+            currentHealth = maximumHealth;
         }
 
 
         public virtual void ResetHealth()
         {
-            _currentHealth = maximumHealth;
+            currentHealth = maximumHealth;
         }
 
         public virtual void TakeDamage(float damage)
         {
-            _currentHealth -= damage;
-            if (_currentHealth <= 0)
+            currentHealth -= damage;
+            if (currentHealth <= 0)
             {
                 Death();
             }
@@ -42,6 +42,7 @@ namespace Health
 
         protected virtual void Death(string message = "")
         {
+            currentHealth = 0;
             onDeath?.Invoke();
             deathAction?.Invoke();
         }

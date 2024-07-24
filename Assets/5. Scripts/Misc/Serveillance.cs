@@ -19,8 +19,11 @@ namespace Misc
         public new bool enabled = true;
 
         private Dictionary<int, Coroutine> _objectsTracking = new Dictionary<int, Coroutine>();
-
-
+        private Dictionary<int, Coroutine> _resetCoroutine = new Dictionary<int, Coroutine>();
+        
+        
+        
+        
         private void OnTriggerStay(Collider other)
         {
             if (!enabled) return;
@@ -28,44 +31,62 @@ namespace Misc
             if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
                 print("InTrigger");
+                
                 if (!_objectsTracking.ContainsKey(other.GetInstanceID()))
                 {
                     var health = other.GetComponent<HealthBaseClass>();
                     if (health)
                     {
-                        _objectsTracking.Add(other.GetInstanceID(), StartCoroutine(CheckForObject(other, health)));
+                        Coroutine coroutine = StartCoroutine(CheckForObject(other, health));
+                        _objectsTracking.Add(other.GetInstanceID(), coroutine);
                     }
                 }
                 else
                 {
-                    StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
+                    if (_resetCoroutine.ContainsKey(other.GetInstanceID()))
+                    {
+                        StopCoroutine(_resetCoroutine[other.GetInstanceID()]);
+                        Coroutine coroutine = StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
+                        _resetCoroutine[other.GetInstanceID()] = coroutine;
+                    }
+                    else
+                    {
+                        Coroutine coroutine = StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
+                        _resetCoroutine.Add(other.GetInstanceID(), coroutine);
+                    }
                 }
             }
         }
 
         private IEnumerator ResetTriggerCoroutine(int instanceId)
         {
+            
+            if(!_objectsTracking.ContainsKey(instanceId)) yield break;
+            
             yield return new WaitForSeconds(0.2f);
+            
+            print("fuck me twice");
             if (_objectsTracking.TryGetValue(instanceId, out Coroutine coroutine))
             {
                 if (coroutine != null)
                 {
                     StopCoroutine(_objectsTracking[instanceId]);
                 }
+
                 _objectsTracking.Remove(instanceId);
             }
         }
 
         private IEnumerator CheckForObject(Collider other, HealthBaseClass health)
         {
+            print("fuck me");
             while (enabled)
             {
                 var otherTransform = other.transform;
                 Vector3 direction = (otherTransform.position + Vector3.up * 0.5f) - transform.position;
                 Ray ray = new Ray(transform.position, direction);
 
-                
-                
+
                 if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
                 {
                     Debug.DrawLine(transform.position, hit.point, Color.red, 10);
@@ -73,12 +94,12 @@ namespace Misc
                     if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC"))
                     {
                         ObjectFound(health);
-                        yield break; // Breaks the coroutine if the object is found
+                        print(hit.collider.name);
+                        break;
                     }
                 }
                 else
                 {
-                    
                     Debug.DrawRay(transform.position, direction * 20f, Color.green, 0.1f);
                 }
 
@@ -142,6 +163,7 @@ namespace Misc
 
 
         private Coroutine _powerChangeCoroutine;
+        private Coroutine _alignCoroutine;
 
         private IEnumerator PowerChange(float lightIntensity, float beamIntensity)
         {
@@ -172,8 +194,13 @@ namespace Misc
                 component.StopCoroutine(_powerChangeCoroutine);
             }
 
-            _powerChangeCoroutine = component.StartCoroutine(PowerChange(powerUpIntensity, powerUpLightBeamIntensity));
-            component.StartCoroutine(AlignSpotlight(PlayerMovementController.Instance.transform.position));
+            _powerChangeCoroutine ??= component.StartCoroutine(PowerChange(powerUpIntensity, powerUpLightBeamIntensity));
+
+            if (_alignCoroutine != null)
+            {
+                component.StopCoroutine(_alignCoroutine);
+            }
+            _alignCoroutine = component.StartCoroutine(AlignSpotlight(component.transform.position));
         }
 
         public void PowerDown(MonoBehaviour component)
@@ -214,6 +241,8 @@ namespace Misc
             }
 
             spotlightTransform.rotation = Quaternion.LookRotation(targetDirection);
+
+            _alignCoroutine = null;
         }
     }
 }
