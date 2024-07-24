@@ -34,27 +34,27 @@ namespace Scene_Scripts
         {
 
             float timeElapsed = Time.time;
+            
             //break the rope.
             rope.BreakRope(false);
-            //play scene animation
-            npc.agent.enabled = false;
-            
 
-            //after player falls disable player movement
-            //if player is grounded (after 0.4f) enable player movement
+            PlayerMovementController playerMovement = PlayerMovementController.Instance;
+            
+            npc.agent.enabled = false;
+            npc.Target = playerMovement.transform;
+            playerMovement.player.CanJump = false;
+            
             yield return new WaitUntil(() => PlayerMovementController.Instance.player.IsGrounded);
-            
-            
             yield return new WaitForSeconds(sceneAnimDelay);
             
+            
+            
             PlayerSceneAnimatonManager.Instance.PlayPlayerSceneAnimation(1);
-            timeElapsed = Time.time - timeElapsed;
-            PlayerMovementController.Instance.player.CanJump = false;
+            
 
+            timeElapsed = Time.time - timeElapsed;
             yield return new WaitForSeconds(sceneAnimationDuration - timeElapsed);
             
-            //if scene animation is complete-> set agent target to player
-            npc.Target = PlayerMovementController.Instance.transform;
             npc.agent.enabled = true;
 
 

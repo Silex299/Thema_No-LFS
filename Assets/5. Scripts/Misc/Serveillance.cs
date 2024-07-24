@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Health;
 using Sirenix.OdinInspector;
 using UnityEngine;
-
+using UnityEngine.Events;
 using VisualState = Misc.SurveillanceVisuals.ServeillanceVisualState;
 
 namespace Misc
 {
-    public class Serveillance : MonoBehaviour
+    public class Serveillance : SerializedMonoBehaviour
     {
         [SerializeField] private Mover mover;
+        [SerializeField] private float resetDelay = 8f;
         [SerializeField] private LayerMask rayCastMask;
         [SerializeField] private SurveillanceVisuals visuals;
+
+        // ReSharper disable once InconsistentNaming
+        [SerializeField] private Dictionary<string, UnityEvent> taggedActions = new Dictionary<string, UnityEvent>();
 
         private int _objectCount;
         public new bool enabled = true;
@@ -24,48 +27,51 @@ namespace Misc
 
         private void OnTriggerStay(Collider other)
         {
-         
-            if(!enabled) return;
+            if (!enabled) return;
 
             if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
-                if(_objectsTracking.ContainsKey(other.GetInstanceID())) return;
-                
+                if (_objectsTracking.ContainsKey(other.GetInstanceID())) return;
+
                 if (IsInLineOfSight(other.transform.position))
                 {
                     if (other.TryGetComponent(out HealthBaseClass health))
                     {
-                        mover?.StopMover(true);
-                        
+                        mover?.StopMoverInstant(true);
+
+                        if (taggedActions.ContainsKey(other.tag))
+                        {
+                            taggedActions[other.tag].Invoke();
+                        }
+
                         DamageObject(other.GetInstanceID(), health);
                         StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
                         StartCoroutine(visuals.AlignSpotlight(other.transform.position));
-                        Invoke(nameof(ResetServeillanceAlignment), 5);
+                        Invoke(nameof(ResetServeillanceAlignment), resetDelay);
                     }
                 }
             }
-            
         }
 
         private bool IsInLineOfSight(Vector3 target)
         {
             Vector3 targetPos = target + 0.5f * Vector3.up;
             Vector3 direction = (targetPos - transform.position).normalized;
-            
+
             if (Physics.Raycast(transform.position, direction, out RaycastHit hit, Mathf.Infinity, rayCastMask))
             {
                 return hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC");
             }
-            
+
             return false;
         }
-        
+
         private void DamageObject(int instanceId, HealthBaseClass health)
         {
             _objectsTracking.Add(instanceId, true);
             health.Kill("RAY");
         }
-        
+
         public void ResetServeillanceAlignment()
         {
             TurnOffMachine(false);
@@ -79,10 +85,10 @@ namespace Misc
         public void TurnOffMachine(bool turnOff)
         {
             enabled = !turnOff;
-            
+
             if (mover) mover.StopMover(turnOff);
-            if(_powerChangeCoroutine != null) StopCoroutine(_powerChangeCoroutine);
-            
+            if (_powerChangeCoroutine != null) StopCoroutine(_powerChangeCoroutine);
+
             if (turnOff)
             {
                 StopAllCoroutines();
@@ -120,7 +126,7 @@ namespace Misc
         {
             var spotlightTransform = targetLight.transform;
             _defaultSpotlightRotation = spotlightTransform.rotation;
-            
+
             Vector3 initialDirection = spotlightTransform.forward;
             Vector3 targetDirection = (lookAt - spotlightTransform.position).normalized;
 
@@ -134,13 +140,12 @@ namespace Misc
             }
 
             spotlightTransform.rotation = Quaternion.LookRotation(targetDirection);
-
         }
 
         public IEnumerator ResetAlignment()
         {
-            if(_defaultSpotlightRotation == Quaternion.identity) yield break;
-            
+            if (_defaultSpotlightRotation == Quaternion.identity) yield break;
+
             var spotlightTransform = targetLight.transform;
             Quaternion initialRotation = spotlightTransform.rotation;
 
@@ -151,17 +156,16 @@ namespace Misc
 
                 spotlightTransform.rotation = Quaternion.Slerp(initialRotation, _defaultSpotlightRotation,
                     elapsedTime / transitionTime);
-                
+
                 yield return null;
             }
         }
-        
+
         public IEnumerator PowerChange(ServeillanceVisualState visualState)
         {
-
             float lightIntensity = 0;
             float beamIntensity = 0;
-            
+
             switch (visualState)
             {
                 case ServeillanceVisualState.Default:
@@ -177,8 +181,8 @@ namespace Misc
                     beamIntensity = 0;
                     break;
             }
-            
-            
+
+
             float currentLightIntensity = targetLight.intensity;
             float currentBeamIntensity = volumetricLightBeam ? volumetricLightBeam.intensityInside : 0;
 
@@ -197,7 +201,7 @@ namespace Misc
                 yield return null;
             }
         }
-        
+
 
         public enum ServeillanceVisualState
         {
@@ -205,6 +209,5 @@ namespace Misc
             PowerUp,
             PowerDown
         }
-        
     }
 }

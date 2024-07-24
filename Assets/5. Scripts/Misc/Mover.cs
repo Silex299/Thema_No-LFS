@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
 namespace Misc
@@ -18,10 +17,11 @@ namespace Misc
             points.Add(transform.position);
         }
 
-
+        
         [SerializeField, BoxGroup("Mover")] internal float speed;
         [SerializeField, BoxGroup("Mover")] private float distanceThreshold = 0.1f;
         [SerializeField, BoxGroup("Mover")] private float transitionTime = 1f;
+        [SerializeField, BoxGroup("Mover")] private float waitTime = 1f;
 
         private int _nextPointIndex;
         private float _currentSpeed;
@@ -32,7 +32,6 @@ namespace Misc
             this.speed = speed;
             _currentSpeed = speed;
         }
-
 
         private void Update()
         {
@@ -52,8 +51,10 @@ namespace Misc
                 yield return null;
             }
 
-            _changingSpeedCoroutine = null;
+            yield return new WaitForSeconds(waitTime);
+            
             action?.Invoke();
+            _changingSpeedCoroutine = null;
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace Misc
                 _changingSpeedCoroutine = StartCoroutine(ChangeSpeed(speed));
             }
         }
-
+        
 
         /// <summary>
         /// Stops or starts the Mover based on the provided boolean value.
@@ -88,10 +89,23 @@ namespace Misc
         public void StopMover(bool stop)
         {
             float targetSpeed = stop ? 0 : speed;
-            if (!Mathf.Approximately(_currentSpeed, targetSpeed))
+
+            if (!enabled) enabled = true;
+
+            if (_changingSpeedCoroutine != null)
             {
-                _changingSpeedCoroutine = StartCoroutine(ChangeSpeed(targetSpeed));
+                StopCoroutine(_changingSpeedCoroutine);
             }
+            _changingSpeedCoroutine = StartCoroutine(ChangeSpeed(targetSpeed));
+        }
+        
+        public void StopMoverInstant(bool stop)
+        {
+            if (_changingSpeedCoroutine != null)
+            {
+                StopCoroutine(_changingSpeedCoroutine);
+            }
+            _currentSpeed = stop ? 0 : speed;
         }
     }
 }
