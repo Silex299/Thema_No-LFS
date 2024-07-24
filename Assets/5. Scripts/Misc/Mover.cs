@@ -98,14 +98,11 @@ namespace Misc
             }
             _changingSpeedCoroutine = StartCoroutine(ChangeSpeed(targetSpeed));
         }
-        
-        public void StopMoverInstant(bool stop)
+       
+        public void DisableMover(bool disable)
         {
-            if (_changingSpeedCoroutine != null)
-            {
-                StopCoroutine(_changingSpeedCoroutine);
-            }
-            _currentSpeed = stop ? 0 : speed;
+            enabled = !disable;
         }
+       
     }
 }

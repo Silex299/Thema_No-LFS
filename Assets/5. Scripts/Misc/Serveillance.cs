@@ -23,7 +23,7 @@ namespace Misc
 
         private Dictionary<int, bool> _objectsTracking = new Dictionary<int, bool>();
         private Coroutine _powerChangeCoroutine;
-
+        private Coroutine _resetCoroutine;
 
         private void OnTriggerStay(Collider other)
         {
@@ -37,7 +37,7 @@ namespace Misc
                 {
                     if (other.TryGetComponent(out HealthBaseClass health))
                     {
-                        mover?.StopMoverInstant(true);
+                        mover?.DisableMover(true);
 
                         if (taggedActions.ContainsKey(other.tag))
                         {
@@ -47,7 +47,9 @@ namespace Misc
                         DamageObject(other.GetInstanceID(), health);
                         StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
                         StartCoroutine(visuals.AlignSpotlight(other.transform.position));
-                        Invoke(nameof(ResetServeillanceAlignment), resetDelay);
+                        //reset
+                        if(_resetCoroutine!=null) StopCoroutine(_resetCoroutine);
+                        _resetCoroutine = StartCoroutine(ResetServeillanceVisual());
                     }
                 }
             }
@@ -72,8 +74,11 @@ namespace Misc
             health.Kill("RAY");
         }
 
-        public void ResetServeillanceAlignment()
+        private IEnumerator ResetServeillanceVisual()
         {
+            yield return new WaitForSeconds(resetDelay);
+            
+            mover.DisableMover(false);
             TurnOffMachine(false);
             StartCoroutine(visuals.ResetAlignment());
         }
