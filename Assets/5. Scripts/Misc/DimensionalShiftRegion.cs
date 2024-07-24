@@ -25,7 +25,7 @@ namespace Misc
             playerController.player.CController.enabled = false;
         
             //power up the visual
-            visuals.PowerUp(this);
+            StartCoroutine(visuals.PowerChange(SurveillanceVisuals.ServeillanceVisualState.PowerUp));
             //Play float animation in layer 1
             playerController.PlayAnimation("Float", 1f, 1);
         
@@ -38,7 +38,7 @@ namespace Misc
             playerController.DisablePlayerMovement(false);
             playerController.player.CController.enabled = true;
             //power down the visuals 
-            visuals.PowerDown(this);
+            StartCoroutine(visuals.PowerChange(SurveillanceVisuals.ServeillanceVisualState.PowerDown));
             //PLay default animation
             playerController.PlayAnimation("Default", 1);
 

@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Health;
-using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+
+using VisualState = Misc.SurveillanceVisuals.ServeillanceVisualState;
 
 namespace Misc
 {
@@ -11,116 +13,64 @@ namespace Misc
     {
         [SerializeField] private Mover mover;
         [SerializeField] private LayerMask rayCastMask;
-
-
         [SerializeField] private SurveillanceVisuals visuals;
 
         private int _objectCount;
         public new bool enabled = true;
 
-        private Dictionary<int, Coroutine> _objectsTracking = new Dictionary<int, Coroutine>();
-        private Dictionary<int, Coroutine> _resetCoroutine = new Dictionary<int, Coroutine>();
-        
-        
-        
-        
+        private Dictionary<int, bool> _objectsTracking = new Dictionary<int, bool>();
+        private Coroutine _powerChangeCoroutine;
+
+
         private void OnTriggerStay(Collider other)
         {
-            if (!enabled) return;
+         
+            if(!enabled) return;
 
             if (other.CompareTag("Player_Main") || other.CompareTag("NPC"))
             {
-                print("InTrigger");
+                if(_objectsTracking.ContainsKey(other.GetInstanceID())) return;
                 
-                if (!_objectsTracking.ContainsKey(other.GetInstanceID()))
+                if (IsInLineOfSight(other.transform.position))
                 {
-                    var health = other.GetComponent<HealthBaseClass>();
-                    if (health)
+                    if (other.TryGetComponent(out HealthBaseClass health))
                     {
-                        Coroutine coroutine = StartCoroutine(CheckForObject(other, health));
-                        _objectsTracking.Add(other.GetInstanceID(), coroutine);
-                    }
-                }
-                else
-                {
-                    if (_resetCoroutine.ContainsKey(other.GetInstanceID()))
-                    {
-                        StopCoroutine(_resetCoroutine[other.GetInstanceID()]);
-                        Coroutine coroutine = StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
-                        _resetCoroutine[other.GetInstanceID()] = coroutine;
-                    }
-                    else
-                    {
-                        Coroutine coroutine = StartCoroutine(ResetTriggerCoroutine(other.GetInstanceID()));
-                        _resetCoroutine.Add(other.GetInstanceID(), coroutine);
+                        mover?.StopMover(true);
+                        
+                        DamageObject(other.GetInstanceID(), health);
+                        StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
+                        StartCoroutine(visuals.AlignSpotlight(other.transform.position));
+                        Invoke(nameof(ResetServeillanceAlignment), 5);
                     }
                 }
             }
+            
         }
 
-        private IEnumerator ResetTriggerCoroutine(int instanceId)
+        private bool IsInLineOfSight(Vector3 target)
         {
+            Vector3 targetPos = target + 0.5f * Vector3.up;
+            Vector3 direction = (targetPos - transform.position).normalized;
             
-            if(!_objectsTracking.ContainsKey(instanceId)) yield break;
-            
-            yield return new WaitForSeconds(0.2f);
-            
-            print("fuck me twice");
-            if (_objectsTracking.TryGetValue(instanceId, out Coroutine coroutine))
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, Mathf.Infinity, rayCastMask))
             {
-                if (coroutine != null)
-                {
-                    StopCoroutine(_objectsTracking[instanceId]);
-                }
-
-                _objectsTracking.Remove(instanceId);
+                return hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC");
             }
+            
+            return false;
         }
-
-        private IEnumerator CheckForObject(Collider other, HealthBaseClass health)
+        
+        private void DamageObject(int instanceId, HealthBaseClass health)
         {
-            print("fuck me");
-            while (enabled)
-            {
-                var otherTransform = other.transform;
-                Vector3 direction = (otherTransform.position + Vector3.up * 0.5f) - transform.position;
-                Ray ray = new Ray(transform.position, direction);
-
-
-                if (Physics.Raycast(ray, out var hit, Mathf.Infinity, rayCastMask))
-                {
-                    Debug.DrawLine(transform.position, hit.point, Color.red, 10);
-
-                    if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("NPC"))
-                    {
-                        ObjectFound(health);
-                        print(hit.collider.name);
-                        break;
-                    }
-                }
-                else
-                {
-                    Debug.DrawRay(transform.position, direction * 20f, Color.green, 0.1f);
-                }
-
-                yield return null;
-            }
+            _objectsTracking.Add(instanceId, true);
+            health.Kill("RAY");
         }
-
-
-        /// <summary>
-        /// Handles the actions to be taken when an object is found. If the object is the player, it triggers the player found sequence.
-        /// </summary>
-        /// <param name="health">The found object health</param>
-        private void ObjectFound(HealthBaseClass health)
+        
+        public void ResetServeillanceAlignment()
         {
-            DamageObject(health);
-            if (mover) mover.enabled = false;
-            visuals.PowerUp(this);
+            TurnOffMachine(false);
+            StartCoroutine(visuals.ResetAlignment());
         }
-
-        private void DamageObject(HealthBaseClass health) => health.Kill("RAY");
-
 
         /// <summary>
         /// Toggles the state of the machine and its visuals based on the provided boolean value.
@@ -129,17 +79,19 @@ namespace Misc
         public void TurnOffMachine(bool turnOff)
         {
             enabled = !turnOff;
+            
             if (mover) mover.StopMover(turnOff);
-
+            if(_powerChangeCoroutine != null) StopCoroutine(_powerChangeCoroutine);
+            
             if (turnOff)
             {
                 StopAllCoroutines();
                 _objectsTracking = null;
-                visuals.PowerDown(this);
+                _powerChangeCoroutine = StartCoroutine(visuals.PowerChange(VisualState.PowerDown));
             }
             else
             {
-                visuals.PowerDefault(this);
+                _powerChangeCoroutine = StartCoroutine(visuals.PowerChange(VisualState.Default));
             }
         }
     }
@@ -162,11 +114,71 @@ namespace Misc
         [BoxGroup("Visual"), SerializeField] private float transitionTime = 5;
 
 
-        private Coroutine _powerChangeCoroutine;
-        private Coroutine _alignCoroutine;
+        private Quaternion _defaultSpotlightRotation = Quaternion.identity;
 
-        private IEnumerator PowerChange(float lightIntensity, float beamIntensity)
+        public IEnumerator AlignSpotlight(Vector3 lookAt)
         {
+            var spotlightTransform = targetLight.transform;
+            _defaultSpotlightRotation = spotlightTransform.rotation;
+            
+            Vector3 initialDirection = spotlightTransform.forward;
+            Vector3 targetDirection = (lookAt - spotlightTransform.position).normalized;
+
+            float elapsedTime = 0f;
+            while (elapsedTime < transitionTime)
+            {
+                elapsedTime += Time.deltaTime;
+                Vector3 newDirection = Vector3.Slerp(initialDirection, targetDirection, elapsedTime / transitionTime);
+                spotlightTransform.rotation = Quaternion.LookRotation(newDirection);
+                yield return null;
+            }
+
+            spotlightTransform.rotation = Quaternion.LookRotation(targetDirection);
+
+        }
+
+        public IEnumerator ResetAlignment()
+        {
+            if(_defaultSpotlightRotation == Quaternion.identity) yield break;
+            
+            var spotlightTransform = targetLight.transform;
+            Quaternion initialRotation = spotlightTransform.rotation;
+
+            float elapsedTime = 0f;
+            while (elapsedTime < transitionTime)
+            {
+                elapsedTime += Time.deltaTime;
+
+                spotlightTransform.rotation = Quaternion.Slerp(initialRotation, _defaultSpotlightRotation,
+                    elapsedTime / transitionTime);
+                
+                yield return null;
+            }
+        }
+        
+        public IEnumerator PowerChange(ServeillanceVisualState visualState)
+        {
+
+            float lightIntensity = 0;
+            float beamIntensity = 0;
+            
+            switch (visualState)
+            {
+                case ServeillanceVisualState.Default:
+                    lightIntensity = defaultIntensity;
+                    beamIntensity = defaultLightBeamIntensity;
+                    break;
+                case ServeillanceVisualState.PowerUp:
+                    lightIntensity = powerUpIntensity;
+                    beamIntensity = powerUpLightBeamIntensity;
+                    break;
+                case ServeillanceVisualState.PowerDown:
+                    lightIntensity = 0;
+                    beamIntensity = 0;
+                    break;
+            }
+            
+            
             float currentLightIntensity = targetLight.intensity;
             float currentBeamIntensity = volumetricLightBeam ? volumetricLightBeam.intensityInside : 0;
 
@@ -185,64 +197,14 @@ namespace Misc
                 yield return null;
             }
         }
+        
 
-
-        public void PowerUp(MonoBehaviour component)
+        public enum ServeillanceVisualState
         {
-            if (_powerChangeCoroutine != null)
-            {
-                component.StopCoroutine(_powerChangeCoroutine);
-            }
-
-            _powerChangeCoroutine ??= component.StartCoroutine(PowerChange(powerUpIntensity, powerUpLightBeamIntensity));
-
-            if (_alignCoroutine != null)
-            {
-                component.StopCoroutine(_alignCoroutine);
-            }
-            _alignCoroutine = component.StartCoroutine(AlignSpotlight(component.transform.position));
+            Default,
+            PowerUp,
+            PowerDown
         }
-
-        public void PowerDown(MonoBehaviour component)
-        {
-            if (_powerChangeCoroutine != null)
-            {
-                component.StopCoroutine(_powerChangeCoroutine);
-            }
-
-            _powerChangeCoroutine = component.StartCoroutine(PowerChange(0, 0));
-        }
-
-        //Function for turning to defaultPower
-        public void PowerDefault(MonoBehaviour component)
-        {
-            if (_powerChangeCoroutine != null)
-            {
-                component.StopCoroutine(_powerChangeCoroutine);
-            }
-
-            _powerChangeCoroutine = component.StartCoroutine(PowerChange(defaultIntensity, defaultLightBeamIntensity));
-        }
-
-        private IEnumerator AlignSpotlight(Vector3 lookAt)
-        {
-            var spotlightTransform = targetLight.transform;
-
-            Vector3 initialDirection = spotlightTransform.forward;
-            Vector3 targetDirection = (lookAt - spotlightTransform.position).normalized;
-
-            float elapsedTime = 0f;
-            while (elapsedTime < transitionTime)
-            {
-                elapsedTime += Time.deltaTime;
-                Vector3 newDirection = Vector3.Slerp(initialDirection, targetDirection, elapsedTime / transitionTime);
-                spotlightTransform.rotation = Quaternion.LookRotation(newDirection);
-                yield return null;
-            }
-
-            spotlightTransform.rotation = Quaternion.LookRotation(targetDirection);
-
-            _alignCoroutine = null;
-        }
+        
     }
 }
