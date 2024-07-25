@@ -280,7 +280,6 @@ namespace Player_Scripts
         {
             if (!playerSounds.ContainsKey(soundKey))
             {
-                Debug.LogWarning("fuck me daddy");
                 return;
             }
             

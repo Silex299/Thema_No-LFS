@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
+using Triggers;
 using UnityEngine;
 
 namespace Player_Scripts.Interactables
@@ -15,6 +18,8 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private Vector3 bounds;
         [SerializeField, BoxGroup("Proximity")] private float proximity;
         [SerializeField, BoxGroup("Proximity")] private LayerMask proximityMask;
+
+        [BoxGroup("Misc")] public List<TriggerCondition> conditions;
         private Vector3 _dragOffset;
 
 
@@ -50,6 +55,13 @@ namespace Player_Scripts.Interactables
             }
             else
             {
+
+                if (conditions.Any(condition => !condition.Condition(PlayerMovementController.Instance.player.CController)))
+                {
+                    _isInteracting = false;
+                    return PlayerInteractionType.NONE;
+                }
+                
                 Transform playerTransform = PlayerMovementController.Instance.transform;
 
                 Vector3 playerPos = playerTransform.position;

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Player_Scripts.Interactables;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -158,6 +159,11 @@ namespace Player_Scripts
         {
             return state == player.eCurrentState;
         }
+
+        public bool VerifyState(int index)
+        {
+            return player.currentStateIndex == index;
+        } 
 
 
         //MARKER: State
