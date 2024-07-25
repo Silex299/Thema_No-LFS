@@ -11,11 +11,12 @@ namespace Path_Scripts
 
         public static PlayerPathController Instance;
 
-        public int nextDestination;
-        public int previousDestination;
-
-
-        [SerializeField] private List<Transform> pathPoints;
+        
+        [BoxGroup("Path Direction")] public int nextDestination;
+        [BoxGroup("Path Direction")] public int previousDestination;
+        [BoxGroup("Path Direction")] public OverridePath overridePath;
+        
+        [SerializeField,BoxGroup("Misc")] private List<Transform> pathPoints;
         public List<Transform> PathPoints => pathPoints;
 
         [Button("Set Path Points", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
@@ -76,12 +77,12 @@ namespace Path_Scripts
 
         public Vector3 GetNextPosition()
         {
-            return PathPoints[nextDestination].position;
+            return overridePath ? overridePath.nextTransform.position : PathPoints[nextDestination].position;
         }
 
         public Vector3 GetPreviousPosition()
         {
-            return pathPoints[previousDestination].position;
+            return overridePath ? overridePath.prevTransform.position : pathPoints[previousDestination].position;
         }
 
     }
