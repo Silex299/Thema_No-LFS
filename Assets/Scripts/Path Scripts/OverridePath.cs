@@ -16,10 +16,11 @@ namespace Path_Scripts
         {
             if (other.CompareTag("Player_Main"))
             {
-                if(_triggered) return;
-                
-                _triggered = true;
-                PlayerPathController.Instance.overridePath = this;
+                if (!_triggered)
+                {
+                    _triggered = true;
+                    PlayerPathController.Instance.overridePath = this;
+                } 
                 
                 if(_triggerCoroutine!=null) StopCoroutine(_triggerCoroutine);
                 _triggerCoroutine = StartCoroutine(ResetTrigger());
@@ -30,7 +31,11 @@ namespace Path_Scripts
         {
             yield return new WaitForSeconds(0.2f);
             _triggered = false;
-            PlayerPathController.Instance.overridePath = null;
+            
+            if (PlayerPathController.Instance.overridePath == this)
+            {
+                PlayerPathController.Instance.overridePath = null;
+            }
         }
     }
 }

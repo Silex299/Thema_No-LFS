@@ -39,12 +39,17 @@ namespace Triggers
             if(!continuousCheck) return;
 
             if (!other.CompareTag(triggerTag)) return;
+
+            if (!_playerIsInTrigger)
+            {
+                _playerIsInTrigger = true;
+                _interactCollider = other;
+            }
             
             if (_triggerReset != null)
             {
                 StopCoroutine(_triggerReset);
             }
-
             _triggerReset = StartCoroutine(ResetTriggerCoroutine());
         }
 
