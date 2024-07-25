@@ -13,22 +13,27 @@ namespace Thema_Camera
         
 #if UNITY_EDITOR
 
-        [SerializeField, BoxGroup("Setup")] private Camera previewCamera;
-        [SerializeField, BoxGroup("Setup")] private Transform previewTarget;
-
-        [Button("Setup Offset", ButtonSizes.Large)]
-        public void SetOffset()
+        
+        [Button("Get Offset", ButtonSizes.Large)]
+        public void GetOffset()
         {
-            var offset = previewCamera.transform.position - previewTarget.position;
-            var rotation = previewCamera.transform.rotation.eulerAngles;
-            var fov = previewCamera.fieldOfView;
-
-            info = new CameraFollowInfo
+            var cameraFollow = FindObjectOfType<CameraFollow>();
+            
+            if (cameraFollow != null)
             {
-                offset = offset,
-                rotation = rotation,
-                FOV = fov
-            };
+                var previewCamera = cameraFollow.GetComponent<Camera>();
+                info = new CameraFollowInfo
+                {
+                    offset = cameraFollow.m_Offset,
+                    rotation = previewCamera.transform.eulerAngles,
+                    FOV = previewCamera.fieldOfView,
+                    lenseShift = previewCamera.lensShift
+                    
+                };
+                
+                if(cameraFollow.m_AudioListener)
+                    info.audioListenerLocalPosition = cameraFollow.m_AudioListener.transform.localPosition;
+            }
         }
 
 #endif

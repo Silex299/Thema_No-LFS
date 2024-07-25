@@ -81,8 +81,6 @@ namespace Triggers
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!CanPull) return;
-
             if (other.CompareTag("Player_Main"))
             {
                 _playerIsInTrigger = true;
@@ -96,7 +94,9 @@ namespace Triggers
                 _playerIsInTrigger = false;
             }
         }
-
+        
+        
+        
         private void Update()
         {
             if (!_playerIsInTrigger) return;
@@ -164,9 +164,12 @@ namespace Triggers
                     {
                         soundSource.PlayOneShot(disabledTriggerSound);
                     }
-                    
-                    yield return new WaitForSeconds(triggerDelay);
-                    triggerPushAction.Invoke();
+
+                    if (canPull)
+                    {
+                        yield return new WaitForSeconds(triggerDelay);
+                        triggerPushAction.Invoke();
+                    }
                     
                 }
                 else if (!triggerPulled && Input.GetAxis("Horizontal") < 0)
@@ -180,14 +183,25 @@ namespace Triggers
                         soundSource.PlayOneShot(triggerSound);
                     }
 
-                    
-                    yield return new WaitForSeconds(triggerDelay);
-                    triggerPullAction.Invoke();
+                    if (canPull)
+                    {
+                        yield return new WaitForSeconds(triggerDelay);
+                        triggerPullAction.Invoke();
+                    }
                 }
 
                 yield return null;
             }
 
+
+
+            if (!canPull)
+            {
+                //reset the trigger
+                triggerPulled = _defaultPull;
+                leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+                //Play reset sound probably
+            }
             //If you don't get e input, go back to default;
             playerController.PlayAnimation("Default", 0.2f, 1);
 
@@ -219,8 +233,8 @@ namespace Triggers
                 PlayerMovementController.Instance.DisablePlayerMovement(false);
             }
         }
-        
-        public void ChangeTriggerState(bool pulled)
+
+        private void ChangeTriggerState(bool pulled)
         {
             if (triggerPulled == pulled) return;
             triggerPulled = pulled;
@@ -233,5 +247,6 @@ namespace Triggers
             triggerPulled = _defaultPull;
             leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
         }
+
     }
 }

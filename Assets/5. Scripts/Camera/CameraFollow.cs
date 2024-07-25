@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Thema_Camera
     {
         [SerializeField] private float m_followSmoothness;
         [SerializeField] internal Transform followTarget;
-        [SerializeField] private Vector3 m_Offset;
+        [SerializeField] internal Vector3 m_Offset;
         [SerializeField] internal AudioListener m_AudioListener;
         [SerializeField] internal bool lookAtTarget;
 
