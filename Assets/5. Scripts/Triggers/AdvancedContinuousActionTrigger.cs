@@ -2,6 +2,7 @@ using System.Collections;
 using Managers;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,7 +28,7 @@ namespace Triggers
 
         private void OnTriggerStay(Collider other)
         {
-            if(!enabled) return;
+            if (!enabled) return;
             if (!other.CompareTag("Player_Main")) return;
 
             if (_playerInTrigger) return;
@@ -91,7 +92,7 @@ namespace Triggers
                 }
 
                 uiManager.UpdateActionFill(Mathf.Clamp01(timeElapsed / actionTriggerTime), actionInput);
-                
+
                 if (timeElapsed >= actionTriggerTime)
                 {
                     player.AnimationController.CrossFade(actionAnimName, 0.2f, 1);
@@ -113,142 +114,5 @@ namespace Triggers
     }
 
 
-    [System.Serializable]
-    public class AdvancedCurvedAnimation
-    {
-        public string animationName;
-        public float animationTime;
-        public float transitionTime;
-        [OnValueChanged(nameof(Preview))] public float animationHeight;
-        [OnValueChanged(nameof(Preview))] public float animationDistance;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
-
-
-#if UNITY_EDITOR
-
-        //REMOVED: EVERYTHING IMPORTANT
-
-        public Animator previewAAnimator;
-        public Transform transform;
-
-        [Range(0, 1), OnValueChanged(nameof(Preview))]
-        public float normalisedTime;
-
-        public void Preview()
-        {
-            previewAAnimator.Play(animationName, 1, normalisedTime);
-            previewAAnimator.Update(0);
-
-            Vector3 repos = transform.position +
-                            transform.forward * distanceCurve.Evaluate(normalisedTime) * animationDistance +
-                            transform.up * heightCurve.Evaluate(normalisedTime) * animationHeight;
-
-            previewAAnimator.transform.position = repos;
-            previewAAnimator.transform.rotation = transform.rotation;
-        }
-
-#endif
-        /// <summary>
-        /// Plays animation and follows the curves
-        /// </summary>
-        /// <param name="animator"></param>
-        /// <param name="target"></param>
-        /// <param name="triggerTransform"></param>
-        /// <returns></returns>
-        public IEnumerator PlayAnim(Animator animator, Transform target, Transform triggerTransform)
-        {
-            animator.CrossFade(animationName, transitionTime, 1);
-
-            Vector3 initialPlayerPos = target.position;
-            Quaternion initialPlayerRot = target.rotation;
-
-            float timeElapsed = 0;
-
-            while (timeElapsed < animationTime)
-            {
-                timeElapsed += Time.deltaTime;
-
-
-                #region GetNormalized Time
-
-                var currentClip = animator.GetCurrentAnimatorStateInfo(1);
-                var nextClip = animator.GetNextAnimatorStateInfo(1);
-
-                float normalizedTime = 0;
-
-                if (currentClip.IsName(animationName))
-                {
-                    normalizedTime = currentClip.normalizedTime;
-                }
-                else if (nextClip.IsName(animationName))
-                {
-                    normalizedTime = nextClip.normalizedTime;
-                }
-
-                #endregion
-
-
-                if (timeElapsed < transitionTime)
-                {
-                    var repos = triggerTransform.position +
-                                triggerTransform.forward * (distanceCurve.Evaluate(0.2f) * animationDistance) +
-                                triggerTransform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
-
-                    target.position = Vector3.Lerp(initialPlayerPos, repos, timeElapsed / transitionTime);
-                }
-                else
-                {
-                    if (normalizedTime != 0)
-                    {
-                        var repos = triggerTransform.position +
-                                    triggerTransform.forward *
-                                    (distanceCurve.Evaluate(normalizedTime) *
-                                     animationDistance) +
-                                    triggerTransform.up * (heightCurve.Evaluate(normalizedTime) *
-                                                           animationHeight);
-
-                        target.position = repos;
-                    }
-                }
-
-                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
-                    timeElapsed / transitionTime);
-
-                yield return null;
-            }
-
-            target.rotation = triggerTransform.rotation;
-        }
-
-        /// <summary>
-        /// Plays animation and directly moves to trigger position
-        /// </summary>
-        /// <param name="animator"></param>
-        /// <param name="target"></param>
-        /// <param name="triggerTransform"></param>
-        /// <returns></returns>
-        public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform)
-        {
-            animator.CrossFade(animationName, transitionTime, 1);
-
-            Vector3 initialPlayerPos = target.position;
-            Quaternion initialPlayerRot = target.rotation;
-
-            float timeElapsed = 0;
-
-            while (timeElapsed < transitionTime)
-            {
-                timeElapsed += Time.deltaTime;
-
-                target.position = Vector3.Lerp(initialPlayerPos, triggerTransform.position,
-                    timeElapsed / transitionTime);
-                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
-                    timeElapsed / transitionTime);
-
-                yield return null;
-            }
-        }
-
-    }
+    
 }
