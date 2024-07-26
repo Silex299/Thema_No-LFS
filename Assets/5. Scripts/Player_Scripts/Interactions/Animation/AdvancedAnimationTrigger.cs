@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Player_Scripts.Interactions.Animation
 {
@@ -10,7 +11,7 @@ namespace Player_Scripts.Interactions.Animation
     {
         
         [FoldoutGroup("Animation")] public AdvancedCurvedAnimation animationInfo;
-        [FoldoutGroup("Animation")] public float animtionWidth;
+        [FoldoutGroup("Animation")] public float animationWidth;
         
 
         [FoldoutGroup("State")] public bool changeState;
@@ -37,8 +38,8 @@ namespace Player_Scripts.Interactions.Animation
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position - transform.right * animtionWidth,
-                transform.position + transform.right * animtionWidth);
+            Gizmos.DrawLine(transform.position - transform.right * animationWidth,
+                transform.position + transform.right * animationWidth);
         }
 
         public void Trigger()
@@ -59,7 +60,7 @@ namespace Player_Scripts.Interactions.Animation
 
             #endregion
 
-            yield return animationInfo.PlayAnim(player.AnimationController, player.transform, transform, animtionWidth);
+            yield return animationInfo.PlayAnim(player.AnimationController, player.transform, transform, animationWidth);
 
             if (changeState)
             {

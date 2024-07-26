@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Managers;
 using Player_Scripts;
@@ -10,21 +11,30 @@ namespace Triggers
 {
     public class AdvancedContinuousActionTrigger : MonoBehaviour
     {
-        [BoxGroup("Input")] public string engageInput;
-        [BoxGroup("Input")] public string actionInput;
-        [BoxGroup("Input")] public float actionTriggerTime;
+        [FoldoutGroup("Input")] public string engageInput;
+        [FoldoutGroup("Input")] public string actionInput;
+        [FoldoutGroup("Input")] public float actionTriggerTime;
 
-        [BoxGroup("Animation")] public bool simpleEngage;
-        [BoxGroup("Animation")] public AdvancedCurvedAnimation engageAnim;
-        [BoxGroup("Animation")] public string actionAnimName; //MAY BE CHANGE LATER TO MORE DYNAMIC
+        [FoldoutGroup("Animation")] public bool simpleEngage;
+        [FoldoutGroup("Animation")] public float engageActionWidth;
+        [FoldoutGroup("Animation")] public AdvancedCurvedAnimation engageAnim;
+        [FoldoutGroup("Animation")] public string actionAnimName; //MAY BE CHANGE LATER TO MORE DYNAMIC
 
 
-        [BoxGroup("Events")] public float actionDelay;
-        [BoxGroup("Events")] public UnityEvent actionEvent;
+        [FoldoutGroup("Events")] public float actionDelay;
+        [FoldoutGroup("Events")] public UnityEvent actionEvent;
 
 
         private Coroutine _engagedCoroutine;
         private bool _playerInTrigger;
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(transform.position - transform.right * engageActionWidth,
+                transform.position + transform.right * engageActionWidth);
+        }
 
         private void OnTriggerStay(Collider other)
         {
@@ -66,11 +76,11 @@ namespace Triggers
 
             if (simpleEngage)
             {
-                yield return engageAnim.SimpleAnim(player.AnimationController, player.transform, transform);
+                yield return engageAnim.SimpleAnim(player.AnimationController, player.transform, transform, engageActionWidth);
             }
             else
             {
-                yield return engageAnim.PlayAnim(player.AnimationController, player.transform, transform);
+                yield return engageAnim.PlayAnim(player.AnimationController, player.transform, transform, engageActionWidth);
             }
 
 

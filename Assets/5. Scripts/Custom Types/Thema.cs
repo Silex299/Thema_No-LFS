@@ -38,19 +38,10 @@ namespace Thema_Type
             Vector3 line = to - from;
             Vector3 pointDirection = point - from;
 
-            float t = 0;
+            float  t = Vector3.Dot(pointDirection, line) / Vector3.Dot(line, line);
 
-            try
-            {
-                t = Vector3.Dot(pointDirection, line) / Vector3.Dot(line, line);
-            }
-            catch
-            {
-                // ignored
-            }
-
-            t = Mathf.Clamp01(t);
-
+            t = float.IsNaN(t) ? 0 : Mathf.Clamp01(t);
+            
             return from + line * t;
         }
 
@@ -191,12 +182,16 @@ namespace Thema_Type
         /// <param name="target"></param>
         /// <param name="triggerTransform"></param>
         /// <returns></returns>
-        public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform)
+        public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform, float animationWidth = 0)
         {
             animator.CrossFade(animationName, transitionTime, 1);
 
             Vector3 initialPlayerPos = target.position;
             Quaternion initialPlayerRot = target.rotation;
+
+            Vector3 finalPos = ThemaVector.GetClosestPointToLine(from: triggerTransform.position - triggerTransform.right * animationWidth,
+                to: triggerTransform.position + triggerTransform.right * animationWidth,
+                point: target.position);
 
             float timeElapsed = 0;
 
@@ -204,7 +199,7 @@ namespace Thema_Type
             {
                 timeElapsed += Time.deltaTime;
 
-                target.position = Vector3.Lerp(initialPlayerPos, triggerTransform.position,
+                target.position = Vector3.Lerp(initialPlayerPos, finalPos,
                     timeElapsed / transitionTime);
                 target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
                     timeElapsed / transitionTime);
