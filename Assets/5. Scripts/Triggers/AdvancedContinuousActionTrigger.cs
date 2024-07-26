@@ -1,19 +1,25 @@
-using System;
 using System.Collections;
+using Managers;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Triggers
 {
     public class AdvancedContinuousActionTrigger : MonoBehaviour
     {
-
         [BoxGroup("Input")] public string engageInput;
         [BoxGroup("Input")] public string actionInput;
         [BoxGroup("Input")] public float actionTriggerTime;
 
-        public AdvancedCurvedAnimation engageAnim;
+        [BoxGroup("Animation")] public bool simpleEngage;
+        [BoxGroup("Animation")] public AdvancedCurvedAnimation engageAnim;
+        [BoxGroup("Animation")] public string actionAnimName; //MAY BE CHANGE LATER TO MORE DYNAMIC
+
+
+        [BoxGroup("Events")] public float actionDelay;
+        [BoxGroup("Events")] public UnityEvent actionEvent;
 
 
         private Coroutine _engagedCoroutine;
@@ -22,8 +28,8 @@ namespace Triggers
         private void OnTriggerStay(Collider other)
         {
             if (!other.CompareTag("Player_Main")) return;
-            
-            if(_playerInTrigger) return;
+
+            if (_playerInTrigger) return;
             _playerInTrigger = true;
 
             if (_engagedCoroutine != null) StopCoroutine(ResetTrigger());
@@ -36,11 +42,11 @@ namespace Triggers
             yield return new WaitForSeconds(0.5f);
             _playerInTrigger = false;
         }
-        
+
         private void Update()
         {
             if (!_playerInTrigger) return;
-            
+
             if (Input.GetButtonDown(engageInput))
             {
                 _engagedCoroutine ??= StartCoroutine(Engage());
@@ -54,25 +60,58 @@ namespace Triggers
 
             player.CanRotate = false;
             player.CController.enabled = false;
-            
-            yield return engageAnim.PlayAnim(player.AnimationController, player.transform, transform);
+            player.DisabledPlayerMovement = true;
 
-            while (Input.GetButton(engageInput))
+            if (simpleEngage)
             {
+                yield return engageAnim.SimpleAnim(player.AnimationController, player.transform, transform);
+            }
+            else
+            {
+                yield return engageAnim.PlayAnim(player.AnimationController, player.transform, transform);
+            }
+
+
+            float timeElapsed = 0;
+
+            var uiManager = UIManager.Instance;
+            uiManager.UpdateActionFillPos(transform.position, new Vector3(0, 2f, 0f));
+
+            //Action
+            while (!Input.GetButtonUp(engageInput))
+            {
+                if (Input.GetButton(actionInput))
+                {
+                    timeElapsed += Time.deltaTime;
+                }
+                else
+                {
+                    timeElapsed = 0;
+                }
+
+                uiManager.UpdateActionFill(Mathf.Clamp01(timeElapsed / actionTriggerTime), actionInput);
+                
+                if (timeElapsed >= actionTriggerTime)
+                {
+                    player.AnimationController.CrossFade(actionAnimName, 0.2f, 1);
+                    yield return new WaitForSeconds(actionDelay);
+                    actionEvent.Invoke();
+                    break;
+                }
+
                 yield return null;
             }
 
+
             player.AnimationController.CrossFade("Default", 0.1f, 1);
+            player.DisabledPlayerMovement = false;
             player.CController.enabled = true;
             player.CanRotate = true;
             _engagedCoroutine = null;
-
         }
-        
-        
     }
-    
-    
+
+
     [System.Serializable]
     public class AdvancedCurvedAnimation
     {
@@ -91,9 +130,10 @@ namespace Triggers
 
         public Animator previewAAnimator;
         public Transform transform;
-        
-        [Range(0,1), OnValueChanged(nameof(Preview))]
+
+        [Range(0, 1), OnValueChanged(nameof(Preview))]
         public float normalisedTime;
+
         public void Preview()
         {
             previewAAnimator.Play(animationName, 1, normalisedTime);
@@ -106,7 +146,7 @@ namespace Triggers
             previewAAnimator.transform.position = repos;
             previewAAnimator.transform.rotation = transform.rotation;
         }
-        
+
 #endif
         /// <summary>
         /// Plays animation and follows the curves
@@ -118,12 +158,12 @@ namespace Triggers
         public IEnumerator PlayAnim(Animator animator, Transform target, Transform triggerTransform)
         {
             animator.CrossFade(animationName, transitionTime, 1);
-            
+
             Vector3 initialPlayerPos = target.position;
             Quaternion initialPlayerRot = target.rotation;
-            
+
             float timeElapsed = 0;
-            
+
             while (timeElapsed < animationTime)
             {
                 timeElapsed += Time.deltaTime;
@@ -158,7 +198,6 @@ namespace Triggers
                 }
                 else
                 {
-
                     if (normalizedTime != 0)
                     {
                         var repos = triggerTransform.position +
@@ -170,16 +209,15 @@ namespace Triggers
 
                         target.position = repos;
                     }
-
                 }
-                
-                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation, timeElapsed / transitionTime);
+
+                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
+                    timeElapsed / transitionTime);
 
                 yield return null;
             }
 
             target.rotation = triggerTransform.rotation;
-            
         }
 
         /// <summary>
@@ -192,23 +230,24 @@ namespace Triggers
         public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform)
         {
             animator.CrossFade(animationName, transitionTime, 1);
-            
+
             Vector3 initialPlayerPos = target.position;
             Quaternion initialPlayerRot = target.rotation;
-            
+
             float timeElapsed = 0;
 
-            while (timeElapsed<transitionTime)
+            while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
 
                 target.position = Vector3.Lerp(initialPlayerPos, triggerTransform.position,
                     timeElapsed / transitionTime);
-                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation, timeElapsed / transitionTime);
-                
+                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
+                    timeElapsed / transitionTime);
+
                 yield return null;
             }
         }
-        
+
     }
 }

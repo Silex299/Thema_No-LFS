@@ -81,6 +81,7 @@ namespace Thema_Camera
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
+            print("From Where");
             if (_transitionOffsetTrigger != null)
                 StopCoroutine(_transitionOffsetTrigger);
 

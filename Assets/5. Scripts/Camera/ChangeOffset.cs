@@ -46,6 +46,7 @@ namespace Thema_Camera
         
         public void ChangeCameraOffset(float transitionTimeOverride)
         {
+            print(gameObject.name);
             CameraFollow.Instance.ChangeOffset(info, transitionTimeOverride);
         }
 

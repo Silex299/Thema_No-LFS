@@ -10,6 +10,10 @@ namespace Triggers
     {
 
 
+        #region  Variables
+
+        
+        
         [SerializeField, BoxGroup("Params")] private string triggerTag;
         [SerializeField, BoxGroup("Params")] private bool continuousCheck;
         [SerializeField, BoxGroup("Condition")] private TriggerCondition[] conditions;
@@ -18,11 +22,20 @@ namespace Triggers
         [SerializeField, BoxGroup("Actions")] private UnityEvent exitAction;
 
 
+        #endregion
+
+
+        #region Private Variables
+
         private bool _playerIsInTrigger;
         private bool _executed;
         private Coroutine _triggerReset;
         private Collider _interactCollider;
 
+        #endregion
+
+
+        #region Built in methods
 
         private void OnTriggerEnter(Collider other)
         {
@@ -61,17 +74,7 @@ namespace Triggers
             }
         }
 
-        private IEnumerator ResetTriggerCoroutine()
-        {
-
-            yield return new WaitForSeconds(0.2f);
-
-            ResetTrigger();
-        }
-
-
-
-
+        
         private void Update()
         {
             if (!_playerIsInTrigger || _executed) return;
@@ -95,14 +98,23 @@ namespace Triggers
             }
 
         }
+        
+        #endregion
 
+        #region Custom Methods
+
+        private IEnumerator ResetTriggerCoroutine()
+        {
+
+            yield return new WaitForSeconds(0.2f);
+
+            ResetTrigger();
+        }
         private void Execute()
         {
             entryAction?.Invoke();
             _executed = true;
         }
-
-
         private void ResetTrigger()
         {
 
@@ -133,6 +145,8 @@ namespace Triggers
 
 
         }
+
+        #endregion
     }
 
 }

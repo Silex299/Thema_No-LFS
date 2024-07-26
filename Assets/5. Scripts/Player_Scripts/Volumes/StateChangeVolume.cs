@@ -101,6 +101,7 @@ namespace Player_Scripts.Volumes
         {
             if (conditions.Any(condition => !condition.Condition(other))) return;
                         
+            print(gameObject.name);
             PlayerMovementController.Instance.ChangeState(entryStateIndex);
             PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
             PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;

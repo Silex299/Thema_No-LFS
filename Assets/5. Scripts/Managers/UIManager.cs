@@ -5,6 +5,7 @@ using Player_Scripts;
 using System;
 using System.Collections;
 using Managers.Checkpoints;
+using Thema_Camera;
 using TMPro;
 
 namespace Managers
@@ -14,6 +15,10 @@ namespace Managers
         [SerializeField, BoxGroup("UI")] private Animator animator;
         [SerializeField, BoxGroup("UI")] private Image fader;
 
+
+        [BoxGroup("Action")] public Image actionFill;
+        [BoxGroup("Action")] public TextMeshProUGUI actionText;
+        
         [SerializeField, BoxGroup("Params")] private float fadeTransitionTime;
 
 
@@ -77,6 +82,34 @@ namespace Managers
 
         private Coroutine _fadingCoroutine;
 
+        
+        
+        public void UpdateActionFill(float fraction, string text = ">")
+        {
+            if (Mathf.Approximately(fraction, 0) || Mathf.Approximately(fraction, 1))
+            {
+                actionFill.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!actionFill.gameObject.activeInHierarchy)
+                {
+                    actionFill.gameObject.SetActive(true);
+                    actionText.text = text;
+                }
+            }
+            
+            actionFill.fillAmount = fraction;
+        }
+
+        public void UpdateActionFillPos(Vector3 position, Vector3 offset)
+        {
+            var myCamera = CameraFollow.Instance.myCamera;
+
+            var pos = myCamera.WorldToScreenPoint(position + offset);
+            actionFill.rectTransform.position = pos;
+        }
+        
         public void FadeIn(float transitionTime = 0.2f)
         {
             if (_fadingCoroutine != null)
@@ -149,8 +182,7 @@ namespace Managers
             animator.Play("EXIT_LCP_VIEW");
             FadeOut();
         }
-
-
+        
         private void TakeDamage(float fraction)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
