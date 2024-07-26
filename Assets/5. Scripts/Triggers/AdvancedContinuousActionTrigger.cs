@@ -27,6 +27,7 @@ namespace Triggers
 
         private void OnTriggerStay(Collider other)
         {
+            if(!enabled) return;
             if (!other.CompareTag("Player_Main")) return;
 
             if (_playerInTrigger) return;
