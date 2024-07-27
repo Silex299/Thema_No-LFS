@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class WeightPressureTrigger : MonoBehaviour
@@ -9,42 +10,39 @@ public class WeightPressureTrigger : MonoBehaviour
     private float _currentMass = 0f;
     private bool _isActivated = false;
 
+    
     private void OnTriggerEnter(Collider other)
     {
-        print("Hello");
-        if (!other.CompareTag("Interactable")) return;
-        
-        Rigidbody rb = other.attachedRigidbody;
-        
-        if (rb == null) return;
-        _currentMass  = Mathf.Clamp(_currentMass+ rb.mass, 0, 99999);
-        CheckMass();
+        if (other.CompareTag("Interactable"))
+        {
+            Rigidbody rb = other.attachedRigidbody;
+            _currentMass += rb.mass;
+            _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+            UpdateWeightVisual();
+        }
+        else if (other.CompareTag("Player_Main"))
+        {
+            _currentMass += 25f;
+            _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+            UpdateWeightVisual();
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Interactable")) return;
-        
-        Rigidbody rb = other.attachedRigidbody;
-        if (rb == null) return;
-        
-        _currentMass  = Mathf.Clamp(_currentMass - rb.mass, 0, 99999);
-        UpdateWeightVisual();
-    }
-
-    private void CheckMass()
-    {
-        UpdateWeightVisual();
-        if (_currentMass >= requiredMass && !_isActivated)
+        if (other.CompareTag("Interactable"))
         {
-            ActivateTrigger();
+            Rigidbody rb = other.attachedRigidbody;
+            _currentMass -= rb.mass;
+            _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+            UpdateWeightVisual();
         }
-    }
-
-    private void ActivateTrigger()
-    {
-        _isActivated = true;
-        Debug.Log("Pressure trigger activated!");
+        else if (other.CompareTag("Player_Main"))
+        {
+            _currentMass -= 25f;
+            _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+            UpdateWeightVisual();
+        }
     }
 
     private void UpdateWeightVisual()
