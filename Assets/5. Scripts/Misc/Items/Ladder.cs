@@ -27,7 +27,8 @@ namespace Misc.Items
         private float _playerAt;
         private Vector3 _playerPosition;
         [HideInInspector] public bool engaged;
-
+        
+        
         public void MoveLadder(float input)
         {
             _playerAt += input * Time.deltaTime * movementSpeed;
@@ -61,6 +62,9 @@ namespace Misc.Items
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(_playerPosition, 0.2f);
+            
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(startLadder.position, endLadder.position);
         }
 
         public void Engage(bool atStart)
@@ -75,7 +79,6 @@ namespace Misc.Items
         private IEnumerator EngageLadder(bool atStart)
         {
             engaged = true;
-            print("Fuck me daddy ::" + Time.time);
 
             PlayerMovementController.Instance.player.ladderMovementState.connectedLadder = this;
             PlayerMovementController.Instance.ChangeState(1);
@@ -92,18 +95,26 @@ namespace Misc.Items
         {
             if (!engaged) return;
 
+            switch (atStart)
+            {
+                case true when !startDisengagedTransform:
+                    print("Cant exit at start");
+                    return;
+                case false when !endDisengagedTransform:
+                    print("Cant exit at end");
+                    return;
+            }
+
             StartCoroutine(DisEngageLadder(atStart));
         }
 
         private IEnumerator DisEngageLadder(bool atStart)
         {
             PlayerMovementController.Instance.RollBack();
-            
             var requiredTransform = atStart ? startDisengagedTransform : endDisengagedTransform;
             
             //Move player to required position and rotate if needed using PlayerMover 
             yield return PlayerMover.MoveCoroutine(requiredTransform, transitionTime);
-
             
             engaged = false;
         }

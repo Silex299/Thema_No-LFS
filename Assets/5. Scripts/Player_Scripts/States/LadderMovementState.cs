@@ -38,7 +38,6 @@ namespace Player_Scripts.States
         }
         public override void UpdateState(Player player)
         {
-            Debug.Log("updating ladder movement");
             if (_isJumped) return;
 
             var input = Input.GetAxis("Vertical");
@@ -47,6 +46,7 @@ namespace Player_Scripts.States
             player.AnimationController.SetFloat(Speed, input);
             
             if (!Input.GetButtonDown("Jump")) return;
+            
             if (connectedLadder.canJumpOfTheLadder)
             {
                 player.StartCoroutine(LeaveLadder(player));
@@ -72,7 +72,6 @@ namespace Player_Scripts.States
         {
             _isJumped = true;
             player.AnimationController.SetTrigger(Jump);
-
             yield return Fall(player);
         }
 
@@ -80,7 +79,7 @@ namespace Player_Scripts.States
         {
             
             player.playerVelocity = Vector3.zero;
-            
+            player.CController.enabled = true;
             while (!player.IsGrounded)
             {
                 player.MovementController.ApplyGravity();

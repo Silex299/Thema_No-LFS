@@ -5,6 +5,7 @@ using UnityEngine;
 // ReSharper disable once CheckNamespace
 namespace Misc
 {
+    //FIX: MOVE TO THEMA SCRIPT
     public class PlayerMover : MonoBehaviour
     {
 
