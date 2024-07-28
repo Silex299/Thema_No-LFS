@@ -100,7 +100,7 @@ namespace Misc.Items
                             transform.position.y - i * (ropeLength) / (ropeResolution - 1), transform.position.z)
                     },
                     //Set object layer to Ignore Player
-                    layer = LayerMask.NameToLayer("Ignore Player")
+                    layer = LayerMask.NameToLayer("Rope")
                 };
 
                 ropeSegments[i] = obj.AddComponent<Rigidbody>();

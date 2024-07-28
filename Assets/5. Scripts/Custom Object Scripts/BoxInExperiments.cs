@@ -38,7 +38,7 @@ public class BoxInExperiments : MonoBehaviour
         connectedRopes[0].BreakRope();
         connectedLoad.isKinematic = false;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         connectedRopes[1].BreakRope();
         yield return new WaitForSeconds(0.1f);

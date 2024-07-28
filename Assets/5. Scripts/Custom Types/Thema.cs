@@ -143,13 +143,13 @@ namespace Thema_Type
                     point: target.position);
 
 
-                if (timeElapsed < transitionTime)
+                if (normalizedTime < transitionTime)
                 {
                     var repos = triggerPos +
                                 triggerTransform.forward * (distanceCurve.Evaluate(0.2f) * animationDistance) +
                                 triggerTransform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
 
-                    target.position = Vector3.Lerp(initialPlayerPos, repos, timeElapsed / transitionTime);
+                    target.position = Vector3.Lerp(initialPlayerPos, repos, normalizedTime / transitionTime);
                 }
                 else
                 {
