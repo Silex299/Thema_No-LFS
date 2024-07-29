@@ -9,6 +9,9 @@ public class Door : MonoBehaviour
     [SerializeField, BoxGroup] private Vector3 openPosition;
     [SerializeField, BoxGroup] private float transitionTime = 1;
     [SerializeField, BoxGroup] private float delay;
+    [SerializeField, BoxGroup] private bool followCurve;
+    [ShowIf("followCurve"), BoxGroup] public AnimationCurve openCurve;
+    [ShowIf("followCurve"), BoxGroup] public AnimationCurve closeCurve;
 
 
     [SerializeField, BoxGroup("Sound")] private AudioClip openSound;
@@ -64,9 +67,16 @@ public class Door : MonoBehaviour
             while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
-                float fraction = timeElapsed / transitionTime;
-                
-                transform.localPosition = Vector3.Lerp(initialPos, destination, fraction);
+
+                if (!followCurve)
+                {
+                    transform.localPosition = Vector3.Lerp(initialPos, destination, timeElapsed / transitionTime);
+                }
+                else
+                {
+                    float normalisedTime = open? openCurve.Evaluate(timeElapsed / transitionTime) : closeCurve.Evaluate(timeElapsed / transitionTime);
+                    transform.localPosition = Vector3.LerpUnclamped(initialPos, destination, normalisedTime);
+                }
                 
                 yield return null;
             }

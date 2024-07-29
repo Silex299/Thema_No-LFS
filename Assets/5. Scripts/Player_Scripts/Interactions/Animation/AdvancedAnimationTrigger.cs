@@ -20,7 +20,7 @@ namespace Player_Scripts.Interactions.Animation
         public int stateIndex;
 
         [FoldoutGroup("State"), ShowIf(nameof(changeState)), Range(0, 1)]
-        public float overrideTime;
+        public float overrideTime = 0.8f;
 
         [FoldoutGroup("State"), ShowIf(nameof(changeState))]
         public bool overrideAnimation;
@@ -60,18 +60,25 @@ namespace Player_Scripts.Interactions.Animation
 
             #endregion
 
-            yield return animationInfo.PlayAnim(player.AnimationController, player.transform, transform, animationWidth);
-
+            TimedAction timedAction = null; 
             if (changeState)
             {
-                player.MovementController.ResetAnimator();
-                player.MovementController.ChangeState(stateIndex);
-
-                if (overrideAnimation)
+                void ChangeState()
                 {
-                    player.AnimationController.Play(overrideAnimationName);
+                    player.MovementController.ResetAnimator();
+                    player.MovementController.ChangeState(stateIndex);
+
+                    if (overrideAnimation)
+                    {
+                        player.AnimationController.Play(overrideAnimationName);
+                    }
                 }
+                
+                timedAction = new TimedAction(overrideTime, ChangeState);
             }
+
+            yield return animationInfo.PlayAnim(player.AnimationController, player.transform, transform, animationWidth,
+                timedAction);
 
             #region Player Movement
 

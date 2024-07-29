@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace Thema_Type
@@ -102,9 +104,10 @@ namespace Thema_Type
         /// <param name="target"></param>
         /// <param name="triggerTransform"></param>
         /// <param name="actionWidth"></param>
+        /// <param name="timedAction"></param>
         /// <returns></returns>
         public IEnumerator PlayAnim(Animator animator, Transform target, Transform triggerTransform,
-            float actionWidth = 0.01f)
+            float actionWidth = 0.01f, TimedAction timedAction = null)
         {
             animator.CrossFade(animationName, transitionTime, 1);
 
@@ -146,8 +149,8 @@ namespace Thema_Type
                 if (normalizedTime < transitionTime)
                 {
                     var repos = triggerPos +
-                                triggerTransform.forward * (distanceCurve.Evaluate(0.2f) * animationDistance) +
-                                triggerTransform.up * (heightCurve.Evaluate(0.2f) * animationHeight);
+                                triggerTransform.forward * (distanceCurve.Evaluate(transitionTime) * animationDistance) +
+                                triggerTransform.up * (heightCurve.Evaluate(transitionTime) * animationHeight);
 
                     target.position = Vector3.Lerp(initialPlayerPos, repos, normalizedTime / transitionTime);
                 }
@@ -169,6 +172,15 @@ namespace Thema_Type
                 target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
                     timeElapsed / transitionTime);
 
+                if (timedAction != null)
+                {
+                    if (timeElapsed >= timedAction.time)
+                    {
+                        timedAction.action?.Invoke();
+                        timedAction = null;
+                    }
+                }
+                
                 yield return null;
             }
 
@@ -207,7 +219,22 @@ namespace Thema_Type
                 yield return null;
             }
         }
+        
     }
 
+    
+    [Serializable, CanBeNull]
+    public class TimedAction
+    {
+        public float time;
+        public Action action;
+        public TimedAction(float time, Action action)
+        {
+            this.time = time;
+            this.action = action;
+        }
+    }
+
+    
     #endregion
 }
