@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,10 +16,14 @@ namespace Triggers
     
         private float _currentMass = 0f;
         private bool _triggered;
-    
-    
 
-    
+
+        private void Start()
+        {
+            UpdateWeightVisual();
+        }
+
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Interactable"))

@@ -78,12 +78,13 @@ namespace Player_Scripts.Interactions.Animation
             player.MovementController.ResetAnimator();
             player.DisabledPlayerMovement = false;
             player.CController.enabled = true;
+            Debug.LogWarning("Hello bakriCHOOD");
 
             #endregion
 
-            StopAllCoroutines();
-            _triggerActionCoroutine = null;
             onActionEnd.Invoke();
+            _triggerActionCoroutine = null;
+            StopAllCoroutines();
             
         }
     }

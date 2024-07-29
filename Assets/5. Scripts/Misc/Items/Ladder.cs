@@ -86,7 +86,7 @@ namespace Misc.Items
             var requiredTransform = atStart ? startLadder : endLadder;
 
             //Move player to required position and rotate if needed using PlayerMover 
-            yield return PlayerMover.MoveCoroutine(requiredTransform, transitionTime, true, true, false);
+            yield return PlayerMover.MoveCoroutine(requiredTransform, transitionTime);
 
         }
 

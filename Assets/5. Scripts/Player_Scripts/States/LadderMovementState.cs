@@ -21,22 +21,23 @@ namespace Player_Scripts.States
         {
         }
 
-        public override void LateUpdateState(Player player)
-        {
-        }
-
+      
         #endregion
 
         #region Overriden Methods
 
         public override void EnterState(Player player)
         {
-            player.CController.enabled = false;
             player.MovementController.ResetAnimator();
             player.IsGrounded = false;
             _isJumped = false;
         }
         public override void UpdateState(Player player)
+        {
+            
+        }
+        
+        public override void LateUpdateState(Player player)
         {
             if (_isJumped) return;
 
@@ -51,9 +52,9 @@ namespace Player_Scripts.States
             {
                 player.StartCoroutine(LeaveLadder(player));
             }
-
-
         }
+
+        
         public override void ExitState(Player player)
         {
             player.CController.enabled = true;

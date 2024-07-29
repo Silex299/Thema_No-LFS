@@ -224,12 +224,12 @@ namespace Misc.Items
             // If the player is moving upwards along the rope
             if (input > 0.2f)
             {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.deltaTime * climbSpeed);
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.fixedDeltaTime * climbSpeed);
             }
             // If the player is moving downwards along the rope
             else if (input < -0.2f)
             {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.deltaTime * climbSpeed);
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.fixedDeltaTime * climbSpeed);
             }
 
             // Ensure the closest index is within the bounds of the rope resolution
