@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -71,24 +72,12 @@ namespace Triggers
             
             while (true)
             {
-                bool result = true;
-            
-                foreach (var condition in conditions)
-                {
-                    result = condition.Condition(other);
-
-                    if (!result)
-                    {
-                        break;
-                    }
-                }
-
-                if (result)
+                
+                if(conditions.All(condition => condition.Condition(other)))
                 {
                     action.Invoke();
                     break;
                 }
-            
                 yield return null;
             }
             

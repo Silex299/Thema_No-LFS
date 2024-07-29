@@ -1,54 +1,57 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(BoxCollider))]
-public class PressureTrigger : MonoBehaviour
+namespace Triggers
 {
-
-    [SerializeField] private bool canTrigger = true;
-    [SerializeField, Range(1, 30)] private int pressureThreshold = 1;
-    [SerializeField] private UnityEvent triggerAction;
-    [SerializeField] private UnityEvent resetAction;
-
-
-    [SerializeField, Space(10)] private AudioSource soundSource;
-    [SerializeField, Space(10)] private AudioClip triggerSound;
-
-    private int _objectInTrigger;
-    private bool _triggered;
-
-    private void OnTriggerEnter(Collider other)
+    [RequireComponent(typeof(BoxCollider))]
+    public class PressureTrigger : MonoBehaviour
     {
 
-        if (!canTrigger) return;
+        [SerializeField] private bool canTrigger = true;
+        [SerializeField, Range(1, 30)] private int pressureThreshold = 1;
+        [SerializeField] private UnityEvent triggerAction;
+        [SerializeField] private UnityEvent resetAction;
 
-        _objectInTrigger = _objectInTrigger + 1;
-        if (_triggered) return;
 
-        if(_objectInTrigger >= pressureThreshold)
+        [SerializeField, Space(10)] private AudioSource soundSource;
+        [SerializeField, Space(10)] private AudioClip triggerSound;
+
+        private int _objectInTrigger;
+        private bool _triggered;
+
+        private void OnTriggerEnter(Collider other)
         {
-            _triggered = true;
-            triggerAction?.Invoke();
-            soundSource?.PlayOneShot(triggerSound);
+
+            if (!canTrigger) return;
+
+            _objectInTrigger = _objectInTrigger + 1;
+            if (_triggered) return;
+
+            if(_objectInTrigger >= pressureThreshold)
+            {
+                _triggered = true;
+                triggerAction?.Invoke();
+                soundSource?.PlayOneShot(triggerSound);
+            }
         }
-    }
 
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (!canTrigger) return;
-
-        _objectInTrigger = Mathf.Clamp(_objectInTrigger-1, 0, 30);
-
-        if (!_triggered) return;
-
-        if(_objectInTrigger < pressureThreshold)
+        private void OnTriggerExit(Collider other)
         {
-            _triggered = false;
-            resetAction?.Invoke();
+            if (!canTrigger) return;
+
+            _objectInTrigger = Mathf.Clamp(_objectInTrigger-1, 0, 30);
+
+            if (!_triggered) return;
+
+            if(_objectInTrigger < pressureThreshold)
+            {
+                _triggered = false;
+                resetAction?.Invoke();
+            }
         }
+
+
+
     }
-
-
-
 }
