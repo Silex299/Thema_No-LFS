@@ -3,7 +3,6 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Player_Scripts.Interactions.Animation
 {

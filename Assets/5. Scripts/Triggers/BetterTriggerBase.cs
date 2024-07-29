@@ -10,45 +10,58 @@ namespace Triggers
         public bool continuousCheck;
 
         private Coroutine _resetTriggerCoroutine;
-        private bool _playerInTrigger;
+        protected bool playerInTrigger;
+        protected bool triggered;
         
         private void OnTriggerEnter(Collider other)
         {
-            if(!enabled) return;
-            if(other.CompareTag(triggerTag))
-            {
-                _playerInTrigger = true;
-            }
-        }
-    
+            OnTriggerEnterBool(other);
+        }  
         private void OnTriggerExit(Collider other)
         {
-            if(other.CompareTag(triggerTag))
-            {
-                _playerInTrigger = false;
-            }
+            OnTriggerExitBool(other);
         }
-
         private void OnTriggerStay(Collider other)
         {
-            if(!enabled) return;
+            OnTriggerStayBool(other);
+        }
+
         
-            if(!continuousCheck) return;
+        
+        protected virtual bool OnTriggerEnterBool(Collider other)
+        {
+            if(!enabled) return false;
+            if (!other.CompareTag(triggerTag)) return false;
+            
+            playerInTrigger = true;
+            return true;
+        }
+    
+        protected virtual bool OnTriggerExitBool(Collider other)
+        {
+            if (!other.CompareTag(triggerTag)) return false;
+            
+            playerInTrigger = false;
+            return true;
+        }
 
-            if (other.CompareTag(triggerTag))
+        protected virtual bool OnTriggerStayBool(Collider other)
+        {
+            if(!enabled) return false;
+            if(!continuousCheck) return false;
+            if (!other.CompareTag(triggerTag)) return false;
+            
+            playerInTrigger = true;
+            if(_resetTriggerCoroutine != null)
             {
-
-                _playerInTrigger = true;
-                
-                if(_resetTriggerCoroutine != null)
-                {
-                    StopCoroutine(_resetTriggerCoroutine);
-                }
-                _resetTriggerCoroutine = StartCoroutine(ResetTriggerCoroutine());
-
+                StopCoroutine(_resetTriggerCoroutine);
             }
+            _resetTriggerCoroutine = StartCoroutine(ResetTriggerCoroutine());
+            return true;
         }
         
+        
+
         private IEnumerator ResetTriggerCoroutine()
         {
             yield return new WaitForSeconds(0.3f);

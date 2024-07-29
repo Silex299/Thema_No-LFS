@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 namespace Triggers
 {
+    //FIX: CHANGE THE BASE TO BETTER TRIGGER BASE
     public class BetterEntryTrigger : MonoBehaviour
     {
         public string triggerTag;
