@@ -82,10 +82,8 @@ namespace Health
 
         protected override void Death(string message = "")
         { 
-            
             base.Death(message);
             IsDead = true;
-            onDeath.Invoke();
         }
 
 

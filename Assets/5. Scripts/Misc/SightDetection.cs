@@ -1,3 +1,4 @@
+using System;
 using Player_Scripts;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,7 +6,6 @@ using UnityEngine.Events;
 // ReSharper disable once CheckNamespace
 namespace Misc
 {
-    [RequireComponent(typeof(Collider))]
     public class SightDetection : MonoBehaviour
     {
         [SerializeField] private LayerMask rayCastMask;
@@ -57,8 +57,19 @@ namespace Misc
             }
         }
 
-        
-        
+        private void Start()
+        {
+            PlayerMovementController.Instance.player.Health.onDeath += DisableSightDetection;
+            PlayerMovementController.Instance.player.Health.onRevive += EnableSightDetection;
+        }
+
+        private void OnDisable()
+        {
+            PlayerMovementController.Instance.player.Health.onDeath -= DisableSightDetection;
+            PlayerMovementController.Instance.player.Health.onRevive -= EnableSightDetection;
+        }
+
+
         public void EnableSightDetection()
         {
             enabled = true;

@@ -39,6 +39,11 @@ namespace Weapons.NPC_Weapon
         public override void Fire()
         {
             if(!canFire) return;
+
+            if (_lastFireTime == 0)
+            {
+                _lastFireTime = Time.time + 0.2f;
+            }
             
             if (Time.time < _lastFireTime + (1 / fireRate))
             {
@@ -132,6 +137,7 @@ namespace Weapons.NPC_Weapon
 
         public override void ResetWeapon()
         {
+            StopAllCoroutines();
             AutomaticFire(false);
         }
         
