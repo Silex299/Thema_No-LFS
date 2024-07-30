@@ -13,7 +13,7 @@ namespace Weapons.NPC_Weapon
         [BoxGroup("Weapon Action Params")] public float damageDistance = 1.7f;
 
         protected Coroutine attackCoroutine;
-
+        
         public virtual void StartAttack()
         {
             if (attackCoroutine != null)

@@ -9,7 +9,7 @@ namespace Misc
 
         [SerializeField, BoxGroup("Movement Variables")] private float rotatingSpeed;
         [SerializeField, BoxGroup("Movement Variables"), Space(5)]
-        private axis rotationAxis;
+        private Axis rotationAxis;
         [SerializeField, BoxGroup("Movement Variables")] private Space rotationSpace;
 
 
@@ -28,13 +28,13 @@ namespace Misc
 
             switch (rotationAxis)
             {
-                case axis.x:
+                case Axis.x:
                     transform.Rotate(_currentSpeed * Time.deltaTime, 0, 0, rotationSpace);
                     break;
-                case axis.y:
+                case Axis.y:
                     transform.Rotate(0, _currentSpeed * Time.deltaTime, 0, rotationSpace);
                     break;
-                case axis.z:
+                case Axis.z:
                     transform.Rotate(0, 0, _currentSpeed * Time.deltaTime, rotationSpace);
                     break;
             }
@@ -45,7 +45,7 @@ namespace Misc
 
                 switch (rotationAxis)
                 {
-                    case axis.x:
+                    case Axis.x:
                         if (eularAngles.x > 180)
                         {
                             eularAngles.x -= 360;
@@ -56,7 +56,7 @@ namespace Misc
                             stopRotating = true;
                         }
                         break;
-                    case axis.y:
+                    case Axis.y:
 
                         if (eularAngles.y > 180)
                         {
@@ -67,7 +67,7 @@ namespace Misc
                             stopRotating = true;
                         }
                         break;
-                    case axis.z:
+                    case Axis.z:
                         if (eularAngles.z > 180)
                         {
                             eularAngles.z -= 360;

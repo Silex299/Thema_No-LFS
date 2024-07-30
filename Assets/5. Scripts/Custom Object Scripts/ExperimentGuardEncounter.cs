@@ -1,3 +1,4 @@
+using NavMesh_NPCs;
 using Player_Scripts;
 using Triggers;
 using UnityEngine;
@@ -6,8 +7,10 @@ namespace Custom_Object_Scripts
 {
     public class ExperimentGuardEncounter : BetterTriggerBase
     {
-        private static readonly int State = Animator.StringToHash("StateIndex");
 
+        public NavMeshNpcController guard;
+        
+        private static readonly int State = Animator.StringToHash("StateIndex");
 
         protected override bool OnTriggerExitBool(Collider other)
         {
@@ -36,6 +39,7 @@ namespace Custom_Object_Scripts
             if (!triggered) return;
             
             triggered = false;
+            guard.Target = PlayerMovementController.Instance.transform;
             PlayerMovementController.Instance.player.AnimationController.SetInteger(State, 0);
             PlayerMovementController.Instance.player.CanJump = true;
         }

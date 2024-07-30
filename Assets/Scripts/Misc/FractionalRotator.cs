@@ -4,7 +4,7 @@ namespace Misc
     public class FractionalRotator : MonoBehaviour
     {
 
-        [SerializeField] private axis localRotationAxis;
+        [SerializeField] private Axis localRotationAxis;
         [SerializeField] private float minimumAngle;
         [SerializeField] private float maximumAngle;
 
@@ -20,22 +20,22 @@ namespace Misc
 
             var rotation = transform.localEulerAngles;
 
-            if (localRotationAxis == axis.y)
+            if (localRotationAxis == Axis.y)
             {
                 transform.localEulerAngles = new Vector3(rotation.x, angle, rotation.z);
             }
-            else if (localRotationAxis == axis.x)
+            else if (localRotationAxis == Axis.x)
             {
                 transform.localEulerAngles = new Vector3(angle, rotation.y, rotation.z);
             }
-            else if (localRotationAxis == axis.z)
+            else if (localRotationAxis == Axis.z)
             {
                 transform.localEulerAngles = new Vector3(rotation.x, rotation.y, angle);
             }
         }
 
     }
-    public enum axis
+    public enum Axis
     {
         x, y, z
     }

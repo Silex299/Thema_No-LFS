@@ -9,7 +9,7 @@ public class DraggableCart : DraggableBox
 {
     [SerializeField, BoxGroup("Wheels")] private bool invertedWheelMovement;
     [SerializeField, BoxGroup("Wheels")] private float wheelRadius;
-    [SerializeField, BoxGroup("Wheels")] private axis wheelAxis;
+    [SerializeField, BoxGroup("Wheels")] private Axis wheelAxis;
 
 
     [SerializeField, BoxGroup("Wheels")] private Transform[] wheels;
@@ -39,11 +39,11 @@ public class DraggableCart : DraggableBox
             float angle = 0;
             switch (wheelAxis)
             {
-                case axis.x:
+                case Axis.x:
                     diff = _lastValue - transform.position.z;
                     _lastValue = transform.position.z;
                     break;
-                case axis.z:
+                case Axis.z:
                     diff = _lastValue - transform.position.x;
                     _lastValue = transform.position.x;
                     break;
@@ -68,15 +68,15 @@ public class DraggableCart : DraggableBox
 
             foreach (var wheel in wheels)
             {
-                if (wheelAxis == axis.x)
+                if (wheelAxis == Axis.x)
                 {
                     wheel.Rotate(new Vector3(invertedWheelMovement ? -1 : 1, 0, 0), angle);
                 }
-                else if (wheelAxis == axis.z)
+                else if (wheelAxis == Axis.z)
                 {
                     wheel.Rotate(new Vector3(0, 0, invertedWheelMovement ? -1 : 1), angle);
                 }
-                else if (wheelAxis == axis.y)
+                else if (wheelAxis == Axis.y)
                 {
                     wheel.Rotate(new Vector3(0, invertedWheelMovement ? -1 : 1, 0), angle);
                 }
