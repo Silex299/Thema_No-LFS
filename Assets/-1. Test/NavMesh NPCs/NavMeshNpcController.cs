@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Drawers;
@@ -42,7 +43,7 @@ namespace NavMesh_NPCs
         [TabGroup("State", "AfterDeath"), SerializeField]
         private NavMeshAgentAfterDeath afterDeath = new NavMeshAgentAfterDeath();
 
-        private NavMeshAgentState _currentState;
+        [SerializeField] private NavMeshAgentState _currentState;
 
         internal int currentSurveillancePoint;
         private Coroutine _changeSurveillancePointCoroutine;
@@ -110,6 +111,8 @@ namespace NavMesh_NPCs
 
         private void OnPlayerDeath()
         {
+            print("DAAAAAAAAAAAAAA");
+            PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;   
             if (!Target) return;
 
             StateChange(States.AfterDeath);
@@ -118,6 +121,9 @@ namespace NavMesh_NPCs
 
         public States enumState;
         private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Chase = Animator.StringToHash("Chase");
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int AfterDeath = Animator.StringToHash("AfterDeath");
 
 
         public void StateChange(int index)
@@ -131,6 +137,8 @@ namespace NavMesh_NPCs
 
             _currentState?.Exit(this);
 
+            _currentState = null;
+            
             _currentState = state switch
             {
                 States.Serveillance => surveillance,
@@ -142,6 +150,28 @@ namespace NavMesh_NPCs
             _currentState?.Entry(this);
         }
 
+        public void ResetNpc()
+        {
+
+            if (_changeSpeedCoroutine != null)
+            {
+                StopCoroutine(_changeSpeedCoroutine);
+                _changeSpeedCoroutine = null;
+            }
+            
+            animator.SetBool(Chase, false);
+            animator.SetBool(Attack, false);
+            animator.SetBool(AfterDeath, false);
+            animator.SetFloat(Speed, 0);
+
+            animator.Play("Default", 0);
+            animator.Play("Default", 1);
+
+            target = null;
+            
+            StateChange(States.Serveillance);
+        }
+        
         public static float PlannerDistance(Vector3 pos1, Vector3 pos2)
         {
             pos2.y = 0;
@@ -210,8 +240,7 @@ namespace NavMesh_NPCs
             _changeSpeedCoroutine = null;
         }
     }
-
-
+    
     public class NavMeshAgentState
     {
         public virtual void Entry(NavMeshNpcController controller)
@@ -239,17 +268,24 @@ namespace NavMesh_NPCs
 
         public override void Entry(NavMeshNpcController controller)
         {
-            if (controller.surveillancePoints.Length == 0) return;
-
-            controller.currentSurveillancePoint = 0;
-            controller.agent.SetDestination(controller.surveillancePoints[controller.currentSurveillancePoint]);
-            controller.ChangeSpeed(controller.velocityThreshold, 1, 1, 1);
+            if (controller.surveillancePoints.Length == 0)
+            {
+                
+                controller.ChangeSpeed(0, 0, 0, 1);
+            }
+            else
+            {
+                controller.currentSurveillancePoint = 0;
+                controller.agent.SetDestination(controller.surveillancePoints[controller.currentSurveillancePoint]);
+                controller.ChangeSpeed(controller.velocityThreshold, 1, 1, 1);
+            }
         }
 
         public override void Update(NavMeshNpcController controller)
         {
+            
             //do nothing if there is no serveillance points
-            if (controller.surveillancePoints.Length == 0) return;
+            if (controller.surveillancePoints.Length == 0) return; //FIX : NOT RETURNING
 
             var transform = controller.transform;
 
@@ -299,7 +335,6 @@ namespace NavMesh_NPCs
                 return;
             }
 
-            Debug.LogError("doing it");
             controller.animator.SetBool(Chase, true);
             controller.ChangeSpeed(controller.velocityThreshold, 1, 1, 1f);
         }
@@ -308,22 +343,30 @@ namespace NavMesh_NPCs
         {
             controller.animator.SetBool(Chase, false);
             controller.animator.SetBool(Attack, false);
+            attack = false;
         }
 
 
+        //REMOVE
         public bool attack;
         public bool unreachable;
+        public float realDistance;
         public override void Update(NavMeshNpcController controller)
         {
             controller.agent.SetDestination(controller.Target.position);
 
-            float realDistance = Vector3.Distance(controller.transform.position, controller.Target.position);
+            realDistance = Vector3.Distance(controller.transform.position, controller.Target.position);
             attack = realDistance < controller.attackDistance;
             unreachable = controller.agent.desiredVelocity.magnitude < 0.09 && controller.agent.pathStatus != NavMeshPathStatus.PathComplete;
 
+            if (attack)
+            {
+                Debug.LogError("Fuck me");
+            }
+            
             controller.animator.SetBool(Attack, attack && !unreachable);
+            
             if (attack && controller.weapon) controller.weapon.Fire();
-
             
             
             if (realDistance < stopDistance || unreachable)

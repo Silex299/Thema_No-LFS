@@ -32,6 +32,7 @@ namespace Player_Scripts.Interactions
                 {
                     if (velocity > velocityThreshold)
                     {
+                        print("hello motherfucker");
                         onThresholdExceeded.Invoke();
                     }
                 }

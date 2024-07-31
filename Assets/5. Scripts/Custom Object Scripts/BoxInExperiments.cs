@@ -4,6 +4,7 @@ using Misc.Items;
 using Player_Scripts;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.ProBuilder;
 
 namespace Custom_Object_Scripts
 {
@@ -19,16 +20,10 @@ namespace Custom_Object_Scripts
 
         private bool _triggered;
 
-        private void OnTriggerEnter(Collider other)
+        public void FallBox()
         {
-            if(_triggered) return;
-        
-            if (other.CompareTag("Player_Main"))
-            {
-                StartCoroutine(StartAction());
-            }
+            StartCoroutine(StartAction());
         }
-
 
         private IEnumerator StartAction()
         {
@@ -48,6 +43,8 @@ namespace Custom_Object_Scripts
 
             connectedRopes[1].BreakRope();
 
+            yield return new WaitForSeconds(0.2f);
+            
             rb.isKinematic = true;
             animator.enabled = true;
             CutsceneManager.Instance.PlayClip(2);

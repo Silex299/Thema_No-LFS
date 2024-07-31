@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Triggers
 {
-    public class PlayerDirectionTrigger : MonoBehaviour
+    public class PlayerDirectionTrigger : BetterTriggerBase
     {
         public MoveDirection moveDirection;
         public float threshold = 0;
@@ -13,32 +13,23 @@ namespace Triggers
         public UnityEvent entryAction;
         public UnityEvent exitAction;
         
-        private  bool _playerIsInTrigger;
         private bool _calledEntry;
         private bool _calledExit;
-        private void OnTriggerEnter(Collider other)
+      
+        protected override bool OnTriggerExitBool(Collider other)
         {
-            if (other.CompareTag("Player_Main"))
-            {
-                _playerIsInTrigger = true;
-            }
-        }
+            if (!base.OnTriggerExitBool(other)) return true;
+            
+            _calledEntry = false;
+            _calledExit = false;
 
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Player_Main"))
-            {
-                _playerIsInTrigger = false;
-                _calledEntry = false;
-                _calledExit = false;
-            }
+            return true;
         }
 
 
         private void Update()
         {
-            if (_playerIsInTrigger)
+            if (playerInTrigger)
             {
                 bool result = moveDirection switch
                 {
