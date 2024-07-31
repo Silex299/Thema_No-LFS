@@ -27,7 +27,9 @@ namespace Custom_Object_Scripts
         private void Update()
         {
             if (!playerInTrigger) return;
-
+            
+            if(PlayerMovementController.Instance.player.Health.IsDead) return;
+            
             if (!triggered)
             {
                 triggered = true;
@@ -43,5 +45,7 @@ namespace Custom_Object_Scripts
             PlayerMovementController.Instance.player.AnimationController.SetInteger(State, 0);
             PlayerMovementController.Instance.player.CanJump = true;
         }
+        
+        
     }
 }

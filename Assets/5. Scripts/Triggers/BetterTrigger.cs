@@ -49,6 +49,7 @@ namespace Triggers
             if (!base.OnTriggerStayBool(other)) return true;
             
             _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
+            
             return true;
         }
 
@@ -65,7 +66,6 @@ namespace Triggers
             
             while (true)
             {
-                print(gameObject.name + "11");
                 if(conditions.All(condition => condition.Condition(other)))
                 {
                     action.Invoke();
@@ -76,7 +76,6 @@ namespace Triggers
             }
             
             yield return new WaitForSeconds(resetAfterActionDelay);
-            _playerInTriggerCoroutine = null;
         }
 
     }

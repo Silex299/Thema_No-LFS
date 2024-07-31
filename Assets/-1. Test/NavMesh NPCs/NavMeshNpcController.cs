@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.Drawers;
 using UnityEngine;
 using UnityEngine.AI;
 using Weapons.NPC_Weapon;
@@ -81,7 +82,7 @@ namespace NavMesh_NPCs
             set
             {
                 target = value;
-                StateChange(States.Chase);
+                StateChange(target ? States.Chase : States.Serveillance);
             }
             get => target;
         }
@@ -118,6 +119,12 @@ namespace NavMesh_NPCs
         public States enumState;
         private static readonly int Speed = Animator.StringToHash("Speed");
 
+
+        public void StateChange(int index)
+        {
+            StateChange((States) index);
+        }
+        
         public void StateChange(States state)
         {
             enumState = state;
