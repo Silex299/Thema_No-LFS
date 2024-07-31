@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using Player_Scripts;
 using Sirenix.OdinInspector;
@@ -14,6 +16,7 @@ namespace Triggers
         [FoldoutGroup("Input")] public string engageInput;
         [FoldoutGroup("Input")] public string actionInput;
         [FoldoutGroup("Input")] public float actionTriggerTime;
+        [FoldoutGroup("Input")] public List<TriggerCondition> conditions;
 
         [FoldoutGroup("Animation")] public bool simpleEngage;
         [FoldoutGroup("Animation")] public float engageActionWidth;
@@ -41,7 +44,9 @@ namespace Triggers
             if (!enabled) return;
             if (!other.CompareTag("Player_Main")) return;
 
+            if (conditions.Any(condition => !condition.Condition(other))) return;
             if (_playerInTrigger) return;
+            
             _playerInTrigger = true;
 
             if (_engagedCoroutine != null) StopCoroutine(ResetTrigger());

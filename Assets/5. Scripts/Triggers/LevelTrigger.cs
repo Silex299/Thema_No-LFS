@@ -157,37 +157,18 @@ namespace Triggers
             {
                 if (triggerPulled && Input.GetAxis("Horizontal") > 0)
                 {
+                    //PUSH
                     playerController.player.AnimationController.SetTrigger(Trigger1);
-                    ChangeTriggerState(false);
 
-                    if (soundSource)
-                    {
-                        soundSource.PlayOneShot(disabledTriggerSound);
-                    }
+                    yield return TriggerPushCoroutine();
 
-                    if (canPull)
-                    {
-                        yield return new WaitForSeconds(triggerDelay);
-                        triggerPushAction.Invoke();
-                    }
-                    
                 }
                 else if (!triggerPulled && Input.GetAxis("Horizontal") < 0)
                 {
-                    print("pulling");
-
+                    //PULL  
                     playerController.player.AnimationController.SetTrigger(Trigger1);
-                    ChangeTriggerState(true);
-                    if (soundSource)
-                    {
-                        soundSource.PlayOneShot(triggerSound);
-                    }
 
-                    if (canPull)
-                    {
-                        yield return new WaitForSeconds(triggerDelay);
-                        triggerPullAction.Invoke();
-                    }
+                    yield return TriggerPullCoroutine();
                 }
 
                 yield return null;
@@ -234,6 +215,50 @@ namespace Triggers
             }
         }
 
+
+        public void TriggerPull()
+        {
+            StartCoroutine(TriggerPullCoroutine());
+        }
+        private IEnumerator TriggerPullCoroutine()
+        {
+            //PULL  
+            if(triggerPulled) yield break;
+                    
+            ChangeTriggerState(true);
+            if (soundSource)
+            {
+                soundSource.PlayOneShot(triggerSound);
+            }
+
+            if (canPull)
+            {
+                yield return new WaitForSeconds(triggerDelay);
+                triggerPullAction.Invoke();
+            }
+        }
+
+        public void TriggerPush()
+        {
+            StartCoroutine(TriggerPushCoroutine());
+        }
+        private IEnumerator TriggerPushCoroutine()
+        {
+            if(!triggerPulled) yield break;
+            
+            ChangeTriggerState(false);
+            if (soundSource)
+            {
+                soundSource.PlayOneShot(disabledTriggerSound);
+            }
+
+            if (canPull)
+            {
+                yield return new WaitForSeconds(triggerDelay);
+                triggerPushAction.Invoke();
+            }
+        }
+        
         private void ChangeTriggerState(bool pulled)
         {
             if (triggerPulled == pulled) return;
