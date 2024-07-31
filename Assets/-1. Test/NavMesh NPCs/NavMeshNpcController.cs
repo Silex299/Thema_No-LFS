@@ -289,8 +289,10 @@ namespace NavMesh_NPCs
             if (controller.Target == null)
             {
                 controller.StateChange(NavMeshNpcController.States.Serveillance);
+                return;
             }
 
+            Debug.LogError("doing it");
             controller.animator.SetBool(Chase, true);
             controller.ChangeSpeed(controller.velocityThreshold, 1, 1, 1f);
         }
