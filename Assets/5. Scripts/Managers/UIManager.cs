@@ -220,6 +220,12 @@ namespace Managers
             damageImage.color = color;
         }
 
+        
+        public void LoadUnReachableMenu(bool load)
+        {
+            animator.Play(load ? "LoadUnreachableMenu" : "UnLoadUnreachableMenu");
+        }
+        
         #endregion
 
         #region Button Methods

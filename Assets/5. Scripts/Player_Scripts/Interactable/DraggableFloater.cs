@@ -129,7 +129,7 @@ namespace Player_Scripts.Interactables
                 {
                     desiredLocalPosition.z = 0;
                 }
-                else if (desiredLocalPosition.z - localPosition.z > 0)
+                else if (desiredLocalPosition.z - localPosition.z < 0)
                 {
                     //Moving in +ve z
                     Ray zRay = new Ray(position + forward * bounds.z + up * bounds.y, forward);
