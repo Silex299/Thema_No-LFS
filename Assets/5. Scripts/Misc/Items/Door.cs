@@ -18,8 +18,6 @@ public class Door : MonoBehaviour
     [SerializeField, BoxGroup("Sound")] private AudioClip closeSound;
     [SerializeField, BoxGroup("Sound")] private AudioSource soundSource;
 
-    [SerializeField, BoxGroup("Sound")] private UnityEvent<bool> action;
-
 
 #if UNITY_EDITOR
     [SerializeField, Button("Set Closed Position", ButtonSizes.Large)]
@@ -41,6 +39,7 @@ public class Door : MonoBehaviour
 
 
 
+    [Button("TOGGLE")]//REMOVE: ONLY REMOVE THE [Button]
     public void ToggleDoor(bool open)
     {
         if (_toggleDoor != null)
@@ -83,7 +82,6 @@ public class Door : MonoBehaviour
             
             isOpen = open;
             PlaySound(open);
-            action.Invoke(open);
 
         }
         

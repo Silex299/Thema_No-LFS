@@ -25,7 +25,7 @@ namespace Triggers
         {
             if (!base.OnTriggerEnterBool(other)) return true;
             
-            print("fuck me bitch");
+            
             _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
             return true;
         }
@@ -55,8 +55,11 @@ namespace Triggers
 
         private IEnumerator PlayerInTrigger(Collider other)
         {
-            print(gameObject.name);
-            if(!enabled) yield break;
+            if (!enabled)
+            {
+                _playerInTriggerCoroutine = null;
+                yield break;
+            }
 
             entryAction.Invoke();
             
