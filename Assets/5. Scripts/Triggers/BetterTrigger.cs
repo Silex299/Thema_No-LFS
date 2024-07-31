@@ -54,6 +54,13 @@ namespace Triggers
         }
 
 
+        protected override IEnumerator ResetTriggerCoroutine()
+        {
+            yield return base.ResetTriggerCoroutine();
+            _playerInTriggerCoroutine = null;
+        }
+
+
         private IEnumerator PlayerInTrigger(Collider other)
         {
             if (!enabled)

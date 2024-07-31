@@ -1,6 +1,7 @@
 using Misc;
 using UnityEngine;
 using UnityEngine.Serialization;
+using TriggerDamage = Misc.New.TriggerDamage;
 
 namespace Weapons.NPC_Weapon
 {

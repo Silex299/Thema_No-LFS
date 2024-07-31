@@ -52,6 +52,7 @@ namespace Triggers
             if (!other.CompareTag(triggerTag)) return false;
             
             playerInTrigger = true;
+            
             if(_resetTriggerCoroutine != null)
             {
                 StopCoroutine(_resetTriggerCoroutine);
@@ -62,9 +63,11 @@ namespace Triggers
         
         
 
-        private IEnumerator ResetTriggerCoroutine()
+        protected virtual IEnumerator ResetTriggerCoroutine()
         {
             yield return new WaitForSeconds(0.3f);
+            playerInTrigger = false;
+            _resetTriggerCoroutine = null;
         }
         
         

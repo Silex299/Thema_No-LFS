@@ -30,8 +30,8 @@ namespace Path_Scripts
         IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.2f);
-            _triggered = false;
             
+            _triggered = false;
             if (PlayerPathController.Instance.overridePath == this)
             {
                 PlayerPathController.Instance.overridePath = null;

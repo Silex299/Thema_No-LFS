@@ -82,6 +82,9 @@ namespace Managers
 
         private Coroutine _fadingCoroutine;
 
+
+
+        #region Action Fill
         
         
         public void UpdateActionFill(float fraction, string text = ">")
@@ -109,6 +112,12 @@ namespace Managers
             var pos = myCamera.WorldToScreenPoint(position + offset);
             actionFill.rectTransform.position = pos;
         }
+        
+
+        #endregion
+
+        #region Fades
+
         
         public void FadeIn(float transitionTime = 0.2f)
         {
@@ -160,6 +169,11 @@ namespace Managers
 
             _fadingCoroutine = StartCoroutine(FadeEnumerator(0, transitionTime));
         }
+        
+
+        #endregion
+
+        #region Menus
 
         private void RestartOrExitView()
         {
@@ -206,12 +220,19 @@ namespace Managers
             damageImage.color = color;
         }
 
+        #endregion
+
         #region Button Methods
 
         public void OnLoadLastCheckpointButtonClicked()
         {
             print("Load Checkpoint");
             CheckpointManager.Instance?.LoadCheckpoint();
+        }
+
+        public void LoadLastCheckpointWithTransition()
+        {
+            
         }
 
         #endregion
