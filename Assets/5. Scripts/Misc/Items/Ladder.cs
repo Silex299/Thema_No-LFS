@@ -32,6 +32,12 @@ namespace Misc.Items
         [HideInInspector] public bool engaged;
 
 
+        public bool Engaged
+        {
+            set => engaged = value;
+        }
+        
+
         public void MoveLadder(float input)
         {
             _playerAt += input * Time.deltaTime * movementSpeed;
