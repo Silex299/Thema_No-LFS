@@ -40,10 +40,10 @@ namespace Thema_Type
             Vector3 line = to - from;
             Vector3 pointDirection = point - from;
 
-            float  t = Vector3.Dot(pointDirection, line) / Vector3.Dot(line, line);
+            float t = Vector3.Dot(pointDirection, line) / Vector3.Dot(line, line);
 
             t = float.IsNaN(t) ? 0 : Mathf.Clamp01(t);
-            
+
             return from + line * t;
         }
 
@@ -66,6 +66,8 @@ namespace Thema_Type
         [OnValueChanged(nameof(Preview))] public float animationDistance;
         [OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
         [OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
+        public bool followRotationCurve;
+        [OnValueChanged(nameof(Preview)), ShowIf(nameof(followRotationCurve))] public AnimationCurve rotationCurve;
 
 
         #region EDITOR
@@ -90,7 +92,9 @@ namespace Thema_Type
                             transform.up * heightCurve.Evaluate(normalisedTime) * animationHeight;
 
             previewAAnimator.transform.position = repos;
-            previewAAnimator.transform.rotation = transform.rotation;
+
+            previewAAnimator.transform.rotation = followRotationCurve ? Quaternion.Euler(transform.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalisedTime) * 180, transform.eulerAngles.z) : transform.rotation;
+            
         }
 
 #endif
@@ -149,8 +153,15 @@ namespace Thema_Type
                 if (normalizedTime < transitionTime)
                 {
                     var repos = triggerPos +
-                                triggerTransform.forward * (distanceCurve.Evaluate(transitionTime) * animationDistance) +
+                                triggerTransform.forward *
+                                (distanceCurve.Evaluate(transitionTime) * animationDistance) +
                                 triggerTransform.up * (heightCurve.Evaluate(transitionTime) * animationHeight);
+
+                    if (followRotationCurve)
+                    {
+                        var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x,transform.rotation.eulerAngles.y +  rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
+                        target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
+                    }
 
                     target.position = Vector3.Lerp(initialPlayerPos, repos, normalizedTime / transitionTime);
                 }
@@ -166,25 +177,35 @@ namespace Thema_Type
                                                            animationHeight);
 
                         target.position = repos;
+
+
+                        if (followRotationCurve)
+                        {
+                            var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x,transform.rotation.eulerAngles.y +  rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
+                            target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
+                        }
+                        
                     }
                 }
 
-                target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
-                    timeElapsed / transitionTime);
+                if (!followRotationCurve)
+                {
+                    target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
+                        timeElapsed / transitionTime);
+                }
 
                 if (timedAction != null)
                 {
-                    if (timeElapsed >= timedAction.time)
+                    if (timeElapsed/animationTime >= timedAction.time)
                     {
                         timedAction.action?.Invoke();
                         timedAction = null;
                     }
                 }
-                
+
                 yield return null;
             }
-
-            target.rotation = triggerTransform.rotation;
+            
         }
 
         /// <summary>
@@ -194,14 +215,16 @@ namespace Thema_Type
         /// <param name="target"></param>
         /// <param name="triggerTransform"></param>
         /// <returns></returns>
-        public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform, float animationWidth = 0)
+        public IEnumerator SimpleAnim(Animator animator, Transform target, Transform triggerTransform,
+            float animationWidth = 0)
         {
             animator.CrossFade(animationName, transitionTime, 1);
 
             Vector3 initialPlayerPos = target.position;
             Quaternion initialPlayerRot = target.rotation;
 
-            Vector3 finalPos = ThemaVector.GetClosestPointToLine(from: triggerTransform.position - triggerTransform.right * animationWidth,
+            Vector3 finalPos = ThemaVector.GetClosestPointToLine(
+                from: triggerTransform.position - triggerTransform.right * animationWidth,
                 to: triggerTransform.position + triggerTransform.right * animationWidth,
                 point: target.position);
 
@@ -219,15 +242,15 @@ namespace Thema_Type
                 yield return null;
             }
         }
-        
     }
 
-    
+
     [Serializable, CanBeNull]
     public class TimedAction
     {
         public float time;
         public Action action;
+
         public TimedAction(float time, Action action)
         {
             this.time = time;
@@ -235,6 +258,5 @@ namespace Thema_Type
         }
     }
 
-    
     #endregion
 }

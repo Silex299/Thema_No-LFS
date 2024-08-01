@@ -81,9 +81,11 @@ namespace Thema_Camera
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
-            print("From Where");
+
             if (_transitionOffsetTrigger != null)
+            {
                 StopCoroutine(_transitionOffsetTrigger);
+            }
 
             _transitionOffsetTrigger = StartCoroutine(TransitionOffset(info, transitionTime));
         }
@@ -126,6 +128,8 @@ namespace Thema_Camera
 
                 yield return null;
             }
+
+            _transitionOffsetTrigger = null;
         }
     }
 }

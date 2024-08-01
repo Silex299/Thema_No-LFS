@@ -83,6 +83,7 @@ namespace Player_Scripts.Interactions.Animation
 
             yield return new WaitForSeconds(0.2f);
             
+            Debug.Log("ducjj");
             player.MovementController.ResetAnimator();
             player.DisabledPlayerMovement = false;
             player.CController.enabled = true;
