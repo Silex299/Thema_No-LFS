@@ -57,7 +57,13 @@ namespace Triggers
         protected override IEnumerator ResetTriggerCoroutine()
         {
             yield return base.ResetTriggerCoroutine();
-            _playerInTriggerCoroutine = null;
+            
+            exitAction.Invoke();
+            if (_playerInTriggerCoroutine != null)
+            {
+                StopCoroutine(_playerInTriggerCoroutine);
+                _playerInTriggerCoroutine = null;
+            }
         }
 
 

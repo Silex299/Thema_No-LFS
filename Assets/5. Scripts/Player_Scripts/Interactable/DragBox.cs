@@ -100,6 +100,11 @@ namespace Player_Scripts.Interactables
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = boxLocalPosition.x;
                     }
+                    else
+                    {
+                        //REMOVE
+                        Debug.DrawLine(xRay.origin, xRay.origin + xRay.direction * bounds.x, Color.red, 1f);
+                    }
                 }
                 else
                 {
@@ -111,6 +116,11 @@ namespace Player_Scripts.Interactables
                         //REMOVE
                         Debug.DrawLine(xRay.origin, info.point, Color.green, 1f);
                         desiredLocalPosition.x = boxLocalPosition.x;
+                    }
+                    else
+                    {
+                        //REMOVE
+                        Debug.DrawLine(xRay.origin, xRay.origin + xRay.direction * bounds.x, Color.red, 1f);
                     }
                 }
 

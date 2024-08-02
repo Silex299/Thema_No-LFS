@@ -56,7 +56,7 @@ namespace Player_Scripts.Interactions.Animation
 
             player.DisabledPlayerMovement = true;
             player.CController.enabled = false;
-
+            player.MovementController.ResetAnimator();
             #endregion
 
             TimedAction timedAction = null; 
