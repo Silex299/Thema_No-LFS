@@ -166,14 +166,16 @@ namespace Player_Scripts.States
                 CrouchPlayer(player, false);
             }
 
+            //Jump
             if (Input.GetButtonDown("Jump"))
             {
                 if (player.CanJump && player.IsGrounded)
                 {
                     player.AnimationController.SetTrigger(Jump);
-                    
                 }
             }
+            
+            
             //Update Speed in animator
             player.AnimationController.SetFloat(Speed, input);
             #endregion
