@@ -11,6 +11,7 @@ namespace Triggers
         [SerializeField, BoxGroup("Trigger")] private string triggerString;
         [SerializeField, BoxGroup("Trigger")] private float secondActionDelay;
 
+        [SerializeField, BoxGroup("Visual")] private MeshRenderer meshRenderer;
         [SerializeField, BoxGroup("Visual")] private int materialIndex;
         [SerializeField, BoxGroup("Visual")] private Material triggeredMaterial;
         [SerializeField, BoxGroup("Visual")] private Material defaultMaterial;
@@ -92,9 +93,14 @@ namespace Triggers
         
         public void UpdateSwitch(bool status)
         {
-            var component = GetComponent<MeshRenderer>();
-            var materials = component.materials;
+            if (!meshRenderer)
+            {
+                if(!TryGetComponent(out meshRenderer)) return;
+            }
 
+            var materials = meshRenderer.materials;
+            
+            
             if (status)
             {
                 materials[materialIndex] = triggeredMaterial;
@@ -104,7 +110,7 @@ namespace Triggers
                 materials[materialIndex] = defaultMaterial;
             }
 
-            component.materials = materials;
+            meshRenderer.materials = materials;
         }
 
         private void TriggerSound()

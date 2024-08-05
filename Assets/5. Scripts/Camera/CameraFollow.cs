@@ -93,6 +93,7 @@ namespace Thema_Camera
 
         private IEnumerator TransitionOffset(CameraFollowInfo info, float transitionTime)
         {
+            print(JsonUtility.ToJson(info));
             float timeElapsed = 0;
 
             Vector3 initialOffset = m_Offset;

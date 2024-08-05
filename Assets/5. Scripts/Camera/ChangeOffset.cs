@@ -1,6 +1,5 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.Validation;
 
 namespace Thema_Camera
 {
@@ -41,6 +40,7 @@ namespace Thema_Camera
 
         public void ChangeCameraOffset()
         {
+            print("Changing offeset");
             CameraFollow.Instance.ChangeOffset(info, transitionTime);
         }
         

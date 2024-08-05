@@ -60,9 +60,10 @@ namespace Misc
             yield return new WaitForSeconds(delay);
 
             _trigger = true;
+            
+            yield return new WaitForSeconds(secondActionDelay);
             ui.FadeOut();
 
-            yield return new WaitForSeconds(secondActionDelay);
 
             _isTriggered = false;
         }
