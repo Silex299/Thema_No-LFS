@@ -1,5 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
+using Unity.Plastic.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,12 +17,7 @@ namespace Mechanics.Player
         [FoldoutGroup("Ground Check")] public float proximityThreshold = 1f;
 
         private PlayerPathManager _pathManager;
-        private Vector3 _movementDirection;
         private static readonly int Speed = Animator.StringToHash("Speed");
-        private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
-        private static readonly int Stop = Animator.StringToHash("Stop");
-        private static readonly int IsInProximity = Animator.StringToHash("IsInProximity");
-        private static readonly int VerticalVelocity = Animator.StringToHash("VerticalVelocity");
 
         private Coroutine _jumpCoroutine;
         private static readonly int Jump1 = Animator.StringToHash("Jump");
@@ -37,64 +33,62 @@ namespace Mechanics.Player
         }
 
         #region Player Movement
-        
-        
+
         private void MovePlayer(PlayerV1 player)
         {
+            //Get desired movement directions and inputs
             var horizontalInput = player.DisableInput ? 0 : Input.GetAxis("Horizontal");
-            
+            Vector3 rotation = _pathManager.GetDestination(player.transform.position, horizontalInput > 0);
 
-            #region Gravity and Jump
 
-            if (player.isGrounded && _movementDirection.y < 0)
+            //Set movement speed and rotation
+            if (player.CanBoost)
             {
-                _movementDirection = new Vector3(0, -2f, 0);
+                if (Input.GetButton("Sprint"))
+                {
+                    player.animator.SetFloat(Speed, 2 * horizontalInput, 0.1f, Time.deltaTime);
+                }
+                else
+                {
+                    player.animator.SetFloat(Speed, horizontalInput, 0.1f, Time.deltaTime);
+                }
             }
-
-            if (Input.GetButtonDown("Jump") && player.isGrounded)
+            else
             {
-                _jumpCoroutine ??= StartCoroutine(SetJumpForce(player, horizontalInput));
-            }
-
-            _movementDirection.y += -9.8f * Time.deltaTime;
-
-            #endregion
-
-            player.characterController.Move((_movementDirection) * Time.deltaTime);
-            
-            #region Rotation and Ground Check
-
-            Vector3 lookAt = _pathManager.GetDestination(player.transform.position, horizontalInput > 0);
-            if (player.isGrounded && !Mathf.Approximately(horizontalInput, 0))
-            {
-                Rotate(player.transform, lookAt);
-            }
-            GroundCheck(player);
-
-            #endregion
-
-
-            if (!player.DisableAnimationUpdate)
-            {
-                //Update speed and Grounded
                 player.animator.SetFloat(Speed, horizontalInput);
-                player.animator.SetFloat(VerticalVelocity, player.PlayerVelocity.y);
-                player.animator.SetBool(IsGrounded, player.isInGroundProximity);
-                player.animator.SetBool(IsInProximity, player.isInGroundProximity);
+            }
+            //Rotate player
+            if (player.IsGrounded && !Mathf.Approximately(horizontalInput, 0))
+            {
+                Rotate(player.transform, rotation);
             }
             
-        }
-        
-        private void GroundCheck(PlayerV1 player)
-        {
-            player.isGrounded = Physics.CheckSphere(player.transform.position, groundDistance, groundMask);
-            player.isInGroundProximity = Physics.CheckSphere(player.transform.position, proximityThreshold, groundMask);
+            //Jump
+            if (Input.GetButtonDown("Jump") && _jumpCoroutine == null)
+            {
+                if (!player.AltMovement && !player.DisableInput && player.CanJump && player.IsGrounded)
+                {
+                    _jumpCoroutine = StartCoroutine(Jump(player, horizontalInput));
+                }
+            }
 
-            //REMOVE
-            Debug.DrawLine(player.transform.position,
-                player.transform.position + Vector3.down * (player.isGrounded ? groundDistance : proximityThreshold),
-                player.isGrounded ? Color.green : player.isInGroundProximity ? Color.blue : Color.red, 1f);
+            //Crouch
+            if (player.CanAltMovement)
+            {
+                if (Input.GetButtonDown("Crouch"))
+                {
+                    player.AltMovement = true;
+                }
+                else if (Input.GetButtonUp("Crouch"))
+                {
+                    player.AltMovement = false;
+                }
+            }
+
+            //Apply gravity
+            player.ApplyGravity();
         }
+
         private void Rotate(Transform target, Vector3 lookAt)
         {
             Vector3 direction = (lookAt - target.position).normalized;
@@ -103,17 +97,20 @@ namespace Mechanics.Player
             target.rotation = Quaternion.Slerp(target.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
 
-        private IEnumerator SetJumpForce(PlayerV1 player, float horizontalInput)
+        private IEnumerator Jump(PlayerV1 player, float horizontalInput)
         {
-
-           
-            if (!player.DisableAnimationUpdate) player.animator.SetTrigger(Jump1);
+            player.animator.SetTrigger(Jump1);
 
             yield return new WaitForSeconds(Mathf.Abs(horizontalInput) < 0.4f ? 0.3f : 0.1f);
+
+            player.animator.ResetTrigger(Jump1);
+
+
+            Vector3 jumpMovement = player.transform.forward *
+                                   (player.Boost ? 2 : 1 * Mathf.Abs(horizontalInput) * forwardJumpSpeed);
+            jumpMovement.y = Mathf.Sqrt(jumpHeight * -2f * -9.8f);
             
-            if (!player.DisableAnimationUpdate) player.animator.ResetTrigger(Jump1);
-            _movementDirection = player.transform.forward * (Mathf.Abs(horizontalInput) * forwardJumpSpeed);
-            _movementDirection.y = Mathf.Sqrt(jumpHeight * -2f * -9.8f);
+            player.AddForce(jumpMovement);
             _jumpCoroutine = null;
         }
 

@@ -8,20 +8,44 @@ namespace Mechanics.Player
         [FoldoutGroup("References")] public CharacterController characterController;
         [FoldoutGroup("References")] public Animator animator;
 
-
-        [FoldoutGroup("Misc")] public bool isGrounded;
-        [FoldoutGroup("Misc")] public bool isInGroundProximity;
+        
+        [FoldoutGroup("Properties")] public float groundDistance = 0.4f;
+        [FoldoutGroup("Properties")] public float proximityThreshold = 1f;
+        [FoldoutGroup("Properties")] public LayerMask groundMask;
+        
         [FoldoutGroup("Misc")] public Controller controller;
 
-        public bool DisableAllMovement { get; set; }
-        public bool DisableInput { get; set; }
-        public bool DisableAnimationUpdate { get; set; }
 
         
+        public bool IsGrounded { get; private set; }
+        private bool IsInProximity { get; set; }
+        public bool DisableAllMovement { get; set; }
+        public bool DisableInput { get; set; }
+        public bool CanJump { get; set; } = true;
+        public bool CanAltMovement { get; set; } = true;
+
+        public bool CanBoost { get; set; } = true;
+        
+        
+        private bool _altMovement;
+        public bool AltMovement
+        {
+            get => _altMovement;
+            set
+            {
+                _altMovement = value;
+                animator.SetBool(AltMovementInt, value);
+            }
+        }
+        public bool Boost { get; set; }
         
         public Vector3 PlayerVelocity { get; private set; }
         private float _lastCalculationTime;
         private Vector3 _lastPosition;
+        private Vector3 _desiredMoveDirection;
+        private static readonly int IsGroundedInt = Animator.StringToHash("IsGrounded");
+        private static readonly int IsInProximityInt = Animator.StringToHash("IsInProximity");
+        private static readonly int AltMovementInt = Animator.StringToHash("AltMovement");
 
         private void Update()
         {
@@ -41,5 +65,37 @@ namespace Mechanics.Player
             _lastCalculationTime = Time.time;
         }
 
+        public void AddForce(Vector3 force)
+        {
+            _desiredMoveDirection = force;
+        }
+        
+        public void ApplyGravity()
+        {
+            GroundCheck();
+            if (IsGrounded && _desiredMoveDirection.y < 0)
+            {
+                _desiredMoveDirection = new Vector3(0, -2f, 0);
+            }
+            
+            _desiredMoveDirection.y += -9.8f * Time.deltaTime;
+            
+            characterController.Move((_desiredMoveDirection) * Time.deltaTime);
+        }
+        private void GroundCheck()
+        {
+            IsGrounded = Physics.CheckSphere(transform.position, groundDistance, groundMask);
+            IsInProximity = Physics.CheckSphere(transform.position, proximityThreshold, groundMask);
+
+            animator.SetBool(IsGroundedInt, IsGrounded);
+            animator.SetBool(IsInProximityInt, IsInProximity);
+            
+            
+            //REMOVE
+            Debug.DrawLine(transform.position,
+                transform.position + Vector3.down * (IsGrounded ? groundDistance : proximityThreshold),
+                IsGrounded ? Color.green : IsInProximity ? Color.blue : Color.red, 1f);
+        }
+        
     }
 }

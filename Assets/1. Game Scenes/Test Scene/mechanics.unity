@@ -4492,6 +4492,11 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: d7491569b330b564a8cc5200bb6f6657, type: 2}
     - target: {fileID: 5866666021909216657, guid: bb9f36beb99509e47b199a12f8fd2175,
         type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: bb9f36beb99509e47b199a12f8fd2175,
+        type: 3}
       propertyPath: m_CullingMode
       value: 0
       objectReference: {fileID: 0}
@@ -4584,7 +4589,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!95 &1869496240 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: bb9f36beb99509e47b199a12f8fd2175,
@@ -4605,8 +4610,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 1869496239}
   animator: {fileID: 1869496240}
-  isGrounded: 0
-  isInGroundProximity: 0
+  groundDistance: 0.24
+  proximityThreshold: 1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
   controller: {fileID: 1869496242}
 --- !u!114 &1869496242
 MonoBehaviour:
