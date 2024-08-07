@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 namespace Mechanics.Player.Actions
 {
-    public class PlayerActionTrigger : MonoBehaviour
+    public class PlayerActionTrigger : PlayerActionBase
     {
 
         public AdvancedCurvedAnimation animAction;
@@ -17,49 +17,16 @@ namespace Mechanics.Player.Actions
 
         [Range(0,1), Space(10)] public float actionTiming;
         public UnityEvent action;
-
-
-        private PlayerV1 _player;
-        private Coroutine _coroutineExit;
-        private Coroutine _coroutineExecute;
-
-        private void OnTriggerStay(Collider other)
-        {
-            if (!other.CompareTag("Player_Main")) return;
-            
-            if (!_player)
-            {
-                _player = other.GetComponent<PlayerV1>();
-                _player.CanJump = false;
-            }
-                
-            if (_coroutineExit != null)
-            {
-                StopCoroutine(_coroutineExit);
-            }
-            _coroutineExit = StartCoroutine(TriggerExit());
-        }
-
-        private IEnumerator TriggerExit()
-        {
-            yield return new WaitForSeconds(0.2f);
-
-            yield return new WaitUntil(() => _coroutineExecute == null);
-            _player.CanJump = true;
-            _player = null;
-            _coroutineExit = null;
-
-        }
-
-
+        
+        
         private void Update()
         {
-            if(!_player) return;
+            if(!player) return;
 
-            if (conditions.All(condition => condition.Condition(_player)))
-            {
-                _coroutineExecute ??= StartCoroutine(Execute());
-            }
+            if (conditions.Any(condition => !condition.Condition(player))) return;
+            
+            coroutineExecute ??= StartCoroutine(Execute());
+            
         }
         
 
@@ -67,19 +34,20 @@ namespace Mechanics.Player.Actions
         {
             
             //disable player movements and character controller
-            _player.DisableAllMovement = true;
-            _player.characterController.enabled = false;
+            player.DisableAllMovement = true;
+            player.characterController.enabled = false;
+            player.ResetAnimator();
             
             //play animation
             TimedAction timedAction = new TimedAction(actionTiming, () => action.Invoke());
-            yield return animAction.PlayAnim(transform, _player, actionWidth, timedAction);
+            yield return animAction.PlayAnim(transform, player, actionWidth, timedAction);
 
             //enable player movements and character controller
-            _player.characterController.enabled = true;
-            _player.DisableAllMovement = false;
-            _coroutineExecute = null;
+            
+            player.characterController.enabled = true;
+            player.DisableAllMovement = false;
+            coroutineExecute = null;
 
         }
-
     }
 }

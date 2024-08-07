@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace Mechanics.Player.Actions
 {
-    public class PlayerActionTriggerContinuous : MonoBehaviour
+    public class PlayerActionTriggerContinuous : PlayerActionBase
     {
         
         [FoldoutGroup("Input")] public string engageInput;
@@ -29,9 +29,6 @@ namespace Mechanics.Player.Actions
         [FoldoutGroup("Events")] public UnityEvent actionEvent;
         
         
-        private PlayerV1 _player;
-        private Coroutine _coroutineExit;
-        private Coroutine _coroutineExecute;
         private bool _actionTriggered;
 
 
@@ -42,54 +39,26 @@ namespace Mechanics.Player.Actions
                 transform.position + transform.right * engageActionWidth);
         }
         
-        private void OnTriggerStay(Collider other)
-        {
-            if (!other.CompareTag("Player_Main")) return;
-            
-            if (!_player)
-            {
-                _player = other.GetComponent<PlayerV1>();
-                _player.CanJump = false;
-            }
-                
-            if (_coroutineExit != null)
-            {
-                StopCoroutine(_coroutineExit);
-            }
-            _coroutineExit = StartCoroutine(TriggerExit());
-        }
-
-        private IEnumerator TriggerExit()
-        {
-            yield return new WaitForSeconds(0.2f);
-
-            yield return new WaitUntil(() => _coroutineExecute == null);
-            _player.CanJump = true;
-            _player = null;
-            _coroutineExit = null;
-
-        }
-        
         
         private void Update()
         {
-            if(!_player) return;
-            if (!conditions.All(condition => condition.Condition(_player))) return;
+            if(!player) return;
+            if (conditions.Any(condition => !condition.Condition(player))) return;
             
             if (Input.GetButtonDown(engageInput))
             {
-                _coroutineExecute ??= StartCoroutine(Engage());
+                coroutineExecute ??= StartCoroutine(Engage());
             }
         }
         
         private IEnumerator Engage()
         {
 
-            _player.DisableAllMovement = true;
-            _player.characterController.enabled = false;
-
+            player.DisableAllMovement = true;
+            player.characterController.enabled = false;
+            player.ResetAnimator();
             
-            yield return engageAnim.PlayAnim(transform, _player, engageActionWidth);
+            yield return engageAnim.PlayAnim(transform, player, engageActionWidth);
             
             float timeElapsed = 0;
 
@@ -113,7 +82,7 @@ namespace Mechanics.Player.Actions
 
                 if (timeElapsed >= actionTriggerTime)
                 {
-                    _player.animator.CrossFade(actionAnimName, 0.2f, 1);
+                    player.animator.CrossFade(actionAnimName, 0.2f, 1);
                     _actionTriggered = true;
                     
                     yield return new WaitForSeconds(actionDelay);
@@ -128,15 +97,14 @@ namespace Mechanics.Player.Actions
 
             if (!_actionTriggered)
             {
-                _player.animator.CrossFade(disEngageAnimName, 0.2f, 1);
+                player.animator.CrossFade(disEngageAnimName, 0.2f, 1);
                 yield return new WaitForSeconds(disEngageTime);
             }
             
-            
-            _player.characterController.enabled = true;
-            _player.DisableAllMovement = false;
+            player.characterController.enabled = true;
+            player.DisableAllMovement = false;
             _actionTriggered = false;
-            _coroutineExecute = null;
+            coroutineExecute = null;
 
         }
         
