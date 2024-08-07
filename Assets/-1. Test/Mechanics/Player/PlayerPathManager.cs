@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
-using UnityEngine.Serialization;
 
 namespace Mechanics.Player
 {
@@ -12,11 +10,15 @@ namespace Mechanics.Player
         public float pointSpacing = 0.1f;
         public float distanceThreshold = 0.1f;
 
+        
+        
         public List<Vector3> curvePoints;
         public static PlayerPathManager Instance;
-
         public int currentIndex;
 
+        
+        public OverridePath OverridenPath { set; get; }
+        
 
         #region UNITY EDITOR
 
@@ -127,31 +129,21 @@ namespace Mechanics.Player
 
         public Vector3 GetDestination(Vector3 playerPos, bool moveNext)
         {
-            int index;
-
-            if (moveNext)
-            {
-                index = currentIndex + 1;
-            }
-            else
-            {
-                index = currentIndex - 1;
-            }
-
+            var index = moveNext ? currentIndex + 1 : currentIndex - 1;
             index = Mathf.Clamp(index, 0, curvePoints.Count-1);
-
+            
             float plannerDistance = PlannerDistance(playerPos, curvePoints[index]);
 
             if (plannerDistance < distanceThreshold)
             {
                 currentIndex = index;
             }
-
-            return curvePoints[index];
+            
+            return OverridenPath ? OverridenPath.GetDestination(moveNext) : curvePoints[index];
         }
 
 
-        private float PlannerDistance(Vector3 a, Vector3 b)
+        public static float PlannerDistance(Vector3 a, Vector3 b)
         {
             a.y = b.y = 0;
             Debug.DrawLine(a, b, Color.blue, 1f);
