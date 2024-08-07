@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Mechanics.Player.Conditions;
-using UnityEngine;
 using Mechanics.Player.Custom;
+using UnityEngine;
 using UnityEngine.Events;
 
-namespace Mechanics.Player
+namespace Mechanics.Player.Actions
 {
     public class PlayerActionTrigger : MonoBehaviour
     {

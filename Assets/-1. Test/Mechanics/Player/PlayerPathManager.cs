@@ -126,15 +126,16 @@ namespace Mechanics.Player
             }
         }
 
+        public float distance;
 
         public Vector3 GetDestination(Vector3 playerPos, bool moveNext)
         {
             var index = moveNext ? currentIndex + 1 : currentIndex - 1;
             index = Mathf.Clamp(index, 0, curvePoints.Count-1);
             
-            float plannerDistance = PlannerDistance(playerPos, curvePoints[index]);
+            distance = PlannerDistance(playerPos, curvePoints[index]);
 
-            if (plannerDistance < distanceThreshold)
+            if (distance < distanceThreshold)
             {
                 currentIndex = index;
             }
@@ -143,11 +144,11 @@ namespace Mechanics.Player
         }
 
 
-        public static float PlannerDistance(Vector3 a, Vector3 b)
+        private static float PlannerDistance(Vector3 a, Vector3 b)
         {
-            a.y = b.y = 0;
+            a.y = b.y;
             Debug.DrawLine(a, b, Color.blue, 1f);
-            return Vector3.Distance(a, b);
+            return Vector3.Distance(new Vector3(a.x, 0, a.z), new Vector3(b.x, 0, b.z));
         }
     }
 }

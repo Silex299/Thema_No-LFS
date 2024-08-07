@@ -33,34 +33,36 @@ namespace Mechanics.Player
 
         #region Player Movement
 
+        
+        float _horizontalInput;
         private void MovePlayer(PlayerV1 player)
         {
-            //Get desired movement directions and inputs
-            var horizontalInput = player.DisableInput ? 0 : Input.GetAxis("Horizontal");
-            Vector3 rotation = _pathManager.GetDestination(player.transform.position, horizontalInput > 0);
-
+            //Get desired movement inputs
+            if (player.IsGrounded)
+            {
+                _horizontalInput = player.DisableInput ? 0 : Input.GetAxis("Horizontal");
+            }
+            Vector3 rotation = _pathManager.GetDestination(player.transform.position, _horizontalInput >= 0);
 
             //Set movement speed and rotation
             if (player.CanBoost)
             {
                 if (Input.GetButton("Sprint"))
                 {
-                    player.animator.SetFloat(Speed, 2 * horizontalInput, 0.1f, Time.deltaTime);
+                    player.animator.SetFloat(Speed, 2 * _horizontalInput, 0.1f, Time.deltaTime);
                 }
                 else
                 {
-                    player.animator.SetFloat(Speed, horizontalInput, 0.1f, Time.deltaTime);
+                    player.animator.SetFloat(Speed, _horizontalInput, 0.1f, Time.deltaTime);
                 }
             }
             else
             {
-                player.animator.SetFloat(Speed, horizontalInput);
+                player.animator.SetFloat(Speed, _horizontalInput);
             }
+            
             //Rotate player
-            if (player.IsGrounded && !Mathf.Approximately(horizontalInput, 0))
-            {
-                Rotate(player.transform, rotation);
-            }
+            Rotate(player.transform, rotation);
             
             //Jump
             if (Input.GetButtonDown("Jump") && _jumpCoroutine == null)
@@ -72,7 +74,7 @@ namespace Mechanics.Player
                         if(player.Interactable.isInteracting) return;
                     }
                     
-                    _jumpCoroutine = StartCoroutine(Jump(player, horizontalInput));
+                    _jumpCoroutine = StartCoroutine(Jump(player, _horizontalInput));
                 }
             }
 
@@ -95,7 +97,7 @@ namespace Mechanics.Player
         {
             Vector3 direction = (lookAt - target.position).normalized;
             direction.y = 0;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
             target.rotation = Quaternion.Slerp(target.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
 
@@ -113,8 +115,7 @@ namespace Mechanics.Player
                 yield break;
             }
 
-            Vector3 jumpMovement = player.transform.forward *
-                                   (player.Boost ? 2 : 1 * Mathf.Abs(horizontalInput) * forwardJumpSpeed);
+            Vector3 jumpMovement = player.transform.forward * (player.Boost ? 2 : 1 * Mathf.Abs(horizontalInput) * forwardJumpSpeed);
             jumpMovement.y = Mathf.Sqrt(jumpHeight * -2f * -9.8f);
             
             player.AddForce(jumpMovement);
