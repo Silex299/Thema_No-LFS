@@ -9,11 +9,6 @@ namespace Mechanics.Player
         [FoldoutGroup("Movement")] public float forwardJumpSpeed = 10;
         [FoldoutGroup("Movement")] public float rotationSpeed = 10;
         [FoldoutGroup("Movement")] public float jumpHeight = 10;
-
-        [FoldoutGroup("Ground Check")] public LayerMask groundMask;
-        [FoldoutGroup("Ground Check")] public float groundDistance = 0.4f;
-        [FoldoutGroup("Ground Check")] public float proximityThreshold = 1f;
-
         private PlayerPathManager _pathManager;
         private static readonly int Speed = Animator.StringToHash("Speed");
 
@@ -112,6 +107,11 @@ namespace Mechanics.Player
 
             player.animator.ResetTrigger(Jump1);
 
+            if (!player.CanJump || player.DisableAllMovement)
+            {
+                _jumpCoroutine = null;
+                yield break;
+            }
 
             Vector3 jumpMovement = player.transform.forward *
                                    (player.Boost ? 2 : 1 * Mathf.Abs(horizontalInput) * forwardJumpSpeed);

@@ -67,6 +67,8 @@ namespace Mechanics.Player
         private static readonly int IsGroundedInt = Animator.StringToHash("IsGrounded");
         private static readonly int IsInProximityInt = Animator.StringToHash("IsInProximity");
         private static readonly int AltMovementInt = Animator.StringToHash("AltMovement");
+        private static readonly int Jump = Animator.StringToHash("Jump");
+        private static readonly int Speed = Animator.StringToHash("Speed");
 
         private void Update()
         {
@@ -131,6 +133,12 @@ namespace Mechanics.Player
                 transform.position + Vector3.down * (IsGrounded ? groundDistance : proximityThreshold),
                 IsGrounded ? Color.green : IsInProximity ? Color.blue : Color.red, 1f);
         }
-        
+
+        public void ResetAnimator()
+        {
+            animator.ResetTrigger(Jump);
+            animator.SetBool(AltMovementInt, false);
+            animator.SetFloat(Speed, 0);
+        }
     }
 }
