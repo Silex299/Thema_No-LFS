@@ -46,8 +46,20 @@ namespace Mechanics.Player
 
 
         public InteractableBase Interactable { get; set; }
-        
-        
+        public Controller MovementController
+        {
+            get=> controller;
+
+            set
+            {
+                if (value == controller) return;
+                
+                controller.ControllerEnter(this);
+                controller = value;
+            }
+            
+        }
+
         public Vector3 PlayerVelocity { get; private set; }
         private float _lastCalculationTime;
         private Vector3 _lastPosition;
