@@ -14,8 +14,8 @@ namespace Player_Scripts.Interactables
 
         public void Reset()
         {
-            _isInteracting = false;
-            _playerIsInTrigger = false;
+            isInteracting = false;
+            playerIsInTrigger = false;
 
             if (!cart.gameObject.activeInHierarchy)
             {

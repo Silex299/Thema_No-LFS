@@ -48,9 +48,9 @@ namespace Player_Scripts.Interactables
 
         public override PlayerInteractionType Interact()
         {
-            if (!GetKey() || !_playerIsInTrigger)
+            if (!GetKey() || !playerIsInTrigger)
             {
-                _isInteracting = false;
+                isInteracting = false;
                 return PlayerInteractionType.NONE;
             }
             else
@@ -58,7 +58,7 @@ namespace Player_Scripts.Interactables
 
                 if (conditions.Any(condition => !condition.Condition(PlayerMovementController.Instance.player.CController)))
                 {
-                    _isInteracting = false;
+                    isInteracting = false;
                     return PlayerInteractionType.NONE;
                 }
                 
@@ -72,9 +72,9 @@ namespace Player_Scripts.Interactables
                 Vector3 forward = transform.forward;
                 Vector3 up = transform.up;
 
-                if (!_isInteracting)
+                if (!isInteracting)
                 {
-                    _isInteracting = true;
+                    isInteracting = true;
                     _dragOffset = playerPos - position;
                 }
 

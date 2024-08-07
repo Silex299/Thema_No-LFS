@@ -1,3 +1,4 @@
+using Mechanics.Player.PlayerInteractions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -16,17 +17,19 @@ namespace Mechanics.Player
         [FoldoutGroup("Misc")] public Controller controller;
 
 
+
+        #region Flags
         
         public bool IsGrounded { get; private set; }
         private bool IsInProximity { get; set; }
         public bool DisableAllMovement { get; set; }
         public bool DisableInput { get; set; }
         public bool CanJump { get; set; } = true;
-        public bool CanAltMovement { get; set; } = true;
-
+        
         public bool CanBoost { get; set; } = true;
+        public bool Boost { get; set; }
         
-        
+        public bool CanAltMovement { get; set; } = true;
         private bool _altMovement;
         public bool AltMovement
         {
@@ -37,7 +40,13 @@ namespace Mechanics.Player
                 animator.SetBool(AltMovementInt, value);
             }
         }
-        public bool Boost { get; set; }
+        
+
+        #endregion
+
+
+        public InteractableBase Interactable { get; set; }
+        
         
         public Vector3 PlayerVelocity { get; private set; }
         private float _lastCalculationTime;
@@ -52,9 +61,25 @@ namespace Mechanics.Player
             CalculateVelocity();
             
             if(DisableAllMovement) return;
-            
-            controller.UpdateController(this);
+            controller.ControllerUpdate(this);
+            Interactable?.InteractionUpdate(this);
         }
+
+        private void FixedUpdate()
+        {
+            if(DisableAllMovement) return;
+            controller.ControllerFixedUpdate(this);
+            Interactable?.InteractionFixedUpdate(this);
+        }
+
+        private void LateUpdate()
+        {
+            if(DisableAllMovement) return;
+            controller.ControllerLateUpdate(this);
+            Interactable?.InteractionLateUpdate(this);
+        }
+
+        
         
         private void CalculateVelocity()
         {
@@ -64,12 +89,10 @@ namespace Mechanics.Player
             _lastPosition = transform.position;
             _lastCalculationTime = Time.time;
         }
-
         public void AddForce(Vector3 force)
         {
             _desiredMoveDirection = force;
         }
-        
         public void ApplyGravity()
         {
             GroundCheck();

@@ -54,7 +54,7 @@ namespace Player_Scripts.Interactables
             
             if (!GetKey())
             {
-                _isInteracting = false;
+                isInteracting = false;
 
                 return PlayerInteractionType.NONE;
 
@@ -72,9 +72,9 @@ namespace Player_Scripts.Interactables
                 var boxUp = transform.up;
 
 
-                if (!_isInteracting)
+                if (!isInteracting)
                 {
-                    _isInteracting = true;
+                    isInteracting = true;
                     _dragOffset = playerPos - boxPos;
                 }
 

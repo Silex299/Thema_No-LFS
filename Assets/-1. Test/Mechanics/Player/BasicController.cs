@@ -1,8 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
-using Unity.Plastic.Antlr3.Runtime;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Mechanics.Player
 {
@@ -27,9 +25,15 @@ namespace Mechanics.Player
             _pathManager = PlayerPathManager.Instance;
         }
 
-        public override void UpdateController(PlayerV1 player)
+        public override void ControllerUpdate(PlayerV1 player)
         {
             MovePlayer(player);
+        }
+
+        public override void ControllerFixedUpdate(PlayerV1 player)
+        {
+            //Apply gravity
+            player.ApplyGravity();
         }
 
         #region Player Movement
@@ -68,6 +72,11 @@ namespace Mechanics.Player
             {
                 if (!player.AltMovement && !player.DisableInput && player.CanJump && player.IsGrounded)
                 {
+                    if (player.Interactable)
+                    {
+                        if(player.Interactable.isInteracting) return;
+                    }
+                    
                     _jumpCoroutine = StartCoroutine(Jump(player, horizontalInput));
                 }
             }
@@ -85,8 +94,6 @@ namespace Mechanics.Player
                 }
             }
 
-            //Apply gravity
-            player.ApplyGravity();
         }
 
         private void Rotate(Transform target, Vector3 lookAt)
