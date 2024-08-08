@@ -107,7 +107,7 @@ namespace Mechanics.Player
         {
             _desiredMoveDirection = force;
         }
-        public void ApplyGravity()
+        public void ApplyGravity(float gravity = -9.8f)
         {
             GroundCheck();
             if (IsGrounded && _desiredMoveDirection.y < 0)
@@ -115,7 +115,7 @@ namespace Mechanics.Player
                 _desiredMoveDirection = new Vector3(0, -2f, 0);
             }
             
-            _desiredMoveDirection.y += -9.8f * Time.deltaTime;
+            _desiredMoveDirection.y += gravity * Time.deltaTime;
             
             characterController.Move((_desiredMoveDirection) * Time.deltaTime);
         }
