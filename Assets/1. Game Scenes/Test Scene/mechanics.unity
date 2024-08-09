@@ -930,12 +930,12 @@ MonoBehaviour:
   constrainX: 0
   defaultX: 8.62
   constrainZ: 1
-  defaultZ: -8.62
+  defaultZ: -9.51
   surfaceLevel: 8
-  bottomLevel: 1
+  bottomLevel: -2.02
   defaultCenter: {x: 0, y: 0, z: 0}
-  defaultHeight: 0.3
-  defaultRadius: 1.8
+  defaultHeight: 1.8
+  defaultRadius: 0.3
   forwardCenter: {x: 0, y: 0, z: 0}
   forwardHeight: 0.4
   forwardRadius: 0.4
@@ -6637,9 +6637,9 @@ GameObject:
   - component: {fileID: 2464212945367739819}
   - component: {fileID: 2456160465874143907}
   - component: {fileID: 2473841747244927801}
-  - component: {fileID: 2473841747244927800}
   - component: {fileID: 2473841747244927802}
   - component: {fileID: 2473841747244927803}
+  - component: {fileID: 2473841747244927804}
   m_Layer: 13
   m_Name: SM_Prop_CardboardBox_Stack_01
   m_TagString: Untagged
@@ -6656,39 +6656,12 @@ Transform:
   m_GameObject: {fileID: 2468465081881474999}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000016018747}
-  m_LocalPosition: {x: -0, y: -1.68, z: 0}
+  m_LocalPosition: {x: -0, y: -1.15, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4969035489495866553}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!54 &2473841747244927800
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2468465081881474999}
-  serializedVersion: 4
-  m_Mass: 10
-  m_Drag: 0.1
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &2473841747244927801
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6747,6 +6720,33 @@ MonoBehaviour:
   isInteracting: 0
   restrictX: 0
   restrictZ: 1
+--- !u!54 &2473841747244927804
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468465081881474999}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4969035489495866552
 GameObject:
   m_ObjectHideFlags: 0
@@ -6772,7 +6772,7 @@ Transform:
   m_GameObject: {fileID: 4969035489495866552}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.051508054, z: 0, w: 0.9986726}
-  m_LocalPosition: {x: 2.04, y: 1.26, z: -8.29}
+  m_LocalPosition: {x: 2.03, y: 1.26, z: -8.43}
   m_LocalScale: {x: 0.7572187, y: 0.6048041, z: 0.75721884}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -9,6 +9,11 @@ namespace Mechanics.Player
         {
             
         }
+
+        public virtual void ControllerExit(PlayerV1 player)
+        {
+            
+        }
         
         public virtual void ControllerUpdate(PlayerV1 player)
         {

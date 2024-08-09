@@ -37,10 +37,7 @@ namespace Mechanics.Player
         public float forwardHeight, forwardRadius;
 
 
-        private bool _atSurface;
-        private bool _atBottom;
         private bool _atDefaultHeight = true;
-        
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int AtSurface = Animator.StringToHash("AtSurface");
@@ -58,6 +55,26 @@ namespace Mechanics.Player
             Gizmos.DrawSphere(transform.position + transform.up * bottomLevel, 0.1f);
         }
 
+
+        public override void ControllerEnter(PlayerV1 player)
+        {
+            player.InWater = true;
+            //CHANGE: animation here
+        }
+
+        public override void ControllerExit(PlayerV1 player)
+        {
+            //CHANGE: change hard code
+            player.characterController.center = new Vector3(0, 1.1f, 0);
+            player.characterController.height = 2f;
+            player.characterController.radius = .24f;
+
+            player.CanInteract = true;
+            player.InWater = false;
+        }
+
+        
+
         public override void ControllerUpdate(PlayerV1 player)
         {
             //get horizontal and vertical  input
@@ -74,7 +91,6 @@ namespace Mechanics.Player
         {
             ConstrainPosition(player);
         }
-
 
         private void MovePlayer(PlayerV1 playerV1, float horizontalInput, float verticalInput)
         {
@@ -129,8 +145,8 @@ namespace Mechanics.Player
                 {
                     position.y = Mathf.Lerp(position.y, surfaceLevel + 2f, Time.deltaTime * 50f);
                 }
-                _atSurface = true;
-                _atBottom = false;
+                player.AtSurface = true;
+                player.AtBottom = false;
             }
             else if(position.y < bottomLevel + 2.1f)
             {
@@ -139,39 +155,39 @@ namespace Mechanics.Player
                     position.y = Mathf.Lerp(position.y, bottomLevel + 2f, Time.deltaTime * 50f);
                 }
 
-                _atSurface = false;
-                _atBottom = true;
+                player.AtSurface = false;
+                player.AtBottom = true;
             }
             else
             {
-                _atBottom = false;
-                _atSurface = false;
+                player.AtSurface = false;
+                player.AtBottom = false;
             }
 
             player.transform.position = position;
-            player.animator.SetBool(AtSurface, _atSurface);
-            player.animator.SetBool(AtBottom, _atBottom);
+            player.animator.SetBool(AtSurface, player.AtSurface);
+            player.animator.SetBool(AtBottom, player.AtBottom);
         }
 
-        private void AdjustCharacterController(PlayerV1 playerV1, float horizontalInput, float verticalInput)
+        private void AdjustCharacterController(PlayerV1 player, float horizontalInput, float verticalInput)
         {
-            if ((Mathf.Abs(horizontalInput) > 0.4f && Mathf.Abs(verticalInput) < 0.4f) || _atSurface)
+            if ((Mathf.Abs(horizontalInput) > 0.4f && Mathf.Abs(verticalInput) < 0.4f) || player.AtSurface)
             {
                 if(!_atDefaultHeight) return;
                 
                 _atDefaultHeight = false;
-                playerV1.characterController.center = forwardCenter;
-                playerV1.characterController.height = forwardHeight;
-                playerV1.characterController.radius = forwardRadius;
+                player.characterController.center = forwardCenter;
+                player.characterController.height = forwardHeight;
+                player.characterController.radius = forwardRadius;
             }
             else
             {
                 if (_atDefaultHeight) return;
                 
                 _atDefaultHeight = true;
-                playerV1.characterController.center = defaultCenter;
-                playerV1.characterController.height = defaultHeight;
-                playerV1.characterController.radius = defaultRadius;
+                player.characterController.center = defaultCenter;
+                player.characterController.height = defaultHeight;
+                player.characterController.radius = defaultRadius;
             }
         }
         

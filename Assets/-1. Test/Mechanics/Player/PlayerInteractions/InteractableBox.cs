@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -35,12 +34,10 @@ namespace Mechanics.Player.PlayerInteractions
         {
             Interact(player);
         }
-
-
-        //FIX: Make like if you remove the interactable in player, it set isiInteracting to false
         
         public override void Interact(PlayerV1 player)
         {
+            if(player.InWater && !player.AtSurface) return;
             
             var playerTransform = player.transform;
             
