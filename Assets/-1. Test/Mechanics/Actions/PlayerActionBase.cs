@@ -1,7 +1,8 @@
 using System.Collections;
+using Mechanics.Player;
 using UnityEngine;
 
-namespace Mechanics.Player.Actions
+namespace Mechanics.Actions
 {
     public class PlayerActionBase : MonoBehaviour
     {

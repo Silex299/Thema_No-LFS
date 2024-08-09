@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Mechanics.Player.Conditions;
+using Mechanics.Actions.Conditions;
 using Mechanics.Player.Custom;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Mechanics.Player.Actions
+namespace Mechanics.Actions
 {
     public class PlayerActionTrigger : PlayerActionBase
     {

@@ -67,11 +67,7 @@ namespace Mechanics.Player.Controllers
             {
                 if (!player.AltMovement && !player.DisableInput && player.CanJump && player.IsGrounded)
                 {
-                    if (player.Interactable)
-                    {
-                        if(player.Interactable.isInteracting) return;
-                    }
-                    
+                    if (player.IsInteracting) return;
                     _jumpCoroutine = StartCoroutine(Jump(player, _horizontalInput));
                 }
             }

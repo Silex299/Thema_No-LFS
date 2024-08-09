@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player.Conditions
+namespace Mechanics.Actions.Conditions
 {
 
     public class InputCondition : TriggerCondition

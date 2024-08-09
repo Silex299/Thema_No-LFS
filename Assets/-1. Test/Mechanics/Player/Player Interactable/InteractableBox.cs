@@ -1,9 +1,7 @@
-using System;
-using Codice.Client.Commands.TransformerRule;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player.PlayerInteractions
+namespace Mechanics.Player.Player_Interactable
 {
     public class InteractableBox : InteractableBase
     {
@@ -76,11 +74,11 @@ namespace Mechanics.Player.PlayerInteractions
             
             if (Input.GetButton(interactionKey))
             {
-                if (!isInteracting)
+                if (!player.IsInteracting)
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     _dragOffset = playerTransform.position - transform.position;
-                    isInteracting = true;
+                    player.IsInteracting = true;
                 }
                 
                 // ReSharper disable once PossibleNullReferenceException
@@ -113,7 +111,7 @@ namespace Mechanics.Player.PlayerInteractions
             }
             else
             {
-                isInteracting = false;
+                player.IsInteracting = false;
                 player.animator.SetBool(Push, false);
             }
             
@@ -127,7 +125,7 @@ namespace Mechanics.Player.PlayerInteractions
                 player.Interactable = null;
                 player.animator.SetBool(Push, false);
             }
-            isInteracting = false;
+            player.IsInteracting = false;
         }
     }
 }

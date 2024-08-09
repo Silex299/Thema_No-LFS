@@ -1,15 +1,13 @@
-using System;
+using Mechanics.Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player.PlayerInteractions
+namespace Mechanics.Player.Player_Interactable
 {
     public class InteractableBase : MonoBehaviour
     {
 
         [BoxGroup("Base")] public string interactionKey;
-        [BoxGroup("Base")]  public bool isInteracting;
-
         public virtual void InteractionUpdate(PlayerV1 player)
         {
         }

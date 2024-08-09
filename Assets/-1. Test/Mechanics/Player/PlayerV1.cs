@@ -1,5 +1,5 @@
 using Mechanics.Player.Controllers;
-using Mechanics.Player.PlayerInteractions;
+using Mechanics.Player.Player_Interactable;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -28,6 +28,8 @@ namespace Mechanics.Player
         public bool AtSurface { get; set; }
         public bool AtBottom { get; set; }
 
+        public bool IsInteracting { get; set; }
+        
         #endregion
 
         #region Movement Flags

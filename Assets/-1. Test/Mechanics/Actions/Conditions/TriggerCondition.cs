@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Mechanics.Player.Conditions
+namespace Mechanics.Actions.Conditions
 {
     public abstract class TriggerCondition : MonoBehaviour
     {
