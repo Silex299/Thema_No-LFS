@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Mechanics.Player.PlayerInteractions
@@ -6,8 +7,8 @@ namespace Mechanics.Player.PlayerInteractions
     public class InteractableBase : MonoBehaviour
     {
 
-        public string interactionKey;
-        public bool isInteracting;
+        [BoxGroup("Base")] public string interactionKey;
+        [BoxGroup("Base")]  public bool isInteracting;
 
         public virtual void InteractionUpdate(PlayerV1 player)
         {
