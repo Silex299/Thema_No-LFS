@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace Mechanics.Player.Custom

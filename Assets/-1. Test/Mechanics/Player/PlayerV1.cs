@@ -1,5 +1,5 @@
 using Mechanics.Player.Controllers;
-using Mechanics.Player.Player_Interactable;
+using Mechanics.Player.Interactable;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -71,7 +71,7 @@ namespace Mechanics.Player
 
                 controller.ControllerExit(this);
                 controller = value;
-                controller.ControllerEnter(this);
+                value.ControllerEnter(this);
             }
         }
 
@@ -124,6 +124,7 @@ namespace Mechanics.Player
 
         public void AddForce(Vector3 force)
         {
+            print("What the hell");
             _desiredMoveDirection = force;
         }
 
@@ -160,6 +161,13 @@ namespace Mechanics.Player
             animator.ResetTrigger(Jump);
             animator.SetBool(AltMovementInt, false);
             animator.SetFloat(Speed, 0);
+            animator.SetBool(IsGroundedInt, false);
+            animator.SetBool(IsInProximityInt, false);
+        }
+
+        public void ResetMovement()
+        {
+            _desiredMoveDirection = Vector3.zero;
         }
     }
 }

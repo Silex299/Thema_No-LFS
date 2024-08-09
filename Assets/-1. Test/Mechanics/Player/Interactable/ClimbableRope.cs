@@ -1,11 +1,9 @@
-using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
-namespace Misc.Items
+namespace Mechanics.Player.Interactable
 {
-    public class Rope : MonoBehaviour
+    public class ClimbableRope : MonoBehaviour
     {
         #region Rope Properties
 
@@ -23,7 +21,7 @@ namespace Misc.Items
 
         [SerializeField, BoxGroup("Rope Properties")]
         private int breakIndex;
-        
+
         [SerializeField, BoxGroup("Rope Properties")]
         private Vector3 breakForce;
 
@@ -62,13 +60,10 @@ namespace Misc.Items
 
         public bool Connected
         {
-            get=>  _connected;
-            set
-            {
-                _connected = value;
-            }
+            get => _connected;
+            set { _connected = value; }
         }
-        
+
         #endregion
 
         #region Editor Specific
@@ -139,10 +134,9 @@ namespace Misc.Items
         [Button("Create LineRenderer")]
         public void CreateLineRenderer()
         {
-
             lineRenderers = new LineRenderer[ropeResolution];
-            
-            for(int i=1; i<ropeResolution; i++)
+
+            for (int i = 1; i < ropeResolution; i++)
             {
                 if (!ropeSegments[i].TryGetComponent<LineRenderer>(out lineRenderers[i]))
                 {
@@ -159,6 +153,7 @@ namespace Misc.Items
                 lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
             }
         }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
@@ -169,27 +164,27 @@ namespace Misc.Items
         /// Breaks the rope
         /// </summary>
         /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
-        
         [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
         public void BreakRope(bool exitFall = true)
         {
             Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
             Destroy(lineRenderers[breakIndex]);
-            
-            ropeSegments[breakIndex+1].AddForce(breakForce, ForceMode.Impulse);
-            
+
+            ropeSegments[breakIndex + 1].AddForce(breakForce, ForceMode.Impulse);
+
             _broken = true;
             _canAttach = false;
 
+            /**
             if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
             {
                 StartCoroutine(PlayerMovementController.Instance.player.ropeMovement.BrokRope(this, exitFall));
             }
-            
+            **/
         }
 
         private bool _broken;
-        
+
         #endregion
 
         #region Bultin Methods
@@ -203,6 +198,7 @@ namespace Misc.Items
                 {
                     continue;
                 }
+
                 lineRenderers[i].SetPosition(0, ropeSegments[i].transform.position);
                 lineRenderers[i].SetPosition(1, ropeSegments[i - 1].transform.position);
             }
@@ -234,25 +230,23 @@ namespace Misc.Items
             // Ensure the closest index is within the bounds of the rope resolution
             _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution - 1);
 
-            var playerInstance = PlayerMovementController.Instance;
+            /**var playerInstance = PlayerMovementController.Instance;
             var playerInstanceTransform = playerInstance.transform;
             Vector3 newOffset = playerInstance.player.ropeMovement.offset;
 
             newOffset = newOffset.x * playerInstanceTransform.right + newOffset.y * playerInstanceTransform.up +
                         newOffset.z * playerInstanceTransform.forward;
-
             playerInstanceTransform.position = GetDesiredPosition() + newOffset;
-            
+
             var newRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.rotation;
 
-            //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
+            //Create a newRotation the Y angle of newRotation is initial Rotation's Y
             newRotation.eulerAngles = initialRotation.y is > 90 or < -90 ? new Vector3(-newRotation.eulerAngles.x, initialRotation.y, -newRotation.eulerAngles.z) :
-                //Create a newRotation the Y angle of newRotation is initial Rotation's Y 
+                //Create a newRotation the Y angle of newRotation is initial Rotation's Y
                 new Vector3(newRotation.eulerAngles.x, initialRotation.y, newRotation.eulerAngles.z);
-            
+
             playerInstanceTransform.rotation = newRotation;
-            
-            
+**/
         }
 
         /// <summary>
@@ -265,7 +259,7 @@ namespace Misc.Items
             if (Connected)
             {
                 Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
-                
+
                 rb.AddForce(0, 0, swingForce * -input * Time.fixedDeltaTime);
             }
         }
@@ -300,7 +294,7 @@ namespace Misc.Items
         /// <returns>An IEnumerator to be used in a coroutine.</returns>
         private void InitialConnect()
         {
-            for (int i = 1; i < ropeResolution; i++)
+            /**for (int i = 1; i < ropeResolution; i++)
             {
                 var distance =
                     Vector3.Distance(PlayerMovementController.Instance.player.ropeMovement.handSocket.position,
@@ -312,21 +306,21 @@ namespace Misc.Items
                     _closestDistance = distance;
                     _closestIndex = i;
                 }
-            }
 
-            //direction of the current closest rope segment from player
+                //direction of the current closest rope segment from player
 
-            Rigidbody currentSegment = ropeSegments[(int)Mathf.Floor(_closestIndex)];
+                Rigidbody currentSegment = ropeSegments[(int)Mathf.Floor(_closestIndex)];
 
-            if (Mathf.Abs(currentSegment.velocity.magnitude) < 1f)
-            {
-                //apply an impulse force in that direction
-                currentSegment.AddForce(PlayerMovementController.Instance.transform.forward * entryForce, ForceMode.Impulse);
-            }
-            
-            // Once all segments have been checked, set the rope as connected
-            Connected = true;
-            
+                if (Mathf.Abs(currentSegment.velocity.magnitude) < 1f)
+                {
+                    //apply an impulse force in that direction
+                    currentSegment.AddForce(PlayerMovementController.Instance.transform.forward * entryForce,
+                        ForceMode.Impulse);
+                }
+
+                // Once all segments have been checked, set the rope as connected
+                Connected = true;
+            }**/
         }
 
         public Rigidbody CurrentRopeSegment()
@@ -339,9 +333,9 @@ namespace Misc.Items
         /// </summary>
         public void AttachPlayer()
         {
-            if(!_canAttach) return;
-            
-            // If the last attachment was less than 1.5 seconds ago, do not attach again
+            if (!_canAttach) return;
+
+            /** If the last attachment was less than 1.5 seconds ago, do not attach again
             if (Time.time - _lastAttachedTime < 1.5f) return;
 
             // If the player can be attached to the rope
@@ -361,7 +355,7 @@ namespace Misc.Items
             {
                 initialRotation.y -= 360;
             }
-
+            **/
         }
 
         /// <summary>

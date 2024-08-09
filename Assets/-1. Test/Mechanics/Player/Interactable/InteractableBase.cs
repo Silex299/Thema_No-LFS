@@ -1,8 +1,7 @@
-using Mechanics.Player;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player.Player_Interactable
+namespace Mechanics.Player.Interactable
 {
     public class InteractableBase : MonoBehaviour
     {
