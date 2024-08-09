@@ -1,8 +1,7 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player
+namespace Mechanics.Player.Controllers
 {
     public class WaterController : Controller
     {
@@ -61,7 +60,6 @@ namespace Mechanics.Player
             player.InWater = true;
             //CHANGE: animation here
         }
-
         public override void ControllerExit(PlayerV1 player)
         {
             //CHANGE: change hard code
@@ -72,9 +70,6 @@ namespace Mechanics.Player
             player.CanInteract = true;
             player.InWater = false;
         }
-
-        
-
         public override void ControllerUpdate(PlayerV1 player)
         {
             //get horizontal and vertical  input
@@ -86,7 +81,6 @@ namespace Mechanics.Player
             UpdateAnimator(player, horizontal, vertical);
             Rotate(player, horizontal);
         }
-
         public override void ControllerLateUpdate(PlayerV1 player)
         {
             ConstrainPosition(player);
@@ -100,14 +94,12 @@ namespace Mechanics.Player
 
             playerV1.characterController.Move(moveDirection);
         }
-
         private void UpdateAnimator(PlayerV1 player, float horizontal, float vertical)
         {
             //Set movement speed and rotation
             player.animator.SetFloat(Speed, horizontal, 0.1f, Time.deltaTime);
             player.animator.SetFloat(Direction, vertical, 0.1f, Time.deltaTime);
         }
-
         private void Rotate(PlayerV1 player, float horizontalInput)
         {
             //Rotate player in forward direction of the controller if horizontal input is greater than 0 and vice versa
@@ -129,7 +121,6 @@ namespace Mechanics.Player
             player.transform.rotation = Quaternion.Slerp(player.transform.rotation,
                 Quaternion.LookRotation(desiredRotation), rotationSpeed * Time.deltaTime);
         }
-
         private void ConstrainPosition(PlayerV1 player)
         {
             Vector3 position = player.transform.position;
@@ -168,7 +159,6 @@ namespace Mechanics.Player
             player.animator.SetBool(AtSurface, player.AtSurface);
             player.animator.SetBool(AtBottom, player.AtBottom);
         }
-
         private void AdjustCharacterController(PlayerV1 player, float horizontalInput, float verticalInput)
         {
             if ((Mathf.Abs(horizontalInput) > 0.4f && Mathf.Abs(verticalInput) < 0.4f) || player.AtSurface)

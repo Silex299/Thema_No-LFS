@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Mechanics.Player
+namespace Mechanics.Player.Controllers
 {
     public class Controller : MonoBehaviour
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player
+namespace Mechanics.Player.Controllers
 {
     public class BasicController : Controller
     {
@@ -24,7 +24,6 @@ namespace Mechanics.Player
         {
             MovePlayer(player);
         }
-
         public override void ControllerFixedUpdate(PlayerV1 player)
         {
             //Apply gravity
@@ -33,8 +32,7 @@ namespace Mechanics.Player
 
         #region Player Movement
 
-        
-        float _horizontalInput;
+        private float _horizontalInput;
         private void MovePlayer(PlayerV1 player)
         {
             //Get desired movement inputs
@@ -92,7 +90,6 @@ namespace Mechanics.Player
             }
 
         }
-
         private void Rotate(Transform target, Vector3 lookAt)
         {
             Vector3 direction = (lookAt - target.position).normalized;
@@ -100,7 +97,6 @@ namespace Mechanics.Player
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             target.rotation = Quaternion.Slerp(target.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
-
         private IEnumerator Jump(PlayerV1 player, float horizontalInput)
         {
             player.animator.SetTrigger(Jump1);
