@@ -1,27 +1,31 @@
-using System.Collections;
 using Mechanics.Player.Custom;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Mechanics.Player.Interactable
 {
     public class ClimbableLadder : ClimbableBase
     {
+        #region Variables
+
+        #region Climbable Properties
+
+        [BoxGroup("Climbable Param")] public float startLadder;
+        [BoxGroup("Climbable Param")] public float endLadder;
+        [BoxGroup("Climbable Param")] public Vector3 offset;
+
+        #endregion
         
-
-        public float startLadder;
-        public float endLadder;
-        public Vector3 offset;
-        public float movementSpeed = 0.1f;
-        public float transitionTime = 0.2f;
-
         private float _playerAt;
-        private Coroutine _engageCoroutine;
-        
-        
+
+        #endregion
+
+        #region Debug
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            
+
             var playerPosition = (transform.position + transform.up * startLadder) +
                                  transform.up * _playerAt * (endLadder - startLadder) + offset;
             Gizmos.DrawWireSphere(playerPosition, 0.2f);
@@ -32,51 +36,33 @@ namespace Mechanics.Player.Interactable
             Gizmos.DrawLine(starPos, endPos);
         }
 
-        public override void EngageClimbable(PlayerV1 player)
+        #endregion
+
+        #region Overriden Methods
+        
+
+        public override Vector3 GetMovementVector(Transform playerTransform, float speed)
         {
-            if (Engaged) return;
-            _engageCoroutine ??= StartCoroutine(EngageCoroutine(player));
+            _playerAt = Mathf.Clamp01(_playerAt + Input.GetAxis("Vertical") * speed);
+            var startPos = transform.position + transform.up * startLadder;
+            var targetPos = startPos + transform.up * (_playerAt * (endLadder - startLadder)) + offset;
+            return targetPos - playerTransform.position;
         }
 
-        public override void MovePlayer(float input, Transform playerTransform)
+        
+        
+        public override Vector3 GetInitialConnectPoint(Transform playerTransform)
         {
-            //Movement
-            _playerAt += Input.GetAxis("Vertical") * Time.deltaTime * movementSpeed;
-            _playerAt = Mathf.Clamp01(_playerAt);
             var startPos = transform.position + transform.up * startLadder;
-            Vector3 direction = transform.up;
+            var endPos = transform.position + transform.up * endLadder;
+            var closestPoint = ThemaVector.GetClosestPointToLine(startPos, endPos, playerTransform.position);
             
-            playerTransform.position = startPos + direction * (_playerAt * (endLadder - startLadder)) + offset;
-            playerTransform.rotation = Quaternion.LookRotation(transform.forward, transform.up);
-        }
-
-        private IEnumerator EngageCoroutine(PlayerV1 player)
-        {
-            var startPos = transform.position + transform.up * startLadder;
-            var endPos =transform.position + transform.up *  endLadder;
-
-            var closestPoint = ThemaVector.GetClosestPointToLine(startPos, endPos, player.transform.position);
             _playerAt = (closestPoint - startPos).magnitude / (endPos - startPos).magnitude;
 
+            return closestPoint;
+        }   
+        
+        #endregion
 
-            float timeElapsed = 0;
-            Vector3 initPlayerPos = player.transform.position;
-            Quaternion initPlayerRot = player.transform.rotation;
-            
-            while (timeElapsed <= transitionTime)
-            {
-                timeElapsed += Time.deltaTime;
-                
-                player.transform.position = Vector3.Lerp(initPlayerPos, closestPoint + offset, timeElapsed / transitionTime);
-                player.transform.rotation = Quaternion.Slerp(initPlayerRot, transform.rotation, timeElapsed / transitionTime);
-
-                yield return new WaitForEndOfFrame();
-            }
-
-            Engaged = true;
-            _engageCoroutine = null;
-
-        }
-       
     }
 }

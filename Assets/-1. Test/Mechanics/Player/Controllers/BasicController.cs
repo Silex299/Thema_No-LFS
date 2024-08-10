@@ -20,11 +20,6 @@ namespace Mechanics.Player.Controllers
             _pathManager = PlayerPathManager.Instance;
         }
 
-
-        public override void ControllerEnter(PlayerV1 player)
-        {
-            player.animator.CrossFade(player.IsGrounded ? "Basic Movement" : "Jump Loop", 0.2f, 0);
-        }
         
         public override void ControllerUpdate(PlayerV1 player)
         {
@@ -36,6 +31,7 @@ namespace Mechanics.Player.Controllers
             player.ApplyGravity();
         }
 
+        
         #region Player Movement
 
         private float _horizontalInput;
@@ -71,7 +67,6 @@ namespace Mechanics.Player.Controllers
             //Jump
             if (Input.GetButtonDown("Jump") && _jumpCoroutine == null)
             {
-                print("Dumb fuck");
                 if (!player.AltMovement && !player.DisableInput && player.CanJump && player.IsGrounded)
                 {
                     if (player.IsInteracting) return;

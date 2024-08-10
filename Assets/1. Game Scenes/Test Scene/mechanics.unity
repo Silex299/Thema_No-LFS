@@ -220,8 +220,6 @@ MonoBehaviour:
   startLadder: -0.75
   endLadder: 7.26
   offset: {x: -0.4, y: 0, z: 0}
-  movementSpeed: 0.1
-  transitionTime: 1
 --- !u!114 &42019289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,7 +232,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98836e57d7b59d6479a5e2bede2f4573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateIndex: 2
   entryAnim: Ladder
+  exitForce: {x: 0, y: 0, z: 0}
+  transitionTime: 0
+  movementSpeed: 0.2
   canJumpOff: 1
   climbable: {fileID: 42019288}
   exitEvent:
@@ -253,6 +255,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  engaged: 1
 --- !u!4 &42019290
 Transform:
   m_ObjectHideFlags: 0
@@ -335,6 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 629c02bc16ce5c34bbd07ae5219698c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateIndex: 0
   forwardJumpSpeed: 3
   rotationSpeed: 10
   jumpHeight: 2
@@ -1663,6 +1667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9f4ba515d6eb74086e051325f3ebe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateIndex: 1
   speed: 0.04
   rotationSpeed: 5
   constrainX: 0
@@ -5058,7 +5063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerTag: Player_Main
-  continuousCheck: 0
+  continuousCheck: 1
   resetAfterActionDelay: 0
   conditions:
   - {fileID: 1048605261}
@@ -5080,10 +5085,34 @@ MonoBehaviour:
         m_CallState: 2
   entryAction:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1869496241}
+        m_TargetAssemblyTypeName: Mechanics.Player.PlayerV1, Game_PlayerAssembly
+        m_MethodName: set_CanJump
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   exitAction:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1869496241}
+        m_TargetAssemblyTypeName: Mechanics.Player.PlayerV1, Game_PlayerAssembly
+        m_MethodName: set_CanJump
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!65 &1048605260
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7556,7 +7585,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 1
-  controller: {fileID: 166622983}
+  controller: {fileID: 42019289}
 --- !u!1 &1889009116
 GameObject:
   m_ObjectHideFlags: 0

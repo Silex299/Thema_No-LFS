@@ -5,44 +5,48 @@ namespace Mechanics.Player.Controllers
 {
     public class WaterController : Controller
     {
+        #region Variables
+        
+        #region Movement Properties
+        
         [FoldoutGroup("Movement")] public float speed = 10;
         [FoldoutGroup("Movement")] public float rotationSpeed = 10;
-
+        
+        #endregion
+        
+        #region Water Properties
+        
         [FoldoutGroup("Water Property")] public bool constrainX;
-
-        [FoldoutGroup("Water Property"), ShowIf(nameof(constrainX))]
-        public float defaultX;
-
+        [FoldoutGroup("Water Property"), ShowIf(nameof(constrainX))] public float defaultX;
         [FoldoutGroup("Water Property")] public bool constrainZ;
+        [FoldoutGroup("Water Property"), ShowIf(nameof(constrainZ))] public float defaultZ;
+        [FoldoutGroup("Water Property"), Space(10)] public float surfaceLevel;
+        [FoldoutGroup("Water Property")] public float bottomLevel;
 
-        [FoldoutGroup("Water Property"), ShowIf(nameof(constrainZ))]
-        public float defaultZ;
+        #endregion
+        
+        #region Character Controller Properties
 
-        [FoldoutGroup("Water Property"), Space(10)]
-        public float surfaceLevel;
+        [TabGroup("Character Controller Properties", "Default")] public Vector3 defaultCenter;
+        [TabGroup("Character Controller Properties", "Default")] public float defaultHeight, defaultRadius;
+        [TabGroup("Character Controller Properties", "Forward")] public Vector3 forwardCenter;
+        [TabGroup("Character Controller Properties", "Forward")] public float forwardHeight, forwardRadius;
 
-        [FoldoutGroup("Water Property")]
-        public float bottomLevel;
-
-
-        [TabGroup("Character Controller Properties", "Default")]
-        public Vector3 defaultCenter;
-        [TabGroup("Character Controller Properties", "Default")]
-        public float defaultHeight, defaultRadius;
-
-        [TabGroup("Character Controller Properties", "Forward")]
-        public Vector3 forwardCenter;
-        [TabGroup("Character Controller Properties", "Forward")]
-        public float forwardHeight, forwardRadius;
-
-
+        #endregion
+        
+        #region State Properties
+        
         private bool _atDefaultHeight = true;
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int AtSurface = Animator.StringToHash("AtSurface");
         private static readonly int AtBottom = Animator.StringToHash("AtBottom");
 
+        #endregion
+        
+        #endregion
 
+        #region Debug
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
@@ -54,11 +58,12 @@ namespace Mechanics.Player.Controllers
             Gizmos.DrawSphere(transform.position + transform.up * bottomLevel, 0.1f);
         }
 
+        #endregion
 
+        #region Overriden Methods
         public override void ControllerEnter(PlayerV1 player)
         {
             player.InWater = true;
-            //CHANGE: animation here
         }
         public override void ControllerExit(PlayerV1 player)
         {
@@ -72,20 +77,28 @@ namespace Mechanics.Player.Controllers
         }
         public override void ControllerUpdate(PlayerV1 player)
         {
-            //get horizontal and vertical  input
+            #region Input
+            
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
+            #endregion
+         
             MovePlayer(player, horizontal, vertical);
+            Rotate(player, horizontal);
             AdjustCharacterController(player, horizontal, vertical);
             UpdateAnimator(player, horizontal, vertical);
-            Rotate(player, horizontal);
         }
         public override void ControllerLateUpdate(PlayerV1 player)
         {
+            //Constrains player position
             ConstrainPosition(player);
         }
-
+        
+        #endregion
+        
+        #region Custom Methods
+        
         private void MovePlayer(PlayerV1 playerV1, float horizontalInput, float verticalInput)
         {
             var moveDirection = playerV1.transform.up * verticalInput +
@@ -181,8 +194,7 @@ namespace Mechanics.Player.Controllers
             }
         }
         
+        #endregion
+        
     }
-
-    //Add Surface movements;
-    //Add bottom blocks
 }

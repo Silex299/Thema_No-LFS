@@ -1,11 +1,10 @@
+using System.Collections.Specialized;
 using UnityEngine;
 
 namespace Mechanics.Player.Interactable
 {
     public class ClimbableBase : MonoBehaviour
     {
-        public bool Engaged { get; set; }
-
         public virtual void MovePlayer(float input, Transform playerTransform)
         {
             
@@ -13,13 +12,22 @@ namespace Mechanics.Player.Interactable
 
         public virtual void EngageClimbable(PlayerV1 player)
         {
-            Engaged = true;
         }
 
 
         public virtual void ExitClimbable()
         {
-            Engaged = false;
+        }
+
+
+        public virtual Vector3 GetMovementVector(Transform playerTransform, float speed)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual Vector3 GetInitialConnectPoint(Transform playerTransform)
+        {
+            throw new System.NotImplementedException();
         }
         
     }
