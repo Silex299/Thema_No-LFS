@@ -1,5 +1,6 @@
 using System.Collections;
 using Mechanics.Player.Custom;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,27 +8,7 @@ namespace Mechanics.Player.Controllers
 {
     public class LadderController : Controller
     {
-        public float transitionTime;
-        public float movementSpeed;
-        public bool canJumpOff;
-
-        public float startLadder;
-        public float endLadder;
-        public Vector3 playerPositionOffset;
-
-
-        public UnityEvent exitEvent;
         
-
-        private float _playerAt;
-        private bool _engaged;
-
-        private Coroutine _engageCoroutine;
-        private Coroutine _jumpCoroutine;
-        private static readonly int Speed = Animator.StringToHash("Speed");
-        private static readonly int Jump = Animator.StringToHash("Jump");
-
-
         #region DEBUG
 
 #if UNITY_EDITOR
@@ -48,8 +29,33 @@ namespace Mechanics.Player.Controllers
 #endif
 
         #endregion
+        
+        #region Variables
+        
+        [FoldoutGroup("Player Movement")] public bool canJumpOff;
+        [FoldoutGroup("Player Movement")] public float transitionTime;
+        [FoldoutGroup("Player Movement")] public float movementSpeed;
+        [FoldoutGroup("Player Movement")] public Vector3 playerPositionOffset;
 
+        [FoldoutGroup("Ladder Property")] public float startLadder;
+        [FoldoutGroup("Ladder Property")] public float endLadder;
 
+        public UnityEvent exitEvent;
+
+        #region Static and private variables
+        
+        private float _playerAt;
+        private bool _engaged;
+
+        private Coroutine _engageCoroutine;
+        private Coroutine _jumpCoroutine;
+        private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Jump = Animator.StringToHash("Jump");
+
+        #endregion
+        
+        #endregion
+        
         #region Enter Ladder
 
         public override void ControllerEnter(PlayerV1 player)
@@ -93,8 +99,7 @@ namespace Mechanics.Player.Controllers
         }
 
         #endregion
-
-
+        
         #region Ladder Action
 
         public override void ControllerUpdate(PlayerV1 player)
@@ -164,7 +169,6 @@ namespace Mechanics.Player.Controllers
         }
 
         #endregion
-
 
         #region Ladder Exit
 
