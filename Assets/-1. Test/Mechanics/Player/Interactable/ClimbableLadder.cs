@@ -40,17 +40,6 @@ namespace Mechanics.Player.Interactable
 
         #region Overriden Methods
         
-
-        public override Vector3 GetMovementVector(Transform playerTransform, float speed)
-        {
-            _playerAt = Mathf.Clamp01(_playerAt + Input.GetAxis("Vertical") * speed);
-            var startPos = transform.position + transform.up * startLadder;
-            var targetPos = startPos + transform.up * (_playerAt * (endLadder - startLadder)) + offset;
-            return targetPos - playerTransform.position;
-        }
-
-        
-        
         public override Vector3 GetInitialConnectPoint(Transform playerTransform)
         {
             var startPos = transform.position + transform.up * startLadder;
@@ -61,6 +50,23 @@ namespace Mechanics.Player.Interactable
 
             return closestPoint;
         }   
+        public override Quaternion GetInitialRotation(Transform playerTransform)
+        {
+            return Quaternion.LookRotation(transform.forward, Vector3.up);
+        }
+        public override Quaternion GetMovementRotation(Transform playerTransform)
+        {
+            return Quaternion.LookRotation(transform.forward, Vector3.up);
+        }
+        public override Vector3 GetMovementVector(Transform playerTransform, float speed)
+        {
+            _playerAt = Mathf.Clamp01(_playerAt + Input.GetAxis("Vertical") * speed);
+            var startPos = transform.position + transform.up * startLadder;
+            var targetPos = startPos + transform.up * (_playerAt * (endLadder - startLadder)) + offset;
+            return targetPos - playerTransform.position;
+        }
+        
+        
         
         #endregion
 

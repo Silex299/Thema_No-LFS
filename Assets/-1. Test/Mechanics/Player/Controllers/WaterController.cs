@@ -63,6 +63,7 @@ namespace Mechanics.Player.Controllers
         #region Overriden Methods
         public override void ControllerEnter(PlayerV1 player)
         {
+            base.ControllerEnter(player);
             player.InWater = true;
         }
         public override void ControllerExit(PlayerV1 player)

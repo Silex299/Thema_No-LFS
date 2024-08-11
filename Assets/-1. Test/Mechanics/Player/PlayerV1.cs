@@ -124,7 +124,6 @@ namespace Mechanics.Player
 
         public void AddForce(Vector3 force)
         {
-            print("What the hell");
             _desiredMoveDirection = force;
         }
 
@@ -141,7 +140,7 @@ namespace Mechanics.Player
             characterController.Move((_desiredMoveDirection) * Time.deltaTime);
         }
 
-        private void GroundCheck()
+        public void GroundCheck()
         {
             IsGrounded = Physics.CheckSphere(transform.position, groundDistance, groundMask);
             IsInProximity = Physics.CheckSphere(transform.position, proximityThreshold, groundMask);
@@ -161,13 +160,12 @@ namespace Mechanics.Player
             animator.ResetTrigger(Jump);
             animator.SetBool(AltMovementInt, false);
             animator.SetFloat(Speed, 0);
-            animator.SetBool(IsGroundedInt, false);
-            animator.SetBool(IsInProximityInt, false);
         }
 
         public void ResetMovement()
         {
             _desiredMoveDirection = Vector3.zero;
+            ResetAnimator();
         }
     }
 }

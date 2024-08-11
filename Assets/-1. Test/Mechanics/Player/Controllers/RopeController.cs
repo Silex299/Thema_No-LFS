@@ -1,77 +1,81 @@
 using System.Collections;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace Mechanics.Player.Interactable
+namespace Mechanics.Player.Controllers
 {
-    public class ClimbableRope : ClimbableBase
+    public class RopeController : Controller
     {
         #region Rope Properties
 
-        [SerializeField, BoxGroup("Rope Properties")]
-        private int breakIndex;
-
-        [SerializeField, BoxGroup("Rope Properties")]
-        private Vector3 breakForce;
+        [BoxGroup("Rope Properties")] public int breakIndex;
+        [BoxGroup("Rope Properties")] public Vector3 breakForce;
+        [BoxGroup("Rope Properties")] public bool canJumpOff = true;
 
         #endregion
 
         #region Player Movement
 
-        [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
-        [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
-        [SerializeField, BoxGroup("Movement")] private float entryForce = 10;
-        [SerializeField, BoxGroup("Movement")] internal Vector3 exitForce = new Vector3(0, 5, 5);
+        [FoldoutGroup("Movement")] public Vector3 playerOffset;
+        [FoldoutGroup("Movement")] public float transitionTime = 0.2f;
+        [FoldoutGroup("Movement")] public float movementSpeed = 0.1f;
+
+        [FoldoutGroup("Entry and Swing")] public float entryForce = 10;
+        [FoldoutGroup("Movement")] public float swingInterval = 1f;
+        [FoldoutGroup("Entry and Swing")] public Vector3 swingForce;
+        [FoldoutGroup("Entry and Swing")] public Vector3 exitForce = new Vector3(0, 5, 5);
 
         #endregion
+
+        public UnityEvent exitEvent;
+
 
         #region Unexposed Variables
 
         [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
-        public Vector3 initialRotation;
-        private bool _connected;
+
+        private bool _engaged;
         private float _closestIndex;
         private float _closestDistance = 100f;
-        private float _lastAttachedTime;
-        private bool _canAttach = true;
 
+        private Coroutine _engageCoroutine;
+        private Coroutine _swingCoroutine;
+        private Coroutine _exitCoroutine;
 
-        public bool Connected
-        {
-            get => _connected;
-            set { _connected = value; }
-        }
+        private bool _broken;
+
+        private static readonly int Jump = Animator.StringToHash("Jump");
 
         #endregion
 
         #region Editor Specific
 
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private int ropeResolution;
 
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private float ropeLength;
 
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private float ropeThickness;
 
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private Material ropeMaterial;
 
 
         [Tooltip(
             "TIt determines how strongly the joint will try to maintain its position. A higher spring value will make the joint stiffer and more resistant to rotational movement")]
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private float spring;
 
         [Tooltip(
             "It determines how quickly the joint will come to rest after being moved. A higher damping value will make the joint slow down and stop more quickly after being moved")]
-        [SerializeField, BoxGroup("Editor - Rope Properties")]
+        [SerializeField, FoldoutGroup("Editor - Rope Properties")]
         private float damp;
 
-
-        private Vector3 _giz;
 
         [Button("Create Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
         public void CreateRopeSegments()
@@ -160,33 +164,8 @@ namespace Mechanics.Player.Interactable
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(_giz, 0.3f);
+            Gizmos.DrawWireSphere(GetDesiredPosition(), 0.3f);
         }
-
-        /// <summary>
-        /// Breaks the rope
-        /// </summary>
-        /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
-        [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
-        public void BreakRope(bool exitFall = true)
-        {
-            Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
-            Destroy(lineRenderers[breakIndex]);
-
-            ropeSegments[breakIndex + 1].AddForce(breakForce, ForceMode.Impulse);
-
-            _broken = true;
-            _canAttach = false;
-
-            /**
-            if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
-            {
-                StartCoroutine(PlayerMovementController.Instance.player.ropeMovement.BrokRope(this, exitFall));
-            }
-            **/
-        }
-
-        private bool _broken;
 
         #endregion
 
@@ -209,34 +188,40 @@ namespace Mechanics.Player.Interactable
 
         #endregion
 
+        #region Entry
 
-        public float swingInterval = 1f;
-        public float swingDelay;
-        public float swingTime;
-        
-        private Coroutine _swingCoroutine;
-        private bool _isSwinging;
-
-        public override Vector3 GetMovementVector(Transform playerTransform, float speed)
+        public override void ControllerEnter(PlayerV1 player)
         {
-            var input = Input.GetAxis("Vertical");
-
-            if (input > 0.2f)
-            {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, speed);
-            }
-            else if (input < -0.2f)
-            {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, speed);
-            }
-
-            _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution - 1);
-            
-            return GetDesiredPosition() - playerTransform.position;
+            base.ControllerEnter(player);
+            _engageCoroutine ??= StartCoroutine(EngagePlayer(player));
         }
 
-        public override Vector3 GetInitialConnectPoint(Transform playerTransform)
+        private IEnumerator EngagePlayer(PlayerV1 player)
         {
+            Vector3 targetPos = GetInitialConnectPoint(player.transform);
+            Quaternion targetRot = GetInitialRotation(player.transform);
+            Vector3 initPlayerPos = player.transform.position;
+            Quaternion initPlayerRot = player.transform.rotation;
+
+            float timeElapsed = 0;
+
+            while (timeElapsed < transitionTime)
+            {
+                player.transform.position = Vector3.Lerp(initPlayerPos, targetPos, timeElapsed / transitionTime);
+                player.transform.rotation = Quaternion.Slerp(initPlayerRot, targetRot, timeElapsed / transitionTime);
+                timeElapsed += Time.deltaTime;
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            _engaged = true;
+            _engageCoroutine = null;
+        }
+        
+        private Vector3 GetInitialConnectPoint(Transform playerTransform)
+        {
+            _closestDistance = Mathf.Infinity;
+
             for (int i = 1; i < ropeResolution; i++)
             {
                 var distance = Vector3.Distance(playerTransform.position, ropeSegments[i].transform.position);
@@ -260,8 +245,8 @@ namespace Mechanics.Player.Interactable
 
             return GetDesiredPosition();
         }
-
-        public override Quaternion GetInitialRotation(Transform playerTransform)
+        
+        private Quaternion GetInitialRotation(Transform playerTransform)
         {
             var segmentRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.eulerAngles;
 
@@ -269,37 +254,137 @@ namespace Mechanics.Player.Interactable
             return Quaternion.Euler(segmentRotation);
         }
 
-        public override Quaternion GetMovementRotation(Transform playerTransform)
-        {
-            var segmentRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.eulerAngles;
+        #endregion
 
-            segmentRotation.y = playerTransform.eulerAngles.y;
-            return Quaternion.Euler(segmentRotation);
+
+        #region Action
+
+        #region General Movement
+        public override void ControllerUpdate(PlayerV1 player)
+        {
+            if (!_engaged) return;
+            MovePlayer(player);
         }
 
-        public override void UpdateClimbable(PlayerV1 player)
+
+        private void MovePlayer(PlayerV1 player)
         {
-            if (Input.GetButton("Horizontal"))
+            #region Player Position and Rotation
+
+            Vector3 movementVector = GetMovementVector(player.transform, movementSpeed * Time.deltaTime);
+            player.characterController.Move(movementVector);
+            player.transform.rotation = GetMovementRotation(player.transform);
+
+            #endregion
+
+            #region player jump
+
+            //Jump off the climbable
+            if (Input.GetButtonDown("Jump") && canJumpOff)
             {
-                _swingCoroutine ??= StartCoroutine(SwingRope());
+                _exitCoroutine ??= StartCoroutine(JumpOff(player));
             }
+
+            #endregion
+        }
+        
+        private Vector3 GetMovementVector(Transform playerTransform, float speed)
+        {
+            var input = Input.GetAxis("Vertical");
+
+            if (input > 0.2f)
+            {
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, speed);
+            }
+            else if (input < -0.2f)
+            {
+                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, speed);
+            }
+
+            _closestIndex = Mathf.Clamp(_closestIndex, 0, ropeResolution - 1);
+
+            return GetDesiredPosition() - playerTransform.position + playerOffset;
+        }
+        private Quaternion GetMovementRotation(Transform playerTransform)
+        {
+            var segmentRotation = ropeSegments[(int)Mathf.Floor(_closestIndex)].transform.eulerAngles;
+
+            segmentRotation.y = playerTransform.eulerAngles.y;
+            return Quaternion.Euler(segmentRotation);
         }
 
+        
+        private IEnumerator JumpOff(PlayerV1 player)
+        {
+            _engaged = false;
+
+            #region Player Contstrains
+
+            player.GroundCheck();
+            player.AddForce(exitForce);
+
+            //Reset Rotation
+            player.transform.rotation = Quaternion.Euler(0, player.transform.rotation.eulerAngles.y, 0);
+
+            #endregion
+
+            #region Trigger Jump off
+
+            _engaged = false;
+            player.animator.SetTrigger(Jump);
+
+            #endregion
+
+            #region apply gravity untill grounded
+
+            while (!player.IsGrounded)
+            {
+                player.ApplyGravity();
+                yield return null;
+            }
+
+            #endregion
+
+            #region exit climbable action
+
+            exitEvent.Invoke();
+            _exitCoroutine = null;
+
+            #endregion
+        }
+        
+        #endregion
+        
         private IEnumerator SwingRope()
         {
-            
             var inputSign = Mathf.Sign(Input.GetAxis("Horizontal"));
             Rigidbody rb = ropeSegments[(int)Mathf.Floor(_closestIndex)];
 
-            _isSwinging = true;
-            
-            
-            rb.AddForce(swingForce * inputSign, 0 , 0, ForceMode.Acceleration);
-            
+            rb.AddForce(swingForce * inputSign, ForceMode.Acceleration);
+
             yield return new WaitForSeconds(swingInterval);
 
             _swingCoroutine = null;
         }
+
+        #endregion
+        
+        #region Other Methods
+        
+        /// <summary>
+        /// Breaks the rope
+        /// </summary>
+        /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
+        [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
+        public void BreakRope(bool exitFall = true)
+        {
+            Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
+            Destroy(lineRenderers[breakIndex]);
+
+            ropeSegments[breakIndex + 1].AddForce(breakForce, ForceMode.Impulse);
+            _broken = true;
+        }
+        
 
         /// <summary>
         /// Calculates the desired position of the player on the rope.
@@ -319,10 +404,10 @@ namespace Mechanics.Player.Interactable
                 float distance = _closestIndex - closestIndexFloor;
                 newPos -= direction * distance;
             }
-
-            // Debugging line, can be removed
-            _giz = newPos;
+            
             return newPos;
         }
+        
+        #endregion
     }
 }

@@ -31,7 +31,11 @@ namespace Mechanics.Player.Controllers
             player.ApplyGravity();
         }
 
-        
+        public override void ControllerExit(PlayerV1 player)
+        {
+            player.ResetMovement();
+        }
+
         #region Player Movement
 
         private float _horizontalInput;
@@ -90,9 +94,11 @@ namespace Mechanics.Player.Controllers
         }
         private void Rotate(Transform target, Vector3 lookAt)
         {
+            if(Mathf.Approximately(_horizontalInput, 0)) return;
+            
             Vector3 direction = (lookAt - target.position).normalized;
             direction.y = 0;
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
             target.rotation = Quaternion.Slerp(target.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
         private IEnumerator Jump(PlayerV1 player, float horizontalInput)
