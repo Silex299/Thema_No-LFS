@@ -7,7 +7,6 @@ namespace Mechanics.Npc
     public class NpcAfterDeathState : NpcStateBase
     {
 
-        private Vector3 _desiredPosition;
         private bool _isReachable;
         private float _speedMultiplier;
         private bool _isStopped;
@@ -23,7 +22,6 @@ namespace Mechanics.Npc
             
             npc = parentNpc;
             SetInitialAnimatorState();
-            _pathCoroutine ??= npc.StartCoroutine(GetPath());
         }
         
         public override void Update()
@@ -51,24 +49,16 @@ namespace Mechanics.Npc
         {
             npc.animator.SetInteger(StateIndex, -1);
         }
-        private IEnumerator GetPath()
-        {  
-            while (true)
-            {
-                _isReachable = npc.pathFinder.GetDesiredPosition(out _desiredPosition);
-                yield return new WaitForSeconds(npc.pathFindingInterval);
-            } // ReSharper disable once IteratorNeverReturns
-        }
         
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            Rotate(npc.transform, _desiredPosition,
+            Rotate(npc.transform, npc.pathFinder.target.position,
                 _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
         private void ProcessTarget()
         {
-            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, _desiredPosition);
+            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
             
             #region if target is reachable -> move to target or vice versa
             if (_isReachable)

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Mechanics.Types;
 using UnityEngine;
 
@@ -7,11 +8,13 @@ namespace Mechanics.Npc
     public class NpcChaseState : NpcStateBase
     {
         
-        private Vector3 _desiredPosition;
         private bool _isReachable;
         private bool _isStopped;
         private float _speedMultiplier = 1;
         
+        private List<int> _path;
+        
+        private int _currentPathIndex;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -54,34 +57,70 @@ namespace Mechanics.Npc
         {
             while (true)
             {
-                _isReachable = npc.pathFinder.GetDesiredPosition(out _desiredPosition);
+                _isReachable = npc.pathFinder.GetPath(npc.transform.position, out _path);
+                
+                if (_path!=null)
+                {
+                    #region Calculate closest point in path
+                    
+                    _currentPathIndex = 0;
+                    float minDistance = float.MaxValue;
+                    for (int i = 0; i < _path.Count; i++)
+                    {
+                        float distance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[i]));
+                        if (distance < minDistance)
+                        {
+                            minDistance = distance;
+                            _currentPathIndex = i;
+                        }
+                    }
+
+                    #endregion
+                }
+                
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
             
             // ReSharper disable once IteratorNeverReturns
         }
         
+        
+        
+        
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            Rotate(npc.transform, _desiredPosition,
+            
+            Vector3 desiredPos = (_path!=null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
+            Rotate(npc.transform, desiredPos,
                 _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
         private void ProcessTarget()
         {
-            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, _desiredPosition);
-
-            #region If rechable and under attack distance -> attack
+            float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
+            
+            #region If rechable-> process path distance, target under attack distance -> attack
             if (_isReachable)
             {
                 if (_isStopped) StartMoving();
-                Attack(plannerDistance < npc.attackDistance);
+
+                if (_path != null)
+                {
+                    float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]));
+                    if (plannerPathDistance < npc.stopDistance)
+                    {
+                        _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
+                    }
+                }
+                
+                Attack(targetPlannerDistance < npc.attackDistance);
+                
             }
             #endregion
             #region If not reachable -> Stop if distance is less than stop distance and vice vers
             else
             {
-                if (plannerDistance < npc.stopDistance)
+                if (targetPlannerDistance < npc.stopDistance)
                 {
                     if(!_isStopped) StopMoving();
                 }
