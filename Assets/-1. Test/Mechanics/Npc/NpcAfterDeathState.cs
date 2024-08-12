@@ -4,32 +4,34 @@ using UnityEngine;
 
 namespace Mechanics.Npc
 {
-    public class NpcChaseState : NpcStateBase
+    public class NpcAfterDeathState : NpcStateBase
     {
-        
+
         private Vector3 _desiredPosition;
         private bool _isReachable;
+        private float _speedMultiplier;
         private bool _isStopped;
-        private float _speedMultiplier = 1;
         
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Speed = Animator.StringToHash("Speed");
-        private static readonly int Attack1 = Animator.StringToHash("Attack");
 
         public override void Enter(Npc parentNpc)
         {
-            //if target is null change to serveillance
+            //TODO: if serveillance after death is true change to serveillance
+            
             npc = parentNpc;
             SetInitialAnimatorState();
             _pathCoroutine ??= npc.StartCoroutine(GetPath());
         }
+        
         public override void Update()
         {
             Move();
             ProcessTarget();
         }
+        
         public override void Exit()
         {
             if (_pathCoroutine != null)
@@ -37,28 +39,25 @@ namespace Mechanics.Npc
                 npc.StopCoroutine(_pathCoroutine);
                 _pathCoroutine = null;
             }
-            
             if(_speedCoroutine != null)
             {
                 npc.StopCoroutine(_speedCoroutine);
                 _speedCoroutine = null;
             }
+            
         }
-        
         
         private void SetInitialAnimatorState()
         {
-            npc.animator.SetInteger(StateIndex, 1);
+            npc.animator.SetInteger(StateIndex, -1);
         }
         private IEnumerator GetPath()
-        {
+        {  
             while (true)
             {
                 _isReachable = npc.pathFinder.GetDesiredPosition(out _desiredPosition);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
-            }
-            
-            // ReSharper disable once IteratorNeverReturns
+            } // ReSharper disable once IteratorNeverReturns
         }
         
         private void Move()
@@ -70,16 +69,9 @@ namespace Mechanics.Npc
         private void ProcessTarget()
         {
             float plannerDistance = GameVector.PlanarDistance(npc.transform.position, _desiredPosition);
-
-            #region If rechable and under attack distance -> attack
+            
+            #region if target is reachable -> move to target or vice versa
             if (_isReachable)
-            {
-                if (_isStopped) StartMoving();
-                Attack(plannerDistance < npc.attackDistance);
-            }
-            #endregion
-            #region If not reachable -> Stop if distance is less than stop distance and vice vers
-            else
             {
                 if (plannerDistance < npc.stopDistance)
                 {
@@ -87,32 +79,32 @@ namespace Mechanics.Npc
                 }
                 else
                 {
-                    if (_isStopped) StartMoving();
+                    if(_isStopped) StartMoving();
                 }
             }
             #endregion
-            
-        }
-        private void Attack(bool attack)
-        {
-            npc.animator.SetBool(Attack1, attack);
-            if (attack) npc.onAttack.Invoke();
+            #region if not reachable -> stop moving
+            else
+            { 
+                if(!_isStopped) StopMoving();
+            }
+            #endregion
         }
         private void StopMoving()
         {
-            //if speed coroutine is not null stop and start new coroutine
             if (_speedCoroutine != null)
             {
                 npc.StopCoroutine(_speedCoroutine);
+                _speedCoroutine = null;
             }
             _speedCoroutine = npc.StartCoroutine(ChangeSpeed(0));
         }
         private void StartMoving()
         {
-            //if speed coroutine is not null stop and start new coroutine
             if (_speedCoroutine != null)
             {
                 npc.StopCoroutine(_speedCoroutine);
+                _speedCoroutine = null;
             }
             _speedCoroutine = npc.StartCoroutine(ChangeSpeed(1));
         }
@@ -130,5 +122,6 @@ namespace Mechanics.Npc
             }
             _speedCoroutine = null;
         }
+        
     }
 }

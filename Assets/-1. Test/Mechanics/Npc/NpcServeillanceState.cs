@@ -7,7 +7,6 @@ namespace Mechanics.Npc
     public class NpcServeillanceState : NpcStateBase
     {
 
-        private Npc _npc;
         private float _speedMultiplier = 1;
         private int _currentWaypointIndex;
         
@@ -16,9 +15,9 @@ namespace Mechanics.Npc
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
 
-        public override void Enter(Npc npc)
+        public override void Enter(Npc parentNpc)
         {
-            _npc = npc;
+            npc = parentNpc;
             SetInitialAnimatorState();
             GetInitialIndex();
         }
@@ -28,24 +27,25 @@ namespace Mechanics.Npc
             Move();
             if (CheckForWaypointThreshold())
             {
-                _changeWaypointCoroutine ??= _npc.StartCoroutine(ChangeWaypoint());
+                _changeWaypointCoroutine ??= npc.StartCoroutine(ChangeWaypoint());
             } //Change waypoint
         }
         
         public override void Exit()
         {
-            if (_changeWaypointCoroutine == null) return;
-            
-            _npc.StopCoroutine(_changeWaypointCoroutine);
-            _changeWaypointCoroutine = null;
+            if (_changeWaypointCoroutine != null)
+            {
+                npc.StopCoroutine(_changeWaypointCoroutine);
+                _changeWaypointCoroutine = null;
+            }
         }
         
         
         private void Move()
         {
-            _npc.animator.SetFloat(Speed, _speedMultiplier);
-            Rotate(_npc.transform, _npc.serveillancePoints[_currentWaypointIndex], 
-                _speedMultiplier * _npc.rotationSpeed * Time.deltaTime);
+            npc.animator.SetFloat(Speed, _speedMultiplier);
+            Rotate(npc.transform, npc.serveillancePoints[_currentWaypointIndex], 
+                _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
         /// <summary>
         /// Checks if the npc has reached the waypoint
@@ -53,7 +53,7 @@ namespace Mechanics.Npc
         /// <returns> if waypoint can be changed </returns>
         private bool CheckForWaypointThreshold()
         {
-            if (GameVector.PlanarDistance(_npc.transform.position, _npc.serveillancePoints[_currentWaypointIndex]) < _npc.stopDistance)
+            if (GameVector.PlanarDistance(npc.transform.position, npc.serveillancePoints[_currentWaypointIndex]) < npc.stopDistance)
             {
                 return true;
             }
@@ -63,39 +63,38 @@ namespace Mechanics.Npc
         {
             //decelerate 
             float timeElapsed = 0;
-            while (timeElapsed < _npc.accelerationTime)
+            while (timeElapsed < npc.accelerationTime)
             {
                 timeElapsed += Time.deltaTime;
-                _speedMultiplier = Mathf.Lerp(1, 0, timeElapsed / _npc.accelerationTime);
+                _speedMultiplier = Mathf.Lerp(1, 0, timeElapsed / npc.accelerationTime);
                 yield return null;
             }
             
             //wait 
-            yield return new WaitForSeconds(_npc.serveillanceWaitTime);
-            _currentWaypointIndex = (_currentWaypointIndex + 1) % _npc.serveillancePoints.Count;
+            yield return new WaitForSeconds(npc.serveillanceWaitTime);
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % npc.serveillancePoints.Count;
             
             //accelerate
             timeElapsed = 0;
-            while (timeElapsed < _npc.accelerationTime)
+            while (timeElapsed < npc.accelerationTime)
             {
                 timeElapsed += Time.deltaTime;
-                _speedMultiplier = Mathf.Lerp(0, 1, timeElapsed / _npc.accelerationTime);
+                _speedMultiplier = Mathf.Lerp(0, 1, timeElapsed / npc.accelerationTime);
                 yield return null;
             }
             _changeWaypointCoroutine = null;
         }
-
         private void SetInitialAnimatorState()
         {
-            _npc.animator.SetInteger(StateIndex, 0);
+            npc.animator.SetInteger(StateIndex, 0);
         }
         private void GetInitialIndex()
         {
             float minDistance = Mathf.Infinity;
             
-            for (int i = 0; i < _npc.serveillancePoints.Count; i++)
+            for (int i = 0; i < npc.serveillancePoints.Count; i++)
             {
-                float distance = GameVector.PlanarDistance(_npc.transform.position, _npc.serveillancePoints[i]);
+                float distance = GameVector.PlanarDistance(npc.transform.position, npc.serveillancePoints[i]);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
