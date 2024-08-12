@@ -1,46 +1,11 @@
 using System;
 using System.Collections;
-using JetBrains.Annotations;
+using Mechanics.Types;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Player.Custom
+namespace Mechanics.Player.Types
 {
-    public static class ThemaVector
-    {
-        public static Vector3 GetClosestPointToLine(Vector3 from, Vector3 to, Vector3 point)
-        {
-            Vector3 line = to - from;
-            Vector3 pointDirection = point - from;
-
-            float t = Vector3.Dot(pointDirection, line) / Vector3.Dot(line, line);
-
-            t = float.IsNaN(t) ? 0 : Mathf.Clamp01(t);
-
-            return from + line * t;
-        }
-
-        public static Vector3 GetClosestPointToLine(Vector3 line, Vector3 point)
-        {
-            Vector3 lineDirection = line.normalized;
-            float t = Vector3.Dot(point, lineDirection);
-            return t * lineDirection;
-        }
-    }
-
-    [Serializable, CanBeNull]
-    public class TimedAction
-    {
-        public float time;
-        public Action action;
-
-        public TimedAction(float time, Action action)
-        {
-            this.time = time;
-            this.action = action;
-        }
-    }
-
     [Serializable]
     public class AdvancedCurvedAnimation
     {
@@ -119,7 +84,7 @@ namespace Mechanics.Player.Custom
                 #region GetclosedPointToLine
 
                 //Get the closest position to the source
-                Vector3 desiredTargetPos = ThemaVector.GetClosestPointToLine(
+                Vector3 desiredTargetPos = GameTypes.GetClosestPointToLine(
                     sourceTransform.position - (sourceTransform.right * actionWidth),
                     to: sourceTransform.position + (sourceTransform.right * actionWidth),
                     point: player.transform.position);

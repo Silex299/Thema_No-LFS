@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Mechanics.Actions.Conditions;
-using Mechanics.Player.Custom;
+using Mechanics.Player.Types;
+using Mechanics.Types;
 using UnityEngine;
 using UnityEngine.Events;
 

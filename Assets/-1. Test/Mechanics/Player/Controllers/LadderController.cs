@@ -1,5 +1,5 @@
 using System.Collections;
-using Mechanics.Player.Custom;
+using Mechanics.Types;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -90,7 +90,7 @@ namespace Mechanics.Player.Controllers
         {
             var startPos = transform.position + transform.up * startLadder;
             var endPos = transform.position + transform.up * endLadder;
-            var closestPoint = ThemaVector.GetClosestPointToLine(startPos, endPos, point);
+            var closestPoint = GameTypes.GetClosestPointToLine(startPos, endPos, point);
 
             _playerAt = (closestPoint - startPos).magnitude / (endPos - startPos).magnitude;
 
