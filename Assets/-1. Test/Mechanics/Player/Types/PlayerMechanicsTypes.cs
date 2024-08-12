@@ -84,7 +84,7 @@ namespace Mechanics.Player.Types
                 #region GetclosedPointToLine
 
                 //Get the closest position to the source
-                Vector3 desiredTargetPos = GameTypes.GetClosestPointToLine(
+                Vector3 desiredTargetPos = GameVector.GetClosestPointToLine(
                     sourceTransform.position - (sourceTransform.right * actionWidth),
                     to: sourceTransform.position + (sourceTransform.right * actionWidth),
                     point: player.transform.position);

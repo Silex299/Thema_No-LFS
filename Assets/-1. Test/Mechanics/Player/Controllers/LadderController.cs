@@ -90,7 +90,7 @@ namespace Mechanics.Player.Controllers
         {
             var startPos = transform.position + transform.up * startLadder;
             var endPos = transform.position + transform.up * endLadder;
-            var closestPoint = GameTypes.GetClosestPointToLine(startPos, endPos, point);
+            var closestPoint = GameVector.GetClosestPointToLine(startPos, endPos, point);
 
             _playerAt = (closestPoint - startPos).magnitude / (endPos - startPos).magnitude;
 
