@@ -15,8 +15,8 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Base Class")] protected PlayerInteractionType interactionType;
         [SerializeField, BoxGroup("Base Class")] protected string keyString;
 
-        protected bool _playerIsInTrigger;
-        protected bool _isInteracting;
+        protected bool playerIsInTrigger;
+        protected bool isInteracting;
 
 
 
@@ -26,7 +26,7 @@ namespace Player_Scripts.Interactables
 
             if (other.CompareTag("Player_Main"))
             {
-                _playerIsInTrigger = true;
+                playerIsInTrigger = true;
                 PlayerMovementController.Instance.SetIntractable(this);
             }
         }
@@ -52,7 +52,7 @@ namespace Player_Scripts.Interactables
         protected virtual IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.2f);
-            _playerIsInTrigger = false;
+            playerIsInTrigger = false;
 
             if(PlayerMovementController.Instance.player.interactable == this)
             {
@@ -64,8 +64,8 @@ namespace Player_Scripts.Interactables
         {
             if (other.CompareTag("Player_Main"))
             {
-                _playerIsInTrigger = false;
-                _isInteracting = false;
+                playerIsInTrigger = false;
+                isInteracting = false;
                 PlayerMovementController.Instance.SetIntractable(null);
             }
         }
