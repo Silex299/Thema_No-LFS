@@ -48,11 +48,10 @@ Material:
     - _FadeRangeStart: 10
     - _NormalThresholdMax: 2
     - _NormalThresholdMin: 0
-    - _Thickness: 1
+    - _Thickness: 0
     m_Colors:
-    - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130791d3e20646d2b6d81688877b0909, type: 3}
   m_Name: '[FlatKit] Example Outline Settings'
   m_EditorClassIdentifier: 
-  edgeColor: {r: 1, g: 1, b: 1, a: 1}
-  thickness: 1
+  edgeColor: {r: 0, g: 0, b: 0, a: 1}
+  thickness: 0
   resolutionInvariant: 0
   fadeWithDistance: 0
   fadeRangeStart: 10
@@ -83,4 +82,4 @@ MonoBehaviour:
   renderEvent: 500
   outlineOnly: 0
   applyInSceneView: 1
-  effectMaterial: {fileID: -3130267085085746722}
+  effectMaterial: {fileID: 0}
