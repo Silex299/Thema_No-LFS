@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130791d3e20646d2b6d81688877b0909, type: 3}
   m_Name: Valley-OutlineSettings [Disabled by Default]
   m_EditorClassIdentifier: 
-  edgeColor: {r: 0.25293696, g: 0.25528237, b: 0.26415092, a: 1}
+  edgeColor: {r: 0, g: 0, b: 0, a: 1}
   thickness: 1
   resolutionInvariant: 0
-  fadeWithDistance: 1
+  fadeWithDistance: 0
   fadeRangeStart: 50
   fadeRangeEnd: 250
   useDepth: 1
   minDepthThreshold: 0.1
   maxDepthThreshold: 0.7
-  useNormals: 1
+  useNormals: 0
   minNormalsThreshold: 0.1
   maxNormalsThreshold: 0.25
   useColor: 1
@@ -44,10 +44,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - OUTLINE_FADE_OUT
   - OUTLINE_USE_COLOR
   - OUTLINE_USE_DEPTH
-  - OUTLINE_USE_NORMALS
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -83,5 +81,5 @@ Material:
     - _NormalThresholdMin: 0.1
     - _Thickness: 1
     m_Colors:
-    - _EdgeColor: {r: 0.25293696, g: 0.25528237, b: 0.26415092, a: 1}
+    - _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
