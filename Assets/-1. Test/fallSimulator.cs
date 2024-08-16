@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 public class FallSimulator : MonoBehaviour
 {
+    public bool isEnable = true;
+    
     public Rigidbody rb;
 
     [BoxGroup("New Force Settings")] public float time;
@@ -22,7 +25,7 @@ public class FallSimulator : MonoBehaviour
     [FoldoutGroup("Transforms")]public List<Quaternion> rotations = new List<Quaternion>();
     private void OnDrawGizmos()
     {
-        
+        if(!isEnable) return;
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.TransformPoint(forcePos), 1f);
         
@@ -42,6 +45,14 @@ public class FallSimulator : MonoBehaviour
                 Gizmos.DrawLine(positions[i - 1], positions[i]);
             }
         }
+        
+        SetTransform();
+    }
+    
+    EditorApplication.CallbackFunction OnEditorUpdate()
+    {
+        SetTransform();
+        return null;
     }
 
     [Button]
@@ -93,6 +104,7 @@ public class FallSimulator : MonoBehaviour
 
     public void SetTransform()
     {
+        if(!isEnable) return;
         if(positions.Count == 0) return;
         
         int index = Mathf.FloorToInt(setTransform * positions.Count);
