@@ -72,6 +72,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   material: {fileID: 2100000, guid: b8344c6d094fe3f40923783efb05ff84, type: 2}
+--- !u!114 &-58752441536713116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d26bf6dbc18cd4bbc2dca1507cd101, type: 3}
+  m_Name: CustomPostProcessRenderer
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  postProcessMaterial: {fileID: 2100000, guid: 69e989468b4ec764cabefe7e4c57447b, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +149,21 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &4201635614782150413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15258066bed28f4a85e83fc5f3ad730, type: 3}
+  m_Name: GlitchRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {glitchMaterial: {fileID: 2100000, guid: 69e989468b4ec764cabefe7e4c57447b,
+      type: 2}}
 --- !u!114 &4687515206262071697
 MonoBehaviour:
   m_ObjectHideFlags: 0
