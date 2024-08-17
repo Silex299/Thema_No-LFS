@@ -6,33 +6,40 @@ using UnityEngine;
 
 public class FallSimulator : MonoBehaviour
 {
-    public bool isEnable = true;
+    [FoldoutGroup("Baked Info")] public bool play;
+    [FoldoutGroup("Baked Info")] public List<Vector3> positions = new List<Vector3>();
+    [FoldoutGroup("Baked Info")] public List<Quaternion> rotations = new List<Quaternion>();
+
+    [OnValueChanged(nameof(SetTransform)), Range(0, 1), FoldoutGroup("Params")]
+    public float setTransform;
+
+    #region Editor
+
+#if UNITY_EDITOR
     
-    public Rigidbody rb;
+    [FoldoutGroup("Editor")] public Rigidbody rb;
 
-    [BoxGroup("New Force Settings")] public float time;
-    [BoxGroup("New Force Settings")] public float count;
+    [FoldoutGroup("Editor")] public float time;
+    [FoldoutGroup("Editor")] public float count;
 
-    public Vector3 forcePos;
-    public Vector3 forceDir;
-    public ForceMode forceMode;
+    [FoldoutGroup("Editor")] public Vector3 forcePos;
+    [FoldoutGroup("Editor")] public float forceMultiplier;
+    [FoldoutGroup("Editor")] public Vector3 forceDir;
+    [FoldoutGroup("Editor")] public ForceMode forceMode;
 
 
-    [OnValueChanged(nameof(SetTransform)), Range(0,1)]public float setTransform;
-    [ProgressBar(0, 1)] public float simulationProgress;
-    
-    [FoldoutGroup("Transforms")]public List<Vector3> positions = new List<Vector3>();
-    [FoldoutGroup("Transforms")]public List<Quaternion> rotations = new List<Quaternion>();
+    [FoldoutGroup("Editor"), ProgressBar(0, 1)]
+    public float simulationProgress;
+
     private void OnDrawGizmos()
     {
-        if(!isEnable) return;
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.TransformPoint(forcePos), 1f);
-        
-        
+
+
         Gizmos.color = Color.yellow;
         // Draw force direction ray
-        Gizmos.DrawRay(transform.TransformPoint(forcePos), (forceDir.x  * transform.right) + (forceDir.y * transform.up) + (forceDir.z  * transform.forward));
+        Gizmos.DrawRay(transform.TransformPoint(forcePos), (forceDir.x * transform.right) + (forceDir.y * transform.up) + (forceDir.z * transform.forward));
 
         Gizmos.color = Color.white;
 
@@ -45,10 +52,10 @@ public class FallSimulator : MonoBehaviour
                 Gizmos.DrawLine(positions[i - 1], positions[i]);
             }
         }
-        
+
         SetTransform();
     }
-    
+
     EditorApplication.CallbackFunction OnEditorUpdate()
     {
         SetTransform();
@@ -63,7 +70,7 @@ public class FallSimulator : MonoBehaviour
     }
 
     [Button]
-    public void SimulatePhysics()
+    public void BakePhysic()
     {
         StartCoroutine(Simulate());
     }
@@ -72,6 +79,8 @@ public class FallSimulator : MonoBehaviour
     {
         float timeElapsed = 0;
         float deltaTime = time / count;
+        bool initEnabled = play;
+        play = false;
 
         Vector3 initialPos = transform.position;
         Quaternion initialRot = transform.rotation;
@@ -79,9 +88,13 @@ public class FallSimulator : MonoBehaviour
         Physics.autoSimulation = false;
 
         // Apply the initial force
-        Vector3 lastForce = transform.TransformDirection(forceDir);
+        Vector3 lastForce = transform.TransformDirection(forceDir) * forceMultiplier;
+
+        positions.Add(rb.position);
+        rotations.Add(rb.rotation);
+
         rb.AddForceAtPosition(lastForce, transform.TransformPoint(forcePos), forceMode);
-        
+
         while (timeElapsed <= time)
         {
             Physics.Simulate(deltaTime);
@@ -100,16 +113,45 @@ public class FallSimulator : MonoBehaviour
         // Reset position and rotation
         transform.position = initialPos;
         transform.rotation = initialRot;
+
+
+        play = initEnabled;
+    }
+
+    [Button]
+    public void StopSimulation()
+    {
+        StopAllCoroutines();
     }
 
     public void SetTransform()
     {
-        if(!isEnable) return;
-        if(positions.Count == 0) return;
-        
+        if (!play) return;
+        if (positions.Count == 0) return;
+
         int index = Mathf.FloorToInt(setTransform * positions.Count);
-        transform.position = positions[index];
-        transform.rotation = rotations[index];
+        if (index < positions.Count)
+        {
+            transform.position = positions[index];
+            transform.rotation = rotations[index];
+        }
     }
-    
+
+#endif
+
+    #endregion
+
+    private void Update()
+    {
+        if (play)
+        {
+            if (positions.Count == 0) return;
+            int index = Mathf.FloorToInt(setTransform * positions.Count);
+            if (index < positions.Count)
+            {
+                transform.position = positions[index];
+                transform.rotation = rotations[index];
+            }
+        }
+    }
 }
