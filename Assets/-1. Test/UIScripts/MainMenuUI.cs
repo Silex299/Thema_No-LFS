@@ -29,11 +29,9 @@ namespace UIScripts
         #region Flags
 
         public bool CanInteract { get; set; } = true;
-        public bool CanInteractMainMenu { get; set; } = true;
 
         #endregion
-
-
+        
         private void Start()
         {
             menuState = MenuState.Main;
@@ -246,6 +244,7 @@ namespace UIScripts
         }
         private IEnumerator ChapterMenuUpdate()
         { 
+            InitSetup();
             yield return new WaitForSeconds(1f);
             while (menuState == MenuState.Chapters)
             {
@@ -265,7 +264,13 @@ namespace UIScripts
 
                 if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
                 {
-                    //Trigger
+                    if (!chapters[selectChapterIndex].locked)
+                    {
+                        chapters[selectChapterIndex].onClick.Invoke(selectedEpisodeIndex, 
+                            episodes[selectedEpisodeIndex].chapterData[selectChapterIndex].checkpoint);
+                    }
+                    
+                    //LOAD ANIMATION HERE
                 }
 
                 #endregion
@@ -279,6 +284,7 @@ namespace UIScripts
                 #endregion
                 yield return null;
             }
+            
             #region exit
             if (menuState == MenuState.Episodes)
             {
@@ -289,7 +295,30 @@ namespace UIScripts
             #endregion
             
             #region Methods
-            
+
+            void InitSetup()
+            {
+                //Set up the chapters;
+                int chapterDataCount = episodes[selectedEpisodeIndex].chapterData.Length;
+                for(int i = 0; i< chapters.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        chapters[i].Selected = true;
+                        selectChapterIndex = 0;
+                    }
+                
+                    if(i<chapterDataCount)
+                    {
+                        chapters[i].chapterName.text = episodes[selectedEpisodeIndex].chapterData[i].name;
+                        chapters[i].Locked = false;
+                    }
+                    else
+                    {   
+                        chapters[i].Locked = true;
+                    }
+                }
+            }
             void NextChapter()
             {
                 if (_lastCoroutine != null) return;
@@ -480,8 +509,8 @@ namespace UIScripts
 
             public bool locked;
             public bool selected;
-            public ChapterData[] chapters;
-
+            public ChapterData[] chapterData;
+            
             public Image selectionImage;
             public GameObject lockedImage;
             public bool Locked
@@ -550,7 +579,7 @@ namespace UIScripts
                         locked = lockedImage.activeInHierarchy;
                     }
 
-                    if (trans.name.Contains("Text"))
+                    if (trans.name.Contains("Title"))
                     {
                         chapterName = trans.GetComponent<TextMeshProUGUI>();
                     }
@@ -568,6 +597,8 @@ namespace UIScripts
             
             public TextMeshProUGUI chapterName;
 
+            public UnityEvent<int, int> onClick;
+            
             public bool Locked
             {
                 get => locked;
@@ -609,12 +640,12 @@ namespace UIScripts
             
         }
         
-        
+        [Serializable]
         public struct ChapterData
         {
             //ADD IMAGES TOO
             public string name;
-            public string index;
+            public int checkpoint;
         }
         public enum MenuState
         {
