@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UIScripts
@@ -10,8 +11,10 @@ namespace UIScripts
     public class MainMenuUI : MonoBehaviour
     {
         [BoxGroup("References")] public Animator animator;
-        
-        [FoldoutGroup("Main Menu")]public MenuButton[] menuButtons;
+
+        [FoldoutGroup("Main Menu")] public MenuButton[] menuButtons;
+
+        [FoldoutGroup("Episodes")] public Episode[] episodes;
 
         [FoldoutGroup("Misc")] public int selectedButtonIndex;
 
@@ -23,6 +26,44 @@ namespace UIScripts
         public bool CanInteractMainMenu { get; set; } = true;
 
         #endregion
+
+
+        private void Update()
+        {
+            if (!CanInteract) return;
+
+            if (CanInteractMainMenu)
+            {
+                #region Scroll through the menu buttons
+
+                if (Input.GetAxis("Vertical") > 0)
+                {
+                    PrevMenuButton();
+                }
+                else if (Input.GetAxis("Vertical") < 0)
+                {
+                    NextMenuButton();
+                }
+
+                #endregion
+
+                #region Triggering menu buttons
+
+                if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
+                {
+                    if (!menuButtons[selectedButtonIndex].Triggered)
+                    {
+                        menuButtons[selectedButtonIndex].onClick.Invoke();
+                        menuButtons[selectedButtonIndex].Triggered = true;
+                    }
+                }
+
+                #endregion
+            }
+        }
+
+
+        #region Main Menu Actions
 
         private void PrevMenuButton()
         {
@@ -63,40 +104,6 @@ namespace UIScripts
             }
         }
 
-        private void Update()
-        {
-            if (!CanInteract) return;
-            
-            if (CanInteractMainMenu)
-            {
-                #region Scroll through the menu buttons
-
-                if (Input.GetAxis("Vertical") > 0)
-                {
-                    PrevMenuButton();
-                }
-                else if (Input.GetAxis("Vertical") < 0)
-                {
-                    NextMenuButton();
-                }
-
-                #endregion
-                #region Triggering menu buttons
-
-                if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
-                {
-                    if (!menuButtons[selectedButtonIndex].Triggered)
-                    {
-                        menuButtons[selectedButtonIndex].onClick.Invoke();
-                        menuButtons[selectedButtonIndex].Triggered = true;
-                    }
-                }
-
-                #endregion
-            }
-        }
-
-
         private IEnumerator ChangeMenuButton(int lastIndex, int nextIndex)
         {
             yield return menuButtons[lastIndex].SelectButton(false, 0.15f);
@@ -108,6 +115,7 @@ namespace UIScripts
             _lastCoroutine = null;
         }
 
+        #endregion
 
         [System.Serializable]
         public class MenuButton
@@ -186,6 +194,67 @@ namespace UIScripts
                 }
 
                 Selected = select;
+            }
+        }
+
+        [System.Serializable]
+        public class Episode
+        {
+            #region editor
+
+#if UNITY_EDITOR
+            public GameObject episode;
+            [Button]
+            public void GetEpisode()
+            {
+                var images = episode.GetComponentsInChildren<Image>(true);
+                foreach (var image in images)
+                {
+                    if (image.name.Contains("Gradient"))
+                    {
+                        selectionImage = image;
+                        selected = (selectionImage.color.a > 0);
+                    }
+
+                    if (image.name.Contains("Locked"))
+                    {
+                        lockedImage = image.gameObject;
+                        locked = lockedImage.activeInHierarchy;
+                    }
+
+                }
+            }
+#endif
+
+            #endregion
+
+            public bool locked;
+            public bool selected;
+
+            public Image selectionImage;
+            public GameObject lockedImage;
+            public UnityEvent onClick;
+
+            public bool Locked
+            {
+                get => locked;
+                set
+                {
+                    locked = value;
+                    lockedImage.SetActive(locked);
+                }
+            }
+
+            public bool Selected
+            {
+                get => selected;
+                set
+                {
+                    selected = value;
+                    var color = selectionImage.color;
+                    color.a = selected ? 0.25f : 0;
+                    selectionImage.color = color;
+                }
             }
         }
     }
