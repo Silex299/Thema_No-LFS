@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UIScripts
@@ -11,14 +11,20 @@ namespace UIScripts
     public class MainMenuUI : MonoBehaviour
     {
         [BoxGroup("References")] public Animator animator;
-
         [FoldoutGroup("Main Menu")] public MenuButton[] menuButtons;
-
         [FoldoutGroup("Episodes")] public Episode[] episodes;
+        [FoldoutGroup("Chapter Placeholders")] public Chapter[] chapters;
 
         [FoldoutGroup("Misc")] public int selectedButtonIndex;
-
+        [FoldoutGroup("Misc")] public int selectedEpisodeIndex;
+        [FoldoutGroup("Misc")] public int selectChapterIndex;
+        [FoldoutGroup("Misc")] public MenuState menuState;
+        
+        
         private Coroutine _lastCoroutine;
+        private Coroutine _mainMenuUpdateCoroutine;
+        private Coroutine _episodeMenuUpdateCoroutine;
+        private Coroutine _chapterMenuUpdateCoroutine;
 
         #region Flags
 
@@ -28,12 +34,22 @@ namespace UIScripts
         #endregion
 
 
-        private void Update()
+        private void Start()
         {
-            if (!CanInteract) return;
-
-            if (CanInteractMainMenu)
+            menuState = MenuState.Main;
+            _mainMenuUpdateCoroutine ??= StartCoroutine(MainMenuUpdate());
+        }
+        
+        private IEnumerator MainMenuUpdate(bool start = false)
+        {
+            yield return new WaitForSeconds(1f);
+            while (menuState == MenuState.Main)
             {
+                if (!CanInteract)
+                { 
+                    break;
+                }
+                
                 #region Scroll through the menu buttons
 
                 if (Input.GetAxis("Vertical") > 0)
@@ -46,7 +62,6 @@ namespace UIScripts
                 }
 
                 #endregion
-
                 #region Triggering menu buttons
 
                 if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
@@ -59,65 +74,302 @@ namespace UIScripts
                 }
 
                 #endregion
+                
+                yield return null;
             }
-        }
-
-
-        #region Main Menu Actions
-
-        private void PrevMenuButton()
-        {
-            if (_lastCoroutine != null) return;
-
-            int desiredIndex = (selectedButtonIndex - 1) % menuButtons.Length;
-            desiredIndex = desiredIndex < 0 ? menuButtons.Length - 1 : desiredIndex;
-
-            while (desiredIndex != selectedButtonIndex)
+            #region Exit Main Menu
+            
+            if (menuState == MenuState.Episodes)
             {
-                if (menuButtons[desiredIndex].Enabled)
-                {
-                    _lastCoroutine = StartCoroutine(ChangeMenuButton(selectedButtonIndex, desiredIndex));
-                    selectedButtonIndex = desiredIndex;
-                    break;
-                }
+                animator.Play("Open Episode Menu");
+            }
+            foreach (var button in menuButtons)
+            {
+                button.Triggered = false;
+            }
+            _mainMenuUpdateCoroutine = null;
 
-                desiredIndex = (desiredIndex - 1) % menuButtons.Length;
+            #endregion
+            
+            #region Main Menu Methods
+
+            void PrevMenuButton()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectedButtonIndex - 1) % menuButtons.Length;
                 desiredIndex = desiredIndex < 0 ? menuButtons.Length - 1 : desiredIndex;
-            }
-        }
 
-        private void NextMenuButton()
-        {
-            if (_lastCoroutine != null) return;
-
-            int desiredIndex = (selectedButtonIndex + 1) % menuButtons.Length;
-            while (desiredIndex != selectedButtonIndex)
-            {
-                if (menuButtons[desiredIndex].Enabled)
+                while (desiredIndex != selectedButtonIndex)
                 {
-                    _lastCoroutine = StartCoroutine(ChangeMenuButton(selectedButtonIndex, desiredIndex));
-                    selectedButtonIndex = desiredIndex;
-                    break;
+                    if (menuButtons[desiredIndex].Enabled)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeMenuButton(selectedButtonIndex, desiredIndex));
+                        selectedButtonIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex - 1) % menuButtons.Length;
+                    desiredIndex = desiredIndex < 0 ? menuButtons.Length - 1 : desiredIndex;
+                }
+            }
+            void NextMenuButton()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectedButtonIndex + 1) % menuButtons.Length;
+                while (desiredIndex != selectedButtonIndex)
+                {
+                    if (menuButtons[desiredIndex].Enabled)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeMenuButton(selectedButtonIndex, desiredIndex));
+                        selectedButtonIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex + 1) % menuButtons.Length;
+                }
+            }
+            IEnumerator ChangeMenuButton(int lastIndex, int nextIndex)
+            {
+                yield return menuButtons[lastIndex].SelectButton(false, 0.15f);
+
+                yield return menuButtons[nextIndex].SelectButton(true, 0.15f);
+
+                yield return new WaitForSecondsRealtime(0.3f);
+
+                _lastCoroutine = null;
+            }
+
+            #endregion
+            
+        }
+        private IEnumerator EpisodeMenuUpdate()
+        {
+            yield return new WaitForSeconds(1f);
+            while (menuState == MenuState.Episodes)
+            {
+                #region Scroll through the episodes
+
+                if (Input.GetAxis("Horizontal") > 0)
+                {
+                    NextEpisode();
+                }
+                else if (Input.GetAxis("Horizontal") < 0)
+                {
+                    PrevEpisode();
                 }
 
-                desiredIndex = (desiredIndex + 1) % menuButtons.Length;
+                #endregion
+                #region Triggering episodes
+
+                if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
+                {
+                    ChangeMenu(MenuState.Chapters);
+                }
+
+                #endregion
+
+                #region Exit Episode Menu
+                
+                if (Input.GetButtonDown("esc"))
+                {
+                    ChangeMenu(MenuState.Main);
+                }
+
+                #endregion
+                
+                yield return null;
             }
-        }
+            #region Exit
+            
+            if (menuState == MenuState.Main)
+            {
+                animator.Play("Close Episode Menu");
+            }
+            else if (menuState == MenuState.Chapters)
+            {
+                animator.Play("Opening Chapters");
+            }
+            _episodeMenuUpdateCoroutine = null;
 
-        private IEnumerator ChangeMenuButton(int lastIndex, int nextIndex)
+            #endregion
+            
+            #region Methods
+
+            void NextEpisode()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectedEpisodeIndex + 1) % episodes.Length;
+                while (desiredIndex != selectedEpisodeIndex)
+                {
+                    if (!episodes[desiredIndex].Locked)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeEpisode(selectedEpisodeIndex, desiredIndex));
+                        selectedEpisodeIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex + 1) % episodes.Length;
+                }
+            }
+            void PrevEpisode()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectedEpisodeIndex - 1) % episodes.Length;
+                desiredIndex = desiredIndex < 0 ? episodes.Length - 1 : desiredIndex;
+
+                while (desiredIndex != selectedEpisodeIndex)
+                {
+                    if (!episodes[desiredIndex].Locked)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeEpisode(selectedEpisodeIndex, desiredIndex));
+                        selectedEpisodeIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex - 1) % episodes.Length;
+                    desiredIndex = desiredIndex < 0 ? episodes.Length - 1 : desiredIndex;
+                }
+            }
+            IEnumerator ChangeEpisode(int lastIndex, int nextIndex)
+            {
+                yield return episodes[lastIndex].CycleEpisode(false, 0.15f);
+                yield return episodes[nextIndex].CycleEpisode(true, 0.15f);
+                yield return new WaitForSecondsRealtime(0.3f);
+                _lastCoroutine = null;
+            }
+            
+            #endregion
+        }
+        private IEnumerator ChapterMenuUpdate()
+        { 
+            yield return new WaitForSeconds(1f);
+            while (menuState == MenuState.Chapters)
+            {
+                #region Scroll through the chapters
+
+                if (Input.GetAxis("Horizontal") > 0)
+                {
+                    NextChapter();
+                }
+                else if (Input.GetAxis("Horizontal") < 0)
+                {
+                    PrevChapter();
+                }
+
+                #endregion
+                #region Triggering chapters
+
+                if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit"))
+                {
+                    //Trigger
+                }
+
+                #endregion
+                
+                #region Exit Chapter Menu
+                
+                if (Input.GetButtonDown("esc"))
+                {
+                    ChangeMenu(MenuState.Episodes);
+                }
+                #endregion
+                yield return null;
+            }
+            #region exit
+            if (menuState == MenuState.Episodes)
+            {
+                animator.Play("Close Chapters");
+            }
+
+            _chapterMenuUpdateCoroutine = null;
+            #endregion
+            
+            #region Methods
+            
+            void NextChapter()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectChapterIndex + 1) % chapters.Length;
+                while (desiredIndex != selectChapterIndex)
+                {
+                    if (!chapters[desiredIndex].Locked)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeChapter(selectChapterIndex, desiredIndex));
+                        selectChapterIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex + 1) % chapters.Length;
+                }
+            }
+            void PrevChapter()
+            {
+                if (_lastCoroutine != null) return;
+
+                int desiredIndex = (selectChapterIndex - 1) % chapters.Length;
+                desiredIndex = desiredIndex < 0 ? chapters.Length - 1 : desiredIndex;
+
+                while (desiredIndex != selectChapterIndex)
+                {
+                    if (!chapters[desiredIndex].Locked)
+                    {
+                        _lastCoroutine = StartCoroutine(ChangeChapter(selectChapterIndex, desiredIndex));
+                        selectChapterIndex = desiredIndex;
+                        break;
+                    }
+
+                    desiredIndex = (desiredIndex - 1) % chapters.Length;
+                    desiredIndex = desiredIndex < 0 ? chapters.Length - 1 : desiredIndex;
+                }
+            }
+            IEnumerator ChangeChapter(int lastIndex, int nextIndex)
+            {
+                yield return chapters[lastIndex].CycleEpisode(false, 0.15f);
+                yield return chapters[nextIndex].CycleEpisode(true, 0.15f);
+                yield return new WaitForSecondsRealtime(0.3f);
+                _lastCoroutine = null;
+            }
+
+            #endregion
+            
+        }
+        
+
+        public void ChangeMenu(int index)
         {
-            yield return menuButtons[lastIndex].SelectButton(false, 0.15f);
-
-            yield return menuButtons[nextIndex].SelectButton(true, 0.15f);
-
-            yield return new WaitForSecondsRealtime(0.3f);
-
-            _lastCoroutine = null;
+            ChangeMenu((MenuState) index);
         }
+        private void ChangeMenu(MenuState newMenu)
+        {
+            print(newMenu);
+            if(newMenu == menuState) return;
+            menuState = newMenu;
 
-        #endregion
+            switch (menuState)
+            {
+                case MenuState.Main:
+                    _mainMenuUpdateCoroutine ??= StartCoroutine(MainMenuUpdate());
+                    break;
+                
+                case MenuState.Episodes:
+                    _episodeMenuUpdateCoroutine ??= StartCoroutine(EpisodeMenuUpdate());
+                    break;
+                
+                case MenuState.Chapters:
+                    _chapterMenuUpdateCoroutine ??= StartCoroutine(ChapterMenuUpdate());
+                    break;
+            }
 
-        [System.Serializable]
+        }
+        
+        
+        
+        [Serializable]
         public class MenuButton
         {
             [SerializeField, OnValueChanged(nameof(UpdateButton))]
@@ -145,7 +397,6 @@ namespace UIScripts
                     buttonText.color = enabled ? defaultColor : disabledColor;
                 }
             }
-
             public bool Selected
             {
                 get => selected;
@@ -197,7 +448,7 @@ namespace UIScripts
             }
         }
 
-        [System.Serializable]
+        [Serializable]
         public class Episode
         {
             #region editor
@@ -221,7 +472,6 @@ namespace UIScripts
                         lockedImage = image.gameObject;
                         locked = lockedImage.activeInHierarchy;
                     }
-
                 }
             }
 #endif
@@ -230,11 +480,10 @@ namespace UIScripts
 
             public bool locked;
             public bool selected;
+            public ChapterData[] chapters;
 
             public Image selectionImage;
             public GameObject lockedImage;
-            public UnityEvent onClick;
-
             public bool Locked
             {
                 get => locked;
@@ -244,7 +493,6 @@ namespace UIScripts
                     lockedImage.SetActive(locked);
                 }
             }
-
             public bool Selected
             {
                 get => selected;
@@ -256,6 +504,125 @@ namespace UIScripts
                     selectionImage.color = color;
                 }
             }
+            
+            public virtual IEnumerator CycleEpisode(bool select, float transitionTime = 1)
+            {
+                var initColor = selectionImage.color;
+                Color targetColor = initColor;
+                targetColor.a = select ? 0.25f : 0;
+
+                float timeElapsed = 0;
+                while (timeElapsed < transitionTime)
+                {
+                    timeElapsed += Time.unscaledDeltaTime;
+                    var progress = timeElapsed / transitionTime;
+                    selectionImage.color = Color.Lerp(initColor, targetColor, progress);
+                    yield return null;
+                }
+
+                Selected = select;
+            }
+            
         }
+        
+        [Serializable]
+        public class Chapter
+        {
+            #region editor
+
+#if UNITY_EDITOR
+            public GameObject episode;
+            [Button]
+            public void GetEpisode()
+            {
+                var transforms = episode.GetComponentsInChildren<Transform>(true);
+                foreach (var trans in transforms)
+                {
+                    if (trans.name.Contains("Gradient"))
+                    {
+                        selectionImage = trans.GetComponent<Image>();
+                        selected = (selectionImage.color.a > 0);
+                    }
+
+                    if (trans.name.Contains("Locked"))
+                    {
+                        lockedImage = trans.gameObject;
+                        locked = lockedImage.activeInHierarchy;
+                    }
+
+                    if (trans.name.Contains("Text"))
+                    {
+                        chapterName = trans.GetComponent<TextMeshProUGUI>();
+                    }
+                }
+            }
+#endif
+
+            #endregion
+
+            public bool locked;
+            public bool selected;
+
+            public Image selectionImage;
+            public GameObject lockedImage;
+            
+            public TextMeshProUGUI chapterName;
+
+            public bool Locked
+            {
+                get => locked;
+                set
+                {
+                    locked = value;
+                    lockedImage.SetActive(locked);
+                }
+            }
+            public bool Selected
+            {
+                get => selected;
+                set
+                {
+                    selected = value;
+                    var color = selectionImage.color;
+                    color.a = selected ? 0.25f : 0;
+                    selectionImage.color = color;
+                }
+            }
+            
+            public virtual IEnumerator CycleEpisode(bool select, float transitionTime = 1)
+            {
+                var initColor = selectionImage.color;
+                Color targetColor = initColor;
+                targetColor.a = select ? 0.25f : 0;
+
+                float timeElapsed = 0;
+                while (timeElapsed < transitionTime)
+                {
+                    timeElapsed += Time.unscaledDeltaTime;
+                    var progress = timeElapsed / transitionTime;
+                    selectionImage.color = Color.Lerp(initColor, targetColor, progress);
+                    yield return null;
+                }
+
+                Selected = select;
+            }
+            
+        }
+        
+        
+        public struct ChapterData
+        {
+            //ADD IMAGES TOO
+            public string name;
+            public string index;
+        }
+        public enum MenuState
+        {
+            Main,
+            Episodes,
+            Chapters,
+            Settings,
+        }
+        
     }
 }

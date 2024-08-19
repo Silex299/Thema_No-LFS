@@ -16,13 +16,20 @@ namespace Custom.PostProcessing
         private Coroutine _glitchCoroutine;
 
 
+        private void OnDisable()
+        {
+            material.SetFloat(NoiseWidth, 0);
+            material.SetFloat(NoiseFrequency, 0);
+            material.SetFloat(GlitchScale, 0);
+            material.SetFloat(ScanlineStrength, 0);
+        }
+
         public void SetGlitch(float time = 1)
         {
             if (_glitchCoroutine != null)
                 StopCoroutine(_glitchCoroutine);
             _glitchCoroutine = StartCoroutine(ChangeGlitch(materialSetting, time));
         }
-
         public void ResetGlitch(float time = 1)
         {
             if (_glitchCoroutine != null)
@@ -30,7 +37,6 @@ namespace Custom.PostProcessing
 
             _glitchCoroutine = StartCoroutine(ChangeGlitch(new GlitchMaterialSetting(), time));
         }
-
         private IEnumerator ChangeGlitch(GlitchMaterialSetting setting, float time = 1)
         {
             var currentSetting = new GlitchMaterialSetting(
