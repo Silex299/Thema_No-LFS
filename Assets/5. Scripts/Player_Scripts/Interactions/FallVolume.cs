@@ -53,11 +53,15 @@ namespace Player_Scripts.Interactions
 
         private void OnTriggerStay(Collider other)
         {
+            print("the fuck");
             if (other.CompareTag("Player_Main"))
             {
                 if(_triggered) return;
-                
-                _playerInTriggerCoroutine??= StartCoroutine(PlayerInTrigger());
+
+                if (!PlayerMovementController.Instance.player.IsGrounded)
+                {
+                    _playerInTriggerCoroutine??= StartCoroutine(PlayerInTrigger());
+                }
                 
                 if(_exitTriggerCoroutine!=null)
                     StopCoroutine(_exitTriggerCoroutine);
@@ -87,6 +91,7 @@ namespace Player_Scripts.Interactions
 
             while (!PlayerMovementController.Instance.player.IsGrounded)
             {
+                print("Jajdjao");
                 velocity = PlayerVelocityCalculator.Instance.velocity.magnitude;
                 yield return null;
             }

@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Player_Scripts.States;
@@ -130,6 +131,8 @@ namespace Player_Scripts
         public CharacterController CController => characterController;
         public PlayerRigController RigController => rigController;
         public PlayerHealth Health => health;
+        
+        [Obsolete]
         public PlayerEffectsManager EffectsManager => effectsManager;
 
         public bool OverrideFlags { get; set; }
