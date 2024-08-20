@@ -49,20 +49,20 @@ namespace Player_Scripts.States
             //Spawn effects
             if (!_surfaceEffect)
             {
-                _surfaceEffect =
-                    player.EffectsManager.SpawnEffects("SurfaceWater", player.transform.position,
-                        player.transform.parent);
+                //_surfaceEffect =
+                    //player.EffectsManager.SpawnEffects("SurfaceWater", player.transform.position,
+                      //  player.transform.parent);
             }
 
             if (!_underWaterEffect)
             {
-                _underWaterEffect =
-                    player.EffectsManager.SpawnEffects("UnderWater",
-                        player.transform.position + player.transform.forward * 0.5f + player.transform.up,
-                        player.transform);
+                //_underWaterEffect =
+                    //player.EffectsManager.SpawnEffects("UnderWater",
+                        //player.transform.position + player.transform.forward * 0.5f + player.transform.up,
+                        //player.transform);
             }
 
-            player.EffectsManager.PlayInteractionSound(_atSurface ? "Dive In" : "Dive In Muffled");
+           // player.EffectsManager.PlayInteractionSound(_atSurface ? "Dive In" : "Dive In Muffled");
 
             //disable Surface effect
             _surfaceEffect.SetActive(_atSurface);
@@ -235,7 +235,7 @@ namespace Player_Scripts.States
                 waterVolume.OnSurface();
 
                 player.Health.ResetHealth();
-                player.EffectsManager.PlayInteractionSound("Dive Out");
+               // player.EffectsManager.PlayInteractionSound("Dive Out");
             }
             else
             {
@@ -243,7 +243,7 @@ namespace Player_Scripts.States
                 if (_underWaterEffect) _underWaterEffect.SetActive(true);
 
                 waterVolume.UnderWater();
-                player.EffectsManager.PlayInteractionSound("Dive In Muffled");
+               // player.EffectsManager.PlayInteractionSound("Dive In Muffled");
             }
         }
 

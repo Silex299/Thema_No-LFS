@@ -49,10 +49,10 @@ namespace Player_Scripts.Volumes
         public void VolumeAction()
         {
             print("ohh daddy");
-            var playerEffects = PlayerEffectsManager.Instance;
+            //var playerEffects = PlayerEffectsManager.Instance;
             
-            playerEffects.CurrentEffectVolume = volumeName;
-            playerEffects.VolumeMultiplier = volumeMultiplier;
+            //playerEffects.CurrentEffectVolume = volumeName;
+            //playerEffects.VolumeMultiplier = volumeMultiplier;
             ApplyAudioVolume();
         }
 

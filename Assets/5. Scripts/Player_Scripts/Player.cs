@@ -118,7 +118,6 @@ namespace Player_Scripts
 
         internal Interactable interactable;
         internal bool isInteracting;
-        internal float verticalAcceleration;
         internal Vector3 playerVelocity = Vector3.zero;
 
         #endregion
@@ -135,6 +134,15 @@ namespace Player_Scripts
         [Obsolete]
         public PlayerEffectsManager EffectsManager => effectsManager;
 
+        
+        public float JumpVelocity => jumpVelocity;
+        public float JumpForwardVelocity => jumpingForwardVelocity;
+        public float RotationSmoothness => rotationSmoothness;
+        
+        public string GroundTag { get; set; }
+
+        #region Flags
+        
         public bool OverrideFlags { get; set; }
         
         public bool IsGrounded { get; set; }
@@ -202,21 +210,9 @@ namespace Player_Scripts
         {
             get => useHorizontal;
         }
+        
+        #endregion
 
-        public float JumpVelocity
-        {
-            get => jumpVelocity;
-        }
-
-        public float JumpForwardVelocity
-        {
-            get => jumpingForwardVelocity;
-        }
-
-        public float RotationSmoothness
-        {
-            get => rotationSmoothness;
-        }
 
         #endregion
     }

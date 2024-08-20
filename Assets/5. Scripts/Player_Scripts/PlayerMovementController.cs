@@ -7,13 +7,14 @@ using UnityEngine.Video;
 
 namespace Player_Scripts
 {
-
     [RequireComponent(typeof(Player))]
     public class PlayerMovementController : MonoBehaviour
     {
-        [SerializeField, BoxGroup("References")] internal Player player;
+        [SerializeField, BoxGroup("References")]
+        internal Player player;
 
         private static PlayerMovementController _instance;
+
         public static PlayerMovementController Instance
         {
             get => _instance;
@@ -56,7 +57,6 @@ namespace Player_Scripts
                 default:
                     player.currentState = player.basicMovementState;
                     break;
-
             }
 
             player.currentState.EnterState(player);
@@ -90,8 +90,8 @@ namespace Player_Scripts
             {
                 ResetAnimator();
             }
-            player.DisabledPlayerMovement = disable;
 
+            player.DisabledPlayerMovement = disable;
         }
 
         public void DisablePlayerMovementInt(int disable)
@@ -122,33 +122,27 @@ namespace Player_Scripts
                 {
                     player.playerVelocity = new Vector3(0, -10, 0);
                 }
-
-                player.verticalAcceleration = 0;
-            }
-            else
-            {
-                player.AnimationController.SetFloat("VerticalAcceleration", player.playerVelocity.y);
-                player.verticalAcceleration = player.playerVelocity.y;
             }
         }
 
         public void GroundCheck()
         {
-
+            //TODO: Change to overlap sphere instead
+            
             Ray ray = new Ray(transform.position + Vector3.up * player.sphereCastOffset, Vector3.down);
 
             if (Physics.SphereCast(ray, player.sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
             {
                 player.IsGrounded = hit.distance < player.groundOffset + player.sphereCastOffset;
+                player.GroundTag = hit.collider.tag;
             }
             else
             {
                 player.IsGrounded = false;
                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * 2f, Color.red);
-
             }
 
-            //TODO may need change????
+            //TODO may need change. Yes do more like Is grounded and Is in proximity
             player.AnimationController.SetBool(IsGrounded, player.IsGrounded);
         }
 
@@ -163,7 +157,7 @@ namespace Player_Scripts
         public bool VerifyState(int index)
         {
             return player.currentStateIndex == index;
-        } 
+        }
 
 
         //MARKER: State
@@ -172,7 +166,7 @@ namespace Player_Scripts
         //TODO : switch case to change state directly
         public void ChangeState(int index)
         {
-            if(player.OverrideFlags)  return;
+            if (player.OverrideFlags) return;
 
             Debug.Log("Changing StATE" + index);
 
@@ -209,13 +203,14 @@ namespace Player_Scripts
                     player.currentState = player.freeBasicMovement;
                     break;
             }
+
             player.currentState.EnterState(player);
         }
 
         public void ChangeState(int index, string animationName)
         {
-            if(player.OverrideFlags)  return;
-            
+            if (player.OverrideFlags) return;
+
             ChangeState(index);
             PlayAnimation(animationName, 0.3f, 0);
         }
@@ -228,7 +223,6 @@ namespace Player_Scripts
         {
             ChangeState(player.previousStateIndex);
         }
-
 
         #endregion
 
@@ -244,25 +238,25 @@ namespace Player_Scripts
 
         public void PlayJump(int forward)
         {
-             if (forward == 1)
-             {
-                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
+            if (forward == 1)
+            {
+                Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
 
-                 player.playerVelocity += velocityChange;
+                player.playerVelocity += velocityChange;
+            }
 
-             }
-
-             player.playerVelocity.y = player.JumpVelocity;
-
+            player.playerVelocity.y = player.JumpVelocity;
         }
-        
+
         #endregion
 
         #region Animations
+
         public void PlayAnimation(string animationName, int animationLayer)
         {
             player.AnimationController.Play(animationName, animationLayer);
         }
+
         public void PlayAnimation(string animationName, float normalisationDuration, int animationLayer)
         {
             player.AnimationController.CrossFade(animationName, normalisationDuration, animationLayer);
@@ -272,10 +266,11 @@ namespace Player_Scripts
         {
             player.AnimationController.CrossFade(animationName, 0.25f, 1);
         }
+
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
-        
-        
+
+
         public void ResetAnimator()
         {
             print("Resetting animator");
@@ -293,7 +288,7 @@ namespace Player_Scripts
             player.enabledDirectionInput = false;
             player.AnimationController.CrossFade(defaultAnim, 0.2f, 0);
         }
-        
+
         #endregion
 
 
@@ -304,7 +299,5 @@ namespace Player_Scripts
             player.DisabledPlayerMovement = false;
             player.OverrideFlags = false;
         }
-
-
     }
 }

@@ -97,14 +97,14 @@ namespace Health
             else if (message == "RAGDOLL DEATH")
             {
                 player.AnimationController.enabled = false;
-                player.EffectsManager.PlayOtherSounds("Death", 1);
+                //player.EffectsManager.PlayOtherSounds("Death", 1);
                 DisableComponents();
                 Death();
             }
             else if (message == "FALL")
             {
                 player.AnimationController.enabled = false;
-                player.EffectsManager.PlayOtherSounds("Fall Death", 1);
+                //player.EffectsManager.PlayOtherSounds("Fall Death", 1);
                 DisableComponents();
                 Death();
             }
