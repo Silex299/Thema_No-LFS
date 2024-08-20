@@ -3,7 +3,6 @@ using UnityEngine;
 using Player_Scripts.States;
 using Player_Scripts.Interactables;
 using Health;
-using UnityEngine.Serialization;
 
 namespace Player_Scripts
 {

@@ -303,7 +303,7 @@ namespace Misc.Items
             for (int i = 1; i < ropeResolution; i++)
             {
                 var distance =
-                    Vector3.Distance(PlayerMovementController.Instance.player.ropeMovement.handSocket.position,
+                     Vector3.Distance(PlayerMovementController.Instance.player.ropeMovement.handSocket.position,
                         ropeSegments[i].transform.position);
 
                 // If the current segment is closer than the previous closest, update the closest distance and index
