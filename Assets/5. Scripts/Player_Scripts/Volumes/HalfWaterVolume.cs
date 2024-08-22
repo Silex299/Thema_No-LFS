@@ -59,7 +59,7 @@ namespace Player_Scripts.Volumes
         }
         IEnumerator ResetPlayerTrigger()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
             Destroy(_spawnedDragEffect);
             _spawnedDragEffect = null;
             _playerTransform = null;

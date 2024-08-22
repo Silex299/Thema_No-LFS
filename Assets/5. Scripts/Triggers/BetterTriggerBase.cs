@@ -45,6 +45,7 @@ namespace Triggers
             return true;
         }
 
+        //TODO: FIX THIS SHIT
         protected virtual bool OnTriggerStayBool(Collider other)
         {
             if(!enabled) return false;

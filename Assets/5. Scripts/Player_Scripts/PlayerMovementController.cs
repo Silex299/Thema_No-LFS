@@ -1,9 +1,6 @@
-using System;
-using System.Runtime.CompilerServices;
 using Player_Scripts.Interactables;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace Player_Scripts
 {
@@ -21,6 +18,13 @@ namespace Player_Scripts
         }
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(transform.position + Vector3.up * player.sphereCastOffset, player.sphereCastRadius);
+        }
 
         private void Awake()
         {
@@ -127,10 +131,7 @@ namespace Player_Scripts
 
         public void GroundCheck()
         {
-            //TODO: Change to overlap sphere instead
-            
             Ray ray = new Ray(transform.position + Vector3.up * player.sphereCastOffset, Vector3.down);
-
             if (Physics.SphereCast(ray, player.sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
             {
                 player.IsGrounded = hit.distance < player.groundOffset + player.sphereCastOffset;
