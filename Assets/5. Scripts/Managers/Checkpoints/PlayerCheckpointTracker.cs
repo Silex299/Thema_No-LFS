@@ -22,7 +22,6 @@ namespace Managers.Checkpoints
             player.Health.Reset();
             player.Health.ResetHealth();
             player.MovementController.Reset();
-            player.RigController.ResetAll();
 
 
         }

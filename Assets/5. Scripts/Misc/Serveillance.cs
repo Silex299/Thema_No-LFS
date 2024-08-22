@@ -49,7 +49,7 @@ namespace Misc
                         StartCoroutine(visuals.AlignSpotlight(other.transform.position));
                         //reset
                         if(_resetCoroutine!=null) StopCoroutine(_resetCoroutine);
-                        _resetCoroutine = StartCoroutine(ResetServeillanceVisual());
+                        _resetCoroutine = StartCoroutine(ResetServeillanceVisual(other));
                     }
                 }
             }
@@ -74,12 +74,17 @@ namespace Misc
             health.Kill("RAY");
         }
 
-        private IEnumerator ResetServeillanceVisual()
+        private IEnumerator ResetServeillanceVisual(Collider other)
         {
             yield return new WaitForSeconds(resetDelay);
             
             mover.DisableMover(false);
             TurnOffMachine(false);
+            if (_objectsTracking.ContainsKey(other.GetInstanceID()))
+            {
+                _objectsTracking.Remove(other.GetInstanceID());
+            }
+            
             StartCoroutine(visuals.ResetAlignment());
         }
 

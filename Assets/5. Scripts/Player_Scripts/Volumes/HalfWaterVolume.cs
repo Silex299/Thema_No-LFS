@@ -87,9 +87,7 @@ namespace Player_Scripts.Volumes
             
             var playerVelocity = other.GetComponent<PlayerVelocityCalculator>();
             
-            print(playerVelocity.velocity.y);
-            
-            if(playerVelocity.velocity.y < -velocityThreshold)
+            if(playerVelocity.velocity.y < velocityThreshold)
             {
                 var desiredPos = other.transform.position;
                 desiredPos.y = (transform.transform.up * dragRestrictedY).y;

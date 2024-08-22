@@ -53,11 +53,8 @@ namespace Player_Scripts.Interactions
 
         private void OnTriggerStay(Collider other)
         {
-            print("the fuck");
             if (other.CompareTag("Player_Main"))
             {
-                if(_triggered) return;
-
                 if (!PlayerMovementController.Instance.player.IsGrounded)
                 {
                     _playerInTriggerCoroutine??= StartCoroutine(PlayerInTrigger());
@@ -103,7 +100,6 @@ namespace Player_Scripts.Interactions
                 fallEvent.CheckThreshold(velocity);
             }
             
-            _triggered = false;
         }
         
         
@@ -111,7 +107,6 @@ namespace Player_Scripts.Interactions
 
         public void ResetVolume()
         {
-            _triggered = false;
             gameObject.SetActive(true);
         }
 

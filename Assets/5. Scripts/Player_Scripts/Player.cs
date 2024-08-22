@@ -20,9 +20,6 @@ namespace Player_Scripts
 
         [SerializeField, BoxGroup("References")]
         private CharacterController characterController;
-        
-        [SerializeField, BoxGroup("References")]
-        private PlayerRigController rigController;
 
         [SerializeField, BoxGroup("References")]
         private PlayerEffectsManager effectsManager;
@@ -128,7 +125,6 @@ namespace Player_Scripts
         public Animator AnimationController => animator;
         public PlayerMovementController MovementController => movementController;
         public CharacterController CController => characterController;
-        public PlayerRigController RigController => rigController;
         public PlayerHealth Health => health;
         
         [Obsolete]
