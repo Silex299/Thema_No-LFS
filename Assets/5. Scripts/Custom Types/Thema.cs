@@ -53,6 +53,13 @@ namespace Thema_Type
             float t = Vector3.Dot(point, lineDirection);
             return t * lineDirection;
         }
+
+        public static float PlannerDistance(Vector3 a, Vector3 b)
+        {
+            a.y = 0;
+            b.y = 0;
+            return Vector3.Distance(a, b);
+        }
     }
 
 
