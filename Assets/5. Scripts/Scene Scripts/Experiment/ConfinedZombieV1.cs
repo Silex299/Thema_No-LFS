@@ -46,7 +46,7 @@ namespace Scene_Scripts.Experiment
 
         private void Start()
         {
-            ChangeState(ZombieState.Idle);
+            ChangeState(ZombieState.Follow);
         }
 
         private void Update()
@@ -81,10 +81,26 @@ namespace Scene_Scripts.Experiment
             _currentState.EnterState(this);
         }
 
-        public void Rotate(Vector3 lookAt)
+        public void Rotate(Vector3 lookAt, float dir = 0)
         {
+            Vector3 forward;
+            if (dir == 0)
+            {
+                forward = transform.forward * 10;
+            }
+            else if (dir > 0)
+            {
+                forward = lookAt - transform.position;
+            }
+            else
+            {
+                
+                forward = transform.position - lookAt;
+            }
+            
+            forward.y = 0;
             //Rotate the zombie to look at the target, but only on the Y axis
-            Quaternion desiredRotation = Quaternion.LookRotation(lookAt, Vector3.up);
+            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
         }
 
@@ -140,9 +156,23 @@ namespace Scene_Scripts.Experiment
             Vector3 desiredPos = zombie.GetDesiredPos();
 
             float plannerDistance = ThemaVector.PlannerDistance(desiredPos, zombie.transform.position);
-            zombie.animator.SetFloat(Speed, plannerDistance < zombie.stopDistance ? 0 : 1, 0.05f, Time.deltaTime);
+            
+            float speed  = 0;
 
-            zombie.Rotate(desiredPos);
+            if (plannerDistance > zombie.stopDistance)
+            {
+                if (desiredPos.z > zombie.transform.position.z)
+                {
+                    speed = 1;
+                }
+                else
+                {
+                    speed = -1;
+                }
+            }
+            
+            zombie.Rotate(desiredPos, speed);
+            zombie.animator.SetFloat(Speed, speed, 0.1f, Time.deltaTime);
         }
     }
 
