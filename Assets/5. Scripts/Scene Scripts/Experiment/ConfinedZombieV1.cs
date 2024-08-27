@@ -1,6 +1,8 @@
+using System.Collections;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace Scene_Scripts.Experiment
 {
@@ -11,42 +13,55 @@ namespace Scene_Scripts.Experiment
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public Transform[] waypoints;
         [FoldoutGroup("References")] public Transform target;
+        [FoldoutGroup("References")] public Transform rigAimTarget;
+        [FoldoutGroup("References")] public Rig aimRig;
 
-        [FoldoutGroup("Movement")] public float speed = 1.0f;
         [FoldoutGroup("Movement")] public float rotationSpeed = 10f;
         [FoldoutGroup("Movement")] public float stopDistance = 1f;
+
+        [FoldoutGroup("Animation and Rig")] public string entryAnimation;
 
         #endregion
 
         #region States
 
         private ConfinedZombieBase _currentState;
-        private ZombieState _currentStateType;
+        private ZombieState _currentStateType = ZombieState.None;
 
-        [SerializeField] private ConfinedZombieIdle idleState;
+        private readonly ConfinedZombieIdle _idleState = new ConfinedZombieIdle();
         private readonly ConfinedZombieFollow _followState = new ConfinedZombieFollow();
         private readonly ConfinedZombieScream _screamState = new ConfinedZombieScream();
 
         #endregion
 
         #region Getter & Setter
+
         public Transform Target
         {
-            get=>target;
+            get => target;
             set
             {
-                target = value;
-                ChangeState(ZombieState.Follow);
+                if (target != null)
+                {
+                    target = value;
+                    ChangeState(ZombieState.Follow);
+                }
+                else
+                {
+                    target = null;
+                    ChangeState(ZombieState.Idle);
+                }
             }
         }
 
         #endregion
 
+
         #region Built-in Methods
 
         private void Start()
         {
-            ChangeState(ZombieState.Follow);
+            ChangeState(ZombieState.Idle);
         }
 
         private void Update()
@@ -73,7 +88,7 @@ namespace Scene_Scripts.Experiment
             _currentStateType = newState;
             _currentState = newState switch
             {
-                ZombieState.Idle => idleState,
+                ZombieState.Idle => _idleState,
                 ZombieState.Follow => _followState,
                 ZombieState.Scream => _screamState,
                 _ => _currentState
@@ -81,37 +96,19 @@ namespace Scene_Scripts.Experiment
             _currentState.EnterState(this);
         }
 
-        public void Rotate(Vector3 lookAt, float dir = 0)
-        {
-            Vector3 forward;
-            if (dir == 0)
-            {
-                forward = transform.forward * 10;
-            }
-            else if (dir > 0)
-            {
-                forward = lookAt - transform.position;
-            }
-            else
-            {
-                
-                forward = transform.position - lookAt;
-            }
-            
-            forward.y = 0;
-            //Rotate the zombie to look at the target, but only on the Y axis
-            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
-        }
-
         public Vector3 GetDesiredPos()
         {
             return ThemaVector.GetClosestPointToLine(waypoints[0].position, waypoints[1].position, target.position);
         }
 
+        public void FollowAimRig()
+        {
+            rigAimTarget.position = target.position;
+        }
+
         #endregion
     }
-    
+
     #region Zombie States & Type
 
     public abstract class ConfinedZombieBase
@@ -120,14 +117,12 @@ namespace Scene_Scripts.Experiment
         public abstract void UpdateState(ConfinedZombieV1 zombie);
     }
 
-    [System.Serializable]
     public class ConfinedZombieIdle : ConfinedZombieBase
     {
-        public string entryAnimation;
-
         public override void EnterState(ConfinedZombieV1 zombie)
         {
-            zombie.animator.CrossFade(entryAnimation, 0.2f);
+            zombie.animator.CrossFade(zombie.entryAnimation, 0.2f);
+            zombie.aimRig.weight = 0;
         }
 
         public override void UpdateState(ConfinedZombieV1 zombie)
@@ -140,6 +135,7 @@ namespace Scene_Scripts.Experiment
         private static readonly int State = Animator.StringToHash("State");
         private static readonly int Speed = Animator.StringToHash("Speed");
 
+
         public override void EnterState(ConfinedZombieV1 zombie)
         {
             if (!zombie.target)
@@ -148,7 +144,7 @@ namespace Scene_Scripts.Experiment
                 return;
             }
 
-            zombie.animator.SetInteger(State, 0);
+            zombie.animator.SetInteger(State, 1);
         }
 
         public override void UpdateState(ConfinedZombieV1 zombie)
@@ -156,8 +152,8 @@ namespace Scene_Scripts.Experiment
             Vector3 desiredPos = zombie.GetDesiredPos();
 
             float plannerDistance = ThemaVector.PlannerDistance(desiredPos, zombie.transform.position);
-            
-            float speed  = 0;
+
+            float speed = 0;
 
             if (plannerDistance > zombie.stopDistance)
             {
@@ -169,11 +165,50 @@ namespace Scene_Scripts.Experiment
                 {
                     speed = -1;
                 }
+
+                if (Mathf.Approximately(zombie.aimRig.weight, 0))
+                {
+                    zombie.aimRig.weight = 1;
+                }
+                zombie.FollowAimRig();
             }
-            
-            zombie.Rotate(desiredPos, speed);
-            zombie.animator.SetFloat(Speed, speed, 0.1f, Time.deltaTime);
+            else
+            {
+                if (Mathf.Approximately(zombie.aimRig.weight, 1))
+                {
+                    zombie.aimRig.weight = 0;
+                }
+            }
+
+
+            Rotate(zombie, desiredPos, speed);
+            zombie.animator.SetFloat(Speed, speed, 0.5f, Time.deltaTime);
         }
+        
+        
+        private void Rotate(ConfinedZombieV1 zombie, Vector3 lookAt, float dir = 0)
+        {
+            Vector3 forward;
+            if (dir == 0)
+            {
+                forward = zombie.transform.forward * 10;
+            }
+            else if (dir > 0)
+            {
+                forward = lookAt - zombie.transform.position;
+            }
+            else
+            {
+                forward = zombie.transform.position - lookAt;
+            }
+
+            forward.y = 0;
+            //Rotate the zombie to look at the target, but only on the Y axis
+            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
+            zombie.transform.rotation = Quaternion.Slerp(zombie.transform.rotation, desiredRotation, zombie.rotationSpeed * Time.deltaTime);
+        }
+
+        
     }
 
     public class ConfinedZombieScream : ConfinedZombieBase
@@ -193,7 +228,19 @@ namespace Scene_Scripts.Experiment
 
         public override void UpdateState(ConfinedZombieV1 zombie)
         {
-            zombie.Rotate(zombie.target.position);
+            Rotate(zombie);
+        }
+
+        private void Rotate(ConfinedZombieV1 zombie)
+        {
+            Vector3 forward = zombie.target.position - zombie.transform.position;
+            forward.y = 0;
+            //Rotate the zombie to look at the target, but only on the Y axis
+            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
+            //rotate desiredRotation by 90 degrees on the Y axis
+            desiredRotation *= Quaternion.Euler(0, -90, 0);
+            
+            zombie.transform.rotation = Quaternion.Slerp(zombie.transform.rotation, desiredRotation, zombie.rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -201,7 +248,8 @@ namespace Scene_Scripts.Experiment
     {
         Idle,
         Follow,
-        Scream
+        Scream,
+        None
     }
 
     #endregion
