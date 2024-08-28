@@ -1,4 +1,3 @@
-using System.Collections;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
@@ -20,6 +19,8 @@ namespace Scene_Scripts.Experiment
         [FoldoutGroup("Movement")] public float stopDistance = 1f;
 
         [FoldoutGroup("Animation and Rig")] public string entryAnimation;
+
+        [FoldoutGroup("Misc")] public ZombieTentacles tentacles;
 
         #endregion
 
@@ -123,6 +124,7 @@ namespace Scene_Scripts.Experiment
         {
             zombie.animator.CrossFade(zombie.entryAnimation, 0.2f);
             zombie.aimRig.weight = 0;
+            if(zombie.tentacles) zombie.tentacles.StopScream();
         }
 
         public override void UpdateState(ConfinedZombieV1 zombie)
@@ -145,6 +147,7 @@ namespace Scene_Scripts.Experiment
             }
 
             zombie.animator.SetInteger(State, 1);
+            if(zombie.tentacles) zombie.tentacles.StopScream();
         }
 
         public override void UpdateState(ConfinedZombieV1 zombie)
@@ -224,6 +227,7 @@ namespace Scene_Scripts.Experiment
             }
 
             zombie.animator.SetInteger(State, 2);
+            if(zombie.tentacles) zombie.tentacles.Scream();
         }
 
         public override void UpdateState(ConfinedZombieV1 zombie)
