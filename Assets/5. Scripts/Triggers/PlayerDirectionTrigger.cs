@@ -45,6 +45,7 @@ namespace Triggers
                     if (_calledEntry) return;
                     
                     entryAction.Invoke();
+                    print("Entry");
                     _calledExit = false;
                     _calledEntry = true;
                 }
@@ -52,6 +53,7 @@ namespace Triggers
                 {
                     if (_calledExit) return;
                     
+                    print("Exit");
                     exitAction.Invoke();
                     _calledEntry = false;
                     _calledExit = true;

@@ -42,7 +42,7 @@ namespace Scene_Scripts.Experiment
             get => target;
             set
             {
-                if (target != null)
+                if (value != null)
                 {
                     target = value;
                     ChangeState(ZombieState.Follow);
