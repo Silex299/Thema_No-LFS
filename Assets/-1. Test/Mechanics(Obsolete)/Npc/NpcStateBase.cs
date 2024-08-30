@@ -14,11 +14,13 @@ namespace Mechanics.Npc
         /// Rotates the transform to the desired direction
         /// </summary>
         /// <param name="transform"></param>
-        /// <param name="desiredDirection"></param>
+        /// <param name="desiredPos"></param>
         /// <param name="speed">Time dependent, use Time.deltaTime or other param</param>
-        protected static void Rotate(Transform transform, Vector3 desiredDirection, float speed)
+        protected static void Rotate(Transform transform, Vector3 desiredPos, float speed)
         {
-            Quaternion desiredRotation = Quaternion.LookRotation(desiredDirection, Vector3.up);
+            Vector3 forward = desiredPos - transform.position;
+            forward.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
         }
     }

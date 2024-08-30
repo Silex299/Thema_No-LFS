@@ -15,6 +15,7 @@ namespace Mechanics.Npc
         [FoldoutGroup("Npc Properties")] public float stopDistance = 1f;
         [FoldoutGroup("Npc Properties")] public float rotationSpeed = 10;
         [FoldoutGroup("Npc Properties")] public float accelerationTime = 1;
+        [FoldoutGroup("Npc Properties")] public CharacterController characterController;
         #endregion
         
         #region Seveillance

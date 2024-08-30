@@ -99,6 +99,8 @@ namespace Mechanics.Npc
         {
             float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
             
+            //TODO: If not reachable -> move to last list position and scream
+            
             #region If rechable-> process path distance, target under attack distance -> attack
             if (_isReachable)
             {

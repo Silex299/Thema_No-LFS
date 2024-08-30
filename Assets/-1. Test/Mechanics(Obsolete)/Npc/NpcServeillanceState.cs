@@ -43,7 +43,9 @@ namespace Mechanics.Npc
         
         private void Move()
         {
+            //TODO: Make it more dynamic
             npc.animator.SetFloat(Speed, _speedMultiplier);
+            
             Rotate(npc.transform, npc.serveillancePoints[_currentWaypointIndex], 
                 _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
