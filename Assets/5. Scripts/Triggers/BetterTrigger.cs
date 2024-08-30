@@ -81,6 +81,7 @@ namespace Triggers
             {
                 if(conditions.All(condition => condition.Condition(other)))
                 {
+                    print("action");
                     action.Invoke();
                     break;
                 }
