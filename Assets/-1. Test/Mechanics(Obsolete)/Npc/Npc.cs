@@ -24,6 +24,7 @@ namespace Mechanics.Npc
         #endregion
         #region Chase
         [FoldoutGroup("Chase")] public CustomPathFinderBase pathFinder;
+        [FoldoutGroup("Chase")] public float npcEyeHeight = 1.5f;
         [FoldoutGroup("Chase")] public float pathFindingInterval = 0.5f;
         [FoldoutGroup("Chase")] public float attackDistance;
         internal Action onAttack;
@@ -45,6 +46,32 @@ namespace Mechanics.Npc
             {
                 serveillancePoints.Add(point.position);
             }
+        }
+
+        [Button]
+        public void TestPath(Color color)
+        {
+            var path = pathFinder.GetPath(transform.position, out List<int> pathList);
+            print(path);
+            
+            if (path)
+            {
+                //if path list has more than 1 element draw lines from each element to the next
+                if (pathList?.Count > 0)
+                {
+                    //draw line from position to first index
+                    Debug.DrawLine(transform.position + transform.up * npcEyeHeight, pathFinder.GetDesiredPosition(pathList[0]), color, 15);
+                    
+                    for (int i = 0; i < pathList.Count - 1; i++)
+                    {
+                        Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[i]), pathFinder.GetDesiredPosition(pathList[i + 1]), color, 15);
+                    }
+                    
+                    //draw line from last index to target
+                    Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[^1]), pathFinder.target.position + pathFinder.target.up * pathFinder.targetOffset, color, 15);
+                }
+            }
+            
         }
         
 #endif

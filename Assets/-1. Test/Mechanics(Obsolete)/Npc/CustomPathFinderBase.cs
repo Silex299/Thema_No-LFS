@@ -14,7 +14,6 @@ namespace Mechanics.Npc
         {
             return waypoints[index].position;
         }
-        
         public bool GetPath(Vector3 from, out List<int> path)
         {
             if (IsTargetInSight(from))
@@ -48,7 +47,7 @@ namespace Mechanics.Npc
                     }
                 }
             }
-
+            
             path = null;
             return false;
         }

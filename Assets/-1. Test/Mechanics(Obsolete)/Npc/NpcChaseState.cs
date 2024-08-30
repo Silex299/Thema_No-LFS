@@ -7,13 +7,12 @@ namespace Mechanics.Npc
 {
     public class NpcChaseState : NpcStateBase
     {
-        
         private bool _isReachable;
         private bool _isStopped;
         private float _speedMultiplier = 1;
-        
+
         private List<int> _path;
-        
+
         private int _currentPathIndex;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
@@ -28,11 +27,13 @@ namespace Mechanics.Npc
             SetInitialAnimatorState();
             _pathCoroutine ??= npc.StartCoroutine(GetPath());
         }
+
         public override void Update()
         {
             Move();
             ProcessTarget();
         }
+
         public override void Exit()
         {
             if (_pathCoroutine != null)
@@ -40,29 +41,35 @@ namespace Mechanics.Npc
                 npc.StopCoroutine(_pathCoroutine);
                 _pathCoroutine = null;
             }
-            
-            if(_speedCoroutine != null)
+
+            if (_speedCoroutine != null)
             {
                 npc.StopCoroutine(_speedCoroutine);
                 _speedCoroutine = null;
             }
         }
-        
-        
+
+
         private void SetInitialAnimatorState()
         {
             npc.animator.SetInteger(StateIndex, 1);
+            var animatorSpeed = npc.animator.GetFloat(Speed);
+            if (!Mathf.Approximately(animatorSpeed, 1))
+            {
+                _isStopped = true;
+            }
         }
+
         private IEnumerator GetPath()
         {
             while (true)
             {
-                _isReachable = npc.pathFinder.GetPath(npc.transform.position, out _path);
-                
-                if (_path!=null)
+                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, out _path);
+
+                if (_path != null)
                 {
                     #region Calculate closest point in path
-                    
+
                     _currentPathIndex = 0;
                     float minDistance = float.MaxValue;
                     for (int i = 0; i < _path.Count; i++)
@@ -77,31 +84,31 @@ namespace Mechanics.Npc
 
                     #endregion
                 }
-                
+
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
-            
+
             // ReSharper disable once IteratorNeverReturns
         }
-        
-        
-        
-        
+
+
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            
-            Vector3 desiredPos = (_path!=null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
-            Rotate(npc.transform, desiredPos,
-                _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+
+            Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
+
+            Rotate(npc.transform, desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
+
         private void ProcessTarget()
         {
             float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
-            
+
             //TODO: If not reachable -> move to last list position and scream
-            
+
             #region If rechable-> process path distance, target under attack distance -> attack
+
             if (_isReachable)
             {
                 if (_isStopped) StartMoving();
@@ -114,31 +121,35 @@ namespace Mechanics.Npc
                         _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
                     }
                 }
-                
+
                 Attack(targetPlannerDistance < npc.attackDistance);
-                
             }
+
             #endregion
+
             #region If not reachable -> Stop if distance is less than stop distance and vice vers
+
             else
             {
                 if (targetPlannerDistance < npc.stopDistance)
                 {
-                    if(!_isStopped) StopMoving();
+                    if (!_isStopped) StopMoving();
                 }
                 else
                 {
                     if (_isStopped) StartMoving();
                 }
             }
+
             #endregion
-            
         }
+
         private void Attack(bool attack)
         {
             npc.animator.SetBool(Attack1, attack);
             if (attack) npc.onAttack.Invoke();
         }
+
         private void StopMoving()
         {
             //if speed coroutine is not null stop and start new coroutine
@@ -146,8 +157,10 @@ namespace Mechanics.Npc
             {
                 npc.StopCoroutine(_speedCoroutine);
             }
+
             _speedCoroutine = npc.StartCoroutine(ChangeSpeed(0));
         }
+
         private void StartMoving()
         {
             //if speed coroutine is not null stop and start new coroutine
@@ -155,13 +168,15 @@ namespace Mechanics.Npc
             {
                 npc.StopCoroutine(_speedCoroutine);
             }
+
             _speedCoroutine = npc.StartCoroutine(ChangeSpeed(1));
         }
+
         private IEnumerator ChangeSpeed(float targetSpeed)
         {
             float currentSpeed = _speedMultiplier;
             _isStopped = targetSpeed == 0;
-            
+
             float timeElapsed = 0;
             while (timeElapsed <= npc.accelerationTime)
             {
@@ -169,6 +184,7 @@ namespace Mechanics.Npc
                 _speedMultiplier = Mathf.Lerp(currentSpeed, targetSpeed, timeElapsed / npc.accelerationTime);
                 yield return null;
             }
+
             _speedCoroutine = null;
         }
     }
