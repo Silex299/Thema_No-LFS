@@ -6,11 +6,17 @@ namespace Mechanics.Npc
 {
     public class ProximityDetection : MonoBehaviour
     {
+        
+        
         [BoxGroup] public float proximityThreshold;
         [BoxGroup] public float height;
         [BoxGroup] public float heightOffset;
         [BoxGroup] public int castResolution;
         [BoxGroup] public LayerMask layerMask;
+        
+        [BoxGroup, Space(5)] public bool checkFront = true;
+        [BoxGroup] public bool checkSides;
+        
         [BoxGroup, Space(5)] public ProximityFlags proximityFlag = ProximityFlags.None;
 
         private void OnDrawGizmos()
@@ -18,9 +24,21 @@ namespace Mechanics.Npc
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, transform.TransformPoint(0, height, 0));
 
-            FrontProximity();
-            LeftProximity();
-            RightProximity();
+            if (!Application.isPlaying)
+            {
+                FrontProximity();
+                LeftProximity();
+                RightProximity();
+            }
+            
+        }
+
+
+        private void FixedUpdate()
+        {
+            if(checkFront) FrontProximity();
+            if(checkSides) LeftProximity();
+            if(checkSides) RightProximity();
         }
 
         private void FrontProximity()

@@ -12,7 +12,10 @@ namespace Mechanics.Npc
         #region Variables
 
         #region Common Properties
-        [FoldoutGroup("Npc Properties")] public Animator animator;
+        [FoldoutGroup("References")] public Animator animator;
+        [FoldoutGroup("References")] public ProximityDetection proximityDetection;
+        
+        
         [FoldoutGroup("Npc Properties")] public float stopDistance = 1f;
         [FoldoutGroup("Npc Properties")] public float rotationSpeed = 10;
         [FoldoutGroup("Npc Properties")] public float accelerationTime = 1;

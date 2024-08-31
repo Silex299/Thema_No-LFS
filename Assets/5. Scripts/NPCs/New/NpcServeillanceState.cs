@@ -65,6 +65,7 @@ namespace Mechanics.Npc
             }
             return false;
         }
+        
         private IEnumerator ChangeWaypoint()
         {
             //decelerate 
@@ -93,7 +94,6 @@ namespace Mechanics.Npc
         private void SetInitialAnimatorState()
         {
             npc.animator.SetInteger(StateIndex, 0);
-
             _speedMultiplier = 1;
             if (npc.serveillancePoints.Count != 0) return;
             _speedMultiplier = 0;

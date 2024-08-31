@@ -19,6 +19,7 @@ namespace Mechanics.Npc
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Attack1 = Animator.StringToHash("Attack");
+        private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
 
         public override void Enter(Npc parentNpc)
         {
@@ -54,10 +55,7 @@ namespace Mechanics.Npc
         {
             npc.animator.SetInteger(StateIndex, 1);
             var animatorSpeed = npc.animator.GetFloat(Speed);
-            if (!Mathf.Approximately(animatorSpeed, 1))
-            {
-                _isStopped = true;
-            }
+            _isStopped = !Mathf.Approximately(animatorSpeed, 1);
         }
 
         private IEnumerator GetPath()
@@ -98,7 +96,7 @@ namespace Mechanics.Npc
 
             Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
 
-            Rotate(npc.transform, desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+            Rotate(npc.transform, desiredPos, npc.rotationSpeed * Time.deltaTime);
         }
 
         private void ProcessTarget()
@@ -111,8 +109,9 @@ namespace Mechanics.Npc
 
             if (_isReachable)
             {
-                if (_isStopped) StartMoving();
-
+                Debug.Log("Reachable");
+               ProcessPathProximity();
+               
                 if (_path != null)
                 {
                     float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]));
@@ -121,24 +120,14 @@ namespace Mechanics.Npc
                         _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
                     }
                 }
-
                 Attack(targetPlannerDistance < npc.attackDistance);
             }
-
             #endregion
 
             #region If not reachable -> Stop if distance is less than stop distance and vice vers
-
             else
             {
-                if (targetPlannerDistance < npc.stopDistance)
-                {
-                    if (!_isStopped) StopMoving();
-                }
-                else
-                {
-                    if (_isStopped) StartMoving();
-                }
+                ProcessPathProximity();
             }
 
             #endregion
@@ -186,6 +175,23 @@ namespace Mechanics.Npc
             }
 
             _speedCoroutine = null;
+        }
+
+        /// <summary>
+        /// Moves if path is not blocked
+        /// </summary>
+        private void ProcessPathProximity()
+        {
+            if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
+            {
+                if(!_isStopped) StopMoving();  
+                npc.animator.SetBool(PathBlocked, true);
+            }
+            else
+            {
+                if (_isStopped) StartMoving();
+                npc.animator.SetBool(PathBlocked, false);
+            }
         }
     }
 }
