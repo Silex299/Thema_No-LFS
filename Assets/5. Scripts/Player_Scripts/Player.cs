@@ -140,6 +140,7 @@ namespace Player_Scripts
         #region Flags
         
         public bool OverrideFlags { get; set; }
+        public bool CanPlayAlternateMovement   { get; set; }
         
         public bool IsGrounded { get; set; }
 

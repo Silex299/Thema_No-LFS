@@ -150,15 +150,18 @@ namespace Player_Scripts.States
 
             #region PLAYER ANIMATION UPDATE
 
-            if (Input.GetButtonDown("Crouch"))
+            if (player.CanPlayAlternateMovement)
             {
-                CrouchPlayer(player, true);
+                if (Input.GetButtonDown("Crouch"))
+                {
+                    CrouchPlayer(player, true);
+                }
+                else if (Input.GetButtonUp("Crouch"))
+                {
+                    CrouchPlayer(player, false);
+                }
             }
-            else if (Input.GetButtonUp("Crouch"))
-            {
-                CrouchPlayer(player, false);
-            }
-
+            
             //Jump
             if (Input.GetButtonDown("Jump"))
             {
