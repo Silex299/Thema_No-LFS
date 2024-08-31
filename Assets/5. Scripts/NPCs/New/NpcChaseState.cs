@@ -13,6 +13,7 @@ namespace Mechanics.Npc
 
         private List<int> _path;
 
+        private bool _isAttacking;
         private int _currentPathIndex;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
@@ -110,8 +111,8 @@ namespace Mechanics.Npc
             if (_isReachable)
             {
                 Debug.Log("Reachable");
-               ProcessPathProximity();
-               
+                ProcessPathProximity();
+
                 if (_path != null)
                 {
                     float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]));
@@ -120,11 +121,14 @@ namespace Mechanics.Npc
                         _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
                     }
                 }
+
                 Attack(targetPlannerDistance < npc.attackDistance);
             }
+
             #endregion
 
             #region If not reachable -> Stop if distance is less than stop distance and vice vers
+
             else
             {
                 ProcessPathProximity();
@@ -135,8 +139,24 @@ namespace Mechanics.Npc
 
         private void Attack(bool attack)
         {
-            npc.animator.SetBool(Attack1, attack);
             if (attack) npc.onAttack?.Invoke();
+
+            if (_isAttacking == attack) return;
+
+            _isAttacking = attack;
+            
+            //Setting aim rig if attacking;
+            switch (attack)
+            {
+                case true:
+                    npc.infectedRigController.SetAimRig(npc.pathFinder.target);
+                    break;
+                default:
+                    npc.infectedRigController.ResetAimRig();
+                    break;
+            }
+            
+            npc.animator.SetBool(Attack1, attack);
         }
 
         private void StopMoving()
@@ -184,7 +204,7 @@ namespace Mechanics.Npc
         {
             if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
             {
-                if(!_isStopped) StopMoving();  
+                if (!_isStopped) StopMoving();
                 npc.animator.SetBool(PathBlocked, true);
             }
             else
