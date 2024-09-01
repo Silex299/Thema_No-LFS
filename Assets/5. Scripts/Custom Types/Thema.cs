@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace Thema_Type
@@ -74,7 +75,9 @@ namespace Thema_Type
         [OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
         [OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
         public bool followRotationCurve;
-        [OnValueChanged(nameof(Preview)), ShowIf(nameof(followRotationCurve))] public AnimationCurve rotationCurve;
+
+        [OnValueChanged(nameof(Preview)), ShowIf(nameof(followRotationCurve))]
+        public AnimationCurve rotationCurve;
 
 
         #region EDITOR
@@ -101,7 +104,6 @@ namespace Thema_Type
             previewAAnimator.transform.position = repos;
 
             previewAAnimator.transform.rotation = followRotationCurve ? Quaternion.Euler(transform.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalisedTime) * 180, transform.eulerAngles.z) : transform.rotation;
-            
         }
 
 #endif
@@ -166,7 +168,7 @@ namespace Thema_Type
 
                     if (followRotationCurve)
                     {
-                        var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x,transform.rotation.eulerAngles.y +  rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
+                        var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
                         target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
                     }
 
@@ -188,10 +190,9 @@ namespace Thema_Type
 
                         if (followRotationCurve)
                         {
-                            var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x,transform.rotation.eulerAngles.y +  rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
+                            var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
                             target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
                         }
-                        
                     }
                 }
 
@@ -203,7 +204,7 @@ namespace Thema_Type
 
                 if (timedAction != null)
                 {
-                    if (timeElapsed/animationTime >= timedAction.time)
+                    if (timeElapsed / animationTime >= timedAction.time)
                     {
                         timedAction.action?.Invoke();
                         timedAction = null;
@@ -212,7 +213,6 @@ namespace Thema_Type
 
                 yield return null;
             }
-            
         }
 
         /// <summary>
@@ -263,6 +263,43 @@ namespace Thema_Type
             this.time = time;
             this.action = action;
         }
+    }
+
+    #endregion
+
+    #region Data Stuctures
+    
+    public class PriorityQueue<T>
+    {
+        
+        private readonly SortedList<float, T> _list = new SortedList<float, T>(Comparer<float>.Create((x, y) => x.CompareTo(y))); // ascending order
+
+        /// <summary>
+        /// Enqueues the item with the given priority.
+        /// </summary>
+        /// <param name="item"> The item to enqueue </param>
+        /// <param name="priority">Priority of the Item</param>
+        public void Enqueue(float priority, T item)
+        {
+            _list.Add(priority, item); // Add a new item with the given priority
+        }
+
+        public KeyValuePair<float, T> Dequeue()
+        {
+            if (_list.Count == 0)
+            {
+                throw new InvalidOperationException("The sorted queue is empty.");
+            }
+            
+            var firstPair = _list.First();
+            _list.Remove(firstPair.Key);
+            
+            return firstPair;
+        }
+
+        public bool IsEmpty => _list.Count == 0;
+        
+        public int Count => _list.Count;
     }
 
     #endregion
