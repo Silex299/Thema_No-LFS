@@ -18,6 +18,7 @@ namespace Managers.Checkpoints
         [BoxGroup("Player Movement")] public bool canRotate = true;
         [BoxGroup("Player Movement")] public bool canJump;
         [BoxGroup("Player Movement")] public bool canBoost;
+        [BoxGroup("Player Movement")] public bool canPlayAlternateMovement;
         
         [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
@@ -44,6 +45,7 @@ namespace Managers.Checkpoints
             player.CanBoost = canBoost;
             player.CanJump = canJump;
             player.CanRotate = canRotate;
+            player.CanPlayAlternateMovement = canPlayAlternateMovement;
             
             PlayerMovementController.Instance.ChangeState(playerStateIndex);
             

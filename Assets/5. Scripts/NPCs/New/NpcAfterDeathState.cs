@@ -16,7 +16,7 @@ namespace Mechanics.Npc
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Speed = Animator.StringToHash("Speed");
 
-        public override void Enter(Npc parentNpc)
+        public override void Enter(NPCs.New.Npc parentNpc)
         {
             //TODO: if serveillance after death is true change to serveillance
             

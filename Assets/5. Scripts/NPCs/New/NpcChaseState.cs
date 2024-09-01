@@ -22,7 +22,7 @@ namespace Mechanics.Npc
         private static readonly int Attack1 = Animator.StringToHash("Attack");
         private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
 
-        public override void Enter(Npc parentNpc)
+        public override void Enter(NPCs.New.Npc parentNpc)
         {
             //if target is null change to serveillance
             npc = parentNpc;
@@ -69,6 +69,11 @@ namespace Mechanics.Npc
                 {
                     #region Calculate closest point in path
 
+
+#if UNITY_EDITOR
+                    npc.TestPath(_path);
+#endif
+                    
                     _currentPathIndex = 0;
                     float minDistance = float.MaxValue;
                     for (int i = 0; i < _path.Count; i++)
@@ -97,6 +102,10 @@ namespace Mechanics.Npc
 
             Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
 
+            //debug line from npc to desired position //REMOVE
+            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
+            Debug.DrawRay(npc.transform.position + Vector3.up * 2f, npc.transform.forward, Color.blue);
+            
             Rotate(npc.transform, desiredPos, npc.rotationSpeed * Time.deltaTime);
         }
 
@@ -110,7 +119,6 @@ namespace Mechanics.Npc
 
             if (_isReachable)
             {
-                Debug.Log("Reachable");
                 ProcessPathProximity();
 
                 if (_path != null)

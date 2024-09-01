@@ -161,6 +161,12 @@ namespace Player_Scripts.States
                     CrouchPlayer(player, false);
                 }
             }
+            //Don't keep crouching if force boost
+            if (player.ForceBoost)
+            {
+                player.currentStateIndex = 0;
+                CrouchPlayer(player, false);
+            }
             
             //Jump
             if (Input.GetButtonDown("Jump"))
@@ -231,6 +237,7 @@ namespace Player_Scripts.States
 
         private void CrouchPlayer(Player player, bool crouch)
         {
+            
             if (crouch)
             {
                 player.AnimationController.SetInteger(StateIndex, -6);

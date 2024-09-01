@@ -15,7 +15,7 @@ namespace Mechanics.Npc
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
 
-        public override void Enter(Npc parentNpc)
+        public override void Enter(NPCs.New.Npc parentNpc)
         {
             npc = parentNpc;
             SetInitialAnimatorState();

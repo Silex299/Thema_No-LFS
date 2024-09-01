@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NPCs.New;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,17 +9,21 @@ using UnityEngine.VFX;
 
 namespace Weapons.NPC_Weapon
 {
-    public sealed class FireArm : WeaponBase
+    public sealed class FireArm : MonoBehaviour
     {
+        [BoxGroup("Fire Property")] public Npc npc;
+        
+        [SerializeField, BoxGroup("References")] private GameObject bulletPrefab;
+        [SerializeField, BoxGroup("References")] private ParticleSystem muzzle;
+        [SerializeField, BoxGroup("References")] private AudioSource source;
+        
+        [SerializeField, BoxGroup("Fire Property")] private float damage = 101;
         [SerializeField, BoxGroup("Fire Property")] private bool canFire = true;
         [SerializeField, BoxGroup("Fire Property")] private float tracerLifetime;
         [SerializeField, BoxGroup("Fire Property")] internal float bulletSpeed;
         [SerializeField, BoxGroup("Fire Property")] private float fireRate = 60;
         [SerializeField, BoxGroup("Fire Property")] private LayerMask fireMask;
 
-        [SerializeField, BoxGroup("References")] private GameObject bulletPrefab;
-        [SerializeField, BoxGroup("References")] private VisualEffect muzzle;
-        [SerializeField, BoxGroup("References")] private AudioSource source;
         
         [SerializeField, BoxGroup("Effects")] private AudioClip firingSound;
         [SerializeField, BoxGroup("Effects")] internal Dictionary<string, GameObject> hitEffects;
@@ -33,10 +38,19 @@ namespace Weapons.NPC_Weapon
             get => canFire;
             set => canFire = value;
         }
-        
-        
+
+
+        private void Start()
+        {
+            npc.onAttack += Fire;
+        }
+        private void OnDisable()
+        {
+            npc.onAttack -= Fire;
+        }
+
         // ReSharper disable once MemberCanBePrivate.Global
-        public override void Fire()
+        public void Fire()
         {
             if(!canFire) return;
 
@@ -59,15 +73,12 @@ namespace Weapons.NPC_Weapon
                 GameObject obj = Instantiate(bulletPrefab, muzzleSocket.position, muzzleSocket.rotation);
                 StartCoroutine(MoveTracer(obj, direction));
             }
-
             
             muzzle.Play();
             source.PlayOneShot(firingSound);
 
             _lastFireTime = Time.time;
         }
-
-
         IEnumerator MoveTracer(GameObject tracer, Vector3 direction)
         {
             float startTime = Time.time;
@@ -98,8 +109,6 @@ namespace Weapons.NPC_Weapon
 
             Destroy(tracer);
         }
-        
-
         private void SpawnEffects(string hitTag, Vector3 hitPoint)
         {
             try
@@ -115,40 +124,5 @@ namespace Weapons.NPC_Weapon
             }
         }
 
-        public void OnDisable()
-        {
-            PlayerMovementController.Instance.player.Health.onDeath -= ResetWeapon;
-        }
-
-        public void AutomaticFire(bool autoFire)
-        {
-            
-            _autoFire = autoFire;
-            
-            if (autoFire == true)
-            {
-                PlayerMovementController.Instance.player.Health.onDeath += ResetWeapon;
-            }
-            else
-            {
-                PlayerMovementController.Instance.player.Health.onDeath -= ResetWeapon;
-            }
-        }
-
-        public override void ResetWeapon()
-        {
-            StopAllCoroutines();
-            AutomaticFire(false);
-        }
-        
-
-        private void Update()
-        {
-            
-            if (_autoFire)
-            {
-                Fire();
-            }
-        }
     }
 }

@@ -4,8 +4,8 @@ namespace Mechanics.Npc
 {
     public abstract class NpcStateBase
     {
-        protected Npc npc;
-        public abstract void Enter(Npc parentNpc);
+        protected NPCs.New.Npc npc;
+        public abstract void Enter(NPCs.New.Npc parentNpc);
         public abstract void Update();
         public abstract void Exit();
 

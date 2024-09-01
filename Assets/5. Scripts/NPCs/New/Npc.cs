@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using NPCs.New;
+using Mechanics.Npc;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Npc
+namespace NPCs.New
 {
     public class Npc : MonoBehaviour
     {
@@ -15,12 +15,17 @@ namespace Mechanics.Npc
         #region Common Properties
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public ProximityDetection proximityDetection;
-        //[FoldoutGroup("References")] public InfectedRigController infectedRigController;
         
         
         [FoldoutGroup("Npc Properties")] public float stopDistance = 1f;
         [FoldoutGroup("Npc Properties")] public float rotationSpeed = 10;
         [FoldoutGroup("Npc Properties")] public float accelerationTime = 1;
+        
+        
+        [FoldoutGroup("Path Finder")] public CustomPathFinderBase pathFinder;
+        [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
+        [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
+        
         #endregion
         
         #region Seveillance
@@ -29,9 +34,6 @@ namespace Mechanics.Npc
         [FoldoutGroup("Serveillance")] public String entryAnim;
         #endregion
         #region Chase
-        [FoldoutGroup("Path Finder")] public CustomPathFinderBase pathFinder;
-        [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
-        [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
         [FoldoutGroup("Chase")] public float attackDistance;
         internal Action onAttack;
@@ -39,8 +41,7 @@ namespace Mechanics.Npc
         #region After Death
         [FoldoutGroup("After Death")] public bool serveillanceAfterDeath;
         #endregion
-
-
+        
         #region States
 
         private NpcStateBase _currentState;
@@ -67,28 +68,21 @@ namespace Mechanics.Npc
             }
         }
 
-        [Button]
-        public void TestPath(Color color)
+        public void TestPath(List<int> pathList)
         {
-            var path = pathFinder.GetPath(transform.position, out List<int> pathList);
-            print(path);
-            
-            if (path)
+            //if path list has more than 1 element draw lines from each element to the next
+            if (pathList?.Count > 0)
             {
-                //if path list has more than 1 element draw lines from each element to the next
-                if (pathList?.Count > 0)
+                //draw line from position to first index
+                Debug.DrawLine(transform.position + transform.up * npcEyeHeight, pathFinder.GetDesiredPosition(pathList[0]), Color.white, 1);
+                    
+                for (int i = 0; i < pathList.Count - 1; i++)
                 {
-                    //draw line from position to first index
-                    Debug.DrawLine(transform.position + transform.up * npcEyeHeight, pathFinder.GetDesiredPosition(pathList[0]), color, 15);
-                    
-                    for (int i = 0; i < pathList.Count - 1; i++)
-                    {
-                        Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[i]), pathFinder.GetDesiredPosition(pathList[i + 1]), color, 15);
-                    }
-                    
-                    //draw line from last index to target
-                    Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[^1]), pathFinder.target.position + pathFinder.target.up * pathFinder.targetOffset, color, 15);
+                    Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[i]), pathFinder.GetDesiredPosition(pathList[i + 1]), Color.white, 1);
                 }
+                    
+                //draw line from last index to target
+                Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[^1]), pathFinder.target.position + pathFinder.target.up * pathFinder.targetOffset, Color.white,1 );
             }
             
         }
@@ -146,6 +140,6 @@ namespace Mechanics.Npc
         }
         
         #endregion
-        
     }
+    
 }

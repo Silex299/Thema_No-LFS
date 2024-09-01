@@ -16,6 +16,7 @@ namespace Mechanics.Npc
 
         private void OnDrawGizmos()
         {
+            if(Application.isPlaying) return;
             //draw lines for each point to every other point
             for (int i = 0; i < waypoints.Count; i++)
             {

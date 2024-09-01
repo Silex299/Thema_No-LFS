@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Player_Scripts;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,50 +14,81 @@ namespace Misc
         [SerializeField] private UnityEvent onPlayerOutOfSight;
 
         private bool _inSight;
-     
+        private bool _playerInTrigger;
+        private Coroutine _resetCoroutine;
 
         private void OnTriggerStay(Collider other)
         {
             if (other.CompareTag("Player_Main") && enabled)
             {
                 
-                var position = transform.position;
-            
-                Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
-
-                Ray ray = new Ray(position, direction);
-            
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
+                if (!_playerInTrigger)
                 {
-                    Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                    _playerInTrigger = true;
+                    onPlayerInSight.Invoke();
+                }
                 
-                    if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
+                
+                if (_resetCoroutine != null)
+                {
+                    StopCoroutine(_resetCoroutine);
+                }
+                _resetCoroutine = StartCoroutine(ResetTrigger());
+            }
+        }
+
+        private IEnumerator ResetTrigger()
+        {
+            yield return new WaitForSeconds(0.3f);
+            _playerInTrigger = false;
+            if (_inSight)
+            {
+                _inSight = false;
+                onPlayerOutOfSight.Invoke();
+            }
+            _resetCoroutine = null;
+        }
+
+
+        private void Update()
+        {
+        
+            if(!_playerInTrigger) return;
+            
+            var position = transform.position;
+            Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
+            Ray ray = new Ray(position, direction);
+            
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
+            {
+                Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                
+                if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
+                {
+                    if (!_inSight)
                     {
-                        if (!_inSight)
-                        {
-                            _inSight = true;
-                            onPlayerInSight.Invoke();
-                        }
-                    }
-                    else
-                    {
-                        _inSight = false;
-                        onPlayerOutOfSight.Invoke();
+                        _inSight = true;
+                        onPlayerInSight.Invoke();
                     }
                 }
                 else
                 {
-                    Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
-                    if (_inSight)
-                    {
-                        _inSight = false;
-                        onPlayerOutOfSight.Invoke();
-                    }
+                    _inSight = false;
+                    onPlayerOutOfSight.Invoke();
                 }
-                
             }
+            else
+            {
+                Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
+                if (_inSight)
+                {
+                    _inSight = false;
+                    onPlayerOutOfSight.Invoke();
+                }
+            }
+            
         }
-
+        
         private void Start()
         {
             PlayerMovementController.Instance.player.Health.onDeath += DisableSightDetection;
