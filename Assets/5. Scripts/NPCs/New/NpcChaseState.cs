@@ -142,20 +142,7 @@ namespace Mechanics.Npc
             if (attack) npc.onAttack?.Invoke();
 
             if (_isAttacking == attack) return;
-
             _isAttacking = attack;
-            
-            //Setting aim rig if attacking;
-            switch (attack)
-            {
-                case true:
-                    npc.infectedRigController.SetAimRig(npc.pathFinder.target);
-                    break;
-                default:
-                    npc.infectedRigController.ResetAimRig();
-                    break;
-            }
-            
             npc.animator.SetBool(Attack1, attack);
         }
 

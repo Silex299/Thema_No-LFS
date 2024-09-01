@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Mechanics.Npc;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -6,6 +8,7 @@ namespace NPCs.New
 {
     public class InfectedRigController : MonoBehaviour
     {
+        public Npc npc;
         public Rig aimRig;
         public Transform aimTarget;
         public Vector3 aimOffset;
@@ -13,6 +16,17 @@ namespace NPCs.New
         private bool _aimRigEnabled;
         private Transform _target;
         private Coroutine _aimRigCoroutine;
+
+
+        private void Start()
+        {
+            npc.onAttack += OnAttack;
+        }
+
+        private void OnDisable()
+        {
+            npc.onAttack -= OnAttack;
+        }
 
         private void Update()
         {
@@ -22,7 +36,34 @@ namespace NPCs.New
             aimTarget.position = _target.position + aimOffset;
         }
 
-        public void SetAimRig(Transform target)
+
+        private Coroutine _attackResetCoroutine;
+        
+        private void OnAttack()
+        {
+            if (!_aimRigEnabled)
+            {
+                SetAimRig(npc.pathFinder.target);
+            }
+            else
+            {
+                if (_attackResetCoroutine != null)
+                {
+                    StopCoroutine(_attackResetCoroutine);
+                }
+                _attackResetCoroutine = StartCoroutine(AttackResetCoroutine());
+            }
+        }
+
+        private IEnumerator AttackResetCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+            ResetAimRig();
+            _attackResetCoroutine = null;
+        }
+
+
+        private void SetAimRig(Transform target)
         {
             if (_aimRigEnabled) return;
 
@@ -36,7 +77,8 @@ namespace NPCs.New
             _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(1));
 
         }
-        public void ResetAimRig()
+
+        private void ResetAimRig()
         {
             if(!_aimRigEnabled) return;
             

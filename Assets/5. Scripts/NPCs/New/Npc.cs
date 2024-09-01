@@ -15,7 +15,7 @@ namespace Mechanics.Npc
         #region Common Properties
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public ProximityDetection proximityDetection;
-        [FoldoutGroup("References")] public InfectedRigController infectedRigController;
+        //[FoldoutGroup("References")] public InfectedRigController infectedRigController;
         
         
         [FoldoutGroup("Npc Properties")] public float stopDistance = 1f;

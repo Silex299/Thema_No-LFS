@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,25 @@ namespace Mechanics.Npc
         public float targetOffset;
         public LayerMask layerMask;
 
+
+#if UNITY_EDITOR
+
+        private void OnDrawGizmos()
+        {
+            //draw lines for each point to every other point
+            for (int i = 0; i < waypoints.Count; i++)
+            {
+                for (int j = 0; j < waypoints.Count; j++)
+                {
+                    if (i == j) continue;
+                    Gizmos.color = IsDirectPathPossible(waypoints[i].position, waypoints[j].position) ? Color.green : Color.cyan;
+                    Gizmos.DrawLine(waypoints[i].position, waypoints[j].position);
+                }
+            }
+        }
+
+#endif
+        
         public Vector3 GetDesiredPosition(int index)
         {
             return waypoints[index].position;
