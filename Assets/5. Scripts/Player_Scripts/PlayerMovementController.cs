@@ -162,7 +162,7 @@ namespace Player_Scripts
         {
             if (player.OverrideFlags) return;
 
-            Debug.Log("Changing StATE" + index);
+            Debug.Log("Changing StATE" + index + ":: " + player.currentStateIndex);
 
             if (index == player.currentStateIndex) return;
 
@@ -292,6 +292,7 @@ namespace Player_Scripts
             player.CController.enabled = true;
             player.DisabledPlayerMovement = false;
             player.OverrideFlags = false;
+            player.ForceBoost = false;
         }
     }
 }

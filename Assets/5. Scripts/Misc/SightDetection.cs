@@ -13,13 +13,14 @@ namespace Misc
         [SerializeField, Space(10)] private UnityEvent onPlayerInSight;
         [SerializeField] private UnityEvent onPlayerOutOfSight;
 
+        [SerializeField] private bool _enabled = true;
         private bool _inSight;
         private bool _playerInTrigger;
         private Coroutine _resetCoroutine;
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag("Player_Main") && enabled)
+            if (other.CompareTag("Player_Main") && _enabled)
             {
                 
                 if (!_playerInTrigger)
@@ -104,13 +105,16 @@ namespace Misc
 
         public void EnableSightDetection()
         {
-            enabled = true;
+            _enabled = true;
+            _inSight = false;
+            _playerInTrigger = false;
         }
 
         public void DisableSightDetection()
         {
-            enabled = false;
-            StopAllCoroutines();
+            if(_resetCoroutine!=null) StopCoroutine(_resetCoroutine);
+            _resetCoroutine = null;
+            _enabled = false;
         }
         
         

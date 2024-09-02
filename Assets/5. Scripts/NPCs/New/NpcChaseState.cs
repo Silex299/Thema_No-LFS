@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mechanics.Types;
+using Thema_Type;
 using UnityEngine;
 
 namespace Mechanics.Npc
@@ -14,7 +15,6 @@ namespace Mechanics.Npc
         private List<int> _path;
 
         private bool _isAttacking;
-        private int _currentPathIndex;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -63,12 +63,6 @@ namespace Mechanics.Npc
             while (true)
             {
                 _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
-                if (_path != null)
-                {
-                    _currentPathIndex = 0;
-                }
-                
-                
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
 
@@ -80,49 +74,27 @@ namespace Mechanics.Npc
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
 
-            Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.target.position;
+            
+            
+            Vector3 desiredPos = npc.target.position;
+            
+            if (_path != null)
+            {
+                desiredPos =  npc.pathFinder.GetDesiredPosition(_path[0]);
+                
+                if (_path.Count > 1)
+                {
+                    if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
+                    {
+                        desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
+                    }
+                }
+            }
             
             Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
             
-            ProcessTarget(desiredPos);
+            ProcessDistanceAndProximity(desiredPos, _path != null);
             Rotate(npc.transform, desiredPos, npc.rotationSpeed * Time.deltaTime);
-        }
-
-        private void ProcessTarget(Vector3 desiredPos)
-        {
-            float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.target.position);
-
-            //TODO: If not reachable -> move to last list position and scream
-
-            #region If rechable-> process path distance, target under attack distance -> attack
-
-            if (_isReachable)
-            {
-                ProcessPathProximity();
-
-                if (_path != null)
-                {
-                    float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, desiredPos);
-                    if (plannerPathDistance < npc.stopDistance)
-                    {
-                        _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
-                    }
-                }
-                
-                if(npc.CanAttack) Attack(targetPlannerDistance < npc.attackDistance);
-                else if (_isAttacking) Attack(false);
-            }
-
-            #endregion
-
-            #region If not reachable -> Stop if distance is less than stop distance and vice vers
-
-            else
-            {
-                ProcessPathProximity();
-            }
-
-            #endregion
         }
 
         private void Attack(bool attack)
@@ -130,8 +102,9 @@ namespace Mechanics.Npc
             if (attack) npc.onAttack?.Invoke();
 
             if (_isAttacking == attack) return;
+            
             _isAttacking = attack;
-            npc.animator.SetBool(Attack1, attack);
+            npc.animator.SetBool(Attack1, _isAttacking);
         }
 
         private void StopMoving()
@@ -175,18 +148,54 @@ namespace Mechanics.Npc
         /// <summary>
         /// Moves if path is not blocked
         /// </summary>
-        private void ProcessPathProximity()
+        private void ProcessDistanceAndProximity(Vector3 desiredPos, bool hasPath)
         {
+
+            bool stopMovement = false;
+            
+            if (!hasPath)
+            {
+                float distance = ThemaVector.PlannerDistance(npc.transform.position, desiredPos);
+                stopMovement = distance < npc.stopDistance;
+                
+                if (npc.CanAttack)
+                {
+                    Attack(distance < npc.attackDistance);
+                }
+                else if (_isAttacking)
+                {
+                    Attack(false);
+                }
+                
+            }
+            else
+            {
+                if(_isAttacking) Attack(false);
+            }
+            
             if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
             {
-                if (!_isStopped) StopMoving();
+                stopMovement = true;
                 npc.animator.SetBool(PathBlocked, true);
             }
             else
             {
-                if (_isStopped) StartMoving();
                 npc.animator.SetBool(PathBlocked, false);
             }
+            
+            
+            if (stopMovement)
+            {
+                if(!_isStopped) StopMoving();
+            }
+            else
+            {
+                if(_isStopped) StartMoving();
+            }
+            
+            
+           
+            
         }
     }
 }

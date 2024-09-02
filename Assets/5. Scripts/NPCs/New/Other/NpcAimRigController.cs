@@ -1,18 +1,17 @@
-using System;
 using System.Collections;
-using Mechanics.Npc;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-namespace NPCs.New
+namespace NPCs.New.Other
 {
-    public class InfectedRigController : MonoBehaviour
+    public class NpcAimRigController : MonoBehaviour
     {
         public Npc npc;
         public Rig aimRig;
         public Transform aimTarget;
         public Vector3 aimOffset;
-
+        public float transitionTime;
+        
         private bool _aimRigEnabled;
         private Transform _target;
         private Coroutine _aimRigCoroutine;
@@ -74,7 +73,7 @@ namespace NPCs.New
             {
                 StopCoroutine(_aimRigCoroutine);
             }
-            _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(1));
+            _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(1, transitionTime));
 
         }
 
@@ -82,14 +81,12 @@ namespace NPCs.New
         {
             if(!_aimRigEnabled) return;
             
-            _aimRigEnabled = false;
-            _target = null;
             
             if (_aimRigCoroutine != null)
             {
                 StopCoroutine(_aimRigCoroutine);
             }
-            _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(0));
+            _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(0, transitionTime));
         }
         
         private IEnumerator UpdateAimRigWeight(float newWeight, float time = 0.5f)
@@ -104,6 +101,15 @@ namespace NPCs.New
                 yield return null;
             }
 
+            aimRig.weight = newWeight;
+
+            //SET AIR RIG ENABLED TO FALSE IF WEIGHT IS 0 only after the transition is done
+            if (newWeight == 0)
+            {
+                _aimRigEnabled = false;
+                _target = null;
+            }
+            
             _aimRigCoroutine = null;
         }
     }

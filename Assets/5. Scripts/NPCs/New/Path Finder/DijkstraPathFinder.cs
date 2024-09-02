@@ -9,7 +9,6 @@ namespace NPCs.New
     {
         private List<int>[] _adjacencyList;
         public List<BakedPath> bakedPaths;
-        public LayerMask layerMask;
 
 
         #region Editor

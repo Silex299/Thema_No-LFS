@@ -5,8 +5,6 @@ namespace NPCs.New
 {
     public class CustomPathFinderBase : PathFinderBase
     {
-        public LayerMask layerMask;
-        
         public override Vector3 GetDesiredPosition(int index)
         {
             return waypoints[index].position;

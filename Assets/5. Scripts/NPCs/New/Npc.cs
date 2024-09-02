@@ -84,6 +84,7 @@ namespace NPCs.New
 
         private void OnDeath()
         {
+            print("Calling Npc after death");
             ChangeState(NpcStates.AfterDeath);
         }
 

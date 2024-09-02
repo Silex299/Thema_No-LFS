@@ -14,6 +14,7 @@ namespace Player_Scripts
 
         public void ChangeState()
         {
+            print("fuck");
             var playerMovement = PlayerMovementController.Instance;
             var player = playerMovement.player;
 

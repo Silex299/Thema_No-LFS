@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace NPCs.New
@@ -6,6 +7,7 @@ namespace NPCs.New
     public class PathFinderBase : MonoBehaviour
     {
         public Transform[] waypoints;
+        public LayerMask layerMask;
 
         public virtual Vector3 GetDesiredPosition(int index)
         {

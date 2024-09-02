@@ -18,6 +18,7 @@ namespace Weapons.NPC_Weapon
         [SerializeField, BoxGroup("References")] private AudioSource source;
         
         [SerializeField, BoxGroup("Fire Property")] private float damage = 101;
+        [SerializeField, BoxGroup("Fire Property")] private float firstAttackDelay = 1;
         [SerializeField, BoxGroup("Fire Property")] private bool canFire = true;
         [SerializeField, BoxGroup("Fire Property")] private float tracerLifetime;
         [SerializeField, BoxGroup("Fire Property")] internal float bulletSpeed;
@@ -56,7 +57,13 @@ namespace Weapons.NPC_Weapon
 
             if (_lastFireTime == 0)
             {
-                _lastFireTime = Time.time + 0.2f;
+                _lastFireTime = Time.time + firstAttackDelay;
+                return;
+            }
+            else if (Time.time > _lastFireTime + 0.5f )
+            {
+                _lastFireTime = Time.time + firstAttackDelay;
+                return;
             }
             
             if (Time.time < _lastFireTime + (1 / fireRate))
