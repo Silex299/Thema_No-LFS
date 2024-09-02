@@ -39,7 +39,10 @@ namespace NPCs.New
         
         [FoldoutGroup("Chase")] public float attackDistance;
         internal Action onAttack;
+        public bool CanAttack { get; set; } = true;
+
         #endregion
+        
         #region After Death
         [FoldoutGroup("After Death")] public bool serveillanceAfterDeath;
         #endregion

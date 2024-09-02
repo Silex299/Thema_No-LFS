@@ -18,7 +18,7 @@ namespace Managers
 
         [BoxGroup("Action")] public Image actionFill;
         [BoxGroup("Action")] public TextMeshProUGUI actionText;
-        
+
         [SerializeField, BoxGroup("Params")] private float fadeTransitionTime;
 
 
@@ -83,10 +83,8 @@ namespace Managers
         private Coroutine _fadingCoroutine;
 
 
-
         #region Action Fill
-        
-        
+
         public void UpdateActionFill(float fraction, string text = ">")
         {
             if (Mathf.Approximately(fraction, 0) || Mathf.Approximately(fraction, 1))
@@ -101,7 +99,7 @@ namespace Managers
                     actionText.text = text;
                 }
             }
-            
+
             actionFill.fillAmount = fraction;
         }
 
@@ -112,13 +110,11 @@ namespace Managers
             var pos = myCamera.WorldToScreenPoint(position + offset);
             actionFill.rectTransform.position = pos;
         }
-        
 
         #endregion
 
         #region Fades
 
-        
         public void FadeIn(float transitionTime = 0.2f)
         {
             if (_fadingCoroutine != null)
@@ -141,7 +137,7 @@ namespace Managers
             }
         }
 
-        private IEnumerator FadeEnumerator( float endAlpha,float transitionTime = 0.2f, Action action = null)
+        private IEnumerator FadeEnumerator(float endAlpha, float transitionTime = 0.2f, Action action = null)
         {
             float timeElapsed = 0;
             Color faderColor = fader.color;
@@ -169,7 +165,6 @@ namespace Managers
 
             _fadingCoroutine = StartCoroutine(FadeEnumerator(0, transitionTime));
         }
-        
 
         #endregion
 
@@ -185,7 +180,7 @@ namespace Managers
                 _isLcpViewOpen = true;
             }
 
-            FadeIn(Action);
+            FadeIn(Action, 2);
         }
 
         private void CloseRestartOrExitView()
@@ -196,7 +191,7 @@ namespace Managers
             animator.Play("EXIT_LCP_VIEW");
             FadeOut();
         }
-        
+
         private void TakeDamage(float fraction)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -220,12 +215,12 @@ namespace Managers
             damageImage.color = color;
         }
 
-        
+
         public void LoadUnReachableMenu(bool load)
         {
             animator.Play(load ? "LoadUnreachableMenu" : "UnLoadUnreachableMenu");
         }
-        
+
         #endregion
 
         #region Button Methods
@@ -238,7 +233,6 @@ namespace Managers
 
         public void LoadLastCheckpointWithTransition()
         {
-            
         }
 
         #endregion

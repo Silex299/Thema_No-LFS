@@ -19,13 +19,6 @@ namespace Player_Scripts
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(transform.position + Vector3.up * player.sphereCastOffset, player.sphereCastRadius);
-        }
-
         private void Awake()
         {
             if (PlayerMovementController.Instance != null)

@@ -33,7 +33,6 @@ namespace Mechanics.Npc
         public override void Update()
         {
             Move();
-            ProcessTarget();
         }
 
         public override void Exit()
@@ -68,6 +67,8 @@ namespace Mechanics.Npc
                 {
                     _currentPathIndex = 0;
                 }
+                
+                
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
 
@@ -80,10 +81,14 @@ namespace Mechanics.Npc
             npc.animator.SetFloat(Speed, _speedMultiplier);
 
             Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.target.position;
+            
+            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
+            
+            ProcessTarget(desiredPos);
             Rotate(npc.transform, desiredPos, npc.rotationSpeed * Time.deltaTime);
         }
 
-        private void ProcessTarget()
+        private void ProcessTarget(Vector3 desiredPos)
         {
             float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.target.position);
 
@@ -97,14 +102,15 @@ namespace Mechanics.Npc
 
                 if (_path != null)
                 {
-                    float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]));
+                    float plannerPathDistance = GameVector.PlanarDistance(npc.transform.position, desiredPos);
                     if (plannerPathDistance < npc.stopDistance)
                     {
                         _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
                     }
                 }
                 
-                Attack(targetPlannerDistance < npc.attackDistance);
+                if(npc.CanAttack) Attack(targetPlannerDistance < npc.attackDistance);
+                else if (_isAttacking) Attack(false);
             }
 
             #endregion

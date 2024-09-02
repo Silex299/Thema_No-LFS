@@ -20,7 +20,7 @@ namespace Mechanics.Npc
         {
             Vector3 forward = desiredPos - transform.position;
             forward.y = 0;
-            Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
+            Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
         }
     }
