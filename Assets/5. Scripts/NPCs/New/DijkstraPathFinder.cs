@@ -7,20 +7,22 @@ namespace NPCs.New
 {
     public class DijkstraPathFinder : PathFinderBase
     {
-        
-
-        public List<int>[] adjacencyList;
+        private List<int>[] _adjacencyList;
         public List<BakedPath> bakedPaths;
         public LayerMask layerMask;
-        
-        
+
+
+        #region Editor
+
+#if UNITY_EDITOR
+
         private void BakeAdjacencyList()
         {
-            adjacencyList = new List<int>[waypoints.Length];
+            _adjacencyList = new List<int>[waypoints.Length];
 
             for (int i = 0; i < waypoints.Length; i++)
             {
-                adjacencyList[i] = new List<int>();
+                _adjacencyList[i] = new List<int>();
 
                 for (int j = 0; j < waypoints.Length; j++)
                 {
@@ -34,10 +36,11 @@ namespace NPCs.New
                         continue;
                     }
 
-                    adjacencyList[i].Add(j);
+                    _adjacencyList[i].Add(j);
                 }
             }
         }
+
         [Button]
         public void BakePath()
         {
@@ -65,9 +68,9 @@ namespace NPCs.New
                 while (priorityQueue.Count > 0)
                 {
                     int currentWaypointIndex = priorityQueue.Dequeue().Value;
-                    for (int i = 0; i < adjacencyList[currentWaypointIndex].Count; i++)
+                    for (int i = 0; i < _adjacencyList[currentWaypointIndex].Count; i++)
                     {
-                        int neighbourIndex = adjacencyList[currentWaypointIndex][i];
+                        int neighbourIndex = _adjacencyList[currentWaypointIndex][i];
                         float distanceToNeighbour = Vector3.Distance(waypoints[currentWaypointIndex].position, waypoints[neighbourIndex].position);
                         float tentativeDistance = distances[currentWaypointIndex] + distanceToNeighbour;
 
@@ -90,21 +93,23 @@ namespace NPCs.New
             }
         }
 
-        
+#endif
+
+        #endregion
+
         public override bool GetPath(Vector3 from, Vector3 to, out List<int> path)
         {
-
             path = null;
-            
+
             if (IsDirectPathPossible(from, to))
             {
                 return true;
             }
 
             var pathPair = GetPathPair(from, to);
-            if(pathPair.Item1 == -1 || pathPair.Item2 == -1) return false;
-            
-            path =  ConstructPath(pathPair.Item1, pathPair.Item2);
+            if (pathPair.Item1 == -1 || pathPair.Item2 == -1) return false;
+
+            path = ConstructPath(pathPair.Item1, pathPair.Item2);
             return true;
         }
 
@@ -152,7 +157,7 @@ namespace NPCs.New
 
             return pathPair;
         }
-        
+
         private bool IsPathPossible(int from, int to, out float weight)
         {
             if (from == to)
@@ -189,7 +194,7 @@ namespace NPCs.New
         {
             return !Physics.Linecast(from, to, layerMask);
         }
-        
+
         public override Vector3 GetDesiredPosition(int index)
         {
             return waypoints[index].position;
@@ -203,5 +208,4 @@ namespace NPCs.New
         public int[] previousPathIndex;
         public float[] distances;
     }
-
 }
