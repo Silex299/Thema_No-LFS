@@ -7,7 +7,6 @@ namespace Mechanics.Npc
     public class NpcAfterDeathState : NpcStateBase
     {
 
-        private bool _isReachable;
         private float _speedMultiplier;
         private bool _isStopped;
         
@@ -62,32 +61,20 @@ namespace Mechanics.Npc
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            Rotate(npc.transform, npc.pathFinder.target.position,
-                _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+            Rotate(npc.transform, npc.target.position,  _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
         private void ProcessTarget()
         {
-            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
+            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.target.position);
             
-            #region if target is reachable -> move to target or vice versa
-            if (_isReachable)
+            if (plannerDistance < npc.stopDistance)
             {
-                if (plannerDistance < npc.stopDistance)
-                {
-                    if(!_isStopped) StopMoving();
-                }
-                else
-                {
-                    if(_isStopped) StartMoving();
-                }
-            }
-            #endregion
-            #region if not reachable -> stop moving
-            else
-            { 
                 if(!_isStopped) StopMoving();
             }
-            #endregion
+            else
+            {
+                if(_isStopped) StartMoving();
+            }
         }
         private void StopMoving()
         {

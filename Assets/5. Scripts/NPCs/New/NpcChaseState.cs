@@ -63,32 +63,11 @@ namespace Mechanics.Npc
         {
             while (true)
             {
-                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, out _path);
-
+                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
                 if (_path != null)
                 {
-                    #region Calculate closest point in path
-
-
-#if UNITY_EDITOR
-                    npc.TestPath(_path);
-#endif
-                    
                     _currentPathIndex = 0;
-                    float minDistance = float.MaxValue;
-                    for (int i = 0; i < _path.Count; i++)
-                    {
-                        float distance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.GetDesiredPosition(_path[i]));
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                            _currentPathIndex = i;
-                        }
-                    }
-
-                    #endregion
                 }
-
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
 
@@ -100,18 +79,13 @@ namespace Mechanics.Npc
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
 
-            Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.pathFinder.target.position;
-
-            //debug line from npc to desired position //REMOVE
-            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
-            Debug.DrawRay(npc.transform.position + Vector3.up * 2f, npc.transform.forward, Color.blue);
-            
+            Vector3 desiredPos = (_path != null) ? npc.pathFinder.GetDesiredPosition(_path[_currentPathIndex]) : npc.target.position;
             Rotate(npc.transform, desiredPos, npc.rotationSpeed * Time.deltaTime);
         }
 
         private void ProcessTarget()
         {
-            float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.pathFinder.target.position);
+            float targetPlannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.target.position);
 
             //TODO: If not reachable -> move to last list position and scream
 
@@ -129,7 +103,7 @@ namespace Mechanics.Npc
                         _currentPathIndex = (_currentPathIndex + 1) % _path.Count;
                     }
                 }
-
+                
                 Attack(targetPlannerDistance < npc.attackDistance);
             }
 

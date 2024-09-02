@@ -43,7 +43,7 @@ namespace NPCs.New
         {
             if (!_aimRigEnabled)
             {
-                SetAimRig(npc.pathFinder.target);
+                SetAimRig(npc.target);
             }
             else
             {

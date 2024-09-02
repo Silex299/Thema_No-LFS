@@ -22,7 +22,9 @@ namespace NPCs.New
         [FoldoutGroup("Npc Properties")] public float accelerationTime = 1;
         
         
-        [FoldoutGroup("Path Finder")] public CustomPathFinderBase pathFinder;
+        [FoldoutGroup("Path Finder")] public PathFinderBase pathFinder;
+        [FoldoutGroup("Path Finder")] public Transform target;
+        [FoldoutGroup("Path Finder")] public float targetOffset;
         [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
         [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
@@ -67,26 +69,6 @@ namespace NPCs.New
                 serveillancePoints.Add(point.position);
             }
         }
-
-        public void TestPath(List<int> pathList)
-        {
-            //if path list has more than 1 element draw lines from each element to the next
-            if (pathList?.Count > 0)
-            {
-                //draw line from position to first index
-                Debug.DrawLine(transform.position + transform.up * npcEyeHeight, pathFinder.GetDesiredPosition(pathList[0]), Color.white, 1);
-                    
-                for (int i = 0; i < pathList.Count - 1; i++)
-                {
-                    Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[i]), pathFinder.GetDesiredPosition(pathList[i + 1]), Color.white, 1);
-                }
-                    
-                //draw line from last index to target
-                Debug.DrawLine(pathFinder.GetDesiredPosition(pathList[^1]), pathFinder.target.position + pathFinder.target.up * pathFinder.targetOffset, Color.white,1 );
-            }
-            
-        }
-        
 #endif
         #endregion
 

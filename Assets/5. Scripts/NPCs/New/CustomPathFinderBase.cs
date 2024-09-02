@@ -1,43 +1,20 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mechanics.Npc
+namespace NPCs.New
 {
-    public class CustomPathFinderBase : MonoBehaviour
+    public class CustomPathFinderBase : PathFinderBase
     {
-        public List<Transform> waypoints;
-        public Transform target;
-        public float targetOffset;
         public LayerMask layerMask;
-
-
-#if UNITY_EDITOR
-
-        private void OnDrawGizmos()
-        {
-            if(Application.isPlaying) return;
-            //draw lines for each point to every other point
-            for (int i = 0; i < waypoints.Count; i++)
-            {
-                for (int j = 0; j < waypoints.Count; j++)
-                {
-                    if (i == j) continue;
-                    Gizmos.color = IsDirectPathPossible(waypoints[i].position, waypoints[j].position) ? Color.green : Color.cyan;
-                    Gizmos.DrawLine(waypoints[i].position, waypoints[j].position);
-                }
-            }
-        }
-
-#endif
         
-        public Vector3 GetDesiredPosition(int index)
+        public override Vector3 GetDesiredPosition(int index)
         {
             return waypoints[index].position;
         }
-        public bool GetPath(Vector3 from, out List<int> path)
+        
+        public override bool GetPath(Vector3 from, Vector3 to, out List<int> path)
         {
-            if (IsTargetInSight(from))
+            if (IsTargetInSight(from, to))
             {
                 path = null;
                 return true;
@@ -52,7 +29,7 @@ namespace Mechanics.Npc
             {
                 int current = exploreQueue.Dequeue();
 
-                for (int point = 0; point < waypoints.Count; point++)
+                for (int point = 0; point < waypoints.Length; point++)
                 {
                     if(point == current) continue;
                     if(!pathMap.ContainsKey(point) && IsDirectPathPossible((current == -1 ? from : waypoints[current].position), waypoints[point].position))
@@ -60,7 +37,7 @@ namespace Mechanics.Npc
                         pathMap[point] = current;
                         exploreQueue.Enqueue(point);
 
-                        if (IsTargetInSight(waypoints[point].position))
+                        if (IsTargetInSight(waypoints[point].position, to))
                         {
                             path = BuildPath(point, pathMap);
                             return true;
@@ -72,6 +49,7 @@ namespace Mechanics.Npc
             path = null;
             return false;
         }
+        
         private List<int> BuildPath(int lastIndex, Dictionary<int, int> pathMap)
         {
             List<int> path = new List<int>();
@@ -88,9 +66,9 @@ namespace Mechanics.Npc
         {
             return !Physics.Linecast(from1, to, layerMask);
         }
-        private bool IsTargetInSight(Vector3 fromPosition)
+        private bool IsTargetInSight(Vector3 fromPosition, Vector3 toPosition)
         {
-            return !Physics.Linecast(fromPosition, target.position + Vector3.up * targetOffset, layerMask);
+            return !Physics.Linecast(fromPosition, toPosition, layerMask);
         }
     }
 }
