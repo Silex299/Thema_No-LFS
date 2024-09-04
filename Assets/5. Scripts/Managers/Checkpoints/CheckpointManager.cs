@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -21,6 +22,8 @@ namespace Managers.Checkpoints
         [SerializeField, BoxGroup("Trackers")] private Tracker[] trackers;
 
 
+        #region Editor
+        
 #if UNITY_EDITOR
         [BoxGroup("Checkpoints"), Button("Get Checkpoints", ButtonSizes.Large), GUIColor(0.1f, 1f, 0.2f)]
         public void GetCheckpoints()
@@ -44,19 +47,21 @@ namespace Managers.Checkpoints
         }
 
 #endif
+        
+        #endregion
 
 
         public int CurrentCheckpoint => currentCheckpoint;
+        
+        public static CheckpointManager Instance { get; private set; }
+        public Action<int> onCheckpointLoad;
 
-
-        private static CheckpointManager _instance;
-        public static CheckpointManager Instance => _instance;
 
         private void Awake()
         {
             if (CheckpointManager.Instance == null)
             {
-                CheckpointManager._instance = this;
+                CheckpointManager.Instance = this;
             }
             else if (CheckpointManager.Instance != this)
             {
@@ -69,18 +74,16 @@ namespace Managers.Checkpoints
             //LOAD CHECKPOINT FIRST
             currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
             LoadCheckpointData();
-
-            playerTracker.InitialSetup(checkpoints[currentCheckpoint]);
-            checkpoints[currentCheckpoint].LoadThisCheckpoint();
-            SetTrackers(true);
+            LoadCheckpoint(true);
         }
 
 
-        public void LoadCheckpoint()
+        public void LoadCheckpoint(bool initialSetup = false)
         {
             playerTracker.ResetItem(checkpoints[currentCheckpoint]);
             checkpoints[currentCheckpoint].LoadThisCheckpoint();
-            SetTrackers(false);
+            SetTrackers(initialSetup);
+            onCheckpointLoad?.Invoke(currentCheckpoint);
         }
 
 
@@ -120,10 +123,8 @@ namespace Managers.Checkpoints
             };
             BinaryFormatter formatter = new BinaryFormatter();
 
-            using (FileStream stream = new FileStream(SavePath, FileMode.Create))
-            {
-                formatter.Serialize(stream, data);
-            }
+            using FileStream stream = new FileStream(SavePath, FileMode.Create);
+            formatter.Serialize(stream, data);
         }
 
         private void LoadCheckpointData()
@@ -131,20 +132,10 @@ namespace Managers.Checkpoints
             if (File.Exists(SavePath))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                using (FileStream stream = new FileStream(SavePath, FileMode.Open))
-                {
-                    CheckpointInfo data = (CheckpointInfo)formatter.Deserialize(stream);
+                using FileStream stream = new FileStream(SavePath, FileMode.Open);
+                CheckpointInfo data = (CheckpointInfo)formatter.Deserialize(stream);
 
-                    if(currentLevelIndex!= data.level)
-                    {
-                        currentCheckpoint = 0;
-                    }
-                    else
-                    {
-                        currentCheckpoint = data.checkpoint;
-                    }
-
-                }
+                currentCheckpoint = currentLevelIndex!= data.level ? 0 : data.checkpoint;
             }
             else
             {
