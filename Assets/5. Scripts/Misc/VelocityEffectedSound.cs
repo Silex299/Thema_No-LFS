@@ -34,7 +34,7 @@ namespace Misc
         
             if(Time.time < _lastUpdateTime + velocityUpdateInterval) return;
         
-            _velocity = (transform.position - _lastPos).magnitude / Time.fixedDeltaTime;
+            _velocity = (transform.position - _lastPos).magnitude / (Time.time - _lastUpdateTime);
             _lastPos = transform.position;
             _lastUpdateTime = Time.time;
         }

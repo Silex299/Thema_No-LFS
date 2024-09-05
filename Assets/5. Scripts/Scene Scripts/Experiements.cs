@@ -15,7 +15,7 @@ namespace Scene_Scripts
 
         [FoldoutGroup("Other Params")] public Vector3 initialRopeForce;
         
-        private void Start()
+        private void OnEnable()
         {
             CheckpointManager.Instance.onCheckpointLoad += OnNewCheckpointLoad;
         }
@@ -26,6 +26,7 @@ namespace Scene_Scripts
 
         private void OnNewCheckpointLoad(int checkpoint)
         {
+            print(checkpoint + " ::: Hello " );
             if (checkpoint == 0)
             {
                 InitialSceneSetup();

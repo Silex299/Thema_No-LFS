@@ -126,8 +126,6 @@ namespace Player_Scripts
         public PlayerMovementController MovementController => movementController;
         public CharacterController CController => characterController;
         public PlayerHealth Health => health;
-        
-        [Obsolete]
         public PlayerEffectsManager EffectsManager => effectsManager;
 
         

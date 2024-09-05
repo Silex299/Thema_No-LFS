@@ -20,6 +20,7 @@ namespace Managers.Checkpoints
         [BoxGroup("Player Movement")] public bool canBoost;
         [BoxGroup("Player Movement")] public bool canPlayAlternateMovement;
         
+        
         [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
         public int checkpointIndex;

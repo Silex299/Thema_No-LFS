@@ -77,7 +77,11 @@ namespace Player_Scripts.Volumes
                 var dragLocalPos = transform.InverseTransformPoint(_playerTransform.position);
                 dragLocalPos.y = dragRestrictedY;
                 dragLocalPos += _playerTransform.TransformDirection(dragEffectOffset);
+                
+                var dragRotation = _playerTransform.eulerAngles;
+                
                 _spawnedDragEffect.transform.localPosition = dragLocalPos;
+                _spawnedDragEffect.transform.eulerAngles = dragRotation;
                 
             }
         }

@@ -21,6 +21,9 @@ namespace Player_Scripts
         [FoldoutGroup("Clips")] public Dictionary<string, KeyedAudioClip> interactions;
         [FoldoutGroup("Clips")] public Dictionary<string, AudioClipWithVolume> playerSounds;
 
+        public float PlayerInteractionVolumeMultiplier { get; set; } = 1;
+        public float PlayerVolumeMultiplier { get; set; } = 1;
+
         public struct KeyedAudioClip
         {
             public readonly Dictionary<string, AudioClip[]> clips;
@@ -65,7 +68,7 @@ namespace Player_Scripts
                 if (!steps.TryGetValue(player.GroundTag, out var audioClips)) return;
             
                 var randomClip = audioClips[UnityEngine.Random.Range(0, audioClips.Length)];
-                playerInteractionSource.PlayOneShot(randomClip, stepInfo == null ? 1 : stepInfo.volume);
+                playerInteractionSource.PlayOneShot(randomClip, stepInfo == null ? PlayerInteractionVolumeMultiplier : (PlayerInteractionVolumeMultiplier * stepInfo.volume));
             }
             void PlayEffects()
             {
@@ -89,7 +92,7 @@ namespace Player_Scripts
             if (!groundInteractions.clips.ContainsKey(playerInteraction.interactionKey)) return;
             if (!groundInteractions.clips.TryGetValue(playerInteraction.interactionKey, out var clips)) return;
 
-            playerInteractionSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)], playerInteraction.volume);
+            playerInteractionSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)], playerInteraction.volume * PlayerVolumeMultiplier);
 
 
         }
@@ -99,7 +102,7 @@ namespace Player_Scripts
             if (!playerSounds.ContainsKey(soundKey)) return;
             if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;
             
-            playerSource.PlayOneShot(audioClip.clip, audioClip.volume);
+            playerSource.PlayOneShot(audioClip.clip, audioClip.volume * PlayerVolumeMultiplier);
         }
         
         
