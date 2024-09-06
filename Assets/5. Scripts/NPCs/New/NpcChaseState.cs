@@ -145,6 +145,8 @@ namespace Mechanics.Npc
             _speedCoroutine = null;
         }
 
+        private float _pathBlockTime = 0;
+        private bool _pathBlocked;
         /// <summary>
         /// Moves if path is not blocked
         /// </summary>
@@ -175,12 +177,26 @@ namespace Mechanics.Npc
             
             if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
             {
-                stopMovement = true;
-                npc.animator.SetBool(PathBlocked, true);
+                if (!_pathBlocked)
+                {
+                    _pathBlocked = true;
+                    _pathBlockTime = Time.time;
+                    stopMovement = true;
+                    npc.animator.SetBool(PathBlocked, true);
+                }
+                else if(_pathBlockTime + npc.returnInterval < Time.time)
+                {
+                    _pathBlocked = false;
+                    npc.animator.SetBool(PathBlocked, false);
+                    npc.ChangeState(1);
+                }
             }
             else
             {
-                npc.animator.SetBool(PathBlocked, false);
+                if (_pathBlocked)
+                {
+                    npc.animator.SetBool(PathBlocked, false);
+                }
             }
             
             

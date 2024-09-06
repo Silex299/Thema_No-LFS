@@ -50,14 +50,14 @@ namespace Mechanics.Npc
             }
             
         }
-        
+
         private void SetInitialAnimatorState()
         {
             npc.animator.SetInteger(StateIndex, -1);
             _speedMultiplier = 1;
             _isStopped = false;
         }
-        
+
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);

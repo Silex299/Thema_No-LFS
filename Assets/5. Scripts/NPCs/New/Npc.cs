@@ -38,8 +38,11 @@ namespace NPCs.New
         #region Chase
         
         [FoldoutGroup("Chase")] public float attackDistance;
+        [FoldoutGroup("Chase")] public bool returnToServeillanceOnTargetLost;
+        [FoldoutGroup("Chase"), ShowIf(nameof(returnToServeillanceOnTargetLost))] public float returnInterval;
         public bool CanAttack { get; set; } = true;
-
+        
+        
         #endregion
         
         #region After Death
