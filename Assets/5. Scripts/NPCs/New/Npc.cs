@@ -38,7 +38,6 @@ namespace NPCs.New
         #region Chase
         
         [FoldoutGroup("Chase")] public float attackDistance;
-        internal Action onAttack;
         public bool CanAttack { get; set; } = true;
 
         #endregion
@@ -54,7 +53,13 @@ namespace NPCs.New
         private readonly NpcServeillanceState _serveillanceState = new NpcServeillanceState();
         private readonly NpcChaseState _chaseState = new NpcChaseState();
         private readonly NpcAfterDeathState _afterDeath = new NpcAfterDeathState();
+
+        #region Events
         
+        internal Action onAttack;
+        internal Action<int> onStateChange;
+        
+        #endregion
 
         #endregion
         
@@ -113,6 +118,7 @@ namespace NPCs.New
             };
             
             _currentState.Enter(this);
+            onStateChange?.Invoke((int)_currentStateType);
         }
         
         #region States

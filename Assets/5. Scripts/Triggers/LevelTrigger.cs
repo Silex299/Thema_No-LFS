@@ -196,10 +196,10 @@ namespace Triggers
             if (!canPull)
             {
                 //reset the trigger
+                //Play reset sound 
+                if(soundSource && triggerPulled!=_defaultPull) soundSource.PlayOneShot(disabledResetSound.clip, disabledResetSound.volume);
                 triggerPulled = _defaultPull;
                 leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
-                if(soundSource) soundSource.PlayOneShot(disabledResetSound.clip, disabledResetSound.volume);
-                //Play reset sound probably
             }
             //If you don't get e input, go back to default;
             playerController.PlayAnimation("Default", 0.2f, 1);

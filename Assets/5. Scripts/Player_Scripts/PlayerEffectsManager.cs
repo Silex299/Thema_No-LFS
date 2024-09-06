@@ -89,8 +89,6 @@ namespace Player_Scripts
         public void PlayPlayerSound(string soundKey)
         {
             
-            print(soundKey);
-            
             if (!playerSounds.ContainsKey(soundKey)) return;
             if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;
             
