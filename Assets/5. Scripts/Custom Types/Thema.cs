@@ -28,6 +28,20 @@ namespace Thema_Type
         LEFT,
         RIGHT
     }
+    
+    [System.Serializable]
+    public struct SoundClip
+    {
+        public AudioClip clip;
+        public float volume;
+    }
+    
+    [System.Serializable]
+    public struct SoundClipArray
+    {
+        public AudioClip[] clips;
+        public float volume;
+    }
 
     #endregion
 
@@ -62,8 +76,7 @@ namespace Thema_Type
             return Vector3.Distance(a, b);
         }
     }
-
-
+    
     [System.Serializable]
     public class AdvancedCurvedAnimation
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,62 +10,71 @@ namespace Triggers
     [RequireComponent(typeof(Collider))]
     public class LevelTrigger : MonoBehaviour
     {
-        [BoxGroup("Animation Params")] public string trigger_Pull_Enter = "Trigger_Pull_Enter";
-        [BoxGroup("Animation Params")] public string trigger_Push_Enter = "Trigger_Push_Enter";
-        [BoxGroup("Animation Params")] public string trigger_Pull_Enter_Inverse = "Trigger_Pull_Enter_Inv";
-        [BoxGroup("Animation Params")] public string trigger_Push_Enter_Inverse = "Trigger_Push_Enter_Inv";
-        [BoxGroup("Animation Params")] public float engageTransitionTime = 0.5f;
-        [BoxGroup("Animation Params")] public float engageDelay = 1f;
-        [BoxGroup("Animation Params")] public float triggerDelay = 1f;
+        #region Anim Params
+        
+        [FoldoutGroup("Animation Params")] public string trigger_Pull_Enter = "Trigger_Pull_Enter";
+        [FoldoutGroup("Animation Params")] public string trigger_Push_Enter = "Trigger_Push_Enter";
+        [FoldoutGroup("Animation Params")] public string trigger_Pull_Enter_Inverse = "Trigger_Pull_Enter_Inv";
+        [FoldoutGroup("Animation Params")] public string trigger_Push_Enter_Inverse = "Trigger_Push_Enter_Inv";
+        [FoldoutGroup("Animation Params")] public float engageTransitionTime = 0.5f;
+        [FoldoutGroup("Animation Params")] public float engageDelay = 1f;
+        [FoldoutGroup("Animation Params")] public float triggerDelay = 1f;
+        
+        #endregion
+        #region Trigger Params
 
-        [SerializeField, BoxGroup("Trigger Params")]
+        [SerializeField, FoldoutGroup("Trigger Params")]
         private bool triggerPulled;
 
-        [SerializeField, BoxGroup("Trigger Params")]
+        [SerializeField, FoldoutGroup("Trigger Params")]
         private Animator leverAnimator;
 
-        [SerializeField, BoxGroup("Trigger Params")]
+        [SerializeField, FoldoutGroup("Trigger Params")]
         private float actionDelay;
 
-        [SerializeField, BoxGroup("Player Movement")]
+        [SerializeField, FoldoutGroup("Player Movement")]
         private Transform forwardPosition;
 
-        [SerializeField, BoxGroup("Player Movement")]
+        [SerializeField, FoldoutGroup("Player Movement")]
         private Transform backwardPosition;
 
-        [SerializeField, BoxGroup("Player Movement")]
+        [SerializeField, FoldoutGroup("Player Movement")]
         private float movementSpeed;
 
-        [SerializeField, BoxGroup("Player Movement")]
+        [SerializeField, FoldoutGroup("Player Movement")]
         private float rotationSpeed;
-
-
-        [SerializeField, BoxGroup("Events")] private UnityEvent engageAction;
-        [SerializeField, BoxGroup("Events")] private UnityEvent triggerPullAction;
-        [SerializeField, BoxGroup("Events")] private UnityEvent triggerPushAction;
-
-        [SerializeField, BoxGroup("Sounds")] private AudioSource soundSource;
-        [SerializeField, BoxGroup("Sounds")] private AudioClip triggerSound;
-        [SerializeField, BoxGroup("Sounds")] private AudioClip disabledTriggerSound;
-
-        [Space(10)] public bool canPull = true;
-
+        
+        #endregion
+        #region Sounds
+        [SerializeField, FoldoutGroup("Sounds")] private AudioSource soundSource;
+        [SerializeField, FoldoutGroup("Sounds")] private SoundClip triggerSound;
+        [SerializeField, FoldoutGroup("Sounds")] private SoundClip disabledResetSound;
+        [SerializeField, FoldoutGroup("Sounds")] private SoundClip disabledTriggerSound;
+        #endregion
+        #region Events
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent engageAction;
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent triggerPullAction;
+        [SerializeField, FoldoutGroup("Events")] private UnityEvent triggerPushAction;
+        #endregion
+        #region Other Variables
+        
+        [FoldoutGroup("Misc")] public bool canPull = true;
+        #endregion
+        
+        #region Other Variables
         public bool CanPull
         {
             get => canPull;
             set => canPull = value;
         }
-
         public string Trigger_Pull_Enter
         {
             set => trigger_Pull_Enter = value;
         }
-
         public string Trigger_Pull_Enter_Inverse
         {
             set => trigger_Pull_Enter_Inverse = value;
         }
-
         private bool _playerIsInTrigger;
         private bool _triggerEngaged;
         private float _lastTriggerTime;
@@ -73,12 +83,12 @@ namespace Triggers
         /// If player is facing forward direction
         /// </summary>
         private bool _forwardDirection;
-
         private bool _defaultPull;
         private Coroutine _engageCoroutine;
         private static readonly int Trigger1 = Animator.StringToHash("Trigger");
-
-
+        
+        #endregion
+        
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player_Main"))
@@ -95,8 +105,6 @@ namespace Triggers
             }
         }
         
-        
-        
         private void Update()
         {
             if (!_playerIsInTrigger) return;
@@ -108,6 +116,17 @@ namespace Triggers
             }
         }
 
+
+
+        private void Start()
+        {
+            //Set Initial State
+            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+            _defaultPull = triggerPulled;
+        }
+
+
+        
         private IEnumerator EngageTrigger()
         {
             PlayerMovementController playerController = PlayerMovementController.Instance;
@@ -174,13 +193,12 @@ namespace Triggers
                 yield return null;
             }
 
-
-
             if (!canPull)
             {
                 //reset the trigger
                 triggerPulled = _defaultPull;
                 leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+                if(soundSource) soundSource.PlayOneShot(disabledResetSound.clip, disabledResetSound.volume);
                 //Play reset sound probably
             }
             //If you don't get e input, go back to default;
@@ -195,16 +213,6 @@ namespace Triggers
             _triggerEngaged = false;
             _engageCoroutine = null;
         }
-
-
-        private void Start()
-        {
-            //Set Initial State
-            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
-            _defaultPull = triggerPulled;
-        }
-
-
         public void Reset()
         {
             _triggerEngaged = false;
@@ -214,8 +222,6 @@ namespace Triggers
                 PlayerMovementController.Instance.DisablePlayerMovement(false);
             }
         }
-
-
         public void TriggerPull()
         {
             StartCoroutine(TriggerPullCoroutine());
@@ -228,7 +234,7 @@ namespace Triggers
             ChangeTriggerState(true);
             if (soundSource)
             {
-                soundSource.PlayOneShot(triggerSound);
+                soundSource.PlayOneShot(triggerSound.clip, triggerSound.volume);
             }
 
             if (canPull)
@@ -237,7 +243,6 @@ namespace Triggers
                 triggerPullAction.Invoke();
             }
         }
-
         public void TriggerPush()
         {
             StartCoroutine(TriggerPushCoroutine());
@@ -249,7 +254,7 @@ namespace Triggers
             ChangeTriggerState(false);
             if (soundSource)
             {
-                soundSource.PlayOneShot(disabledTriggerSound);
+                soundSource.PlayOneShot(disabledTriggerSound.clip, disabledTriggerSound.volume);
             }
 
             if (canPull)
@@ -258,14 +263,12 @@ namespace Triggers
                 triggerPushAction.Invoke();
             }
         }
-        
         private void ChangeTriggerState(bool pulled)
         {
             if (triggerPulled == pulled) return;
             triggerPulled = pulled;
             leverAnimator.Play(pulled ? "Trigger" : "Trigger Inverse");
         }
-
         public void ResetTrigger()
         {
             CanPull = true;

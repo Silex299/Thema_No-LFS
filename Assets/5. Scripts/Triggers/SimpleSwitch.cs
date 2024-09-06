@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,7 +19,8 @@ namespace Triggers
 
 
         [SerializeField, BoxGroup("Sound")] private AudioSource source;
-        [SerializeField, BoxGroup("Sound")] private AudioClip triggerClip;
+        [SerializeField, BoxGroup("Sound")] private SoundClip triggerClip;
+        [SerializeField, BoxGroup("Sound")] private SoundClip unTriggerClip;
 
 
         [BoxGroup("Events")] public UnityEvent triggeredEvents;
@@ -115,9 +117,15 @@ namespace Triggers
 
         private void TriggerSound()
         {
-            if (source)
+            if (!source) return;
+            
+            if (Triggered)
             {
-                source.PlayOneShot(triggerClip);
+                source.PlayOneShot(triggerClip.clip, triggerClip.volume);
+            }
+            else
+            {
+                source.PlayOneShot(unTriggerClip.clip, unTriggerClip.volume);
             }
         }
 

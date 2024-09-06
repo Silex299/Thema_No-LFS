@@ -63,6 +63,7 @@ public class Door : MonoBehaviour
             float timeElapsed = 0;
             
             
+            PlaySound(open);
             while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
@@ -81,7 +82,6 @@ public class Door : MonoBehaviour
             }
             
             isOpen = open;
-            PlaySound(open);
 
         }
         

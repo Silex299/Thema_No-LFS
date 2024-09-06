@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Scriptable;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,7 +20,7 @@ namespace Player_Scripts
 
         [FoldoutGroup("Clips")] public Dictionary<string, AudioClip[]> steps;
         [FoldoutGroup("Clips")] public Dictionary<string, KeyedAudioClip> interactions;
-        [FoldoutGroup("Clips")] public Dictionary<string, AudioClipWithVolume> playerSounds;
+        [FoldoutGroup("Clips")] public Dictionary<string, SoundClipArray> playerSounds;
 
         public float PlayerInteractionVolumeMultiplier { get; set; } = 1;
         public float PlayerVolumeMultiplier { get; set; } = 1;
@@ -27,21 +28,9 @@ namespace Player_Scripts
         public struct KeyedAudioClip
         {
             public readonly Dictionary<string, AudioClip[]> clips;
-
             public KeyedAudioClip(Dictionary<string, AudioClip[]> clips)
             {
                 this.clips = clips;
-            }
-        }
-        public struct AudioClipWithVolume
-        {
-            public readonly AudioClip clip;
-            public readonly float volume;
-
-            public AudioClipWithVolume(AudioClip clip, float volume)
-            {
-                this.clip = clip;
-                this.volume = volume;
             }
         }
         
@@ -99,10 +88,16 @@ namespace Player_Scripts
         
         public void PlayPlayerSound(string soundKey)
         {
+            
+            print(soundKey);
+            
             if (!playerSounds.ContainsKey(soundKey)) return;
             if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;
             
-            playerSource.PlayOneShot(audioClip.clip, audioClip.volume * PlayerVolumeMultiplier);
+            int randomIndex = UnityEngine.Random.Range(0, audioClip.clips.Length);
+            var clip = audioClip.clips[randomIndex];
+
+            playerSource.PlayOneShot(clip, audioClip.volume * PlayerVolumeMultiplier);
         }
         
         
