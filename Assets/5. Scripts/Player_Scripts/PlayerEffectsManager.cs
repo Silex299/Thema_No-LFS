@@ -45,6 +45,9 @@ namespace Player_Scripts
 
         public void PlaySteps(Object step)
         {
+            
+            if(player.DisabledPlayerMovement) return;
+            
             var stepInfo = step as Step;
             PlayStepSound();
             PlayEffects();
@@ -69,6 +72,8 @@ namespace Player_Scripts
         public void PlayPlayerInteraction(Object interaction)
         {
             
+            if(player.DisabledPlayerMovement) return;
+            
             var playerInteraction = interaction as PlayerInteraction;
             if(playerInteraction == null) return;
             
@@ -88,6 +93,7 @@ namespace Player_Scripts
         
         public void PlayPlayerSound(string soundKey)
         {
+            if(player.DisabledPlayerMovement) return;
             
             if (!playerSounds.ContainsKey(soundKey)) return;
             if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;

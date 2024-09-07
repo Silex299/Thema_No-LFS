@@ -1,6 +1,5 @@
-using Managers;
 using Managers.Checkpoints;
-using Player_Scripts;
+using Misc;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Scene_Scripts
 
 
         [FoldoutGroup("Scene Objects")] public Rigidbody firstRope;
-        [FoldoutGroup("Scene Objects")] public Player player;
+        [FoldoutGroup("Scene Objects")] public CutsceneManager cutsceneManager;
 
         [FoldoutGroup("Other Params")] public Vector3 initialRopeForce;
         
@@ -26,7 +25,6 @@ namespace Scene_Scripts
 
         private void OnNewCheckpointLoad(int checkpoint)
         {
-            print(checkpoint + " ::: Hello " );
             if (checkpoint == 0)
             {
                 InitialSceneSetup();
@@ -37,8 +35,7 @@ namespace Scene_Scripts
         public void InitialSceneSetup()
         {
             firstRope.AddForce(initialRopeForce, ForceMode.Impulse);
-            UIManager.Instance.FadeOut(0.5f);
-            player.AnimationController.Play("Fall", 1);
+            cutsceneManager.PlayClip(0);
         }
         
     }

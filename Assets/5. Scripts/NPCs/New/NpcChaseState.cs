@@ -195,6 +195,7 @@ namespace Mechanics.Npc
             {
                 if (_pathBlocked)
                 {
+                    _pathBlocked = false;
                     npc.animator.SetBool(PathBlocked, false);
                 }
             }
@@ -209,9 +210,9 @@ namespace Mechanics.Npc
                 if(_isStopped) StartMoving();
             }
             
-            
-           
-            
         }
+        
+        
+        
     }
 }
