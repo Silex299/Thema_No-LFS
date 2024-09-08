@@ -35,7 +35,7 @@ namespace Scene_Scripts
         public void InitialSceneSetup()
         {
             firstRope.AddForce(initialRopeForce, ForceMode.Impulse);
-            cutsceneManager.PlayClip(0);
+            cutsceneManager.PlayClip(3);
         }
         
     }
