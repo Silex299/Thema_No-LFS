@@ -112,6 +112,8 @@ namespace Triggers
         {
             actions?.Invoke();
 
+            print("Triggered");
+            
             _isTriggered = true;
             _lastTriggerTime = Time.time;
         }

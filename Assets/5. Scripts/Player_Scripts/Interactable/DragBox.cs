@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.VFX;
@@ -7,8 +8,10 @@ namespace Player_Scripts.Interactables
 
     public class DragBox : Interactable
     {
+        [BoxGroup] public Transform targetBox;
 
         [SerializeField, BoxGroup("Proximity")] private bool restrictX;
+        [SerializeField, BoxGroup("Proximity")] private bool restrictY = true;
         [SerializeField, BoxGroup("Proximity")] private bool restrictZ;
 
         [SerializeField, BoxGroup("Proximity")]
@@ -47,6 +50,15 @@ namespace Player_Scripts.Interactables
 
         }
 
+
+        private void Start()
+        {
+            if (!targetBox)
+            {
+                targetBox = transform;
+            }
+        }
+
         public override PlayerInteractionType Interact()
         {
 
@@ -65,11 +77,11 @@ namespace Player_Scripts.Interactables
                 var player = PlayerMovementController.Instance.transform;
                 var playerPos = player.position;
 
-                var boxLocalPosition = transform.localPosition;
-                var boxPos = transform.position;
-                var boxForward = transform.forward;
-                var boxRight = transform.right;
-                var boxUp = transform.up;
+                var boxLocalPosition = targetBox.localPosition;
+                var boxPos =targetBox.position;
+                var boxForward = targetBox.forward;
+                var boxRight = targetBox.right;
+                var boxUp = targetBox.up;
 
 
                 if (!isInteracting)
@@ -81,7 +93,7 @@ namespace Player_Scripts.Interactables
 
                 var desiredPosition = playerPos - _dragOffset;
 
-                var desiredLocalPosition = transform.parent.InverseTransformPoint(desiredPosition);
+                var desiredLocalPosition = targetBox.parent.InverseTransformPoint(desiredPosition);
 
                 // INFO ::: Forward is Z and Right is X 
                 
@@ -153,8 +165,8 @@ namespace Player_Scripts.Interactables
                     }
                 }
 
-                desiredLocalPosition.y = defaultY;
-                transform.localPosition = desiredLocalPosition;
+                if(restrictY) desiredLocalPosition.y = defaultY;
+                targetBox.localPosition = desiredLocalPosition;
 
                 return interactionType;
             }

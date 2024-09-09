@@ -139,6 +139,8 @@ namespace Player_Scripts
         
         public bool OverrideFlags { get; set; }
         public bool CanPlayAlternateMovement { get; set; } = true;
+
+        public bool IsOverridingAnimation { get; set; } = false;
         
         public bool IsGrounded { get; set; }
 

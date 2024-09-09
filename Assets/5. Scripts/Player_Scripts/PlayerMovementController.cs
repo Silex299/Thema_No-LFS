@@ -11,7 +11,6 @@ namespace Player_Scripts
         internal Player player;
 
         private static PlayerMovementController _instance;
-
         public static PlayerMovementController Instance
         {
             get => _instance;
@@ -64,6 +63,7 @@ namespace Player_Scripts
             if (player.DisabledPlayerMovement) return;
 
             player.currentState.UpdateState(player);
+            player.IsOverridingAnimation = IsAnimationOverriding();
         }
 
         private void LateUpdate()
@@ -246,6 +246,12 @@ namespace Player_Scripts
 
         #region Animations
 
+        private bool IsAnimationOverriding()
+        {
+            //check if any other animation than "Default" is playing on layer 1
+            return !player.AnimationController.GetCurrentAnimatorStateInfo(1).IsName("Default");
+        }
+        
         public void PlayAnimation(string animationName, int animationLayer)
         {
             player.AnimationController.Play(animationName, animationLayer);
@@ -264,7 +270,6 @@ namespace Player_Scripts
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
 
-
         public void ResetAnimator()
         {
             print("Resetting animator");
@@ -272,8 +277,7 @@ namespace Player_Scripts
             player.AnimationController.SetBool(IsGrounded, true);
             player.AnimationController.ResetTrigger($"Jump");
         }
-
-
+        
         public void ResetMovement(string defaultAnim = "Basic Movement")
         {
             DisablePlayerMovement(false);

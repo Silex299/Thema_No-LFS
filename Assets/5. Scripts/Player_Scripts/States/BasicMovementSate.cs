@@ -199,7 +199,7 @@ namespace Player_Scripts.States
 
         private void Rotate(Player player, Vector3 rotateTowards)
         {
-            if (!player.CanRotate) return;
+            if (!player.CanRotate || player.IsOverridingAnimation) return;
 
             var transform = player.transform;
             var pos = transform.position;
