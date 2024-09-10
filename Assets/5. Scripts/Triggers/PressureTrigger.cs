@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,6 +8,7 @@ namespace Triggers
     public class PressureTrigger : MonoBehaviour
     {
 
+        [SerializeField] private List<string> tags;
         [SerializeField] private bool canTrigger = true;
         [SerializeField, Range(1, 30)] private int pressureThreshold = 1;
         [SerializeField] private UnityEvent triggerAction;
@@ -24,6 +26,8 @@ namespace Triggers
 
             if (!canTrigger) return;
 
+            if (!tags.Contains(other.tag)) return;
+            
             _objectInTrigger = _objectInTrigger + 1;
             if (_triggered) return;
 
@@ -39,6 +43,7 @@ namespace Triggers
         private void OnTriggerExit(Collider other)
         {
             if (!canTrigger) return;
+            if (!tags.Contains(other.tag)) return;
 
             _objectInTrigger = Mathf.Clamp(_objectInTrigger-1, 0, 30);
 
@@ -50,7 +55,6 @@ namespace Triggers
                 resetAction?.Invoke();
             }
         }
-
 
 
     }

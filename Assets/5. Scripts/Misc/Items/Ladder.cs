@@ -75,7 +75,6 @@ namespace Misc.Items
         {
             if (engaged) return;
 
-            print("Get Ready to fuck me daddy:" + Time.time);
             _playerAt = atStart ? 0 : 1;
             StartCoroutine(EngageLadder(atStart));
         }
