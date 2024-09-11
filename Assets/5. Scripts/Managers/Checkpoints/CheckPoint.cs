@@ -38,7 +38,7 @@ namespace Managers.Checkpoints
         {
             if(ignoreThisCheckpoint) return;
             //camera
-            cameraOffsetInfo.ChangeCameraOffsetInstantaneous();
+            cameraOffsetInfo?.ChangeCameraOffsetInstantaneous();
             CameraManager.Instance.Reset();
 
             //Player

@@ -72,8 +72,6 @@ namespace Player_Scripts
         public void PlayPlayerInteraction(Object interaction)
         {
             
-            if(player.DisabledPlayerMovement || player.IsOverridingAnimation) return;
-            
             var playerInteraction = interaction as PlayerInteraction;
             if(playerInteraction == null) return;
             
@@ -93,7 +91,6 @@ namespace Player_Scripts
         
         public void PlayPlayerSound(string soundKey)
         {
-            if(player.DisabledPlayerMovement || player.IsOverridingAnimation) return;
             
             if (!playerSounds.ContainsKey(soundKey)) return;
             if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;

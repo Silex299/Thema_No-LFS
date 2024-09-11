@@ -8,28 +8,27 @@ namespace Misc
     {
         [SerializeField] private PlayableAsset[] clip;
         [SerializeField] private PlayableDirector director;
- 
-        
+
+
         //Create singleton instance
         public static CutsceneManager Instance { get; private set; }
-        
+
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
             }
-            else
+            else if (Instance != this)
             {
                 Destroy(gameObject);
             }
         }
-    
+
         public void PlayClip(int index)
         {
             Debug.Log(index);
             director.Play(clip[index]);
         }
-
     }
 }
