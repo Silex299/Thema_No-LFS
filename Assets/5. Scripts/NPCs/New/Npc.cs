@@ -88,6 +88,7 @@ namespace NPCs.New
         {
             ChangeState(NpcStates.Serveillance);
             PlayerMovementController.Instance.player.Health.onDeath += OnDeath;
+            target = PlayerMovementController.Instance.transform;
         }
 
         private void OnDeath()

@@ -1,3 +1,4 @@
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
@@ -11,9 +12,9 @@ namespace Scene_Scripts.Experiment
 
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public Transform[] waypoints;
-        [FoldoutGroup("References")] public Transform target;
         [FoldoutGroup("References")] public Transform rigAimTarget;
         [FoldoutGroup("References")] public Rig aimRig;
+        [FoldoutGroup("References")] public Transform target;
 
         [FoldoutGroup("Movement")] public float rotationSpeed = 10f;
         [FoldoutGroup("Movement")] public float stopDistance = 1f;
@@ -36,25 +37,18 @@ namespace Scene_Scripts.Experiment
         #endregion
 
         #region Getter & Setter
-
         public Transform Target
         {
-            get => target;
-            set
+            get
             {
-                if (value != null)
+                if (!target)
                 {
-                    target = value;
-                    ChangeState(ZombieState.Follow);
+                    target = PlayerMovementController.Instance.transform;
                 }
-                else
-                {
-                    target = null;
-                    ChangeState(ZombieState.Idle);
-                }
+                return target;
             }
+            set => target = value;
         }
-
         #endregion
 
 
@@ -99,12 +93,12 @@ namespace Scene_Scripts.Experiment
 
         public Vector3 GetDesiredPos()
         {
-            return ThemaVector.GetClosestPointToLine(waypoints[0].position, waypoints[1].position, target.position);
+            return ThemaVector.GetClosestPointToLine(waypoints[0].position, waypoints[1].position, Target.position);
         }
 
         public void FollowAimRig()
         {
-            rigAimTarget.position = target.position;
+            rigAimTarget.position = Target.position;
         }
 
         #endregion
@@ -140,7 +134,7 @@ namespace Scene_Scripts.Experiment
 
         public override void EnterState(ConfinedZombieV1 zombie)
         {
-            if (!zombie.target)
+            if (!zombie.Target)
             {
                 zombie.ChangeState(ZombieState.Idle);
                 return;
@@ -220,7 +214,7 @@ namespace Scene_Scripts.Experiment
 
         public override void EnterState(ConfinedZombieV1 zombie)
         {
-            if (!zombie.target)
+            if (!zombie.Target)
             {
                 zombie.ChangeState(ZombieState.Idle);
                 return;
@@ -237,7 +231,7 @@ namespace Scene_Scripts.Experiment
 
         private void Rotate(ConfinedZombieV1 zombie)
         {
-            Vector3 forward = zombie.target.position - zombie.transform.position;
+            Vector3 forward = zombie.Target.position - zombie.transform.position;
             forward.y = 0;
             //Rotate the zombie to look at the target, but only on the Y axis
             Quaternion desiredRotation = Quaternion.LookRotation(forward, Vector3.up);
