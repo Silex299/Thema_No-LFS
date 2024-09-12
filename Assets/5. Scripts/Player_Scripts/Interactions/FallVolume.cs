@@ -88,7 +88,6 @@ namespace Player_Scripts.Interactions
 
             while (!PlayerMovementController.Instance.player.IsGrounded)
             {
-                print("Jajdjao");
                 velocity = PlayerVelocityCalculator.Instance.velocity.magnitude;
                 yield return null;
             }

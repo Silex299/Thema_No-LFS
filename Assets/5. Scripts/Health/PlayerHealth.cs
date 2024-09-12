@@ -167,7 +167,7 @@ namespace Health
             player.AnimationController.enabled = true;
 
             player.AnimationController.SetFloat(VerticalAcceleration, 0);
-            onRevive.Invoke();
+            onRevive?.Invoke();
             Start();
         }
 

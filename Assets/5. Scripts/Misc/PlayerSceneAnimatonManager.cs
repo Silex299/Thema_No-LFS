@@ -10,23 +10,6 @@ namespace Misc
         [SerializeField] private PlayableDirector m_director;
         [SerializeField] private PlayableAsset[] m_sceneAnimations;
 
-
-        //Create a singleton 
-        public static PlayerSceneAnimatonManager Instance { get; private set; }
-    
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-    
-
         public void PlayPlayerSceneAnimation(int index)
         {
             m_director.Play(m_sceneAnimations[index]);

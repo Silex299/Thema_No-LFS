@@ -49,7 +49,7 @@ namespace Scene_Scripts
             
             
             
-            PlayerSceneAnimatonManager.Instance.PlayPlayerSceneAnimation(1);
+           // PlayerSceneAnimatonManager.Instance.PlayPlayerSceneAnimation(1);
             
 
             timeElapsed = Time.time - timeElapsed;

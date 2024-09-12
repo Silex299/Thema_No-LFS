@@ -14,6 +14,7 @@ namespace Custom_Object_Scripts
         [SerializeField] private float initialDelay;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Rope[] connectedRopes;
+        [SerializeField] private PlayerSceneAnimatonManager sceneAnim;
 
         [SerializeField] private UnityEvent onBoxFall;
 
@@ -46,7 +47,7 @@ namespace Custom_Object_Scripts
             
             rb.isKinematic = true;
             animator.enabled = true;
-            CutsceneManager.Instance.PlayClip(2);
+            sceneAnim.PlayPlayerSceneAnimation(0);
 
         }
 

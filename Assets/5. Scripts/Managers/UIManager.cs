@@ -70,13 +70,10 @@ namespace Managers
         private void OnDisable()
         {
             PlayerMovementController controller = PlayerMovementController.Instance;
-
-            if (controller)
-            {
-                controller.player.Health.onDeath -= RestartOrExitView;
-                controller.player.Health.onRevive -= CloseRestartOrExitView;
-                controller.player.Health.onTakingDamage -= TakeDamage;
-            }
+            
+            controller.player.Health.onDeath -= RestartOrExitView;
+            controller.player.Health.onRevive -= CloseRestartOrExitView;
+            controller.player.Health.onTakingDamage -= TakeDamage;
         }
 
 

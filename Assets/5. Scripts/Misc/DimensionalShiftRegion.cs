@@ -30,7 +30,7 @@ namespace Misc
             playerController.PlayAnimation("Float", 1f, 1);
         
             //Call dimensional Shift UI animation
-            PlayerSceneAnimatonManager.Instance.PlayPlayerSceneAnimation(toAlternate ? 1 : 0);
+           // PlayerSceneAnimatonManager.Instance.PlayPlayerSceneAnimation(toAlternate ? 1 : 0);
         
             //wait for few second
             yield return new WaitForSeconds(4f);
