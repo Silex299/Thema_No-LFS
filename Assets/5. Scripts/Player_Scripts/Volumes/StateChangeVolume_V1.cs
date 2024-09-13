@@ -1,29 +1,23 @@
-
-using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExternPropertyAttributes;
 using Triggers;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 namespace Player_Scripts.Volumes
 {
-    [RequireComponent(typeof(Collider))]
-    public class StateChangeVolume : MonoBehaviour
+    public class StateChangeVolumeV1 : MonoBehaviour
     {
+        
         
         [BoxGroup("Conditions")] public List<TriggerCondition> conditions;
         
-        [SerializeField, BoxGroup("ENTRY STATE")] private int entryStateIndex;
-        [SerializeField, BoxGroup("ENTRY STATE")] private bool enableEntryDirection;
-        [SerializeField, BoxGroup("ENTRY STATE")] private bool entryOneWayRotation;
+        [SerializeField, BoxGroup("ENTRY STATE")] private PlayerStateInstances entryState;
         [SerializeField, BoxGroup("ENTRY STATE")] private UnityEvent entryAction;
 
-        [SerializeField, BoxGroup("EXIT STATE")] private int exitStateIndex;
-        [SerializeField, BoxGroup("EXIT STATE")] private bool enableExitDirection;
-        [SerializeField, BoxGroup("EXIT STATE")] private bool exitOneWayRotation;
+        [SerializeField, BoxGroup("EXIT STATE")] private PlayerStateInstances exitState;
         [SerializeField, BoxGroup("EXIT STATE")] private UnityEvent exitAction;
 
         
@@ -39,7 +33,6 @@ namespace Player_Scripts.Volumes
         {
             if (continuousCheck)
             {
-
                 if (other.CompareTag("Player_Main"))
                 {
                     if (!_triggered)
@@ -62,7 +55,6 @@ namespace Player_Scripts.Volumes
                 
             }
         }
-        
         private void OnTriggerEnter(Collider other)
         {
             
@@ -71,15 +63,11 @@ namespace Player_Scripts.Volumes
                 EntryAction(other);
             }
         }
-
         private void OnTriggerExit(Collider other)
         {
-
             if (other.CompareTag("Player_Main"))
             {
-                
                ExitAction(other);
-
             }
         }
 
@@ -87,9 +75,7 @@ namespace Player_Scripts.Volumes
         {
             yield return new WaitForSeconds(recheckTime);
             
-            PlayerMovementController.Instance.ChangeState(exitStateIndex);
-            PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
-            PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
+            exitState.ChangeState();
             _triggered = false;
             _resetCoroutine = null;
         }
@@ -100,9 +86,7 @@ namespace Player_Scripts.Volumes
             if (conditions.Any(condition => !condition.Condition(other))) return;
                         
             print(gameObject.name);
-            PlayerMovementController.Instance.ChangeState(entryStateIndex);
-            PlayerMovementController.Instance.player.enabledDirectionInput = enableEntryDirection;
-            PlayerMovementController.Instance.player.oneWayRotation = entryOneWayRotation;
+            entryState.ChangeState();
             _triggered = true;
             
             entryAction?.Invoke();
@@ -111,16 +95,12 @@ namespace Player_Scripts.Volumes
         private void ExitAction(Collider other)
         {
             if (conditions.Any(condition => !condition.Condition(other))) return;
-                
-            PlayerMovementController.Instance.ChangeState(exitStateIndex);
-            PlayerMovementController.Instance.player.enabledDirectionInput = enableExitDirection;
-            PlayerMovementController.Instance.player.oneWayRotation = exitOneWayRotation;
-            _triggered = false;
             
+            exitState.ChangeState();
+            _triggered = false;
             exitAction?.Invoke();
         }
         
-
+        
     }
-
 }

@@ -30222,6 +30222,57 @@ MonoBehaviour:
     - 14.689671
     - 7.662929
     - 0
+--- !u!1 &954433365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 954433366}
+  - component: {fileID: 954433367}
+  m_Layer: 1
+  m_Name: Half Water Instance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &954433366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954433365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2085948931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &954433367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954433365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc2380d1c945c948b0d58b2beff3d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateIndex: -7
+  oneWayRotation: 0
+  directionalInput: 0
+  canBoost: 0
+  canRotate: 1
+  canPlayAlternateMovement: 0
+  canJump: 0
 --- !u!1 &954475033
 GameObject:
   m_ObjectHideFlags: 0
@@ -37539,6 +37590,57 @@ Transform:
   - {fileID: 350919480}
   m_Father: {fileID: 533982866}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1385861244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1385861245}
+  - component: {fileID: 1385861246}
+  m_Layer: 1
+  m_Name: Normal Instance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1385861245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385861244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2085948931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1385861246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385861244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc2380d1c945c948b0d58b2beff3d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateIndex: 0
+  oneWayRotation: 0
+  directionalInput: 0
+  canBoost: 1
+  canRotate: 1
+  canPlayAlternateMovement: 1
+  canJump: 1
 --- !u!4 &1412274751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9740174029404389, guid: 72dac7bd627f0f747a5009b464509d15,
@@ -56396,10 +56498,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2085948931}
   - component: {fileID: 2085948932}
-  - component: {fileID: 2085948933}
   - component: {fileID: 2085948934}
   - component: {fileID: 2085948935}
   - component: {fileID: 2085948936}
+  - component: {fileID: 2085948937}
   m_Layer: 1
   m_Name: Water Volume
   m_TagString: Untagged
@@ -56419,7 +56521,9 @@ Transform:
   m_LocalPosition: {x: 6.413883, y: 0.12158775, z: 26.852156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 954433366}
+  - {fileID: 1385861245}
   m_Father: {fileID: 38521960}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2085948932
@@ -56443,70 +56547,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 45.247005, y: 1.2552065, z: 6.7717137}
   m_Center: {x: 2.4262428, y: 0.12760334, z: 0.8769741}
---- !u!114 &2085948933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085948930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc11e569aeb00ac479b7c535b4b41c3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  conditions:
-  - {fileID: 2085948935}
-  entryStateIndex: -7
-  enableEntryDirection: 0
-  entryOneWayRotation: 0
-  entryAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2085948934}
-        m_TargetAssemblyTypeName: Thema_Camera.ChangeOffset, Assembly-CSharp
-        m_MethodName: ChangeCameraOffset
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player_Scripts.Player, Assembly-CSharp
-        m_MethodName: set_CanJump
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player_Scripts.Player, Assembly-CSharp
-        m_MethodName: set_CanBoost
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  exitStateIndex: 0
-  enableExitDirection: 0
-  exitOneWayRotation: 0
-  exitAction:
-    m_PersistentCalls:
-      m_Calls: []
-  continuousCheck: 1
-  recheckTime: 0.2
 --- !u!114 &2085948934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56562,6 +56602,42 @@ MonoBehaviour:
   dragEffectOffset: {x: 0, y: -0.1, z: 0}
   dragRestrictedY: 0.75
   velocityThreshold: 0.1
+--- !u!114 &2085948937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085948930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee8a63f6dec4ec44b07aeee54a6a548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  conditions:
+  - {fileID: 2085948935}
+  entryState: {fileID: 954433367}
+  entryAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2085948934}
+        m_TargetAssemblyTypeName: Thema_Camera.ChangeOffset, Assembly-CSharp
+        m_MethodName: ChangeCameraOffset
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  exitState: {fileID: 1385861246}
+  exitAction:
+    m_PersistentCalls:
+      m_Calls: []
+  continuousCheck: 1
+  recheckTime: 0.2
 --- !u!1 &2104396572
 GameObject:
   m_ObjectHideFlags: 0
