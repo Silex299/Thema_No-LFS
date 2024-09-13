@@ -43,6 +43,14 @@ namespace Thema_Type
         public float volume;
     }
 
+    
+    [System.Serializable]
+    public struct SoundSource
+    {
+        public AudioSource source;
+        public float maximumVolume;
+    }
+    
     #endregion
 
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +77,7 @@ namespace Triggers
             player.CanRotate = false;
             player.CController.enabled = false;
             player.DisabledPlayerMovement = true;
+            player.MovementController.ResetAnimator();
 
             if (simpleEngage)
             {
