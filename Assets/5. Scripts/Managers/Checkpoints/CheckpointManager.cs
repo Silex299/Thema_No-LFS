@@ -19,7 +19,6 @@ namespace Managers.Checkpoints
         [SerializeField, BoxGroup("Checkpoints")] private CheckPoint[] checkpoints;
 
         [SerializeField, BoxGroup("Trackers")] private PlayerCheckpointTracker playerTracker;
-        [SerializeField, BoxGroup("Trackers")] private Tracker[] trackers;
 
 
         #region Editor
@@ -43,7 +42,6 @@ namespace Managers.Checkpoints
         public void GetTrackers()
         {
             playerTracker = FindObjectOfType<PlayerCheckpointTracker>();
-            trackers = FindObjectsOfType<Tracker>();
         }
 
 #endif
@@ -82,27 +80,9 @@ namespace Managers.Checkpoints
         {
             playerTracker.ResetItem(checkpoints[currentCheckpoint]);
             checkpoints[currentCheckpoint].LoadThisCheckpoint();
-            SetTrackers(initialSetup);
             onCheckpointLoad?.Invoke(currentCheckpoint);
         }
-
-
-        private void SetTrackers(bool initialSetup)
-        {
-            foreach (Tracker tracker in trackers)
-            {
-                if (initialSetup)
-                {
-                    tracker.InitialSetup(checkpoints[currentCheckpoint]);
-                }
-                else
-                {
-                    tracker.ResetItem(checkpoints[currentCheckpoint]);
-                }
-
-            }
-        }
-
+        
         public void SaveCheckpoint(int index)
         {
             if (currentCheckpoint < index)
