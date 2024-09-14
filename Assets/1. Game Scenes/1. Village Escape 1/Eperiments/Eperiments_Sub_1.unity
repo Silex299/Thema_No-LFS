@@ -9142,6 +9142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  targetTransform: {fileID: 0}
   loadResetTransform: 1
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 90, z: 0}
@@ -31583,7 +31584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: canPull
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerSound.clip
@@ -55526,6 +55527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  targetTransform: {fileID: 0}
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -81420,7 +81422,7 @@ Transform:
   m_GameObject: {fileID: 6488245079871148088}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000058114523}
-  m_LocalPosition: {x: -0, y: 0, z: 180}
+  m_LocalPosition: {x: -0, y: 0, z: 5}
   m_LocalScale: {x: 1.4, y: 1, z: 2.6607}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -81448,7 +81450,6 @@ GameObject:
   - component: {fileID: 6488777783420810853}
   - component: {fileID: 6519632156713157138}
   - component: {fileID: 6519632156713157140}
-  - component: {fileID: 6519632156713157142}
   m_Layer: 13
   m_Name: SM_Prop_Pallet_01
   m_TagString: Interactable
@@ -81583,6 +81584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6488777783615283600}
+  - component: {fileID: 6488777783615283601}
   m_Layer: 13
   m_Name: Drag Floater
   m_TagString: Untagged
@@ -81606,6 +81608,44 @@ Transform:
   - {fileID: 6485792621501323478}
   m_Father: {fileID: 661828299}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6488777783615283601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488777783615283599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: 0
+  targetTransform: {fileID: 6485792621501323478}
+  loadResetTransform: 1
+  resetPosition: {x: 0, y: 0, z: 5}
+  resetRotation: {x: 0, y: 180, z: 0}
+  resetEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6488245079871148088}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  loadFinalStateTransform: 0
+  finalStatePosition: {x: 0, y: 0, z: 0}
+  finalStateRotation: {x: 0, y: 0, z: 0}
+  finalStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!23 &6511676428300025670
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -81721,31 +81761,6 @@ MonoBehaviour:
   brokenPlankPrefab: {fileID: 5145839815235985077, guid: 1298b8a33aaa1fc42a88df84d2ca49e3,
     type: 3}
   checkpointThreshold: 0
---- !u!114 &6519632156713157142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6488245079871148088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkpointThreshold: 0
-  loadResetTransform: 1
-  resetPosition: {x: 0, y: 0, z: 5}
-  resetRotation: {x: 0, y: 180, z: 0}
-  resetEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  loadFinalStateTransform: 0
-  finalStatePosition: {x: 0, y: 0, z: 0}
-  finalStateRotation: {x: 0, y: 0, z: 0}
-  finalStateEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &8217432132455954725
 Transform:
   m_ObjectHideFlags: 0
