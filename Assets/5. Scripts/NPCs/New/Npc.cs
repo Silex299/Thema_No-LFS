@@ -62,6 +62,11 @@ namespace NPCs.New
         internal Action onAttack;
         internal Action<int> onStateChange;
         
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
+        private static readonly int StateIndex = Animator.StringToHash("StateIndex");
+
         #endregion
 
         #endregion
@@ -123,6 +128,18 @@ namespace NPCs.New
             
             _currentState.Enter(this);
             onStateChange?.Invoke((int)_currentStateType);
+        }
+
+        public void Reset()
+        {
+            ChangeState(NpcStates.Serveillance);
+            
+            //Reset Animator
+            animator.SetBool(Attack, false);
+            animator.SetFloat(Speed, 0);
+            animator.SetBool(PathBlocked, false);
+            animator.SetInteger(StateIndex, 0);
+            
         }
         
         #region States

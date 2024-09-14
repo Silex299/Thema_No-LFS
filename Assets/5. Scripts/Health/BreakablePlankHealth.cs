@@ -7,6 +7,12 @@ namespace Health
     {
     
         [SerializeField, BoxGroup("Prefab")] private GameObject brokenPlankPrefab;
+        [BoxGroup("Checkpoint Properties")] public int checkpointThreshold = 0;
+        
+        
+        
+        
+        
     
         [Button("Break", ButtonSizes.Gigantic)]
         protected override void Death(string message = "")
@@ -17,5 +23,7 @@ namespace Health
             gameObject.SetActive(false);
             deathAction?.Invoke();
         }
+        
+        
     }
 }

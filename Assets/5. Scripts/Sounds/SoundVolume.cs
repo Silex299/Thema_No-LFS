@@ -63,6 +63,7 @@ namespace Sounds
             if (_objectCount > 0)
             {
                 UpdateVolumeFraction();
+                UpdateSoundSources();
             }
         }
 

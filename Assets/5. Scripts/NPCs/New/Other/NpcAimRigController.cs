@@ -81,7 +81,6 @@ namespace NPCs.New.Other
         {
             if(!_aimRigEnabled) return;
             
-            
             if (_aimRigCoroutine != null)
             {
                 StopCoroutine(_aimRigCoroutine);
@@ -111,6 +110,13 @@ namespace NPCs.New.Other
             }
             
             _aimRigCoroutine = null;
+        }
+        
+        public void Reset()
+        {
+            aimRig.weight = 0;
+            _aimRigEnabled = false;
+            _target = null;
         }
     }
 }
