@@ -10,26 +10,21 @@ namespace Managers.Checkpoints
     public class CheckpointTracker : MonoBehaviour
     {
         [InfoBox("If threshold is same as the loaded checkpoint, it will call the reset event, or final State Event")]
-        public int checkpointThreshold;
+        [BoxGroup("Misc")] public int checkpointThreshold;
+        [BoxGroup("Misc")] public Transform targetTransform;
 
         [TabGroup("State", "Reset")] public bool loadResetTransform;
-
         [TabGroup("State", "Reset"), ShowIf(nameof(loadResetTransform))]
         public Vector3 resetPosition;
-
         [TabGroup("State", "Reset"), ShowIf(nameof(loadResetTransform))]
         public Vector3 resetRotation;
 
         [TabGroup("State", "Reset")] public UnityEvent resetEvent;
-
         [TabGroup("State", "Final")] public bool loadFinalStateTransform;
-
         [TabGroup("State", "Final"), ShowIf(nameof(loadFinalStateTransform))]
         public Vector3 finalStatePosition;
-
         [TabGroup("State", "Final"), ShowIf(nameof(loadFinalStateTransform))]
         public Vector3 finalStateRotation;
-
         [TabGroup("State", "Final")] public UnityEvent finalStateEvent;
 
 
@@ -53,8 +48,16 @@ namespace Managers.Checkpoints
             yield return new WaitForEndOfFrame();
             resetEvent.Invoke();
             if (!loadResetTransform) yield break;
-            transform.localPosition = resetPosition;
-            transform.localRotation = Quaternion.Euler(resetRotation);
+            if (targetTransform)
+            {
+                targetTransform.localPosition = resetPosition;
+                targetTransform.localRotation = Quaternion.Euler(resetRotation);
+            }
+            else
+            {
+                transform.localPosition = resetPosition;
+                transform.localRotation = Quaternion.Euler(resetRotation);
+            }
         }
 
         private IEnumerator FinalState()
@@ -63,8 +66,17 @@ namespace Managers.Checkpoints
 
             finalStateEvent.Invoke();
             if (!loadFinalStateTransform)  yield break;
-            transform.localPosition = finalStatePosition;
-            transform.localRotation = Quaternion.Euler(finalStateRotation);
+            
+            if (targetTransform)
+            {
+                targetTransform.localPosition = finalStatePosition;
+                targetTransform.localRotation = Quaternion.Euler(finalStateRotation);
+            }
+            else
+            {
+                transform.localPosition = finalStatePosition;
+                transform.localRotation = Quaternion.Euler(finalStateRotation);
+            }
         }
     }
 }
