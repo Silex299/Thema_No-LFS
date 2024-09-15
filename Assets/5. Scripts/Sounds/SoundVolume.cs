@@ -56,6 +56,8 @@ namespace Sounds
         private void Start()
         {
             CreateBoxCollider();
+            UpdateVolumeFraction();
+            UpdateSoundSources();
         }
 
         private void Update()
@@ -85,6 +87,7 @@ namespace Sounds
                 soundSource.source.volume = soundSource.maximumVolume * _fadeFraction;
             }
         }
+        
         private void CreateBoxCollider()
         {
             

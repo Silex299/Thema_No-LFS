@@ -85,10 +85,9 @@ namespace Managers.Checkpoints
         
         public void SaveCheckpoint(int index)
         {
+            currentCheckpoint = index;
             if (currentCheckpoint < index)
             {
-                currentCheckpoint = index;
-
                 SaveCheckpointData();
             }
         }

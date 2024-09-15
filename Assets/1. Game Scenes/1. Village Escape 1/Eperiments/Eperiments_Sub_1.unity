@@ -479,6 +479,8 @@ MonoBehaviour:
   soundSources:
   - source: {fileID: 1288516696}
     maximumVolume: 0.5
+  - source: {fileID: 106283381}
+    maximumVolume: 1
 --- !u!4 &19894126
 Transform:
   m_ObjectHideFlags: 0
@@ -487,8 +489,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 19894124}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.7}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -2.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55766,6 +55768,7 @@ GameObject:
   - component: {fileID: 1963331856}
   - component: {fileID: 1963331858}
   - component: {fileID: 1963331857}
+  - component: {fileID: 1963331859}
   m_Layer: 1
   m_Name: ZombieTrigger
   m_TagString: Untagged
@@ -55819,14 +55822,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1878551640}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
+      - m_Target: {fileID: 1963331859}
+        m_TargetAssemblyTypeName: Triggers.OneTimeTrigger, Assembly-CSharp
+        m_MethodName: Trigger
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 67371eb939d645145b950d1bcf48dd1f,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -55859,6 +55861,35 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.020188, y: 1.4450378, z: 5.8710327}
   m_Center: {x: 0, y: 0.545105, z: 0.2381897}
+--- !u!114 &1963331859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963331855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd9e8b364b330b448848350929a7896e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: -1
+  trigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1878551640}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 67371eb939d645145b950d1bcf48dd1f,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1964104273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1195122619078218386, guid: 697da115d6cf2914dbfa49484d5b7245,

@@ -6637,7 +6637,7 @@ Transform:
   m_GameObject: {fileID: 919132148502884703}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00022408541, y: -0.022187404, z: 0.010096662, w: 0.9997029}
-  m_LocalPosition: {x: 5.8022, y: 1.2712, z: -0.7300019}
+  m_LocalPosition: {x: 5.8022, y: 5.57, z: -0.7300019}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7560,7 +7560,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5501222221322386436}
   - component: {fileID: 3752404045150059032}
-  m_Layer: 0
+  - component: {fileID: 5501222221322386437}
+  m_Layer: 1
   m_Name: checkpoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8029,7 +8030,7 @@ Transform:
   m_GameObject: {fileID: 2570120538701618080}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.491, y: 0.923, z: 8.169}
+  m_LocalPosition: {x: 1.97, y: 0.91, z: 1.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9487,6 +9488,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9034582097910321150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5501222221322386437
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528519115666892215}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.1811583, y: 3.7082734, z: 4.195797}
+  m_Center: {x: 0.270007, y: 1.3541367, z: 1.0429603}
 --- !u!222 &5508971080958890474
 CanvasRenderer:
   m_ObjectHideFlags: 0
