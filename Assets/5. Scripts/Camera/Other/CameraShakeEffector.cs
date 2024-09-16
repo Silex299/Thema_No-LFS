@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Thema_Camera
@@ -11,8 +12,6 @@ namespace Thema_Camera
         [SerializeField] private float shakeMultiplier = 1;
 
         private CameraManager _cameraManager;
-
-
         private void Start()
         {
             _cameraManager = CameraManager.Instance;
@@ -21,30 +20,19 @@ namespace Thema_Camera
 
         private void Update()
         {
+            float distance = Vector3.Distance(transform.position, _cameraManager.GetCurrentTarget(out bool canShake).position);
+            
+            if (!canShake) return;
+            if (!(distance < maximumEffectingDistance)) return;
+            
+            var fraction = (maximumEffectingDistance - distance) / (maximumEffectingDistance - minimumEffectingDistance);
+            fraction = Mathf.Clamp01(fraction);
 
-            try
-            {
-                float distance = Vector3.Distance(transform.position, _cameraManager.GetCurrentTarget(out bool canShake).position);
+            Shake shakeParams = _cameraManager.defaultShakeParameters;
+            shakeParams.amplitude *= fraction * shakeMultiplier;
+            shakeParams.damping *= fraction;
 
-                if (!canShake) return;
-
-                if (distance < maximumEffectingDistance)
-                {
-                    var fraction = (maximumEffectingDistance - distance) / (maximumEffectingDistance - minimumEffectingDistance);
-
-                    fraction = Mathf.Clamp01(fraction);
-
-                    Shake shakeParams = _cameraManager.defaultShakeParameters;
-                    shakeParams.amplitude *= fraction * shakeMultiplier;
-                    shakeParams.damping *= fraction;
-
-                    _cameraManager.ShakeCamera(shakeParams);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
+            _cameraManager.ShakeCamera(shakeParams);
         }
     }
 
