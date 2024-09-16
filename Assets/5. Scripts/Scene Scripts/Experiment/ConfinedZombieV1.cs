@@ -101,6 +101,12 @@ namespace Scene_Scripts.Experiment
             rigAimTarget.position = Target.position;
         }
 
+        public void Reset()
+        {
+            ChangeState(ZombieState.Idle);
+            Target = null;
+        }
+        
         #endregion
     }
 
@@ -114,8 +120,11 @@ namespace Scene_Scripts.Experiment
 
     public class ConfinedZombieIdle : ConfinedZombieBase
     {
+        private static readonly int StateIndex = Animator.StringToHash("State");
+
         public override void EnterState(ConfinedZombieV1 zombie)
         {
+            zombie.animator.SetInteger(StateIndex, 0);
             zombie.animator.CrossFade(zombie.entryAnimation, 0.2f);
             zombie.aimRig.weight = 0;
             if(zombie.tentacles) zombie.tentacles.StopScream();

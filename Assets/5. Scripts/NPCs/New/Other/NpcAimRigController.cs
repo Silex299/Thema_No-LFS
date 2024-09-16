@@ -87,7 +87,6 @@ namespace NPCs.New.Other
             }
             _aimRigCoroutine = StartCoroutine(UpdateAimRigWeight(0, transitionTime));
         }
-        
         private IEnumerator UpdateAimRigWeight(float newWeight, float time = 0.5f)
         {
             float elapsedTime = 0;

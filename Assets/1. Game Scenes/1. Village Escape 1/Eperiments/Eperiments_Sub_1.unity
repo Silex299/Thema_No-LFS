@@ -474,7 +474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 3.29, y: 2.71, z: 30.6}
+    m_Extent: {x: 3.29, y: 3.36, z: 30.6}
   fadeDistance: 5
   soundSources:
   - source: {fileID: 1288516696}
@@ -490,7 +490,7 @@ Transform:
   m_GameObject: {fileID: 19894124}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2.87}
+  m_LocalPosition: {x: 0, y: 1.26, z: 1.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -30346,8 +30346,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateIndex: -7
+  overrideFlags: 0
   oneWayRotation: 0
   directionalInput: 0
+  forceBoost: 0
   canBoost: 0
   canRotate: 1
   canPlayAlternateMovement: 0
@@ -37842,8 +37844,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateIndex: 0
+  overrideFlags: 0
   oneWayRotation: 0
   directionalInput: 0
+  forceBoost: 0
   canBoost: 1
   canRotate: 1
   canPlayAlternateMovement: 1
@@ -55874,6 +55878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: -1
+  initialDelay: 0
   trigger:
     m_PersistentCalls:
       m_Calls:

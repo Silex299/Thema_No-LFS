@@ -12,11 +12,10 @@ namespace Scene_Scripts.Experiment
 
         public void PlayInteraction(string interaction)
         {
-            if (interactionClips.TryGetValue(interaction, out var interactionClip))
-            {
-                var clip = interactionClip.clips[Random.Range(0, interactionClip.clips.Length)];
-                source.PlayOneShot(clip, interactionClip.volume);
-            }
+            if (!interactionClips.TryGetValue(interaction, out var interactionClip)) return;
+            
+            var clip = interactionClip.clips[Random.Range(0, interactionClip.clips.Length)];
+            source.PlayOneShot(clip, interactionClip.volume);
         }
     }
 }
