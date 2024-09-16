@@ -2674,8 +2674,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerSound.clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 83b54a4cd71b78f47af195b6a1cc6a18, type: 3}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerSound.volume
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: engageAction.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.size
@@ -2699,7 +2707,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: engageAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -2708,10 +2720,18 @@ PrefabInstance:
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1673716311}
+      objectReference: {fileID: 1673716315}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1673716315}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_CanPull
+      value: Execute
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPushAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -2723,7 +2743,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Triggers.LevelTrigger, Assembly-CSharp
+      value: Triggers.SequentialActions, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Misc.PlayerSceneAnimatonManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPushAction.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -2744,6 +2768,10 @@ PrefabInstance:
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: triggerPullAction.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404389, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: m_RootOrder
@@ -2800,7 +2828,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9740174029404390, guid: 72dac7bd627f0f747a5009b464509d15,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1673716314}
+    - targetCorrespondingSourceObject: {fileID: 9740174029404390, guid: 72dac7bd627f0f747a5009b464509d15,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1673716315}
   m_SourcePrefab: {fileID: 100100000, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
 --- !u!1 &887609838 stripped
 GameObject:
@@ -4394,6 +4430,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607191d54c597b24ebb607fa64a6b55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1673716314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887609839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd9e8b364b330b448848350929a7896e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: -1
+  initialDelay: 0
+  trigger:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1673716315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887609839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75716df798446ba48aa1f56a43b1f190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timedActions:
+  - action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1176247570}
+          m_TargetAssemblyTypeName: Misc.PlayerSceneAnimatonManager, Assembly-CSharp
+          m_MethodName: PlayPlayerSceneAnimation
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    time: 2
+  - action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1673716311}
+          m_TargetAssemblyTypeName: Triggers.LevelTrigger, Assembly-CSharp
+          m_MethodName: set_CanPull
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    time: 0
 --- !u!1 &1768401525
 GameObject:
   m_ObjectHideFlags: 0

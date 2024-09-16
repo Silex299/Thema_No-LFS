@@ -2,10 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-// ReSharper disable once CheckNamespace
-namespace Misc
+namespace Triggers
 {
-
     public class SequentialActions : MonoBehaviour
     {
         [SerializeField] private TimedAction[] timedActions;
