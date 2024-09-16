@@ -15,7 +15,6 @@ namespace Misc.Items
 
 
         [SerializeField, BoxGroup("Sounds")] private AudioSource source;
-        [SerializeField, BoxGroup("Sounds"), Space(10)] private AudioClip machineSound;
         [SerializeField, BoxGroup("Sounds")] private AudioClip startSound;
         [SerializeField, BoxGroup("Sounds")] private AudioClip stopSound;
 
@@ -31,13 +30,6 @@ namespace Misc.Items
         private void Update()
         {
             Rotate();
-
-            if (!source) return;
-            if (source.isPlaying) return;
-            
-            source.clip = machineSound;
-            source.loop = true;
-            source.Play();
         }
 
         private void Rotate()

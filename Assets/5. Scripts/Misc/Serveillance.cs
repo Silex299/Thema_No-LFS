@@ -15,9 +15,6 @@ namespace Misc
         [SerializeField] private LayerMask rayCastMask;
         [SerializeField] private SurveillanceVisuals visuals;
 
-        // ReSharper disable once InconsistentNaming
-        [SerializeField] private Dictionary<string, UnityEvent> taggedActions = new Dictionary<string, UnityEvent>();
-
         private int _objectCount;
         public new bool enabled = true;
 
@@ -38,11 +35,6 @@ namespace Misc
                     if (other.TryGetComponent(out HealthBaseClass health))
                     {
                         mover?.DisableMover(true);
-
-                        if (taggedActions.ContainsKey(other.tag))
-                        {
-                            taggedActions[other.tag].Invoke();
-                        }
 
                         DamageObject(other.GetInstanceID(), health);
                         StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
