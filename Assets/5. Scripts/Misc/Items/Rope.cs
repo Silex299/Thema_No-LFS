@@ -1,5 +1,6 @@
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -37,6 +38,12 @@ namespace Misc.Items
         [SerializeField, BoxGroup("Rope Properties")]
         private float damp;
 
+        [SerializeField, BoxGroup("Rope Properties")]
+        private AudioSource audioSource;
+        
+        [SerializeField, BoxGroup("Rope Properties")]
+        private SoundClip brokenRopeSound;
+
         #endregion
 
         #region Player Movement
@@ -53,22 +60,14 @@ namespace Misc.Items
         [SerializeField] private Rigidbody[] ropeSegments;
         [SerializeField] private LineRenderer[] lineRenderers;
         public Vector3 initialRotation;
-        private bool _connected;
         private float _closestIndex;
         private float _closestDistance = 100f;
         private float _lastAttachedTime;
         private bool _canAttach = true;
-
-
-        public bool Connected
-        {
-            get=>  _connected;
-            set
-            {
-                _connected = value;
-            }
-        }
+        private bool _broken;
         
+        private bool Connected { get; set; }
+
         #endregion
 
         #region Editor Specific
@@ -164,31 +163,7 @@ namespace Misc.Items
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(_giz, 0.3f);
         }
-
-        /// <summary>
-        /// Breaks the rope
-        /// </summary>
-        /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
         
-        [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
-        public void BreakRope(bool exitFall = true)
-        {
-            Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
-            Destroy(lineRenderers[breakIndex]);
-            
-            ropeSegments[breakIndex+1].AddForce(breakForce, ForceMode.Impulse);
-            
-            _broken = true;
-            _canAttach = false;
-
-            if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
-            {
-                StartCoroutine(PlayerMovementController.Instance.player.ropeMovement.BrokRope(this, exitFall));
-            }
-            
-        }
-
-        private bool _broken;
         
         #endregion
 
@@ -212,6 +187,33 @@ namespace Misc.Items
 
         #region Custom Methods For Rope Movement
 
+        
+        /// <summary>
+        /// Breaks the rope
+        /// </summary>
+        /// <param name="exitFall"> if false, doesn't initiate exit animation after player fell on the ground </param>
+        
+        [Button("Break Rope", ButtonSizes.Large), GUIColor(1, 0.3f, 0.3f)]
+        public void BreakRope(bool exitFall = true)
+        {
+            Destroy(ropeSegments[breakIndex].GetComponent<HingeJoint>());
+            Destroy(lineRenderers[breakIndex]);
+            
+            ropeSegments[breakIndex+1].AddForce(breakForce, ForceMode.Impulse);
+            
+            _broken = true;
+            _canAttach = false;
+
+            PlayRopeBreakSound();
+            if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
+            {
+                StartCoroutine(PlayerMovementController.Instance.player.ropeMovement.BrokRope(this, exitFall));
+            }
+            
+            
+        }
+        
+        
         /// <summary>
         /// Moves the player along the rope based on the input.
         /// </summary>
@@ -377,6 +379,13 @@ namespace Misc.Items
             Connected = false;
         }
 
+
+        public void PlayRopeBreakSound()
+        {
+            if(audioSource && brokenRopeSound.clip)
+                audioSource.PlayOneShot(brokenRopeSound.clip, brokenRopeSound.volume);
+        }
+        
         #endregion
     }
 }

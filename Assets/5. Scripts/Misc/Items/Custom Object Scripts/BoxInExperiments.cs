@@ -35,16 +35,10 @@ namespace Custom_Object_Scripts
         
             _triggered = true;
             yield return new WaitForSeconds(initialDelay);
-
-            connectedRopes[0].BreakRope();
-
-            yield return new WaitForSeconds(1.5f);
-
-
-            connectedRopes[1].BreakRope();
-
-            yield return new WaitForSeconds(0.2f);
             
+            connectedRopes[0].BreakRope();
+            yield return new WaitForSeconds(1.5f);
+            connectedRopes[1].BreakRope();
             rb.isKinematic = true;
             animator.enabled = true;
             sceneAnim.PlayPlayerSceneAnimation(0);
@@ -54,7 +48,6 @@ namespace Custom_Object_Scripts
 
         public void EnableRopeTrigger()
         {
-        
             onBoxFall.Invoke();
         }
 
