@@ -20,8 +20,6 @@ namespace Managers.Checkpoints
         [BoxGroup("Player Movement")] public bool canBoost;
         [BoxGroup("Player Movement")] public bool canPlayAlternateMovement;
         
-        
-        [SerializeField, BoxGroup("Camera Info")] private ChangeOffset cameraOffsetInfo;
 
         public int checkpointIndex;
 
@@ -37,9 +35,6 @@ namespace Managers.Checkpoints
         public void LoadThisCheckpoint()
         {
             if(ignoreThisCheckpoint) return;
-            //camera
-            cameraOffsetInfo?.ChangeCameraOffsetInstantaneous();
-            CameraManager.Instance.Reset();
 
             //Player
             Player player = PlayerMovementController.Instance.player;

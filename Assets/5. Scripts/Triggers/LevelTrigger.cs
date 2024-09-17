@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Triggers
 {
@@ -49,7 +50,7 @@ namespace Triggers
         [SerializeField, FoldoutGroup("Sounds")] private AudioSource soundSource;
         [SerializeField, FoldoutGroup("Sounds")] private SoundClip triggerSound;
         [SerializeField, FoldoutGroup("Sounds")] private SoundClip disabledResetSound;
-        [SerializeField, FoldoutGroup("Sounds")] private SoundClip disabledTriggerSound;
+        [FormerlySerializedAs("disabledTriggerSound")] [SerializeField, FoldoutGroup("Sounds")] private SoundClip unTriggerSound;
         #endregion
         #region Events
         [SerializeField, FoldoutGroup("Events")] private UnityEvent engageAction;
@@ -254,7 +255,7 @@ namespace Triggers
             ChangeTriggerState(false);
             if (soundSource)
             {
-                soundSource.PlayOneShot(disabledTriggerSound.clip, disabledTriggerSound.volume);
+                soundSource.PlayOneShot(unTriggerSound.clip, unTriggerSound.volume);
             }
 
             if (canPull)
