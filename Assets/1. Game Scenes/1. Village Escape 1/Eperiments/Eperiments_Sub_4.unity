@@ -4051,7 +4051,7 @@ Transform:
   m_GameObject: {fileID: 1118641290}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.71, y: -17.4, z: -8.99}
+  m_LocalPosition: {x: -11.71, y: -17.4, z: -9.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4070,7 +4070,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extents: {x: 4.69, y: 5, z: 1.5}
-  _fadeFraction: 0
+  soundSources:
+  - source: {fileID: 1921801204}
+    maximumVolume: 1
   fadeInDirection: 1
   color: {r: 1, g: 0.6154556, b: 0.015686274, a: 1}
   arrow: {fileID: -5495902117074765545, guid: d8e7a3f02be582842bdba5853b953f5b, type: 3}
