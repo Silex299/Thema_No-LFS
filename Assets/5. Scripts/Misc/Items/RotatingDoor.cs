@@ -1,5 +1,7 @@
 using System.Collections;
+using System.ComponentModel.Design;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 
 namespace Misc.Items
@@ -7,18 +9,24 @@ namespace Misc.Items
     public class RotatingDoor : MonoBehaviour
     {
         
-        public Quaternion closedRotation;
-        public Quaternion openRotation;
+        [FoldoutGroup("Door Movement")] public Quaternion closedRotation;
+        [FoldoutGroup("Door Movement")] public Quaternion openRotation;
         
-        public float transitionTime = 1f;
+        [FoldoutGroup("Door Movement")] public float transitionTime = 1f;
         
-        public bool followCurve;
-        [ShowIf(nameof(followCurve))]public AnimationCurve openCurve;
-        [ShowIf(nameof(followCurve))]public AnimationCurve closeCurve;
-        
-        [Space(10)]
-        public bool isOpen;
+        [FoldoutGroup("Door Movement")] public bool followCurve;
+        [FoldoutGroup("Door Movement")] [ShowIf(nameof(followCurve))]public AnimationCurve openCurve;
+        [FoldoutGroup("Door Movement")] [ShowIf(nameof(followCurve))]public AnimationCurve closeCurve;
 
+
+
+        [FoldoutGroup("Sound")] public AudioSource source;
+        [FoldoutGroup("Sound")] public SoundClip openSound;
+        [FoldoutGroup("Sound")] public SoundClip closeSound;
+        
+        
+        [FoldoutGroup("Misc")]
+        public bool isOpen;
         private Coroutine _openDoorCoroutine;
 
 #if UNITY_EDITOR
@@ -55,9 +63,9 @@ namespace Misc.Items
                 StopCoroutine(_openDoorCoroutine);
             }
             _openDoorCoroutine = StartCoroutine(OpenDoorCoroutine(open));
+            PlaySound(open);
         }
-
-
+        
         private IEnumerator OpenDoorCoroutine(bool open)
         {
 
@@ -85,7 +93,20 @@ namespace Misc.Items
             }
             
         }
-        
+
+        private void PlaySound(bool open)
+        {
+            if(!source) return;
+
+            if (open && openSound.clip)
+            {
+                source.PlayOneShot(openSound.clip, openSound.volume);
+            }
+            else if(closeSound.clip)
+            {
+                source.PlayOneShot(closeSound.clip, closeSound.volume);
+            }
+        }
 
     }
 }

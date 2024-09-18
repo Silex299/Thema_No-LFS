@@ -171,7 +171,7 @@ namespace Player_Scripts.States
             //Jump
             if (Input.GetButtonDown("Jump"))
             {
-                if (player.CanJump && player.IsGrounded)
+                if (player.CanJump && player.IsGrounded && !player.IsOverridingAnimation)
                 {
                     _jumpCoroutine ??= player.StartCoroutine(JumpCoroutine(player));
                 }

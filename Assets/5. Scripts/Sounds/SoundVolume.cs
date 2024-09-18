@@ -12,11 +12,11 @@ namespace Sounds
         public float fadeDistance;
         public SoundSource[] soundSources;
 
-        private float _fadeFraction;
+        protected float fadeFraction;
         private int _objectCount;
         private Transform _target;
 
-        private Transform Target
+        protected Transform Target
         {
             get
             {
@@ -53,14 +53,14 @@ namespace Sounds
             
         }
         
-        private void Start()
+        protected void Start()
         {
             CreateBoxCollider();
             UpdateVolumeFraction();
             UpdateSoundSources();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (_objectCount > 0)
             {
@@ -69,8 +69,15 @@ namespace Sounds
             }
         }
 
+        private void UpdateSoundSources()
+        {
+            foreach (var soundSource in soundSources)
+            {
+                soundSource.source.volume = soundSource.maximumVolume * fadeFraction;
+            }
+        }
 
-        private void UpdateVolumeFraction()
+        protected virtual void UpdateVolumeFraction()
         {
             Vector3 objectLocalPosition = transform.InverseTransformPoint(Target.position);
             Vector3 closestPoint = bounds.ClosestPoint(objectLocalPosition);
@@ -78,19 +85,11 @@ namespace Sounds
             float distance = Vector3.Distance(Target.position, closedPointWorld);
             
             Debug.DrawLine(closedPointWorld, Target.position, Color.red);
-            _fadeFraction = 1 - Mathf.Clamp01(distance / fadeDistance);
-        }
-        private void UpdateSoundSources()
-        {
-            foreach (var soundSource in soundSources)
-            {
-                soundSource.source.volume = soundSource.maximumVolume * _fadeFraction;
-            }
+            fadeFraction = 1 - Mathf.Clamp01(distance / fadeDistance);
         }
         
-        private void CreateBoxCollider()
+        protected virtual void CreateBoxCollider()
         {
-            
             //create a box collider with the bounds
             BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
             boxCollider.center = bounds.center;
