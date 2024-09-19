@@ -72,6 +72,8 @@ namespace Sounds
         private void Start()
         {
             CreateBoxCollider();
+            UpdateFadeFraction();
+            UpdateSoundSources();
         }
         private void Update()
         {

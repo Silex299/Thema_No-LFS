@@ -24,6 +24,19 @@ namespace Triggers
         private float _currentMass = 0f;
         private bool _triggered;
 
+        public float CurrentMass
+        {
+            set
+            {
+                _currentMass = value;
+                UpdateWeightVisual();
+            }
+            get => _currentMass;
+        }
+        public bool Triggered
+        {
+            set => _triggered = value;
+        }
 
         private void Start()
         {
@@ -57,18 +70,16 @@ namespace Triggers
             if (other.CompareTag("Interactable"))
             {
                 Rigidbody rb = other.attachedRigidbody;
-                _currentMass -= rb.mass;
-                _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+                CurrentMass -= rb.mass;
+                CurrentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
                 PlayItemUpdatedSound(false, rb.mass);
-                UpdateWeightVisual();
                 CheckPressure();
             }
             else if (other.CompareTag("Player_Main"))
             {
-                _currentMass -= 25f;
-                _currentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
+                CurrentMass -= 25f;
+                CurrentMass = Mathf.Clamp(_currentMass, 0, Mathf.Infinity);
                 PlayItemUpdatedSound(false, 25);
-                UpdateWeightVisual();
                 CheckPressure();
             }
         }
@@ -88,7 +99,7 @@ namespace Triggers
                 _triggered = false;
             }
         }
-        
+
         private void UpdateWeightVisual()
         {
             if (_currentMass == 0)

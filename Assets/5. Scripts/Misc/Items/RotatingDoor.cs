@@ -23,10 +23,9 @@ namespace Misc.Items
         [FoldoutGroup("Sound")] public AudioSource source;
         [FoldoutGroup("Sound")] public SoundClip openSound;
         [FoldoutGroup("Sound")] public SoundClip closeSound;
-        
-        
-        [FoldoutGroup("Misc")]
-        public bool isOpen;
+
+
+        [FoldoutGroup("Misc")] [field: SerializeField] public bool isOpen { get; set; }
         private Coroutine _openDoorCoroutine;
 
 #if UNITY_EDITOR
