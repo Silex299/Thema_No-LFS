@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,6 +18,10 @@ public class RotateOnDemand : MonoBehaviour
 
     [SerializeField, BoxGroup("Action")] private UnityEvent onCompleteRotation;
 
+    [FoldoutGroup("Sound")] public AudioSource source;
+    [FoldoutGroup("Sound")] public SoundClip[] clips;
+
+    #region Editor
 #if UNITY_EDITOR
 
     [Button("Set Rotation", ButtonSizes.Large), GUIColor(0.3f, 1f, 0.1f), BoxGroup("Rotations")]
@@ -27,6 +32,7 @@ public class RotateOnDemand : MonoBehaviour
     }
 
 #endif
+    #endregion
 
 
     private Coroutine _rotateCoroutine;
@@ -50,6 +56,7 @@ public class RotateOnDemand : MonoBehaviour
         }
 
         _rotateCoroutine = StartCoroutine(Rotate(index));
+        PlaySound(index);
     }
 
 
@@ -78,4 +85,11 @@ public class RotateOnDemand : MonoBehaviour
 
         onCompleteRotation.Invoke();
     }
+
+    private void PlaySound(int index)
+    {
+        if(!source && !clips[index].clip) return;
+        source.PlayOneShot(clips[index].clip, clips[index].volume);
+    }
+    
 }

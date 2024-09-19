@@ -13187,7 +13187,6 @@ GameObject:
   - component: {fileID: 1232050745}
   - component: {fileID: 1232050749}
   - component: {fileID: 1232050748}
-  - component: {fileID: 1232050750}
   m_Layer: 0
   m_Name: fan
   m_TagString: Untagged
@@ -13374,23 +13373,6 @@ MonoBehaviour:
   source: {fileID: 1232050748}
   startSound: {fileID: 0}
   stopSound: {fileID: 0}
---- !u!114 &1232050750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1232050744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d637c03b1e50fe84a9bf1b73fe2052da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  updateInterval: 0.2
-  axis: {x: 0, y: 0, z: 1}
-  maximumRpm: 55
-  audioSource: {fileID: 1232050748}
-  <Rpm>k__BackingField: 0
 --- !u!1 &1233158691
 GameObject:
   m_ObjectHideFlags: 0
@@ -14312,7 +14294,6 @@ GameObject:
   - component: {fileID: 1276734238}
   - component: {fileID: 1276734241}
   - component: {fileID: 1276734240}
-  - component: {fileID: 1276734242}
   m_Layer: 0
   m_Name: fan.001
   m_TagString: Untagged
@@ -14499,23 +14480,6 @@ MonoBehaviour:
   source: {fileID: 1276734240}
   startSound: {fileID: 0}
   stopSound: {fileID: 0}
---- !u!114 &1276734242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276734236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d637c03b1e50fe84a9bf1b73fe2052da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  updateInterval: 0.2
-  axis: {x: 0, y: 0, z: 1}
-  maximumRpm: 55
-  audioSource: {fileID: 1276734240}
-  <Rpm>k__BackingField: 0
 --- !u!1 &1281362614
 GameObject:
   m_ObjectHideFlags: 0
