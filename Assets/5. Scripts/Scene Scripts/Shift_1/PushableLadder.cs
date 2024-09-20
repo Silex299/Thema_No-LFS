@@ -73,6 +73,7 @@ namespace Scene_Scripts.Shift_1
 
             EngageAction();
             float elapsedTime = 0;
+            
             while (elapsedTime < transitionTime)
             {
                 _player.transform.position = Vector3.Lerp(initPlayerPos, pushPosition.position, elapsedTime / transitionTime);
@@ -85,6 +86,7 @@ namespace Scene_Scripts.Shift_1
             
             _player.transform.position = pushPosition.position;
             _player.transform.rotation = pushPosition.rotation;
+            
             #endregion
             
             
@@ -121,7 +123,7 @@ namespace Scene_Scripts.Shift_1
 
         private void EngageAction()
         {
-            _player.AnimationController.CrossFade("Side Single Push Start", 0.2f, 1);
+            _player.AnimationController.CrossFade("Side Single Push Start", 0.1f, 1);
         }
         
         private void DisEngageAction()
@@ -131,7 +133,7 @@ namespace Scene_Scripts.Shift_1
         
         private void PushAction()
         {
-            _player.AnimationController.Play("Side Single Push End", 1);
+            _player.AnimationController.CrossFade("Side Single Push End", 0.1f, 1);
             ladderAnimator.Play("Ladder Move");
             _triggered = true;
         }
