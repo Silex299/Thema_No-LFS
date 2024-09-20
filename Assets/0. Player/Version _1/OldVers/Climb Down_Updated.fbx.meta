@@ -61,17 +61,11 @@ ModelImporter:
       curves: []
       events:
       - time: 0.29798958
-        functionName: PlayStepsIndependent
-        data: Ladder
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0.6
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.75812656
-        functionName: PlayStepsIndependent
+        functionName: PlayIndependentStep
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0.6
+        objectReferenceParameter: {fileID: 11400000, guid: 760f3324c3510f741b9431a4a84f4916,
+          type: 2}
+        floatParameter: 0
         intParameter: 0
         messageOptions: 0
       transformMask: []

@@ -19,6 +19,7 @@ public class Door : MonoBehaviour
     [SerializeField, BoxGroup("Sound")] private AudioSource soundSource;
 
 
+    #region Editor
 #if UNITY_EDITOR
     [SerializeField, Button("Set Closed Position", ButtonSizes.Large)]
     public void SetClosedPosition()
@@ -33,6 +34,7 @@ public class Door : MonoBehaviour
     }
 
 #endif
+    #endregion
 
     [SerializeField, BoxGroup("Misc")] private bool isOpen;
     private Coroutine _toggleDoor;
@@ -46,7 +48,6 @@ public class Door : MonoBehaviour
         {
             StopCoroutine(_toggleDoor);
         }
-
         _toggleDoor = StartCoroutine(DoorToggle(open));
     }
 
@@ -57,13 +58,15 @@ public class Door : MonoBehaviour
 
         if (open != isOpen)
         {
-            Vector3 destination = open ? openPosition : closedPosition;
-            Vector3 initialPos = transform.localPosition;
+            var destination = open ? openPosition : closedPosition;
+            var initialPos = transform.localPosition;
             
             float timeElapsed = 0;
             
             
+            isOpen = open;
             PlaySound(open);
+            
             while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
@@ -81,9 +84,9 @@ public class Door : MonoBehaviour
                 yield return null;
             }
             
-            isOpen = open;
-
         }
+        
+        _toggleDoor = null;
         
     }
 
@@ -94,7 +97,6 @@ public class Door : MonoBehaviour
             soundSource.PlayOneShot(open ? openSound : closeSound);
         }
     }
-
     public void InstantToggle(bool open)
     {
         print("instant");

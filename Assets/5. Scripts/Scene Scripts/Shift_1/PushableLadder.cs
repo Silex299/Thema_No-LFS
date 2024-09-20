@@ -82,6 +82,9 @@ namespace Scene_Scripts.Shift_1
                 yield return new WaitForEndOfFrame();
             }
 
+            
+            _player.transform.position = pushPosition.position;
+            _player.transform.rotation = pushPosition.rotation;
             #endregion
             
             

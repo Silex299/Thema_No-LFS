@@ -45,6 +45,12 @@ namespace Misc
                 yield return null;
             }
 
+            playerTransform.position = moveTo.position;
+            if (changeRotation)
+            {
+                playerTransform.rotation = moveTo.rotation;
+            }
+
 
             if (restoreControllerAfterTransition)
             {

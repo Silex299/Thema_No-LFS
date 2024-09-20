@@ -51,7 +51,6 @@ namespace Player_Scripts
             var stepInfo = step as Step;
             PlayStepSound();
             PlayEffects();
-            
             return;
 
             void PlayStepSound()
@@ -68,6 +67,22 @@ namespace Player_Scripts
             }
         }
 
+        public void PlayIndependentStep(Object interaction)
+        {
+            if(player.DisabledPlayerMovement || player.IsOverridingAnimation) return;
+            
+            var playerInteraction = interaction as PlayerInteraction;
+            if(playerInteraction == null) return;
+            
+            var key = playerInteraction.interactionKey;
+            
+            
+            if (!steps.ContainsKey(key)) return;
+            if (!steps.TryGetValue(key, out var audioClips)) return;
+            
+            var randomClip = audioClips[UnityEngine.Random.Range(0, audioClips.Length)];
+            playerInteractionSource.PlayOneShot(randomClip, PlayerInteractionVolumeMultiplier * playerInteraction.volume);
+        }
 
         public void PlayPlayerInteraction(Object interaction)
         {
@@ -78,7 +93,6 @@ namespace Player_Scripts
             var groundKey = player.GroundTag;
             
             if(!interactions.ContainsKey(groundKey)) return;
-
             if (!interactions.TryGetValue(groundKey, out var groundInteractions)) return;
             
             if (!groundInteractions.clips.ContainsKey(playerInteraction.interactionKey)) return;
