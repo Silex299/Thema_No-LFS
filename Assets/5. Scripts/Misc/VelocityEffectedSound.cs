@@ -13,6 +13,7 @@ namespace Misc
         private float _velocity;
         private Vector3 _lastPos;
         private float _lastUpdateTime;
+        public bool paused;
 
         //Some odd sounds at start
         private void Start()
@@ -23,8 +24,19 @@ namespace Misc
 
         private void Update()
         {
+            switch (paused)
+            {
+                case true when audioSource.isPlaying:
+                    audioSource.Pause();
+                    break;
+                case false when !audioSource.isPlaying:
+                    audioSource.Play();
+                    break;
+            }
+            
+            if(paused) return;
+            
             UpdateVelocity();
-        
             float volume = Mathf.Clamp(_velocity / maximumVelocity, 0, 1);
             audioSource.volume = Mathf.Lerp(audioSource.volume, volume, Time.deltaTime * volumeUpdateSpeed);
         }
@@ -38,6 +50,6 @@ namespace Misc
             _lastPos = transform.position;
             _lastUpdateTime = Time.time;
         }
-    
+        
     }
 }

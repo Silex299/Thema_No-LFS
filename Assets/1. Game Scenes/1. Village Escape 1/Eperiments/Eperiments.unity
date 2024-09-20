@@ -1000,7 +1000,7 @@ GameObject:
   - component: {fileID: 232596790}
   - component: {fileID: 232596789}
   m_Layer: 1
-  m_Name: PathPoint_57
+  m_Name: PathPoint_59
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1033,9 +1033,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 58
-  currentIndex: 57
-  prevPointIndex: 56
+  nextPointIndex: 60
+  currentIndex: 59
+  prevPointIndex: 58
 --- !u!65 &232596790
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1069,7 +1069,7 @@ GameObject:
   - component: {fileID: 314855324}
   - component: {fileID: 314855323}
   m_Layer: 1
-  m_Name: PathPoint_38
+  m_Name: PathPoint_40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1102,9 +1102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 39
-  currentIndex: 38
-  prevPointIndex: 37
+  nextPointIndex: 41
+  currentIndex: 40
+  prevPointIndex: 39
 --- !u!65 &314855324
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1139,7 +1139,7 @@ GameObject:
   - component: {fileID: 320813275}
   - component: {fileID: 320813277}
   m_Layer: 1
-  m_Name: PathPoint_52
+  m_Name: PathPoint_54
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1172,9 +1172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 53
-  currentIndex: 52
-  prevPointIndex: 51
+  nextPointIndex: 55
+  currentIndex: 54
+  prevPointIndex: 53
 --- !u!65 &320813276
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1524,7 +1524,7 @@ GameObject:
   - component: {fileID: 438746853}
   - component: {fileID: 438746852}
   m_Layer: 1
-  m_Name: PathPoint_37
+  m_Name: PathPoint_39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1539,7 +1539,7 @@ Transform:
   m_GameObject: {fileID: 438746850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000004023313}
-  m_LocalPosition: {x: -4.4699793, y: 0.99, z: 207.45001}
+  m_LocalPosition: {x: -4.4699793, y: 0.99, z: 207.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1557,9 +1557,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 38
-  currentIndex: 37
-  prevPointIndex: 36
+  nextPointIndex: 40
+  currentIndex: 39
+  prevPointIndex: 38
 --- !u!65 &438746853
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1579,8 +1579,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.3047676, y: 8.210806, z: 2.068563}
-  m_Center: {x: 0, y: 3.6054037, z: -0.013417959}
+  m_Size: {x: 1.3047676, y: 9.276667, z: 2.068563}
+  m_Center: {x: 2.509115e-16, y: 4.1383333, z: -0.013417959}
 --- !u!1 &446772944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,6 +1647,8 @@ Transform:
   - {fileID: 1501742792}
   - {fileID: 1096543137}
   - {fileID: 1232981203}
+  - {fileID: 527302627}
+  - {fileID: 1671715012}
   - {fileID: 1531150709}
   - {fileID: 438746851}
   - {fileID: 314855322}
@@ -1730,6 +1732,8 @@ MonoBehaviour:
   - {fileID: 1501742792}
   - {fileID: 1096543137}
   - {fileID: 1232981203}
+  - {fileID: 527302627}
+  - {fileID: 1671715012}
   - {fileID: 1531150709}
   - {fileID: 438746851}
   - {fileID: 314855322}
@@ -1860,6 +1864,75 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.5718079, z: 1}
   m_Center: {x: 0, y: 1.2859039, z: 0}
+--- !u!1 &527302626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527302627}
+  - component: {fileID: 527302629}
+  - component: {fileID: 527302628}
+  m_Layer: 1
+  m_Name: PathPoint_36
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527302627
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527302626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.0000004023313}
+  m_LocalPosition: {x: -6.29, y: 0.99, z: 193.16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 446772945}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &527302628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527302626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextPointIndex: 37
+  currentIndex: 36
+  prevPointIndex: 35
+--- !u!65 &527302629
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527302626}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3047676, y: 9.496761, z: 1.3638875}
+  m_Center: {x: 2.509115e-16, y: 4.2483807, z: -0.013417959}
 --- !u!1 &574840910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1872,7 +1945,7 @@ GameObject:
   - component: {fileID: 574840913}
   - component: {fileID: 574840912}
   m_Layer: 1
-  m_Name: PathPoint_42
+  m_Name: PathPoint_44
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1905,9 +1978,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 43
-  currentIndex: 42
-  prevPointIndex: 41
+  nextPointIndex: 45
+  currentIndex: 44
+  prevPointIndex: 43
 --- !u!65 &574840913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1941,7 +2014,7 @@ GameObject:
   - component: {fileID: 578386574}
   - component: {fileID: 578386573}
   m_Layer: 1
-  m_Name: PathPoint_44
+  m_Name: PathPoint_46
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1974,9 +2047,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 45
-  currentIndex: 44
-  prevPointIndex: 43
+  nextPointIndex: 47
+  currentIndex: 46
+  prevPointIndex: 45
 --- !u!65 &578386574
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2041,7 +2114,7 @@ GameObject:
   - component: {fileID: 740484779}
   - component: {fileID: 740484778}
   m_Layer: 1
-  m_Name: PathPoint_54
+  m_Name: PathPoint_56
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2074,9 +2147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 55
-  currentIndex: 54
-  prevPointIndex: 53
+  nextPointIndex: 57
+  currentIndex: 56
+  prevPointIndex: 55
 --- !u!65 &740484779
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2339,7 +2412,7 @@ GameObject:
   - component: {fileID: 849871990}
   - component: {fileID: 849871989}
   m_Layer: 1
-  m_Name: PathPoint_60
+  m_Name: PathPoint_62
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2372,9 +2445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 61
-  currentIndex: 60
-  prevPointIndex: 59
+  nextPointIndex: 63
+  currentIndex: 62
+  prevPointIndex: 61
 --- !u!65 &849871990
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2524,7 +2597,7 @@ GameObject:
   - component: {fileID: 937216914}
   - component: {fileID: 937216913}
   m_Layer: 1
-  m_Name: PathPoint_62
+  m_Name: PathPoint_64
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2557,9 +2630,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 63
-  currentIndex: 62
-  prevPointIndex: 61
+  nextPointIndex: 65
+  currentIndex: 64
+  prevPointIndex: 63
 --- !u!65 &937216914
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2624,7 +2697,7 @@ GameObject:
   - component: {fileID: 1004680088}
   - component: {fileID: 1004680087}
   m_Layer: 1
-  m_Name: PathPoint_55
+  m_Name: PathPoint_57
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2657,9 +2730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 56
-  currentIndex: 55
-  prevPointIndex: 54
+  nextPointIndex: 58
+  currentIndex: 57
+  prevPointIndex: 56
 --- !u!65 &1004680088
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2693,7 +2766,7 @@ GameObject:
   - component: {fileID: 1004793333}
   - component: {fileID: 1004793332}
   m_Layer: 1
-  m_Name: PathPoint_49
+  m_Name: PathPoint_51
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2726,9 +2799,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 50
-  currentIndex: 49
-  prevPointIndex: 48
+  nextPointIndex: 52
+  currentIndex: 51
+  prevPointIndex: 50
 --- !u!65 &1004793333
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2762,7 +2835,7 @@ GameObject:
   - component: {fileID: 1022844977}
   - component: {fileID: 1022844976}
   m_Layer: 1
-  m_Name: PathPoint_50
+  m_Name: PathPoint_52
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2795,9 +2868,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 51
-  currentIndex: 50
-  prevPointIndex: 49
+  nextPointIndex: 53
+  currentIndex: 52
+  prevPointIndex: 51
 --- !u!65 &1022844977
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2900,7 +2973,7 @@ GameObject:
   - component: {fileID: 1065554196}
   - component: {fileID: 1065554195}
   m_Layer: 1
-  m_Name: PathPoint_59
+  m_Name: PathPoint_61
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2933,9 +3006,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 60
-  currentIndex: 59
-  prevPointIndex: 58
+  nextPointIndex: 62
+  currentIndex: 61
+  prevPointIndex: 60
 --- !u!65 &1065554196
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3188,7 +3261,7 @@ GameObject:
   - component: {fileID: 1204062690}
   - component: {fileID: 1204062689}
   m_Layer: 1
-  m_Name: PathPoint_43
+  m_Name: PathPoint_45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3221,9 +3294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 44
-  currentIndex: 43
-  prevPointIndex: 42
+  nextPointIndex: 46
+  currentIndex: 45
+  prevPointIndex: 44
 --- !u!65 &1204062690
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3257,7 +3330,7 @@ GameObject:
   - component: {fileID: 1221065481}
   - component: {fileID: 1221065480}
   m_Layer: 1
-  m_Name: PathPoint_64
+  m_Name: PathPoint_66
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3290,9 +3363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 64
-  currentIndex: 64
-  prevPointIndex: 63
+  nextPointIndex: 66
+  currentIndex: 66
+  prevPointIndex: 65
 --- !u!65 &1221065481
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3340,8 +3413,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232981202}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000004023313}
-  m_LocalPosition: {x: -5.9299817, y: 0.99, z: 189.91}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.0000004023313}
+  m_LocalPosition: {x: -6.29, y: 0.99, z: 186.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3381,8 +3454,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.3047676, y: 8.210806, z: 2.068563}
-  m_Center: {x: 0, y: 3.6054037, z: -0.013417959}
+  m_Size: {x: 1.3047676, y: 9.496761, z: 1.3638875}
+  m_Center: {x: 2.509115e-16, y: 4.2483807, z: -0.013417959}
 --- !u!1 &1235591076
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,7 +3468,7 @@ GameObject:
   - component: {fileID: 1235591079}
   - component: {fileID: 1235591078}
   m_Layer: 1
-  m_Name: PathPoint_47
+  m_Name: PathPoint_49
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3428,9 +3501,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 48
-  currentIndex: 47
-  prevPointIndex: 46
+  nextPointIndex: 50
+  currentIndex: 49
+  prevPointIndex: 48
 --- !u!65 &1235591079
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3686,7 +3759,7 @@ GameObject:
   - component: {fileID: 1372443405}
   - component: {fileID: 1372443404}
   m_Layer: 1
-  m_Name: PathPoint_41
+  m_Name: PathPoint_43
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3719,9 +3792,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 42
-  currentIndex: 41
-  prevPointIndex: 40
+  nextPointIndex: 44
+  currentIndex: 43
+  prevPointIndex: 42
 --- !u!65 &1372443405
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5040,7 +5113,7 @@ GameObject:
   - component: {fileID: 1531150711}
   - component: {fileID: 1531150710}
   m_Layer: 1
-  m_Name: PathPoint_36
+  m_Name: PathPoint_38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5054,8 +5127,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531150708}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000004023313}
-  m_LocalPosition: {x: -5.9299817, y: 0.99, z: 204.492}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.0000004023313}
+  m_LocalPosition: {x: -6.29, y: 0.99, z: 204.492}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5073,9 +5146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 37
-  currentIndex: 36
-  prevPointIndex: 35
+  nextPointIndex: 39
+  currentIndex: 38
+  prevPointIndex: 37
 --- !u!65 &1531150711
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5109,7 +5182,7 @@ GameObject:
   - component: {fileID: 1583084742}
   - component: {fileID: 1583084741}
   m_Layer: 1
-  m_Name: PathPoint_53
+  m_Name: PathPoint_55
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5142,9 +5215,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 54
-  currentIndex: 53
-  prevPointIndex: 52
+  nextPointIndex: 56
+  currentIndex: 55
+  prevPointIndex: 54
 --- !u!65 &1583084742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5178,7 +5251,7 @@ GameObject:
   - component: {fileID: 1595662324}
   - component: {fileID: 1595662323}
   m_Layer: 1
-  m_Name: PathPoint_45
+  m_Name: PathPoint_47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5211,9 +5284,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 46
-  currentIndex: 45
-  prevPointIndex: 44
+  nextPointIndex: 48
+  currentIndex: 47
+  prevPointIndex: 46
 --- !u!65 &1595662324
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5247,7 +5320,7 @@ GameObject:
   - component: {fileID: 1602896928}
   - component: {fileID: 1602896927}
   m_Layer: 1
-  m_Name: PathPoint_56
+  m_Name: PathPoint_58
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5280,9 +5353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 57
-  currentIndex: 56
-  prevPointIndex: 55
+  nextPointIndex: 59
+  currentIndex: 58
+  prevPointIndex: 57
 --- !u!65 &1602896928
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5316,7 +5389,7 @@ GameObject:
   - component: {fileID: 1628730566}
   - component: {fileID: 1628730565}
   m_Layer: 1
-  m_Name: PathPoint_61
+  m_Name: PathPoint_63
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5349,9 +5422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 62
-  currentIndex: 61
-  prevPointIndex: 60
+  nextPointIndex: 64
+  currentIndex: 63
+  prevPointIndex: 62
 --- !u!65 &1628730566
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5511,6 +5584,75 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.0475852, z: 1}
   m_Center: {x: 0, y: 1.0237926, z: 0}
+--- !u!1 &1671715011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1671715012}
+  - component: {fileID: 1671715014}
+  - component: {fileID: 1671715013}
+  m_Layer: 1
+  m_Name: PathPoint_37
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1671715012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671715011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.0000004023313}
+  m_LocalPosition: {x: -6.29, y: 0.99, z: 197.94}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 446772945}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1671715013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671715011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextPointIndex: 38
+  currentIndex: 37
+  prevPointIndex: 36
+--- !u!65 &1671715014
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671715011}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3047676, y: 9.496761, z: 1.3638875}
+  m_Center: {x: 2.509115e-16, y: 4.2483807, z: -0.013417959}
 --- !u!1 &1714124515
 GameObject:
   m_ObjectHideFlags: 0
@@ -5523,7 +5665,7 @@ GameObject:
   - component: {fileID: 1714124518}
   - component: {fileID: 1714124517}
   m_Layer: 1
-  m_Name: PathPoint_46
+  m_Name: PathPoint_48
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5556,9 +5698,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 47
-  currentIndex: 46
-  prevPointIndex: 45
+  nextPointIndex: 49
+  currentIndex: 48
+  prevPointIndex: 47
 --- !u!65 &1714124518
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5692,7 +5834,7 @@ GameObject:
   - component: {fileID: 1859270112}
   - component: {fileID: 1859270111}
   m_Layer: 1
-  m_Name: PathPoint_58
+  m_Name: PathPoint_60
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5725,9 +5867,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 59
-  currentIndex: 58
-  prevPointIndex: 57
+  nextPointIndex: 61
+  currentIndex: 60
+  prevPointIndex: 59
 --- !u!65 &1859270112
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6037,7 +6179,7 @@ GameObject:
   - component: {fileID: 1963340276}
   - component: {fileID: 1963340275}
   m_Layer: 1
-  m_Name: PathPoint_48
+  m_Name: PathPoint_50
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6070,9 +6212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 49
-  currentIndex: 48
-  prevPointIndex: 47
+  nextPointIndex: 51
+  currentIndex: 50
+  prevPointIndex: 49
 --- !u!65 &1963340276
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6175,7 +6317,7 @@ GameObject:
   - component: {fileID: 2022146045}
   - component: {fileID: 2022146044}
   m_Layer: 1
-  m_Name: PathPoint_51
+  m_Name: PathPoint_53
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6208,9 +6350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 52
-  currentIndex: 51
-  prevPointIndex: 50
+  nextPointIndex: 54
+  currentIndex: 53
+  prevPointIndex: 52
 --- !u!65 &2022146045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6244,7 +6386,7 @@ GameObject:
   - component: {fileID: 2022618389}
   - component: {fileID: 2022618388}
   m_Layer: 1
-  m_Name: PathPoint_63
+  m_Name: PathPoint_65
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6277,9 +6419,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 64
-  currentIndex: 63
-  prevPointIndex: 62
+  nextPointIndex: 66
+  currentIndex: 65
+  prevPointIndex: 64
 --- !u!65 &2022618389
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6451,7 +6593,7 @@ GameObject:
   - component: {fileID: 2061857709}
   - component: {fileID: 2061857708}
   m_Layer: 1
-  m_Name: PathPoint_40
+  m_Name: PathPoint_42
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6484,9 +6626,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 41
-  currentIndex: 40
-  prevPointIndex: 39
+  nextPointIndex: 43
+  currentIndex: 42
+  prevPointIndex: 41
 --- !u!65 &2061857709
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6520,7 +6662,7 @@ GameObject:
   - component: {fileID: 2063654739}
   - component: {fileID: 2063654738}
   m_Layer: 1
-  m_Name: PathPoint_39
+  m_Name: PathPoint_41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6553,9 +6695,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d904ede049e3ba4ba28db91865dab27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPointIndex: 40
-  currentIndex: 39
-  prevPointIndex: 38
+  nextPointIndex: 42
+  currentIndex: 41
+  prevPointIndex: 40
 --- !u!65 &2063654739
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7013,7 +7155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148502884703}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
@@ -8486,7 +8628,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00000007450581, y: 0.19684808, z: 0.00000013411046}
+  m_ConnectedAnchor: {x: -0.00000003911555, y: 0.19684787, z: 0.00000010430814}
   serializedVersion: 2
   m_SwingAxis: {x: -1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -8835,8 +8977,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523584588122027446}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.038291976, y: 0.045973748, z: 0.007231074, w: 0.9981823}
-  m_LocalPosition: {x: 1.3010861, y: 0.8701321, z: -0.07078553}
+  m_LocalRotation: {x: 0.038291983, y: 0.04597375, z: 0.007231073, w: 0.99818236}
+  m_LocalPosition: {x: 1.3010861, y: 0.87013155, z: -0.07078556}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9173,7 +9315,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000000372529, y: 0.34889156, z: -0.000000119209226}
+  m_ConnectedAnchor: {x: -0.0000000372529, y: 0.3488913, z: 0.000000029802306}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -9972,7 +10114,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.1689342, y: 0.14272463, z: 0.043837544}
+  m_ConnectedAnchor: {x: 0.16893408, y: 0.14272434, z: 0.043837607}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -10190,7 +10332,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000013411045, y: 0.34894544, z: -0.000000014901148}
+  m_ConnectedAnchor: {x: 0.000000007450581, y: 0.3489455, z: -0.000000014901148}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -10392,7 +10534,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.09929921, y: -0.040364835, z: 0.0057107396}
+  m_ConnectedAnchor: {x: 0.0992992, y: -0.04036501, z: 0.005710761}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -10515,7 +10657,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000006705522, y: 0.19695625, z: 0.00000019371507}
+  m_ConnectedAnchor: {x: 0.0000000372529, y: 0.19695619, z: 0.000000044703476}
   serializedVersion: 2
   m_SwingAxis: {x: 1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -10678,7 +10820,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.09929932, y: -0.040364675, z: 0.0043327855}
+  m_ConnectedAnchor: {x: -0.099299215, y: -0.040364914, z: 0.0043328446}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -11079,7 +11221,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0006966563, y: 0.32939735, z: 0.078665674}
+  m_ConnectedAnchor: {x: 0.0006967969, y: 0.32939717, z: 0.07866572}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -11633,7 +11775,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0073913815, y: 0.15756263, z: 0.0024205996}
+  m_ConnectedAnchor: {x: 0.0073916176, y: 0.15756245, z: 0.0024206126}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -12098,8 +12240,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7036213050387149105}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000000081461614, y: -0, z: 4.738467e-10, w: 1}
-  m_LocalPosition: {x: -1.298248, y: -0.00000006856428, z: -0.000000021811704}
+  m_LocalRotation: {x: 0.000000081460335, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.2982479, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12254,7 +12396,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.16749498, y: 0.13499512, z: 0.014051302}
+  m_ConnectedAnchor: {x: -0.16749486, y: 0.13499504, z: 0.014051279}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
