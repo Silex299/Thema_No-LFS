@@ -13,6 +13,7 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private bool restrictX;
         [SerializeField, BoxGroup("Proximity")] private bool restrictY = true;
         [SerializeField, BoxGroup("Proximity")] private bool restrictZ;
+        [SerializeField, BoxGroup("Proximity")] private bool invertedX;
 
         [SerializeField, BoxGroup("Proximity")]
         private float defaultY;
@@ -20,6 +21,7 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private Vector3 bounds;
         [SerializeField, BoxGroup("Proximity")] private float proximity;
         [SerializeField, BoxGroup("Proximity")] private LayerMask proximityMask;
+        
         
         
         
@@ -101,7 +103,8 @@ namespace Player_Scripts.Interactables
                 {
                     desiredLocalPosition.x = 0;
                 }
-                else if (desiredLocalPosition.x - boxLocalPosition.x > 0)
+                //PROXIMITY CHANGE
+                else if ( !invertedX ? desiredLocalPosition.x - boxLocalPosition.x > 0 : desiredLocalPosition.x - boxLocalPosition.x < 0)
                 {
                     //print("Moving +ve x");
                     Ray xRay = new Ray(boxPos + boxRight * bounds.x + boxUp * bounds.y, boxRight);

@@ -28,9 +28,6 @@ namespace Player_Scripts.States
         {
         }
 
-        public override void LateUpdateState(Player player)
-        {
-        }
 
         #endregion
 
@@ -87,6 +84,7 @@ namespace Player_Scripts.States
             {
                 multiplier = player.CanBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
             }
+            input = (player.enabledDirectionInput ? input : Mathf.Abs(input)) * multiplier;
 
             //Apply gravity and ground check
             player.MovementController.GroundCheck();
@@ -97,6 +95,47 @@ namespace Player_Scripts.States
 
             #endregion
 
+            #region PLAYER ANIMATION UPDATE
+
+            if (player.CanPlayAlternateMovement)
+            {
+                if (Input.GetButtonDown("Crouch"))
+                {
+                    CrouchPlayer(player, true);
+                }
+                else if (Input.GetButtonUp("Crouch"))
+                {
+                    CrouchPlayer(player, false);
+                }
+            }
+            //Don't keep crouching if force boost
+            if (player.ForceBoost)
+            {
+                player.currentStateIndex = 0;
+                CrouchPlayer(player, false);
+            }
+            
+            //Jump
+            if (Input.GetButtonDown("Jump"))
+            {
+                if (player.CanJump && player.IsGrounded && !player.IsOverridingAnimation)
+                {
+                    _jumpCoroutine ??= player.StartCoroutine(JumpCoroutine(player));
+                }
+            }
+
+            //Update Speed in animator
+            player.AnimationController.SetFloat(Speed, input);
+
+            #endregion
+        }
+        
+        
+        public override void LateUpdateState(Player player)
+        {
+            
+            var input = player.UseHorizontal ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
+            
             #region PLAYER INTERACTION
 
             //Interact
@@ -144,44 +183,10 @@ namespace Player_Scripts.States
                 }
             }
 
-            input = (player.enabledDirectionInput ? input : Mathf.Abs(input)) * multiplier;
-
-            #endregion
-
-            #region PLAYER ANIMATION UPDATE
-
-            if (player.CanPlayAlternateMovement)
-            {
-                if (Input.GetButtonDown("Crouch"))
-                {
-                    CrouchPlayer(player, true);
-                }
-                else if (Input.GetButtonUp("Crouch"))
-                {
-                    CrouchPlayer(player, false);
-                }
-            }
-            //Don't keep crouching if force boost
-            if (player.ForceBoost)
-            {
-                player.currentStateIndex = 0;
-                CrouchPlayer(player, false);
-            }
-            
-            //Jump
-            if (Input.GetButtonDown("Jump"))
-            {
-                if (player.CanJump && player.IsGrounded && !player.IsOverridingAnimation)
-                {
-                    _jumpCoroutine ??= player.StartCoroutine(JumpCoroutine(player));
-                }
-            }
-
-            //Update Speed in animator
-            player.AnimationController.SetFloat(Speed, input);
 
             #endregion
         }
+        
 
         #endregion
 
