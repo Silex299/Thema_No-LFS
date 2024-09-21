@@ -15,13 +15,13 @@ namespace Player_Scripts.Interactables
         [SerializeField, BoxGroup("Proximity")] private bool restrictZ;
         [SerializeField, BoxGroup("Proximity")] private bool invertedX;
 
-        [SerializeField, BoxGroup("Proximity")]
-        private float defaultY;
-        
+        [BoxGroup("Proximity")]
+        [field: SerializeField]
+        public float defaultY { get; set; }
+
         [SerializeField, BoxGroup("Proximity")] private Vector3 bounds;
         [SerializeField, BoxGroup("Proximity")] private float proximity;
         [SerializeField, BoxGroup("Proximity")] private LayerMask proximityMask;
-        
         
         
         

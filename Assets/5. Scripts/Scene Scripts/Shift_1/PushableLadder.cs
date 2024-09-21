@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Managers;
 using Player_Scripts;
@@ -20,7 +19,7 @@ namespace Scene_Scripts.Shift_1
         private UIManager _uiManager;
         private bool _playerInTrigger;
         private Coroutine _resetTrigger;
-        private bool _triggered;
+        public bool Triggered { get; set; }
 
 
         private void OnTriggerStay(Collider other)
@@ -53,7 +52,7 @@ namespace Scene_Scripts.Shift_1
 
         private void Update()
         {
-            if(!_playerInTrigger || _triggered) return;
+            if(!_playerInTrigger || Triggered) return;
 
             if (Input.GetButtonDown("e"))
             {
@@ -134,8 +133,10 @@ namespace Scene_Scripts.Shift_1
         private void PushAction()
         {
             _player.AnimationController.CrossFade("Side Single Push End", 0.1f, 1);
+
+            ladderAnimator.enabled = true;
             ladderAnimator.Play("Ladder Move");
-            _triggered = true;
+            Triggered = true;
         }
         
         

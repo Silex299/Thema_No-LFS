@@ -1,4 +1,4 @@
- using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,6 +20,7 @@ public class Door : MonoBehaviour
 
 
     #region Editor
+
 #if UNITY_EDITOR
     [SerializeField, Button("Set Closed Position", ButtonSizes.Large)]
     public void SetClosedPosition()
@@ -34,20 +35,24 @@ public class Door : MonoBehaviour
     }
 
 #endif
+
     #endregion
 
-    [SerializeField, BoxGroup("Misc")] private bool isOpen;
+    [BoxGroup("Misc")]
+    [field: SerializeField]
+    public bool isOpen { get; set; }
+
     private Coroutine _toggleDoor;
 
 
-
-    [Button("TOGGLE")]//REMOVE: ONLY REMOVE THE [Button]
+    [Button("TOGGLE")] //REMOVE: ONLY REMOVE THE [Button]
     public void ToggleDoor(bool open)
     {
         if (_toggleDoor != null)
         {
             StopCoroutine(_toggleDoor);
         }
+
         _toggleDoor = StartCoroutine(DoorToggle(open));
     }
 
@@ -60,13 +65,13 @@ public class Door : MonoBehaviour
         {
             var destination = open ? openPosition : closedPosition;
             var initialPos = transform.localPosition;
-            
+
             float timeElapsed = 0;
-            
-            
+
+
             isOpen = open;
             PlaySound(open);
-            
+
             while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
@@ -77,17 +82,15 @@ public class Door : MonoBehaviour
                 }
                 else
                 {
-                    float normalisedTime = open? openCurve.Evaluate(timeElapsed / transitionTime) : closeCurve.Evaluate(timeElapsed / transitionTime);
+                    float normalisedTime = open ? openCurve.Evaluate(timeElapsed / transitionTime) : closeCurve.Evaluate(timeElapsed / transitionTime);
                     transform.localPosition = Vector3.LerpUnclamped(initialPos, destination, normalisedTime);
                 }
-                
+
                 yield return null;
             }
-            
         }
-        
+
         _toggleDoor = null;
-        
     }
 
     private void PlaySound(bool open)
@@ -97,12 +100,11 @@ public class Door : MonoBehaviour
             soundSource.PlayOneShot(open ? openSound : closeSound);
         }
     }
+
     public void InstantToggle(bool open)
     {
         print("instant");
         transform.localPosition = open ? openPosition : closedPosition;
         isOpen = open;
     }
-
-
 }

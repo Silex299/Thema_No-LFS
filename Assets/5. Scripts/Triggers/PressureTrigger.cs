@@ -18,8 +18,8 @@ namespace Triggers
         [SerializeField, Space(10)] private AudioSource soundSource;
         [SerializeField, Space(10)] private AudioClip triggerSound;
 
-        private int _objectInTrigger;
-        private bool _triggered;
+        [field: SerializeField] public int ObjectInTrigger { get; set; }
+        [field: SerializeField] public bool Triggered { get; set; }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -28,12 +28,12 @@ namespace Triggers
 
             if (!tags.Contains(other.tag)) return;
             
-            _objectInTrigger = _objectInTrigger + 1;
-            if (_triggered) return;
+            ObjectInTrigger = ObjectInTrigger + 1;
+            if (Triggered) return;
 
-            if(_objectInTrigger >= pressureThreshold)
+            if(ObjectInTrigger >= pressureThreshold)
             {
-                _triggered = true;
+                Triggered = true;
                 triggerAction?.Invoke();
                 soundSource?.PlayOneShot(triggerSound);
             }
@@ -45,13 +45,13 @@ namespace Triggers
             if (!canTrigger) return;
             if (!tags.Contains(other.tag)) return;
 
-            _objectInTrigger = Mathf.Clamp(_objectInTrigger-1, 0, 30);
+            ObjectInTrigger = Mathf.Clamp(ObjectInTrigger-1, 0, 30);
 
-            if (!_triggered) return;
+            if (!Triggered) return;
 
-            if(_objectInTrigger < pressureThreshold)
+            if(ObjectInTrigger < pressureThreshold)
             {
-                _triggered = false;
+                Triggered = false;
                 resetAction?.Invoke();
             }
         }
