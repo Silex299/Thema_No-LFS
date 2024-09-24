@@ -101,11 +101,11 @@ namespace NPCs.New
         private void Start()
         {
             ChangeState(NpcStates.Serveillance);
-            PlayerMovementController.Instance.player.Health.onDeath += OnDeath;
+            PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             target = PlayerMovementController.Instance.transform;
         }
 
-        private void OnDeath()
+        private void OnPlayerDeath()
         {
             print("Calling Npc after death");
             ChangeState(NpcStates.AfterDeath);
