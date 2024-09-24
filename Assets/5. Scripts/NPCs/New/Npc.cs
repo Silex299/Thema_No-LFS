@@ -70,6 +70,15 @@ namespace NPCs.New
         #endregion
 
         #endregion
+
+        #region Getter Setter
+
+        public float SurveillanceWaitTime
+        {
+            set => serveillanceWaitTime = value;
+        }
+
+        #endregion
         
         #endregion
         

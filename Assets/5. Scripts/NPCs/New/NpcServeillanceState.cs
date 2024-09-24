@@ -134,7 +134,7 @@ namespace Mechanics.Npc
             
             _currentWaypointIndex = (_currentWaypointIndex + 1) % npc.serveillancePoints.Count;
             
-            if (npc.serveillanceWaitTime != 0)
+            if (Mathf.Approximately(_speedMultiplier, 0))
             {
                 //accelerate
                 float timeElapsed = 0;
