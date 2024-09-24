@@ -54,7 +54,9 @@ namespace Weapons.NPC_Weapon
         public void Fire()
         {
             if(!canFire) return;
-
+            
+            print("Firing");
+            
             if (_lastFireTime == 0)
             {
                 _lastFireTime = Time.time + firstAttackDelay;

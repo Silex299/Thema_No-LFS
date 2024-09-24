@@ -9,7 +9,9 @@ namespace Triggers
     public class OneTimeTrigger : MonoBehaviour
     {
 
-        [InfoBox("-1 if you want to reset the trigger everytime a checkpoint loads")]public int checkpointThreshold = -1;
+        [InfoBox("-1 if you want to reset the trigger everytime a checkpoint loads")]
+        [InfoBox("Resets if checkpoint is less than or equal to threshold")]
+        public int checkpointThreshold = -1;
         public float initialDelay;
         public UnityEvent trigger;
         private bool _isTriggered;
@@ -25,7 +27,11 @@ namespace Triggers
 
         private void ResetTrigger(int checkpoint)
         {
-            if(checkpoint>=checkpointThreshold) _isTriggered = false;
+            if (checkpointThreshold == -1)
+            {
+                _isTriggered = false;
+            }
+            if(checkpoint <= checkpointThreshold) _isTriggered = false;
         }
 
         public void Trigger()

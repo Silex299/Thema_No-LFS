@@ -26,9 +26,7 @@ namespace Misc
                 if (!_playerInTrigger)
                 {
                     _playerInTrigger = true;
-                    onPlayerInSight.Invoke();
                 }
-                
                 
                 if (_resetCoroutine != null)
                 {
@@ -42,6 +40,7 @@ namespace Misc
         {
             yield return new WaitForSeconds(0.3f);
             _playerInTrigger = false;
+            
             if (_inSight)
             {
                 _inSight = false;
