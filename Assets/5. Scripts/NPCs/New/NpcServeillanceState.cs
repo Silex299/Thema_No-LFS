@@ -64,7 +64,7 @@ namespace Mechanics.Npc
                     _pathCoroutine = null;
                     yield break;
                 }
-                
+
                 _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.serveillancePoints[_currentWaypointIndex], out _path);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
@@ -84,8 +84,8 @@ namespace Mechanics.Npc
 
             if (_path != null)
             {
-                desiredPos =  npc.pathFinder.GetDesiredPosition(_path[0]);
-                
+                desiredPos = npc.pathFinder.GetDesiredPosition(_path[0]);
+
                 if (_path.Count > 1)
                 {
                     if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
@@ -115,28 +115,37 @@ namespace Mechanics.Npc
 
         private IEnumerator ChangeWaypoint()
         {
-            //decelerate 
-            float timeElapsed = 0;
-            while (timeElapsed < npc.accelerationTime)
-            {
-                timeElapsed += Time.deltaTime;
-                _speedMultiplier = Mathf.Lerp(1, 0, timeElapsed / npc.accelerationTime);
-                yield return null;
-            }
 
-            //wait 
-            yield return new WaitForSeconds(npc.serveillanceWaitTime);
+            if (npc.serveillanceWaitTime != 0)
+            {
+                //decelerate 
+                float timeElapsed = 0;
+                
+                while (timeElapsed < npc.accelerationTime)
+                {
+                    timeElapsed += Time.deltaTime;
+                    _speedMultiplier = Mathf.Lerp(1, 0, timeElapsed / npc.accelerationTime);
+                    yield return null;
+                }
+
+                //wait 
+                yield return new WaitForSeconds(npc.serveillanceWaitTime);
+            }
+            
             _currentWaypointIndex = (_currentWaypointIndex + 1) % npc.serveillancePoints.Count;
-
-            //accelerate
-            timeElapsed = 0;
-            while (timeElapsed < npc.accelerationTime)
+            
+            if (npc.serveillanceWaitTime != 0)
             {
-                timeElapsed += Time.deltaTime;
-                _speedMultiplier = Mathf.Lerp(0, 1, timeElapsed / npc.accelerationTime);
-                yield return null;
+                //accelerate
+                float timeElapsed = 0;
+                while (timeElapsed < npc.accelerationTime)
+                {
+                    timeElapsed += Time.deltaTime;
+                    _speedMultiplier = Mathf.Lerp(0, 1, timeElapsed / npc.accelerationTime);
+                    yield return null;
+                }
             }
-
+            
             _changeWaypointCoroutine = null;
         }
 
