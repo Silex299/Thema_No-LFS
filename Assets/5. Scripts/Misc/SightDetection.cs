@@ -10,6 +10,7 @@ namespace Misc
     public class SightDetection : MonoBehaviour
     {
         [SerializeField] private LayerMask rayCastMask;
+        [SerializeField] private float playerHeight = 0.8f;
         [SerializeField, Space(10)] private UnityEvent onPlayerInSight;
         [SerializeField] private UnityEvent onPlayerOutOfSight;
 
@@ -56,7 +57,7 @@ namespace Misc
             if(!_playerInTrigger) return;
             
             var position = transform.position;
-            Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * 0.8f );
+            Vector3 direction = (PlayerMovementController.Instance.transform.position - position + Vector3.up * playerHeight );
             Ray ray = new Ray(position, direction);
             
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
