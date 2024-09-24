@@ -14,7 +14,7 @@ namespace Mechanics.Npc
 
         private List<int> _path;
 
-        private bool _isAttacking;
+        [SerializeField]private bool _isAttacking;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -99,10 +99,9 @@ namespace Mechanics.Npc
 
         private void Attack(bool attack)
         {
-            if (attack) npc.onAttack?.Invoke();
-
-            if (_isAttacking == attack) return;
+            if (attack) npc.onAttack.Invoke();
             
+            if (_isAttacking == attack) return;
             _isAttacking = attack;
             npc.animator.SetBool(Attack1, _isAttacking);
         }
