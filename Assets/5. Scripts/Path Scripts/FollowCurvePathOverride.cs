@@ -1,6 +1,8 @@
 using System;
+using Managers.Checkpoints;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 
 namespace Path_Scripts
@@ -9,12 +11,28 @@ namespace Path_Scripts
     {
         public Transform[] waypoints;
         public float progressSpeed;
+        public float interpolationSpeed;
         public bool invertRotation;
+
 
         [SerializeField, OnValueChanged(nameof(Move))]
         private float pathProgress;
+
         private Player _player;
-        public bool _engagedOverride;
+        private float _sectionDistance = 1;
+        private bool _engageOverride;
+        public bool EngageOverride
+        {
+            get=>_engageOverride;
+            set
+            {
+                _engageOverride = value;
+                if (value)
+                {
+                    InitialProgress();
+                }
+            }
+        }
 
         #region Editor
 
@@ -33,25 +51,30 @@ namespace Path_Scripts
             Gizmos.DrawWireSphere(mainPoint, 0.5f);
         }
 #endif
+
         #endregion
 
         private void OnEnable()
         {
             _player = PlayerMovementController.Instance.player;
+            CheckpointManager.Instance.onCheckpointLoad += Reset;
+        }
+        private void OnDisable()
+        {
+            CheckpointManager.Instance.onCheckpointLoad -= Reset;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if(!_engagedOverride) return;
-            if (!_player) return;
+            if (!EngageOverride) return;
+            if (_player.OverrideFlags) return;
 
             float input = (_player.UseHorizontal) ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
-            pathProgress += input * pathProgress * Time.deltaTime;
+            pathProgress += (input * progressSpeed * Time.deltaTime) / _sectionDistance;
             pathProgress = Mathf.Clamp(pathProgress, 0, waypoints.Length - 1);
             Move();
         }
-
-
+        
         private void Move()
         {
             int lowerRoundOff = Mathf.FloorToInt(pathProgress);
@@ -63,13 +86,32 @@ namespace Path_Scripts
             Vector3 direction = waypoints[higherRoundOff].position - waypoints[lowerRoundOff].position;
             Vector3 playerPos = waypoints[lowerRoundOff].position + direction * reminder;
             Vector3 playerForward = (invertRotation ? 1 : -1) * Vector3.Cross(direction, Vector3.up).normalized;
-            playerPos.y = _player.transform.position.y;
+            
+            if (direction.magnitude != 0)
+            {
+                _sectionDistance = direction.magnitude;
+            }
+            
+
 #if UNITY_EDITOR
             mainPoint = playerPos;
             forwardPoint = playerPos + playerForward;
+            //if(!_player) return;
 #endif
-            _player.transform.position = playerPos;
-            _player.transform.rotation = Quaternion.LookRotation(playerForward, Vector3.up);
+            playerPos.y = _player.transform.position.y;
+            _player.transform.position = Vector3.Lerp(_player.transform.position, playerPos, interpolationSpeed * Time.deltaTime);
+            _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, Quaternion.LookRotation(playerForward, Vector3.up), interpolationSpeed * Time.deltaTime);
+        }
+        private void InitialProgress()
+        {
+            float startDistance = ThemaVector.PlannerDistance(waypoints[0].position, _player.transform.position);
+            float endDistance = ThemaVector.PlannerDistance(waypoints[^1].position, _player.transform.position);
+            pathProgress = startDistance < endDistance ? 0 : waypoints.Length - 1;
+        }
+
+        private void Reset(int index)
+        {
+            _engageOverride = false;
         }
     }
 }
