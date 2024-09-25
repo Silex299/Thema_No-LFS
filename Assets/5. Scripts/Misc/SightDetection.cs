@@ -36,7 +36,6 @@ namespace Misc
                 _resetCoroutine = StartCoroutine(ResetTrigger());
             }
         }
-
         private IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.3f);
@@ -54,6 +53,7 @@ namespace Misc
         private void Update()
         {
         
+            
             if(!_playerInTrigger) return;
             
             var position = transform.position;
@@ -90,7 +90,7 @@ namespace Misc
             
         }
         
-        private void Start()
+        private void OnEnable()
         {
             PlayerMovementController.Instance.player.Health.onDeath += DisableSightDetection;
             PlayerMovementController.Instance.player.Health.onRevive += EnableSightDetection;
@@ -115,6 +115,7 @@ namespace Misc
             if(_resetCoroutine!=null) StopCoroutine(_resetCoroutine);
             _resetCoroutine = null;
             _enabled = false;
+            _playerInTrigger = false;
         }
         
         
