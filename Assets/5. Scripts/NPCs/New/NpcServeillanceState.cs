@@ -152,9 +152,11 @@ namespace Mechanics.Npc
             npc.animator.SetInteger(StateIndex, 0);
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
-            _speedCoroutine = npc.StartCoroutine(Accelerate(1));
-            if (npc.serveillancePoints.Count != 0) return;
             _speedMultiplier = 0;
+            if (npc.serveillancePoints.Count != 0)
+            {
+                _speedCoroutine = npc.StartCoroutine(Accelerate(1));
+            }
             //npc.animator.CrossFade(npc.entryAnim, 0.25f);
         }
 
