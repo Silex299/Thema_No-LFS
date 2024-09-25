@@ -18,6 +18,8 @@ namespace Mechanics.Npc
         private bool _isReachable;
         private List<int> _path;
         private Coroutine _pathCoroutine;
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
 
 
         public override void Enter(NPCs.New.Npc parentNpc)
@@ -152,6 +154,8 @@ namespace Mechanics.Npc
         private void SetInitialAnimatorState()
         {
             npc.animator.SetInteger(StateIndex, 0);
+            npc.animator.SetBool(Attack, false);
+            npc.animator.SetBool(PathBlocked, false);
             _speedMultiplier = 1;
             if (npc.serveillancePoints.Count != 0) return;
             _speedMultiplier = 0;

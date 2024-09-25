@@ -5101,6 +5101,81 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.8873067, y: 20.955032, z: 1}
   m_Center: {x: 0, y: 9.977516, z: 0}
+--- !u!1 &1523699462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1523699463}
+  - component: {fileID: 1523699465}
+  - component: {fileID: 1523699464}
+  m_Layer: 1
+  m_Name: checkpoint_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1523699463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523699462}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.019899245, z: -0, w: 0.99980205}
+  m_LocalPosition: {x: -0.735, y: 3.34, z: 210.137}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9034582097910321150}
+  m_LocalEulerAnglesHint: {x: 0, y: 2.28, z: 0}
+--- !u!65 &1523699464
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523699462}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.297178, y: 3.5671675, z: 1.5215094}
+  m_Center: {x: 1.2652748, y: 1.2835838, z: -0.0000000017485362}
+--- !u!114 &1523699465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523699462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c599afdb15d6a4480e7067d1b4520a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreThisCheckpoint: 0
+  playerStateIndex: 0
+  nextPathPointIndex: 41
+  prevPathPointIndex: 39
+  canRotate: 1
+  canJump: 1
+  canBoost: 1
+  canPlayAlternateMovement: 1
+  checkpointIndex: 4
 --- !u!1 &1531150708
 GameObject:
   m_ObjectHideFlags: 0
@@ -9850,6 +9925,7 @@ MonoBehaviour:
   - {fileID: 437059806}
   - {fileID: 13829617}
   - {fileID: 1446533987}
+  - {fileID: 1523699465}
   playerTracker: {fileID: 1495976983}
 --- !u!114 &5373106684274154333
 MonoBehaviour:
@@ -12315,6 +12391,7 @@ Transform:
   - {fileID: 437059805}
   - {fileID: 13829615}
   - {fileID: 1446533985}
+  - {fileID: 1523699463}
   m_Father: {fileID: 7415020759999584073}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &9073369159064209350
