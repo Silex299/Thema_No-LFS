@@ -29,6 +29,8 @@ namespace NPCs.New
         [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
         #endregion
+
+        public NpcStates initState = NpcStates.Serveillance;
         
         #region Seveillance
         [FoldoutGroup("Serveillance")] public List<Vector3> serveillancePoints;
@@ -53,6 +55,7 @@ namespace NPCs.New
 
         private NpcStateBase _currentState;
         private NpcStates _currentStateType;
+        private readonly NpcIdleState _idleState = new NpcIdleState();
         private readonly NpcServeillanceState _serveillanceState = new NpcServeillanceState();
         private readonly NpcChaseState _chaseState = new NpcChaseState();
         private readonly NpcAfterDeathState _afterDeath = new NpcAfterDeathState();
@@ -111,7 +114,7 @@ namespace NPCs.New
 
         private void Start()
         {
-            ChangeState(NpcStates.Serveillance);
+            ChangeState(initState);
             PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             target = PlayerMovementController.Instance.transform;
         }
@@ -134,6 +137,8 @@ namespace NPCs.New
         private void ChangeState(NpcStates state)
         {
             
+            print("Changing guard state to " + state + " from " + _currentStateType);
+            
             if(state == _currentStateType) return;
             
             _currentState?.Exit();
@@ -144,6 +149,7 @@ namespace NPCs.New
                 NpcStates.Serveillance => _serveillanceState,
                 NpcStates.Chase => _chaseState,
                 NpcStates.AfterDeath => _afterDeath,
+                NpcStates.Idle => _idleState,
             };
             
             _currentState.Enter(this);
@@ -152,7 +158,7 @@ namespace NPCs.New
 
         public void Reset()
         {
-            ChangeState(NpcStates.Serveillance);
+            ChangeState(initState);
             
             //Reset Animator
             animator.SetBool(Attack, false);
@@ -164,12 +170,14 @@ namespace NPCs.New
         
         #region States
 
-        enum NpcStates
+        [System.Serializable]
+        public enum NpcStates
         {
-            None,
-            Serveillance,
-            Chase,
-            AfterDeath
+            None, //0
+            Serveillance, //1
+            Chase, //2
+            AfterDeath, //3
+            Idle //4
         }
         
         #endregion

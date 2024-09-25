@@ -18,6 +18,7 @@ namespace Mechanics.Npc
         private bool _isReachable;
         private List<int> _path;
         private Coroutine _pathCoroutine;
+        private Coroutine _speedCoroutine;
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
 
@@ -121,19 +122,17 @@ namespace Mechanics.Npc
 
         private IEnumerator ChangeWaypoint()
         {
-
+            
+            if(_speedCoroutine!=null)
+            {
+                npc.StopCoroutine(_speedCoroutine);
+                _speedCoroutine = null;
+            }
+            
             if (npc.serveillanceWaitTime != 0)
             {
-                //decelerate 
-                float timeElapsed = 0;
                 
-                while (timeElapsed < npc.accelerationTime)
-                {
-                    timeElapsed += Time.deltaTime;
-                    _speedMultiplier = Mathf.Lerp(1, 0, timeElapsed / npc.accelerationTime);
-                    yield return null;
-                }
-
+                yield return Accelerate(0);
                 //wait 
                 yield return new WaitForSeconds(npc.serveillanceWaitTime);
             }
@@ -142,14 +141,7 @@ namespace Mechanics.Npc
             
             if (Mathf.Approximately(_speedMultiplier, 0))
             {
-                //accelerate
-                float timeElapsed = 0;
-                while (timeElapsed < npc.accelerationTime)
-                {
-                    timeElapsed += Time.deltaTime;
-                    _speedMultiplier = Mathf.Lerp(0, 1, timeElapsed / npc.accelerationTime);
-                    yield return null;
-                }
+                yield return Accelerate(1);
             }
             
             _changeWaypointCoroutine = null;
@@ -160,10 +152,25 @@ namespace Mechanics.Npc
             npc.animator.SetInteger(StateIndex, 0);
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
-            _speedMultiplier = 1;
+            _speedCoroutine = npc.StartCoroutine(Accelerate(1));
             if (npc.serveillancePoints.Count != 0) return;
             _speedMultiplier = 0;
-            npc.animator.CrossFade(npc.entryAnim, 0.25f);
+            //npc.animator.CrossFade(npc.entryAnim, 0.25f);
+        }
+
+        private IEnumerator Accelerate(float targetSpeed)
+        {
+            float currentSpeed = _speedMultiplier;
+
+            float timeElapsed = 0;
+            while (timeElapsed <= npc.accelerationTime)
+            {
+                timeElapsed += Time.deltaTime;
+                _speedMultiplier = Mathf.Lerp(currentSpeed, targetSpeed, timeElapsed / npc.accelerationTime);
+                yield return null;
+            }
+
+            _speedCoroutine = null;
         }
     }
 }
