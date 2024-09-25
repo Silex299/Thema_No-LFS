@@ -61,6 +61,9 @@ namespace Mechanics.Npc
         {
             while (true)
             {
+                
+                if(!npc.gameObject.activeInHierarchy) continue;
+                
                 if (npc.serveillancePoints.Count == 0)
                 {
                     _pathCoroutine = null;
@@ -98,6 +101,7 @@ namespace Mechanics.Npc
             }
 
 
+            Debug.DrawLine(npc.transform.position, desiredPos, Color.cyan);
             Rotate(npc.transform, desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
 

@@ -62,6 +62,7 @@ namespace Mechanics.Npc
         {
             while (true)
             {
+                if(!npc.gameObject.activeInHierarchy) continue;
                 _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }

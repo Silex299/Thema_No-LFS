@@ -94,6 +94,17 @@ namespace NPCs.New
                 serveillancePoints.Add(point.position);
             }
         }
+
+
+        private void OnDrawGizmos()
+        {
+            if (serveillancePoints.Count == 0) return;
+            foreach (var t in serveillancePoints)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(t, 0.2f);
+            }
+        }
 #endif
         #endregion
 
