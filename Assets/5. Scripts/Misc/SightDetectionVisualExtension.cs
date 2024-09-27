@@ -1,5 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 
 namespace Misc
@@ -14,7 +15,7 @@ namespace Misc
         [FoldoutGroup("Flicker")] public float flickerInterval = 0.4f;
         
         [FoldoutGroup("Sound")] public AudioSource audioSource;
-        [FoldoutGroup("Sound")] public AudioClip detectionSound;
+        [FoldoutGroup("Sound")] public SoundClip detectionSound;
 
 
         private Coroutine _detectionCoroutine;
@@ -23,7 +24,7 @@ namespace Misc
         public void OnDetection()
         {
             _detectionCoroutine ??= StartCoroutine(DetectionFlicker());
-            audioSource?.PlayOneShot(detectionSound);
+            audioSource?.PlayOneShot(detectionSound.clip, detectionSound.volume);
         }
 
         private IEnumerator DetectionFlicker()
