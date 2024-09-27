@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 52.46666666666667
+  m_Time: 54.733333333333334
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: d8ebfba9f12aa3d48a960dcc5890bb4c, type: 2}
@@ -151,7 +151,7 @@ MonoBehaviour:
   - {fileID: -3597488485560741175}
   m_Clips:
   - m_Version: 1
-    m_Start: 6.973588795214889
+    m_Start: 9.240255461881556
     m_ClipIn: 0
     m_Asset: {fileID: -5818825379836894319}
     m_Duration: 1.6833332498868305
@@ -169,7 +169,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -181,10 +199,10 @@ MonoBehaviour:
     m_PostExtrapolationMode: 2
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 6.973588795214889
+    m_PreExtrapolationTime: 9.240255461881556
     m_DisplayName: Slow Run
   - m_Version: 1
-    m_Start: 8.190255461881561
+    m_Start: 10.456922128548229
     m_ClipIn: 0
     m_Asset: {fileID: -871834042352292719}
     m_Duration: 1.3666666666666667
@@ -196,7 +214,25 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -235,7 +271,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Pull
   - m_Version: 1
-    m_Start: 9.556922128548228
+    m_Start: 11.823588795214896
     m_ClipIn: 0
     m_Asset: {fileID: -8522084237897481296}
     m_Duration: 1.216666666666666
@@ -244,7 +280,76 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 0.15000000000000036
+    m_BlendOutDuration: 0.14999999999999858
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 1
+    m_PreExtrapolationMode: 1
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Pull heavy
+  - m_Version: 1
+    m_Start: 12.890255461881562
+    m_ClipIn: 0
+    m_Asset: {fileID: 6974213080957540683}
+    m_Duration: 0.8833333333333337
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -7694318185573988174}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.14999999999999858
+    m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -280,46 +385,13 @@ MonoBehaviour:
     m_ExposedParameterNames: []
     m_AnimationCurves: {fileID: 0}
     m_Recordable: 0
-    m_PostExtrapolationMode: 1
-    m_PreExtrapolationMode: 1
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Pull heavy
-  - m_Version: 1
-    m_Start: 10.623588795214895
-    m_ClipIn: 0
-    m_Asset: {fileID: 6974213080957540683}
-    m_Duration: 0.8833333333333337
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -7694318185573988174}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: 0.15000000000000036
-    m_BlendOutDuration: 0
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
     m_PostExtrapolationMode: 2
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: Slow Run
   - m_Version: 1
-    m_Start: 11.506922128548227
+    m_Start: 13.773588795214895
     m_ClipIn: 0
     m_Asset: {fileID: -4534184124107427233}
     m_Duration: 5.569046802818775
@@ -327,7 +399,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7694318185573988174}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0
+    m_BlendInDuration: -1
     m_BlendOutDuration: 0.1357134694854416
     m_MixInCurve:
       serializedVersion: 2
@@ -337,7 +409,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -352,7 +442,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Side Push Right
   - m_Version: 1
-    m_Start: 16.94025546188156
+    m_Start: 19.20692212854823
     m_ClipIn: 0
     m_Asset: {fileID: -3205498177880424393}
     m_Duration: 2.5
@@ -421,7 +511,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Slow Run
   - m_Version: 1
-    m_Start: 19.240255461881556
+    m_Start: 21.506922128548226
     m_ClipIn: 0.41666666666666785
     m_Asset: {fileID: -198294152421391708}
     m_Duration: 1.1333333333333346
@@ -430,7 +520,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: 0.20000000000000284
-    m_BlendOutDuration: 0.1999999999999993
+    m_BlendOutDuration: 0.19999999999999574
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -490,7 +580,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Push Front
   - m_Version: 1
-    m_Start: 20.173588795214894
+    m_Start: 22.440255461881563
     m_ClipIn: 0
     m_Asset: {fileID: 6314423972048206176}
     m_Duration: 0.6833333333333336
@@ -498,7 +588,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7694318185573988174}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.1999999999999993
+    m_BlendInDuration: 0.19999999999999574
     m_BlendOutDuration: 0.31666666666666643
     m_MixInCurve:
       serializedVersion: 2
@@ -559,7 +649,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Basic Idle
   - m_Version: 1
-    m_Start: 20.54025546188156
+    m_Start: 22.80692212854823
     m_ClipIn: 0
     m_Asset: {fileID: 1095194408442401663}
     m_Duration: 2.5
@@ -651,7 +741,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 2.25
+    m_Start: 4.516666666666667
     m_ClipIn: 0
     m_Asset: {fileID: 6662808412726716454}
     m_Duration: 2.9333333333333336
@@ -659,11 +749,29 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 1.125950813293457
-    m_BlendInDuration: 0.6166666666666667
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 0.6166666666666654
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -702,7 +810,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 03
   - m_Version: 1
-    m_Start: 0.4666666666666667
+    m_Start: 2.733333333333332
     m_ClipIn: 0.4666666666666667
     m_Asset: {fileID: 5366549616409096970}
     m_Duration: 2.4
@@ -711,7 +819,7 @@ MonoBehaviour:
     m_EaseInDuration: 0.974034309387207
     m_EaseOutDuration: 0.9293560981750488
     m_BlendInDuration: -1
-    m_BlendOutDuration: 0.6166666666666667
+    m_BlendOutDuration: 0.6166666666666654
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -738,7 +846,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -753,7 +879,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 03
   - m_Version: 1
-    m_Start: 5.183333333333334
+    m_Start: 7.449999999999998
     m_ClipIn: 0
     m_Asset: {fileID: 4810978629328815095}
     m_Duration: 1.2886228088203318
@@ -761,14 +887,20 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: 0.12195614215366568
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0.12195614215366746
     m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -777,19 +909,13 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -804,58 +930,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 03
   - m_Version: 1
-    m_Start: 6.35
-    m_ClipIn: 0
-    m_Asset: {fileID: 5097683057080515822}
-    m_Duration: 1.25
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -7586556476641537294}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0.7985458374023438
-    m_BlendInDuration: 0.12195614215366568
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: METAL-HIT_GEN-HDF-17033
-  - m_Version: 1
-    m_Start: 10.040255461881559
+    m_Start: 12.306922128548226
     m_ClipIn: 0
     m_Asset: {fileID: -2869968406796693089}
     m_Duration: 0.5833333333333357
@@ -867,25 +942,7 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -924,7 +981,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 03
   - m_Version: 1
-    m_Start: 11.816666666666666
+    m_Start: 14.083333333333332
     m_ClipIn: 0
     m_Asset: {fileID: -6064034657608528671}
     m_Duration: 4.528951438081757
@@ -993,7 +1050,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 04
   - m_Version: 1
-    m_Start: 19.766666666666666
+    m_Start: 22.033333333333335
     m_ClipIn: 4.511304023799802
     m_Asset: {fileID: 7318922932975417250}
     m_Duration: 3.7441154773339846
@@ -1002,7 +1059,7 @@ MonoBehaviour:
     m_EaseInDuration: 0.45569491386413574
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 0.8116778356111318
+    m_BlendOutDuration: 0.8116778356111354
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1062,7 +1119,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 04
   - m_Version: 1
-    m_Start: 22.69910430838952
+    m_Start: 24.965770975056184
     m_ClipIn: 0
     m_Asset: {fileID: 942242310677834565}
     m_Duration: 8.70089569161048
@@ -1070,8 +1127,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.8116778356111318
-    m_BlendOutDuration: 0.5941950113378702
+    m_BlendInDuration: 0.8116778356111354
+    m_BlendOutDuration: 0.5941950113378667
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1131,7 +1188,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 05
   - m_Version: 1
-    m_Start: 30.80580498866213
+    m_Start: 33.0724716553288
     m_ClipIn: 0
     m_Asset: {fileID: -8143960854646214156}
     m_Duration: 8.744195011337869
@@ -1139,8 +1196,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.5941950113378702
-    m_BlendOutDuration: 0.9666666666666615
+    m_BlendInDuration: 0.5941950113378667
+    m_BlendOutDuration: 0.9666666666666686
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1164,7 +1221,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 05
   - m_Version: 1
-    m_Start: 38.583333333333336
+    m_Start: 40.849999999999994
     m_ClipIn: 0
     m_Asset: {fileID: 6818622426284147660}
     m_Duration: 8.744195011337869
@@ -1172,8 +1229,8 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.9666666666666615
-    m_BlendOutDuration: 0.7941950113378766
+    m_BlendInDuration: 0.9666666666666686
+    m_BlendOutDuration: 0.7941950113378624
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1197,7 +1254,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 05
   - m_Version: 1
-    m_Start: 46.53333333333333
+    m_Start: 48.8
     m_ClipIn: 0
     m_Asset: {fileID: 8008361360649799531}
     m_Duration: 8.744195011337869
@@ -1205,7 +1262,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -7586556476641537294}
     m_EaseInDuration: 0
     m_EaseOutDuration: 2.296097755432129
-    m_BlendInDuration: 0.7941950113378766
+    m_BlendInDuration: 0.7941950113378624
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -1247,6 +1304,57 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: Heavy Metal Object Movement 05
+  - m_Version: 1
+    m_Start: 8.616666666666664
+    m_ClipIn: 0
+    m_Asset: {fileID: -773654933334568132}
+    m_Duration: 3.4734149244924417
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -7586556476641537294}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.12195614215366746
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Heavy Metal Impact
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -1292,7 +1400,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 6.616666666666666
+    m_Start: 8.883333333333336
     m_ClipIn: 0
     m_Asset: {fileID: -6569403541128652688}
     m_Duration: 27.9749999999995
@@ -1470,7 +1578,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 2.2666666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -8818112714953487496}
     m_Duration: 7.0735887952148895
@@ -1535,11 +1643,11 @@ MonoBehaviour:
     m_Recordable: 1
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
-    m_PostExtrapolationTime: 2.9666666666666694
-    m_PreExtrapolationTime: 0
+    m_PostExtrapolationTime: 2.966666666666674
+    m_PreExtrapolationTime: 2.2666666666666666
     m_DisplayName: Recorded
   - m_Version: 1
-    m_Start: 10.040255461881559
+    m_Start: 12.30692212854823
     m_ClipIn: 0
     m_Asset: {fileID: -1256230937791010831}
     m_Duration: 0.6666666865348816
@@ -1608,7 +1716,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Recorded (1)
   - m_Version: 1
-    m_Start: 11.990255461881562
+    m_Start: 14.256922128548233
     m_ClipIn: 0
     m_Asset: {fileID: 4442141153592882760}
     m_Duration: 44.94307787145178
@@ -1678,6 +1786,23 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
+--- !u!114 &-4764833487039073127
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
+  m_Name: AudioPlayableAsset(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 8300000, guid: dac03c802afcbdd46bd85a1b54aef7e3, type: 3}
+  m_Loop: 0
+  m_bufferingTime: 0.1
+  m_ClipProperties:
+    volume: 1
 --- !u!114 &-4534184124107427233
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1722,7 +1847,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 2.2666666666666666
     m_ClipIn: 0
     m_Asset: {fileID: 2638999629695237897}
     m_Duration: 54.03333333333333
@@ -4031,7 +4156,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 6.35
+    m_Start: 8.616666666666664
     m_ClipIn: 0
     m_Asset: {fileID: -5689688119655138492}
     m_Duration: 6.455147392290249
@@ -4064,7 +4189,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: CrashMetal PS01_22_1
   - m_Version: 1
-    m_Start: 5.1
+    m_Start: 7.3666666666666645
     m_ClipIn: 0
     m_Asset: {fileID: 3736201761865129023}
     m_Duration: 1.25
@@ -4133,7 +4258,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: METAL-HIT_GEN-HDF-17033
   - m_Version: 1
-    m_Start: 19.933333333333334
+    m_Start: 22.199999999999996
     m_ClipIn: 0
     m_Asset: {fileID: 2218219144286474393}
     m_Duration: 1.25
@@ -4246,7 +4371,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 4.306922140469153
+    m_Start: 6.573588807135818
     m_ClipIn: 0
     m_Asset: {fileID: 6937098700423301003}
     m_Duration: 39.7333333214124
@@ -4312,7 +4437,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 4.306922140469153
+    m_PreExtrapolationTime: 6.573588807135818
     m_DisplayName: Recorded (3)
   m_Markers:
     m_Objects: []
@@ -4397,7 +4522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 50.95
+  m_Time: 53.21666666666667
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: 8efefd1205cd4bc47922a6e676dc8155, type: 2}
@@ -4530,6 +4655,23 @@ MonoBehaviour:
   m_Loop: 0
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &-773654933334568132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
+  m_Name: AudioPlayableAsset
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 8300000, guid: 3428e3f795648a440aa97ddaa38a9603, type: 3}
+  m_Loop: 0
+  m_bufferingTime: 0.1
+  m_ClipProperties:
+    volume: 0.638
 --- !u!114 &-239169517265571199
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4607,7 +4749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 54.06666666666667
+  m_Time: 56.333333333333336
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: a2f122e3768d8fd40a3ff7ea4e588924, type: 2}
@@ -4684,7 +4826,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 2.2666666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -3513740532471667012}
     m_Duration: 51
@@ -4816,7 +4958,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 2.2666666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -239169517265571199}
     m_Duration: 52.46666666666667
@@ -6170,7 +6312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 49.483333333333334
+  m_Time: 51.75
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: f4eb7bad26e150049a69ae87dff5ef69, type: 2}
@@ -6208,23 +6350,6 @@ MonoBehaviour:
   m_bufferingTime: 0.1
   m_ClipProperties:
     volume: 1
---- !u!114 &5097683057080515822
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
-  m_Name: AudioPlayableAsset(Clone)(Clone)
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 8300000, guid: 6226f50a36375a440a552ddcad0c7d0d, type: 3}
-  m_Loop: 0
-  m_bufferingTime: 0.1
-  m_ClipProperties:
-    volume: 0.581
 --- !u!114 &5181456176899488912
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10394,10 +10519,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 1.1833333333333333
     m_ClipIn: 0.21666666666666673
     m_Asset: {fileID: -2515667736134382403}
-    m_Duration: 1.2833333333333334
+    m_Duration: 2.5999999999999996
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7780624993443614367}
     m_EaseInDuration: 0
@@ -10463,7 +10588,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: truck-starting-and-departing
   - m_Version: 1
-    m_Start: 2.531700680272109
+    m_Start: 4.798367346938774
     m_ClipIn: 1.2499999999999998
     m_Asset: {fileID: 2464837182171472055}
     m_Duration: 3.9402554618815566
@@ -10532,7 +10657,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: 12990 truck braking screech
   - m_Version: 1
-    m_Start: 23.30413816633324
+    m_Start: 25.570804832999908
     m_ClipIn: 0
     m_Asset: {fileID: -3738892795190501667}
     m_Duration: 2.0650340136054424
@@ -10583,7 +10708,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 28.248367346938775
+    m_Start: 30.51503401360544
     m_ClipIn: 0
     m_Asset: {fileID: 498038337616422922}
     m_Duration: 2.0650340136054424
@@ -10591,7 +10716,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7780624993443614367}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -10616,7 +10741,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 30.316666666666666
+    m_Start: 32.58333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 2652884902852687812}
     m_Duration: 2.0650340136054424
@@ -10667,7 +10792,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 32.38333333333333
+    m_Start: 34.64999999999999
     m_ClipIn: 0
     m_Asset: {fileID: 5434047595714027676}
     m_Duration: 2.0650340136054424
@@ -10718,7 +10843,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 34.45
+    m_Start: 36.71666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -6283464363417095221}
     m_Duration: 2.0650340136054424
@@ -10787,7 +10912,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 36.515034013605444
+    m_Start: 38.78170068027211
     m_ClipIn: 0
     m_Asset: {fileID: 4697781002595668343}
     m_Duration: 2.0650340136054424
@@ -10838,7 +10963,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 38.583333333333336
+    m_Start: 40.849999999999994
     m_ClipIn: 0
     m_Asset: {fileID: 496482240634105324}
     m_Duration: 2.0650340136054424
@@ -10889,7 +11014,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 40.63333333333333
+    m_Start: 42.89999999999999
     m_ClipIn: 0
     m_Asset: {fileID: -2473189253180727678}
     m_Duration: 2.0650340136054424
@@ -10922,7 +11047,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 42.71666666666667
+    m_Start: 44.983333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 2874660077851315733}
     m_Duration: 2.0650340136054424
@@ -10973,7 +11098,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 44.733333333333334
+    m_Start: 47
     m_ClipIn: 0
     m_Asset: {fileID: 5988742382398359635}
     m_Duration: 2.0650340136054424
@@ -11006,7 +11131,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 46.75
+    m_Start: 49.016666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -8951945314818414439}
     m_Duration: 2.0650340136054424
@@ -11039,7 +11164,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 48.8
+    m_Start: 51.06666666666666
     m_ClipIn: 0
     m_Asset: {fileID: 6791293270112640756}
     m_Duration: 2.0650340136054424
@@ -11072,7 +11197,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 50.849999999999994
+    m_Start: 53.11666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -1869598350436518626}
     m_Duration: 2.0650340136054424
@@ -11105,7 +11230,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 52.93333333333333
+    m_Start: 55.19999999999999
     m_ClipIn: 0
     m_Asset: {fileID: -7774068725973167016}
     m_Duration: 2.0650340136054424
@@ -11156,7 +11281,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 54.949999999999996
+    m_Start: 57.216666666666654
     m_ClipIn: 0
     m_Asset: {fileID: 4503941803612165065}
     m_Duration: 2.0650340136054424
@@ -11207,7 +11332,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 25.36917217993868
+    m_Start: 27.63583884660535
     m_ClipIn: 0
     m_Asset: {fileID: 9106144342599587376}
     m_Duration: 2.065034013605441
@@ -11258,7 +11383,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 27.43420619354412
+    m_Start: 29.70087286021079
     m_ClipIn: 0
     m_Asset: {fileID: 7056750080660946463}
     m_Duration: 0.8141611533946538
@@ -11267,7 +11392,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -11335,7 +11460,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 3.25
+    m_Start: 5.516666666666667
     m_ClipIn: 1.7999999999999998
     m_Asset: {fileID: 7189813395306596154}
     m_Duration: 23.7
@@ -11343,7 +11468,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 8233199461711704556}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.3467346938775515
+    m_BlendInDuration: 1.3467346938775497
     m_BlendOutDuration: 0.7666666666666657
     m_MixInCurve:
       serializedVersion: 2
@@ -11404,7 +11529,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Idle Truck Engine - Loop
   - m_Version: 1
-    m_Start: 0.4666666666666667
+    m_Start: 2.733333333333332
     m_ClipIn: 0
     m_Asset: {fileID: -1850510883907007189}
     m_Duration: 2.0650340136054424
@@ -11412,7 +11537,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 8233199461711704556}
     m_EaseInDuration: 0.5518832206726074
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0.1597445381184408
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -11455,7 +11580,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 2.531700680272109
+    m_Start: 4.798367346938774
     m_ClipIn: 0
     m_Asset: {fileID: -6900393711002878689}
     m_Duration: 2.0650340136054424
@@ -11464,7 +11589,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 1.3467346938775515
+    m_BlendOutDuration: 1.3467346938775497
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -11473,7 +11598,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -11488,7 +11631,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Truck Engine Running (Loop)
   - m_Version: 1
-    m_Start: 41.4119954648526
+    m_Start: 43.67866213151926
     m_ClipIn: 0
     m_Asset: {fileID: -1532566172553488258}
     m_Duration: 9.438004535147392
@@ -11539,7 +11682,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: TRANSPORTATION_TRUCK_Ural_4320_Driving_Accelerate_01
   - m_Version: 1
-    m_Start: 30.313401360544216
+    m_Start: 32.580068027210885
     m_ClipIn: 2.6800680272108828
     m_Asset: {fileID: -9126750749250226301}
     m_Duration: 3.0532653061224515
@@ -11547,7 +11690,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 8233199461711704556}
     m_EaseInDuration: 0.5748734474182129
     m_EaseOutDuration: 0.5999183654785156
-    m_BlendInDuration: 0.5199319727891165
+    m_BlendInDuration: 0.5199319727891094
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -11590,7 +11733,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: truck-starting-and-departing
   - m_Version: 1
-    m_Start: 26.183333333333334
+    m_Start: 28.45
     m_ClipIn: 6.4560755278703095
     m_Asset: {fileID: 5181456176899488912}
     m_Duration: 4.649999999999999
@@ -11599,52 +11742,16 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: 0.7666666666666657
-    m_BlendOutDuration: 0.5199319727891165
+    m_BlendOutDuration: 0.5199319727891094
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -11659,7 +11766,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: truck-starting-and-departing
   - m_Version: 1
-    m_Start: 34.03333333333333
+    m_Start: 36.3
     m_ClipIn: 2.6800680272108828
     m_Asset: {fileID: 5219586060384607547}
     m_Duration: 3.0532653061224515
@@ -11728,7 +11835,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: truck-starting-and-departing
   - m_Version: 1
-    m_Start: 38.88333333333333
+    m_Start: 41.14999999999999
     m_ClipIn: 7.421337868480737
     m_Asset: {fileID: 1895141748837517128}
     m_Duration: 2.095328798185932
@@ -11796,6 +11903,75 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: truck-starting-and-departing
+  - m_Version: 1
+    m_Start: 0
+    m_ClipIn: 1.7999999999999998
+    m_Asset: {fileID: -4764833487039073127}
+    m_Duration: 2.893077871451773
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 8233199461711704556}
+    m_EaseInDuration: 1.0177102088928223
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: 0.1597445381184408
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Idle Truck Engine - Loop
   m_Markers:
     m_Objects: []
   m_TrackProperties:
