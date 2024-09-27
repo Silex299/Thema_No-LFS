@@ -1,4 +1,3 @@
-using System;
 using Player_Scripts;
 using Thema_Type;
 using UnityEngine;
@@ -37,6 +36,11 @@ namespace Sounds
             if (other.CompareTag("Player"))
             {
                 _objectCount--;
+                if (_objectCount <= 0)
+                {
+                    UpdateVolumeFraction();
+                    UpdateSoundSources();
+                }
             }
         }
         private void OnDrawGizmos()
