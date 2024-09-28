@@ -64,7 +64,6 @@ namespace NPCs.New
         #endregion
 
         #region States
-
         private NpcStateBase _currentState;
         private NpcStates _currentStateType;
         private readonly NpcIdleState _idleState = new NpcIdleState();
@@ -85,16 +84,6 @@ namespace NPCs.New
         #endregion
 
         #endregion
-
-        #region Getter Setter
-
-        public float SurveillanceWaitTime
-        {
-            set => serveillanceWaitTime = value;
-        }
-
-        #endregion
-
         #endregion
 
         #region Editor
@@ -183,11 +172,6 @@ namespace NPCs.New
         {
             ChangeState(initState);
 
-            //Reset Animator
-            animator.SetBool(Attack, false);
-            animator.SetFloat(Speed, 0);
-            animator.SetBool(PathBlocked, false);
-            animator.SetInteger(StateIndex, 0);
         }
 
         #region States
