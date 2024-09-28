@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using NPCs.New;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace Weapons.NPC_Weapon
 {

@@ -74,8 +74,6 @@ namespace Mechanics.Npc
                 _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.serveillancePoints[_currentWaypointIndex], out _path);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
-
-            // ReSharper disable once IteratorNeverReturns
         }
 
 

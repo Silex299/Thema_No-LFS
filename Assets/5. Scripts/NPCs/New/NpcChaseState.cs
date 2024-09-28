@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mechanics.Types;
 using Thema_Type;
 using UnityEngine;
 
@@ -8,7 +7,6 @@ namespace Mechanics.Npc
 {
     public class NpcChaseState : NpcStateBase
     {
-        private bool _isReachable;
         private bool _isStopped;
         private float _speedMultiplier = 1;
 
@@ -63,7 +61,7 @@ namespace Mechanics.Npc
             while (true)
             {
                 if(!npc.gameObject.activeInHierarchy) continue;
-                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
+                npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
 
@@ -74,8 +72,6 @@ namespace Mechanics.Npc
         private void Move()
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-
-            
             
             Vector3 desiredPos = npc.target.position;
             

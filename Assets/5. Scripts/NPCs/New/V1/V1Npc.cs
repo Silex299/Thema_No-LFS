@@ -4,7 +4,7 @@ using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace NPCs.New
+namespace NPCs.New.V1
 {
     public class V1Npc : MonoBehaviour
     {
@@ -23,16 +23,13 @@ namespace NPCs.New
 
 
         [FoldoutGroup("Path Finder")] public PathFinderBase pathFinder;
-        [FoldoutGroup("Path Finder")] public Transform target;
         [FoldoutGroup("Path Finder")] public float targetOffset;
         [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
         [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
-        [FoldoutGroup("States")] public NpcStates initState = NpcStates.Serveillance;
-        [FoldoutGroup("States"), SerializeReference] public INpcBaseState idleState = new V1NpcIdleState();
-        [FoldoutGroup("States"), SerializeReference] public INpcBaseState chaseState = new V1NpcChaseState();
-        [FoldoutGroup("States"), SerializeReference] public INpcBaseState serveillanceState = new V1NpcServeillanceState();
-        [FoldoutGroup("States"), SerializeReference] public INpcBaseState afterDeathState = new V1NpcAfterDeathState();
+        [FoldoutGroup("States")] public int initState;
+        [FoldoutGroup("States")] public int afterPlayerDeathState;
+        [FoldoutGroup("States")] public V1NpcBaseState[] states;
         
         #endregion
 
@@ -41,9 +38,8 @@ namespace NPCs.New
         public Action onAttack;
         public Action<int> onStateChange;
         
-        private INpcBaseState _currentStateRef;
-        private NpcStates _currentStateEnum;
-        private Transform _target;
+        private int _currentStateIndex = -1;
+        [HideInInspector] public Transform target;
         
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Speed = Animator.StringToHash("Speed");
@@ -61,7 +57,7 @@ namespace NPCs.New
         private void Start()
         {
             ChangeState((int) initState);
-            _target = PlayerMovementController.Instance.transform;
+            target = PlayerMovementController.Instance.transform;
         }
         private void OnEnable()
         {
@@ -71,39 +67,38 @@ namespace NPCs.New
         {
             PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
         }
-
         private void Update()
         {
-            _currentStateRef.Update(this);
+            states[_currentStateIndex].UpdateState(this);
         }
 
         #endregion
         
         #region Custom Methods
         
+        public void Rotate(Vector3 desiredPos, float speed)
+        {
+            
+            Vector3 forward = desiredPos - transform.position;
+            forward.y = 0;
+            Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
+        }
+        
         public void ChangeState(int stateIndex)
         {
-            ChangeState((NpcStates) stateIndex);
-        }
-        public void ChangeState(NpcStates state)
-        {
-            if(_currentStateEnum == state) return;
             
-            _currentStateRef.Exit(this);
-            _currentStateEnum = state;
+            if(stateIndex == _currentStateIndex) return;
             
-            _currentStateRef = state switch
-            {
-                NpcStates.Serveillance => serveillanceState,
-                NpcStates.Chase => chaseState,
-                NpcStates.AfterDeath => afterDeathState,
-                NpcStates.Idle => idleState,
-                _ => idleState,
-            };
-
-            _currentStateRef.Enter(this);
+            states[_currentStateIndex].Exit(this);
+            
+            _currentStateIndex = stateIndex;
+            onStateChange?.Invoke(_currentStateIndex);
+            
+            states[_currentStateIndex].Enter(this);
 
         }
+       
         public void Reset()
         {
             ChangeState(initState);
@@ -117,23 +112,11 @@ namespace NPCs.New
         }
         private void OnPlayerDeath()
         {
-            ChangeState(NpcStates.AfterDeath);
+            ChangeState(afterPlayerDeathState);
         }
         
         #endregion
-        
-        #region Types
-        
-        [System.Serializable]
-        public enum NpcStates
-        {
-            None, //0
-            Serveillance, //1
-            Chase, //2
-            AfterDeath, //3
-            Idle //4
-        }
-        #endregion
+       
         
     }
 }
