@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Mechanics.Npc;
-using NPCs.New.V1;
+using NPCs.New.Other;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
+using Weapons.NPC_Weapon;
 
-namespace NPCs.New
+namespace NPCs.New.V1
 {
     public class V1NpcChaseState : V1NpcBaseState
     {
@@ -14,12 +15,12 @@ namespace NPCs.New
         #region Variables
 
         public float attackDistance;
-        public bool returnToServeillanceOnTargetLost;
-        [ShowIf(nameof(returnToServeillanceOnTargetLost))]
+        public int stateIndexOnTargetLost = -1;
+        public WeaponBase weapon;
+        
+        [HideIf("stateIndexOnTargetLost", -1)]
         public float returnInterval;
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        public bool CanAttack { get; set; } = true;
         
         
         private bool _isStopped;
@@ -44,14 +45,10 @@ namespace NPCs.New
             SetInitialAnimatorState(npc);
             _pathCoroutine ??= StartCoroutine(GetPath(npc));
         }
-
-
         public override void UpdateState(V1Npc npc)
         {
             Move(npc);
         }
-
-
         public override void Exit(V1Npc npc)
         {
             if (_pathCoroutine != null)
@@ -93,19 +90,18 @@ namespace NPCs.New
             npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime);
 
         }
-        
         private void ProcessDistanceAndProximity(V1Npc npc, Vector3 desiredPos, bool hasPath)
         {
-         
             
             bool stopMovement = false;
             
             if (!hasPath)
             {
-                float distance = ThemaVector.PlannerDistance(npc.transform.position, desiredPos);
+                //TODO: check for in sight
+                float distance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
                 stopMovement = distance < npc.stopDistance;
                 
-                if (CanAttack)
+                if (npc.CanAttack)
                 {
                     Attack(npc, distance < attackDistance);
                 }
@@ -120,7 +116,7 @@ namespace NPCs.New
                 if(_isAttacking) Attack(npc, false);
             }
             
-            if(!npc.proximityDetection) return;
+            if(!npc.proximityDetection || stateIndexOnTargetLost == -1) return;
             
             if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
             {
@@ -135,7 +131,7 @@ namespace NPCs.New
                 {
                     _pathBlocked = false;
                     npc.animator.SetBool(PathBlocked, false);
-                    npc.ChangeState(1);
+                    npc.ChangeState(stateIndexOnTargetLost);
                 }
             }
             else
@@ -159,12 +155,14 @@ namespace NPCs.New
 
             
         }
-        
         private void Attack(V1Npc npc, bool attack)
         {
-            if (attack) npc.onAttack.Invoke();
+            if (attack)
+            {
+                weapon?.Fire();
+                npc.aimRigController.Aim(npc.target);
+            }
             
-            if (_isAttacking == attack) return;
             _isAttacking = attack;
             npc.animator.SetBool(Attack1, _isAttacking);
         }

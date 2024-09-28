@@ -2,7 +2,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Mechanics.Npc
+namespace NPCs.New.Other
 {
     public class ProximityDetection : MonoBehaviour
     {

@@ -1,5 +1,6 @@
 using System;
 using Mechanics.Npc;
+using NPCs.New.Other;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace NPCs.New.V1
         
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public ProximityDetection proximityDetection;
+        [FoldoutGroup("References")] public V1NpcAimRigController aimRigController;
         
         [FoldoutGroup("Npc Movement Properties")] public float stopDistance = 1f;
         [FoldoutGroup("Npc Movement Properties")] public float rotationSpeed = 10;
@@ -34,12 +36,11 @@ namespace NPCs.New.V1
         #endregion
 
         #region Non Exposed Variables
-
-        public Action onAttack;
-        public Action<int> onStateChange;
         
         private int _currentStateIndex = -1;
         [HideInInspector] public Transform target;
+
+        public bool CanAttack { get; set; } = true;
         
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Speed = Animator.StringToHash("Speed");
@@ -56,7 +57,7 @@ namespace NPCs.New.V1
         
         private void Start()
         {
-            ChangeState((int) initState);
+            ChangeState(initState);
             target = PlayerMovementController.Instance.transform;
         }
         private void OnEnable()
@@ -90,10 +91,9 @@ namespace NPCs.New.V1
             
             if(stateIndex == _currentStateIndex) return;
             
-            states[_currentStateIndex].Exit(this);
+            if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
             
             _currentStateIndex = stateIndex;
-            onStateChange?.Invoke(_currentStateIndex);
             
             states[_currentStateIndex].Enter(this);
 

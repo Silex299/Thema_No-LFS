@@ -1,8 +1,9 @@
 using System.Collections;
+using Mechanics.Npc;
 using Mechanics.Types;
 using UnityEngine;
 
-namespace Mechanics.Npc
+namespace NPCs.New
 {
     public class NpcAfterDeathState : NpcStateBase
     {

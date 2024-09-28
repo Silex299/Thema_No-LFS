@@ -1,24 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using NPCs.New.V1;
+using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
-namespace NPCs.New
+namespace NPCs.New.V1
 {
     public class V1NpcServeillanceState : V1NpcBaseState
     {
-
-
         #region Variables
-        
+
         #region Editor Exposed Variables
 
         public Vector3[] serveillancePoints;
         public float serveillanceWaitTime;
-        
+
         #endregion
-        
+
         private float _speedMultiplier = 1;
         private int _currentWaypointIndex = 0;
         private bool _isReachable;
@@ -27,18 +25,44 @@ namespace NPCs.New
         private Coroutine _pathCoroutine;
         private Coroutine _changeWaypointCoroutine;
 
-        
+
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
         private static readonly int Speed = Animator.StringToHash("Speed");
 
         #endregion
+
+
+        #region Ediotr
+
+#if UNITY_EDITOR
         
-        
+        [Button]
+        public void SetServeillancePoints(Transform[] points)
+        {
+            serveillancePoints = new Vector3[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                serveillancePoints[i] = points[i].position;
+            }
+        }
+        private void OnDrawGizmos()
+        {
+            if (serveillancePoints.Length == 0) return;
+            foreach (var t in serveillancePoints)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(t, 0.25f);
+            }
+        }
+#endif
+
+        #endregion
+
 
         #region Overriden Methods
-        
+
         public override void Enter(V1Npc npc)
         {
             SetInitialAnimatorState(npc);
@@ -51,7 +75,7 @@ namespace NPCs.New
             Move(npc);
 
             if (serveillancePoints.Length == 0) return;
-            
+
             if (CheckForWaypointThreshold(npc))
             {
                 _changeWaypointCoroutine ??= StartCoroutine(ChangeWaypoint(npc));
@@ -71,7 +95,7 @@ namespace NPCs.New
                 StopCoroutine(_changeWaypointCoroutine);
                 _changeWaypointCoroutine = null;
             }
-            
+
             if (_speedCoroutine != null)
             {
                 StopCoroutine(_speedCoroutine);
@@ -82,7 +106,7 @@ namespace NPCs.New
         #endregion
 
         #region Custom Methods
-        
+
         private void Move(V1Npc npc)
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
@@ -103,18 +127,17 @@ namespace NPCs.New
                     }
                 }
             }
-            
+
             Debug.DrawLine(npc.transform.position, desiredPos, Color.cyan);
             npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
-
         }
-        
+
         private IEnumerator GetPath(V1Npc npc)
         {
             while (true)
             {
-                if(!npc.gameObject.activeInHierarchy) continue;
-                
+                if (!npc.gameObject.activeInHierarchy) continue;
+
                 if (serveillancePoints.Length == 0)
                 {
                     _pathCoroutine = null;
@@ -124,40 +147,39 @@ namespace NPCs.New
                 _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, serveillancePoints[_currentWaypointIndex], out _path);
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
-            
         }
+
         private bool CheckForWaypointThreshold(V1Npc npc)
         {
             return ThemaVector.PlannerDistance(npc.transform.position, serveillancePoints[_currentWaypointIndex]) < npc.stopDistance;
         }
+
         private IEnumerator ChangeWaypoint(V1Npc npc)
         {
-            
-            if(_speedCoroutine!=null)
+            if (_speedCoroutine != null)
             {
                 StopCoroutine(_speedCoroutine);
                 _speedCoroutine = null;
             }
-            
+
             if (serveillanceWaitTime != 0)
             {
-                
                 yield return Accelerate(npc, 0);
                 //wait 
                 yield return new WaitForSeconds(serveillanceWaitTime);
             }
-            
+
             _currentWaypointIndex = (_currentWaypointIndex + 1) % serveillancePoints.Length;
-            
+
             if (Mathf.Approximately(_speedMultiplier, 0))
             {
                 yield return Accelerate(npc, 1);
             }
-            
+
             _changeWaypointCoroutine = null;
         }
-        
-        
+
+
         private void SetInitialAnimatorState(V1Npc npc)
         {
             npc.animator.SetInteger(StateIndex, 0);
@@ -169,6 +191,7 @@ namespace NPCs.New
                 _speedCoroutine = npc.StartCoroutine(Accelerate(npc, 1));
             }
         }
+
         private IEnumerator Accelerate(V1Npc npc, float targetSpeed)
         {
             float currentSpeed = _speedMultiplier;
@@ -183,11 +206,7 @@ namespace NPCs.New
 
             _speedCoroutine = null;
         }
-        
+
         #endregion
-        
-        
     }
-    
-    
 }
