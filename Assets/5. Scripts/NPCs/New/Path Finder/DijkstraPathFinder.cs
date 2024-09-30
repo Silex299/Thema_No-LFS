@@ -3,11 +3,12 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
-namespace NPCs.New
+namespace NPCs.New.Path_Finder
 {
     public class DijkstraPathFinder : PathFinderBase
     {
         private List<int>[] _adjacencyList;
+        [FoldoutGroup("Raycast Properties")] public float sphereRadius;
         public List<BakedPath> bakedPaths;
 
 
@@ -30,7 +31,7 @@ namespace NPCs.New
                         continue;
                     }
 
-                    if (Physics.Linecast(waypoints[i].position, waypoints[j].position, layerMask))
+                    if (!IsDirectPathPossible(waypoints[i].position, waypoints[j].position))
                     {
                         continue;
                     }
@@ -189,9 +190,12 @@ namespace NPCs.New
             return list;
         }
 
+
         private bool IsDirectPathPossible(Vector3 from, Vector3 to)
         {
-            return !Physics.Linecast(from, to, layerMask);
+            var direction = to - from;
+            Ray ray = new Ray(from, direction.normalized);
+            return !Physics.SphereCast(ray, sphereRadius, direction.magnitude, layerMask);
         }
 
         public override Vector3 GetDesiredPosition(int index)
