@@ -34,7 +34,6 @@ namespace NPCs.New.V1.States
 
         public override void Enter(V1Npc npc)
         {
-            npc.navigationAgent.updateRotation = false;
             _speedMultiplier = 1;
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);

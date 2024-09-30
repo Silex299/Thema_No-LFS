@@ -1,33 +1,36 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using NPCs.New.Other;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Weapons.NPC_Weapon;
 
 namespace NPCs.New.V1.States
 {
     public class V1NpcChaseState : V1NpcBaseState
     {
+
         #region Variables
 
         public float attackDistance;
         public int stateIndexOnTargetLost = -1;
         public WeaponBase weapon;
+        
+        [HideIf("stateIndexOnTargetLost", -1)]
+        public float returnInterval;
 
-        [FormerlySerializedAs("returnInterval")] [HideIf("stateIndexOnTargetLost", -1)]
-        public float returnOnTargetLostInterval;
-
-
+        
+        
+        private bool _isStopped;
         private float _speedMultiplier = 1;
         private float _pathBlockTime;
         private bool _pathBlocked;
 
-        private NavMeshPathStatus _pathStatus;
+        private List<int> _path;
 
         private bool _isAttacking;
+        private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Speed = Animator.StringToHash("Speed");
@@ -39,69 +42,69 @@ namespace NPCs.New.V1.States
         public override void Enter(V1Npc npc)
         {
             SetInitialAnimatorState(npc);
-            npc.navigationAgent.updateRotation = false;
         }
-
         public override void UpdateState(V1Npc npc)
         {
-            var navAgent = npc.navigationAgent;
-            navAgent.SetDestination(npc.target.position);
-
-
-            var plannerDistance = ThemaVector.PlannerDistance(npc.target.position, npc.transform.position);
-            bool attack = plannerDistance < attackDistance;
-            bool stop = plannerDistance < npc.stopDistance;
-
-            if (stop && _speedMultiplier > 0)
-            {
-                if (_speedCoroutine != null) StopCoroutine(_speedCoroutine);
-                _speedCoroutine ??= StartCoroutine(StopMovement(npc, true));
-            }
-            else if (!stop && Mathf.Approximately(_speedMultiplier, 0))
-            {
-                if (_speedCoroutine != null) StopCoroutine(_speedCoroutine);
-                _speedCoroutine ??= StartCoroutine(StopMovement(npc, false));
-            }
-
-            Attack(npc, attack);
-
-            npc.Rotate(npc.transform.position + navAgent.desiredVelocity, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
-            
-            ProcessProximity(npc);
-
-            npc.animator.SetFloat(Speed, _speedMultiplier);
         }
-
         public override void Exit(V1Npc npc)
         {
+            if (_pathCoroutine != null)
+            {
+                StopCoroutine(_pathCoroutine);
+                _pathCoroutine = null;
+            }
+
             if (_speedCoroutine != null)
             {
                 StopCoroutine(_speedCoroutine);
                 _speedCoroutine = null;
             }
         }
-
-
-        private void ProcessProximity(V1Npc npc)
+        
+        
+      
+        private void ProcessDistanceAndProximity(V1Npc npc, Vector3 desiredPos, bool hasPath)
         {
-            var proximity = npc.proximityDetection;
-
-            if (!proximity) return;
-
-            if ((proximity.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //FRONT HTTING
+            
+            bool stopMovement = false;
+            
+            if (!hasPath)
+            {
+                //TODO: check for in sight
+                float distance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
+                stopMovement = distance < npc.stopDistance;
+                
+                if (npc.CanAttack)
+                {
+                    Attack(npc, distance < attackDistance);
+                }
+                else if (_isAttacking)
+                {
+                    Attack(npc , false);
+                }
+                
+            }
+            else
+            {
+                if(_isAttacking) Attack(npc, false);
+            }
+            
+            if(!npc.proximityDetection || stateIndexOnTargetLost == -1) return;
+            
+            if ((npc.proximityDetection.proximityFlag & ProximityDetection.ProximityFlags.Front) == ProximityDetection.ProximityFlags.Front) //HITTING FRONT
             {
                 if (!_pathBlocked)
                 {
                     _pathBlocked = true;
                     _pathBlockTime = Time.time;
+                    stopMovement = true;
                     npc.animator.SetBool(PathBlocked, true);
                 }
-                else if (_pathBlockTime + returnOnTargetLostInterval < Time.time)
+                else if(_pathBlockTime + returnInterval < Time.time)
                 {
-                    if (stateIndexOnTargetLost > 0)
-                    {
-                        npc.ChangeState(stateIndexOnTargetLost);
-                    }
+                    _pathBlocked = false;
+                    npc.animator.SetBool(PathBlocked, false);
+                    npc.ChangeState(stateIndexOnTargetLost);
                 }
             }
             else
@@ -112,8 +115,19 @@ namespace NPCs.New.V1.States
                     npc.animator.SetBool(PathBlocked, false);
                 }
             }
-        }
+            
+            
+            if (stopMovement)
+            {
+                if(!_isStopped) StopMoving(npc);
+            }
+            else
+            {
+                if(_isStopped) StartMoving(npc);
+            }
 
+            
+        }
         private void Attack(V1Npc npc, bool attack)
         {
             if (attack)
@@ -121,17 +135,37 @@ namespace NPCs.New.V1.States
                 weapon?.Fire();
                 npc.aimRigController?.Aim(npc.target);
             }
-
-            if (attack == _isAttacking) return;
+            
             _isAttacking = attack;
             npc.animator.SetBool(Attack1, _isAttacking);
         }
 
-        private IEnumerator StopMovement(V1Npc npc, bool stop)
-        {
-            float targetSpeed = stop ? 0 : 1;
 
+        private void StartMoving(V1Npc npc)
+        {
+            //if speed coroutine is not null stop and start new coroutine
+            if (_speedCoroutine != null)
+            {
+                StopCoroutine(_speedCoroutine);
+            }
+
+            _speedCoroutine = StartCoroutine(ChangeSpeed(npc, 1));
+        }
+        private void StopMoving(V1Npc npc)
+        {
+            //if speed coroutine is not null stop and start new coroutine
+            if (_speedCoroutine != null)
+            {
+                StopCoroutine(_speedCoroutine);
+            }
+
+            _speedCoroutine = StartCoroutine(ChangeSpeed(npc, 0));
+        }
+        private IEnumerator ChangeSpeed(V1Npc npc, float targetSpeed)
+        {
             float currentSpeed = _speedMultiplier;
+            _isStopped = targetSpeed == 0;
+
             float timeElapsed = 0;
             while (timeElapsed <= npc.accelerationTime)
             {
@@ -140,15 +174,18 @@ namespace NPCs.New.V1.States
                 yield return null;
             }
 
-            _speedMultiplier = targetSpeed;
             _speedCoroutine = null;
         }
+        
 
+      
         private void SetInitialAnimatorState(V1Npc npc)
         {
             npc.animator.SetInteger(StateIndex, 1);
-            _speedCoroutine = StartCoroutine(StopMovement(npc, false));
-            _speedMultiplier = 1;
+            var animatorSpeed = npc.animator.GetFloat(Speed);
+            _isStopped = !Mathf.Approximately(animatorSpeed, 1);
         }
+        
+        
     }
 }
