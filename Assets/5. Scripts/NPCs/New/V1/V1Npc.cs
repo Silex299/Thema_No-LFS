@@ -4,7 +4,6 @@ using NPCs.New.Other;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace NPCs.New.V1
 {
@@ -25,7 +24,10 @@ namespace NPCs.New.V1
         [FoldoutGroup("Npc Movement Properties")] public float accelerationTime = 1;
 
 
-        [FoldoutGroup("Path Finder")] public NavMeshAgent navigationAgent;
+        [FoldoutGroup("Path Finder")] public PathFinderBase pathFinder;
+        [FoldoutGroup("Path Finder")] public float targetOffset;
+        [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
+        [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
         [FoldoutGroup("States")] public int initState;
         [FoldoutGroup("States")] public int afterPlayerDeathState;

@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
-namespace NPCs.New.V1.States
+namespace NPCs.New.V1
 {
     public class V1NpcServeillanceState : V1NpcBaseState
     {
@@ -19,7 +19,10 @@ namespace NPCs.New.V1.States
 
         private float _speedMultiplier = 1;
         private int _currentWaypointIndex = 0;
+        private bool _isReachable;
+        private List<int> _path;
         private Coroutine _speedCoroutine;
+        private Coroutine _pathCoroutine;
         private Coroutine _changeWaypointCoroutine;
         private bool _canRotate = true;
 
@@ -65,28 +68,30 @@ namespace NPCs.New.V1.States
         public override void Enter(V1Npc npc)
         {
             SetInitialAnimatorState(npc);
-            npc.navigationAgent.updateRotation = false;
             _currentWaypointIndex = 0;
+            _pathCoroutine = StartCoroutine(GetPath(npc));
         }
 
         public override void UpdateState(V1Npc npc)
         {
-            var navAgent = npc.navigationAgent;
-            navAgent.SetDestination(serveillancePoints[_currentWaypointIndex]);
+            Move(npc);
 
+            if (serveillancePoints.Length == 0) return;
 
             if (CheckForWaypointThreshold(npc))
             {
                 _changeWaypointCoroutine ??= StartCoroutine(ChangeWaypoint(npc));
-            }
-
-
-            if (_canRotate) npc.Rotate(npc.transform.position + navAgent.desiredVelocity, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
-            npc.animator.SetFloat(Speed, _speedMultiplier);
+            } //Change waypoint
         }
 
         public override void Exit(V1Npc npc)
         {
+            if (_pathCoroutine != null)
+            {
+                StopCoroutine(_pathCoroutine);
+                _pathCoroutine = null;
+            }
+
             if (_changeWaypointCoroutine != null)
             {
                 StopCoroutine(_changeWaypointCoroutine);
@@ -104,6 +109,48 @@ namespace NPCs.New.V1.States
 
         #region Custom Methods
 
+        private void Move(V1Npc npc)
+        {
+            npc.animator.SetFloat(Speed, _speedMultiplier);
+
+            if (serveillancePoints.Length == 0) return;
+
+            Vector3 desiredPos = serveillancePoints[_currentWaypointIndex];
+
+            if (_path != null)
+            {
+                desiredPos = npc.pathFinder.GetDesiredPosition(_path[0]);
+
+                if (_path.Count > 1)
+                {
+                    if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
+                    {
+                        desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
+                    }
+                }
+            }
+
+            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
+            if(_canRotate) npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+        }
+
+        private IEnumerator GetPath(V1Npc npc)
+        {
+            while (true)
+            {
+                if (!npc.gameObject.activeInHierarchy) continue;
+
+                if (serveillancePoints.Length == 0)
+                {
+                    _pathCoroutine = null;
+                    yield break;
+                }
+
+                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, serveillancePoints[_currentWaypointIndex], out _path);
+                yield return new WaitForSeconds(npc.pathFindingInterval);
+            }
+        }
+
         private bool CheckForWaypointThreshold(V1Npc npc)
         {
             return ThemaVector.PlannerDistance(npc.transform.position, serveillancePoints[_currentWaypointIndex]) < npc.stopDistance;
@@ -111,8 +158,14 @@ namespace NPCs.New.V1.States
 
         private IEnumerator ChangeWaypoint(V1Npc npc)
         {
-            _canRotate = false;
+            if (_speedCoroutine != null)
+            {
+                StopCoroutine(_speedCoroutine);
+                _speedCoroutine = null;
+            }
 
+            _canRotate = false;
+            
             if (serveillanceWaitTime != 0)
             {
                 yield return Accelerate(npc, 0);
@@ -122,7 +175,7 @@ namespace NPCs.New.V1.States
 
             _currentWaypointIndex = (_currentWaypointIndex + 1) % serveillancePoints.Length;
             _canRotate = true;
-
+            
             if (Mathf.Approximately(_speedMultiplier, 0))
             {
                 yield return Accelerate(npc, 1);
@@ -149,7 +202,6 @@ namespace NPCs.New.V1.States
             float currentSpeed = _speedMultiplier;
 
             float timeElapsed = 0;
-
             while (timeElapsed <= npc.accelerationTime)
             {
                 timeElapsed += Time.deltaTime;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NPCs.New.V1.States
+namespace NPCs.New.V1
 {
     
     public sealed class V1NpcIdleState : V1NpcBaseState
@@ -20,7 +20,7 @@ namespace NPCs.New.V1.States
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
             npc.animator.SetFloat(Speed, 0);
-            npc.animator.CrossFade(entryAnim, 0.25f, animatorLayer);
+            npc.animator.CrossFade(entryAnim, 0.25f, 0);
         }
     }
 }
