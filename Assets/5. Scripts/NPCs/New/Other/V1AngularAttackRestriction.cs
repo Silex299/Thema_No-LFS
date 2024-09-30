@@ -1,4 +1,5 @@
 using NPCs.New.V1;
+using NPCs.New.V1.States;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;

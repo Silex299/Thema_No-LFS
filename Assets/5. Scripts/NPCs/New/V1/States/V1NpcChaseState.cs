@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Mechanics.Npc;
 using NPCs.New.Other;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 using Weapons.NPC_Weapon;
 
-namespace NPCs.New.V1
+namespace NPCs.New.V1.States
 {
     public class V1NpcChaseState : V1NpcBaseState
     {
@@ -43,11 +42,9 @@ namespace NPCs.New.V1
         public override void Enter(V1Npc npc)
         {
             SetInitialAnimatorState(npc);
-            _pathCoroutine ??= StartCoroutine(GetPath(npc));
         }
         public override void UpdateState(V1Npc npc)
         {
-            Move(npc);
         }
         public override void Exit(V1Npc npc)
         {
@@ -65,31 +62,7 @@ namespace NPCs.New.V1
         }
         
         
-        private void Move(V1Npc npc)
-        {
-            npc.animator.SetFloat(Speed, _speedMultiplier);
-            
-            Vector3 desiredPos = npc.target.position;
-            
-            if (_path != null)
-            {
-                desiredPos =  npc.pathFinder.GetDesiredPosition(_path[0]);
-                
-                if (_path.Count > 1)
-                {
-                    if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
-                    {
-                        desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
-                    }
-                }
-            }
-            
-            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
-            
-            ProcessDistanceAndProximity(npc, desiredPos, _path != null);
-            npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime);
-
-        }
+      
         private void ProcessDistanceAndProximity(V1Npc npc, Vector3 desiredPos, bool hasPath)
         {
             
@@ -205,16 +178,7 @@ namespace NPCs.New.V1
         }
         
 
-        private IEnumerator GetPath(V1Npc npc)
-        {
-            while (true)
-            {
-                if(!npc.gameObject.activeInHierarchy) continue;
-                npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
-                yield return new WaitForSeconds(npc.pathFindingInterval);
-            }
-            // ReSharper disable once IteratorNeverReturns
-        }
+      
         private void SetInitialAnimatorState(V1Npc npc)
         {
             npc.animator.SetInteger(StateIndex, 1);
