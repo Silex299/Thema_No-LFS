@@ -24,7 +24,6 @@ namespace NPCs.New.V1
         private Coroutine _speedCoroutine;
         private Coroutine _pathCoroutine;
         private Coroutine _changeWaypointCoroutine;
-        private bool _canRotate = true;
 
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -38,7 +37,7 @@ namespace NPCs.New.V1
         #region Ediotr
 
 #if UNITY_EDITOR
-
+        
         [Button]
         public void SetServeillancePoints(Transform[] points)
         {
@@ -48,7 +47,6 @@ namespace NPCs.New.V1
                 serveillancePoints[i] = points[i].position;
             }
         }
-
         private void OnDrawGizmos()
         {
             if (serveillancePoints.Length == 0) return;
@@ -131,7 +129,7 @@ namespace NPCs.New.V1
             }
 
             Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
-            if(_canRotate) npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+            npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
 
         private IEnumerator GetPath(V1Npc npc)
@@ -164,8 +162,6 @@ namespace NPCs.New.V1
                 _speedCoroutine = null;
             }
 
-            _canRotate = false;
-            
             if (serveillanceWaitTime != 0)
             {
                 yield return Accelerate(npc, 0);
@@ -174,8 +170,7 @@ namespace NPCs.New.V1
             }
 
             _currentWaypointIndex = (_currentWaypointIndex + 1) % serveillancePoints.Length;
-            _canRotate = true;
-            
+
             if (Mathf.Approximately(_speedMultiplier, 0))
             {
                 yield return Accelerate(npc, 1);
@@ -208,8 +203,6 @@ namespace NPCs.New.V1
                 _speedMultiplier = Mathf.Lerp(currentSpeed, targetSpeed, timeElapsed / npc.accelerationTime);
                 yield return null;
             }
-
-            _speedMultiplier = targetSpeed;
 
             _speedCoroutine = null;
         }
