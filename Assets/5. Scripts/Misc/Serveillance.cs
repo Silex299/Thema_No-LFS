@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Health;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Events;
 using VisualState = Misc.SurveillanceVisuals.ServeillanceVisualState;
 
 namespace Misc
@@ -11,8 +10,8 @@ namespace Misc
     public class Serveillance : SerializedMonoBehaviour
     {
         [SerializeField] private Mover mover;
-        [SerializeField] private float resetDelay = 8f;
-        [SerializeField] private LayerMask rayCastMask;
+        [SerializeField, Tooltip("Delay before the surveillance system resets after detecting an object.")] private float resetDelay = 8f;
+        [SerializeField, Tooltip("Hitting layer mask")] private LayerMask rayCastMask;
         [SerializeField] private SurveillanceVisuals visuals;
 
         private int _objectCount;
@@ -40,7 +39,7 @@ namespace Misc
                         StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
                         StartCoroutine(visuals.AlignSpotlight(other.transform.position));
                         //reset
-                        if(_resetCoroutine!=null) StopCoroutine(_resetCoroutine);
+                        if (_resetCoroutine != null) StopCoroutine(_resetCoroutine);
                         _resetCoroutine = StartCoroutine(ResetServeillanceVisual(other));
                     }
                 }
@@ -59,24 +58,22 @@ namespace Misc
 
             return false;
         }
-
         private void DamageObject(int instanceId, HealthBaseClass health)
         {
             _objectsTracking.Add(instanceId, true);
             health.Kill("RAY");
         }
-
         private IEnumerator ResetServeillanceVisual(Collider other)
         {
             yield return new WaitForSeconds(resetDelay);
-            
+
             mover.DisableMover(false);
             TurnOffMachine(false);
             if (_objectsTracking.ContainsKey(other.GetInstanceID()))
             {
                 _objectsTracking.Remove(other.GetInstanceID());
             }
-            
+
             StartCoroutine(visuals.ResetAlignment());
         }
 
@@ -93,7 +90,6 @@ namespace Misc
 
             if (turnOff)
             {
-                StopAllCoroutines();
                 _objectsTracking = null;
                 _powerChangeCoroutine = StartCoroutine(visuals.PowerChange(VisualState.PowerDown));
             }
@@ -119,7 +115,8 @@ namespace Misc
         [BoxGroup("Visual"), SerializeField] private float defaultLightBeamIntensity;
         [BoxGroup("Visual"), SerializeField] private float powerUpLightBeamIntensity;
 
-        [BoxGroup("Visual"), SerializeField] private float transitionTime = 5;
+        [BoxGroup("Visual"), SerializeField, Tooltip("Time taken for the transition between visual states.")]
+        private float transitionTime = 5;
 
 
         private Quaternion _defaultSpotlightRotation = Quaternion.identity;

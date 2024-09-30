@@ -8,9 +8,10 @@ namespace Triggers
     [RequireComponent(typeof(BoxCollider))]
     public class SimpleSwitch : MonoBehaviour
     {
-        
         [SerializeField, BoxGroup("Trigger")] private string triggerString;
-        [SerializeField, BoxGroup("Trigger")] private float secondActionDelay;
+
+        [SerializeField, BoxGroup("Trigger"), Tooltip("Delay before the second action can be triggered.")]
+        private float secondActionDelay;
 
         [SerializeField, BoxGroup("Visual")] private MeshRenderer meshRenderer;
         [SerializeField, BoxGroup("Visual")] private int materialIndex;
@@ -36,7 +37,7 @@ namespace Triggers
             get => _triggered;
             set => _triggered = value;
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (!enabled) return;
@@ -72,11 +73,11 @@ namespace Triggers
         {
             print("fuck me");
             if (!(_lastTriggerTime + secondActionDelay < Time.time)) return;
-            
-            if(Triggered == triggered) return;
-            
+
+            if (Triggered == triggered) return;
+
             Triggered = triggered;
-                
+
             if (_triggered)
             {
                 triggeredEvents.Invoke();
@@ -85,24 +86,24 @@ namespace Triggers
             {
                 unTriggeredEvents.Invoke();
             }
-                
+
             UpdateSwitch(Triggered);
             TriggerSound();
-            
+
             _lastTriggerTime = Time.time;
         }
-        
-        
+
+
         public void UpdateSwitch(bool status)
         {
             if (!meshRenderer)
             {
-                if(!TryGetComponent(out meshRenderer)) return;
+                if (!TryGetComponent(out meshRenderer)) return;
             }
 
             var materials = meshRenderer.materials;
-            
-            
+
+
             if (status)
             {
                 materials[materialIndex] = triggeredMaterial;
@@ -118,7 +119,7 @@ namespace Triggers
         private void TriggerSound()
         {
             if (!source) return;
-            
+
             if (Triggered)
             {
                 source.PlayOneShot(triggerClip.clip, triggerClip.volume);
@@ -128,8 +129,5 @@ namespace Triggers
                 source.PlayOneShot(unTriggerClip.clip, unTriggerClip.volume);
             }
         }
-
-
     }
-
 }

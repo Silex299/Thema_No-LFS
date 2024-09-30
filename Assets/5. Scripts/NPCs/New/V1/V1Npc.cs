@@ -85,7 +85,6 @@ namespace NPCs.New.V1
             Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
         }
-        
         public void ChangeState(int stateIndex)
         {
             
@@ -93,12 +92,18 @@ namespace NPCs.New.V1
             
             if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
             
-            _currentStateIndex = stateIndex;
+            //TODO: TEST MAY NOT WORK
+            if (stateIndex == -1)
+            {
+                states[_currentStateIndex].Exit(this);
+                enabled = false;
+                return;
+            }
             
+            _currentStateIndex = stateIndex;
             states[_currentStateIndex].Enter(this);
 
         }
-       
         public void Reset()
         {
             ChangeState(initState);

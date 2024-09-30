@@ -5,7 +5,7 @@ namespace Path_Scripts
 {
     public class OverridePath : MonoBehaviour
     {
-        private Transform nextTransform;
+        public Transform nextTransform;
         public Transform prevTransform;
 
 
