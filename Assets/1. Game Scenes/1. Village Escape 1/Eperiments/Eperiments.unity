@@ -1283,7 +1283,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05a7c62fccbafd342991629222351294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scenePrefabInstances: []
+  _scenePrefabInstances:
+  - _gameObject: {fileID: 958069574}
+    _prefab: Assets/0.0.1. NP Characters/Canine/Wolf Magic.FBX
 --- !u!4 &348596960
 Transform:
   m_ObjectHideFlags: 11
@@ -2725,6 +2727,69 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.3047676, y: 8.210806, z: 1.0268359}
   m_Center: {x: 0, y: 3.6054037, z: -0.013417959}
+--- !u!1001 &958069573
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_Name
+      value: Wolf Magic
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.2794147
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.088506
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 362.1193
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3, type: 3}
+--- !u!1 &958069574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100108, guid: 9a5a6e2d8587a644b9b2da5d4940b5e3,
+    type: 3}
+  m_PrefabInstance: {fileID: 958069573}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &994252903
 GameObject:
   m_ObjectHideFlags: 1
@@ -13046,3 +13111,4 @@ SceneRoots:
   - {fileID: 994252904}
   - {fileID: 1157742533}
   - {fileID: 923600351}
+  - {fileID: 958069573}

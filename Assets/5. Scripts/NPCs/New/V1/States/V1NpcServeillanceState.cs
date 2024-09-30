@@ -128,7 +128,7 @@ namespace NPCs.New.V1
                 }
             }
 
-            Debug.DrawLine(npc.transform.position, desiredPos, Color.cyan);
+            Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, desiredPos, Color.cyan);
             npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
 
