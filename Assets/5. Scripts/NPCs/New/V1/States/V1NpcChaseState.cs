@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using NPCs.New.Other;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;

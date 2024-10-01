@@ -1,5 +1,3 @@
-using System;
-using Mechanics.Npc;
 using NPCs.New.Other;
 using Player_Scripts;
 using Sirenix.OdinInspector;
