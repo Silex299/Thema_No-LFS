@@ -20,6 +20,7 @@ namespace NPCs.New.V1
         private float _speedMultiplier = 1;
         private int _currentWaypointIndex = 0;
         private bool _isReachable;
+        private bool _canRotate = true;
         private List<int> _path;
         private Coroutine _speedCoroutine;
         private Coroutine _pathCoroutine;
@@ -129,7 +130,7 @@ namespace NPCs.New.V1
             }
 
             Debug.DrawLine(npc.transform.position, desiredPos, Color.cyan);
-            npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+            if(_canRotate) npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
 
         private IEnumerator GetPath(V1Npc npc)
@@ -156,12 +157,8 @@ namespace NPCs.New.V1
 
         private IEnumerator ChangeWaypoint(V1Npc npc)
         {
-            if (_speedCoroutine != null)
-            {
-                StopCoroutine(_speedCoroutine);
-                _speedCoroutine = null;
-            }
-
+            _canRotate = false;
+            
             if (serveillanceWaitTime != 0)
             {
                 yield return Accelerate(npc, 0);
@@ -170,7 +167,8 @@ namespace NPCs.New.V1
             }
 
             _currentWaypointIndex = (_currentWaypointIndex + 1) % serveillancePoints.Length;
-
+            _canRotate = true;
+            
             if (Mathf.Approximately(_speedMultiplier, 0))
             {
                 yield return Accelerate(npc, 1);
