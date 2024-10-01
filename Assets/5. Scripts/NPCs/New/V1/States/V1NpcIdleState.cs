@@ -20,7 +20,7 @@ namespace NPCs.New.V1
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
             npc.animator.SetFloat(Speed, 0);
-            npc.animator.CrossFade(entryAnim, 0.25f, 0);
+            npc.animator.CrossFade(entryAnim, 0.25f, animatorLayer);
         }
     }
 }

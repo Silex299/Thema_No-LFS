@@ -3,17 +3,13 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
-namespace NPCs.New
+namespace NPCs.New.Path_Finder
 {
     public class DijkstraPathFinder : PathFinderBase
     {
         private List<int>[] _adjacencyList;
         public List<BakedPath> bakedPaths;
-
-
-        #region Editor
-
-#if UNITY_EDITOR
+        
 
         private void BakeAdjacencyList()
         {
@@ -39,7 +35,6 @@ namespace NPCs.New
                 }
             }
         }
-
         [Button]
         public void BakePath()
         {
@@ -91,11 +86,7 @@ namespace NPCs.New
                 bakedPaths.Add(bakedPath);
             }
         }
-
-#endif
-
-        #endregion
-
+        
         public override bool GetPath(Vector3 from, Vector3 to, out List<int> path)
         {
             path = null;
@@ -188,12 +179,7 @@ namespace NPCs.New
 
             return list;
         }
-
-        private bool IsDirectPathPossible(Vector3 from, Vector3 to)
-        {
-            return !Physics.Linecast(from, to, layerMask);
-        }
-
+        
         public override Vector3 GetDesiredPosition(int index)
         {
             return waypoints[index].position;
