@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Player_Scripts;
 using Sirenix.OdinInspector;
@@ -13,7 +14,20 @@ namespace Weapons.NPC_Weapon
         [BoxGroup("Weapon Action Params")] public float damageDistance = 1.7f;
 
         protected Coroutine attackCoroutine;
-        
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Vector3 socketPosition = overrideSocket ? overrideSocket.position : transform.position;
+            Gizmos.DrawWireSphere(socketPosition, damageDistance);
+        }
+
+        private void OnEnable()
+        {
+            PlayerMovementController.Instance.player.Health.onDeath += EndAttack;
+        }
+
         public virtual void StartAttack()
         {
             if (attackCoroutine != null)

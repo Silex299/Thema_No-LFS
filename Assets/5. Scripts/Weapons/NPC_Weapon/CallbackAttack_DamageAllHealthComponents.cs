@@ -29,15 +29,10 @@ namespace Weapons.NPC_Weapon
 
         private void OnDrawGizmos()
         {
-            if (Application.isPlaying)
-            {
-                if (attackCoroutine != null)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(overrideSocket ? overrideSocket.position : transform.position,
-                        damageDistance);
-                }
-            }
+            
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(overrideSocket ? overrideSocket.position : transform.position,
+                damageDistance);
         }
     }
 }
