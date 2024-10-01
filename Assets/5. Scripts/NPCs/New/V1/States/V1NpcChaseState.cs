@@ -23,6 +23,7 @@ namespace NPCs.New.V1.States
         private float _pathBlockTime;
         private bool _pathBlocked;
         private bool _isReachable;
+        public bool UpdatePath { get; set; } = true;
 
         private List<int> _path;
 
@@ -61,8 +62,6 @@ namespace NPCs.New.V1.States
                     }
                 }
 
-                npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime);
-
                 switch (_isStopped)
                 {
                     case true when !ShouldStop(npc):
@@ -72,16 +71,18 @@ namespace NPCs.New.V1.States
                             StopCoroutine(_speedCoroutine);
                             _speedCoroutine = null;
                         }
+
                         _speedCoroutine ??= StartCoroutine(ChangeSpeed(npc, 1));
                         break;
                     }
-                    case false when ShouldStop(npc):
+                    case false when ShouldStop(npc) && npc.CanAttack:
                     {
                         if (_speedCoroutine != null)
                         {
                             StopCoroutine(_speedCoroutine);
                             _speedCoroutine = null;
                         }
+
                         _speedCoroutine ??= StartCoroutine(ChangeSpeed(npc, 0));
                         break;
                     }
@@ -96,15 +97,17 @@ namespace NPCs.New.V1.States
                         StopCoroutine(_speedCoroutine);
                         _speedCoroutine = null;
                     }
+
                     _speedCoroutine ??= StartCoroutine(ChangeSpeed(npc, 0));
                 }
             }
-            
+
             npc.animator.SetFloat(Speed, _speedMultiplier);
+            npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime);
             
             #region Attack
-            
-            if (CanAttack(npc))
+
+            if (ShouldAttack(npc) && npc.CanAttack)
             {
                 npc.animator.SetBool(Attack1, true);
                 Attack(npc);
@@ -115,27 +118,27 @@ namespace NPCs.New.V1.States
             }
 
             #endregion
-            
-            
         }
 
 
-        private bool CanAttack(V1Npc npc)
+        private bool ShouldAttack(V1Npc npc)
         {
             var distance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
             return distance <= attackDistance;
         }
+
         private void Attack(V1Npc npc)
         {
             weapon?.Fire();
             npc.aimRigController?.Aim(npc.target);
         }
+
         private bool ShouldStop(V1Npc npc)
         {
             var distance = ThemaVector.PlannerDistance(npc.target.position, npc.transform.position);
             return distance < npc.stopDistance;
         }
-        
+
         public override void Exit(V1Npc npc)
         {
             if (_pathCoroutine != null)
@@ -150,6 +153,7 @@ namespace NPCs.New.V1.States
                 _speedCoroutine = null;
             }
         }
+
         private IEnumerator ChangeSpeed(V1Npc npc, float targetSpeed)
         {
             float currentSpeed = _speedMultiplier;
@@ -166,13 +170,17 @@ namespace NPCs.New.V1.States
             _speedMultiplier = targetSpeed;
             _speedCoroutine = null;
         }
+
         private IEnumerator GetPath(V1Npc npc)
         {
             while (true)
             {
-                if (!npc.gameObject.activeInHierarchy) continue;
-                _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
-                PreviewPath(npc);
+                if (UpdatePath)
+                {
+                    _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
+                    PreviewPath(npc);
+                }
+
                 yield return new WaitForSeconds(npc.pathFindingInterval);
             }
             // ReSharper disable once IteratorNeverReturns
