@@ -78,7 +78,7 @@ namespace NPCs.New.V1
                 if(health.IsDead) return;
             }
             
-            states[_currentStateIndex].UpdateState(this);
+            if(_currentStateIndex!=-1) states[_currentStateIndex].UpdateState(this);
         }
 
         #endregion

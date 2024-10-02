@@ -12,7 +12,7 @@ namespace Health
         [SerializeField, FoldoutGroup("Base Health")] protected float maximumHealth = 100;
         [SerializeField, FoldoutGroup("Base Health")] protected UnityEvent deathAction;
 
-        protected float currentHealth;
+        protected float currentHealth = 100;
         
         public bool IsDead => currentHealth <= 0;
         
