@@ -38,6 +38,7 @@ namespace Misc
                         DamageObject(other.GetInstanceID(), health);
                         StartCoroutine(visuals.PowerChange(VisualState.PowerUp));
                         StartCoroutine(visuals.AlignSpotlight(other.transform.position));
+                        
                         //reset
                         if (_resetCoroutine != null) StopCoroutine(_resetCoroutine);
                         _resetCoroutine = StartCoroutine(ResetServeillanceVisual(other));
@@ -67,12 +68,8 @@ namespace Misc
         {
             yield return new WaitForSeconds(resetDelay);
 
-            mover.DisableMover(false);
+            mover?.DisableMover(false);
             TurnOffMachine(false);
-            if (_objectsTracking.ContainsKey(other.GetInstanceID()))
-            {
-                _objectsTracking.Remove(other.GetInstanceID());
-            }
 
             StartCoroutine(visuals.ResetAlignment());
         }
@@ -97,6 +94,12 @@ namespace Misc
             {
                 _powerChangeCoroutine = StartCoroutine(visuals.PowerChange(VisualState.Default));
             }
+        }
+
+
+        public void Reset()
+        {
+            _objectsTracking = new Dictionary<int, bool>();
         }
     }
 

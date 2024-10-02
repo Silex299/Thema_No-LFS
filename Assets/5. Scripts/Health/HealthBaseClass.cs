@@ -13,14 +13,16 @@ namespace Health
         [SerializeField, FoldoutGroup("Base Health")] protected UnityEvent deathAction;
 
         protected float currentHealth;
+        
+        public bool IsDead => currentHealth <= 0;
+        
         public Action onDeath;
 
-        private void Start()
+        protected virtual void Start()
         {
             currentHealth = maximumHealth;
         }
-
-
+        
         public virtual void ResetHealth()
         {
             currentHealth = maximumHealth;

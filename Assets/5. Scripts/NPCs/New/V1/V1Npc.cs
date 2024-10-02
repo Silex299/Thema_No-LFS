@@ -1,3 +1,4 @@
+using Health;
 using NPCs.New.Other;
 using Player_Scripts;
 using Sirenix.OdinInspector;
@@ -16,6 +17,7 @@ namespace NPCs.New.V1
         [FoldoutGroup("References")] public Animator animator;
         [FoldoutGroup("References")] public ProximityDetection proximityDetection;
         [FoldoutGroup("References")] public V1NpcAimRigController aimRigController;
+        [FoldoutGroup("References")] public HealthBaseClass health;
         
         [FoldoutGroup("Npc Movement Properties")] public float stopDistance = 1f;
         [FoldoutGroup("Npc Movement Properties")] public float rotationSpeed = 10;
@@ -40,6 +42,7 @@ namespace NPCs.New.V1
 
         public bool CanAttack { get; set; } = true;
         
+        
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int PathBlocked = Animator.StringToHash("PathBlocked");
@@ -61,13 +64,20 @@ namespace NPCs.New.V1
         private void OnEnable()
         {
             PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
+            if(health) health.onDeath += OnNpcDeath;
         }
         private void OnDisable()
         {
             PlayerMovementController.Instance.player.Health.onDeath -= OnPlayerDeath;
+            if(health) health.onDeath -= OnNpcDeath;
         }
         private void Update()
         {
+            if (health )
+            {
+                if(health.IsDead) return;
+            }
+            
             states[_currentStateIndex].UpdateState(this);
         }
 
@@ -85,6 +95,10 @@ namespace NPCs.New.V1
         }
         public void ChangeState(int stateIndex)
         {
+            if (health)
+            {
+                if(health.IsDead) return;
+            }
             
             if(stateIndex == _currentStateIndex) return;
             
@@ -102,6 +116,18 @@ namespace NPCs.New.V1
             states[_currentStateIndex].Enter(this);
 
         }
+      
+        private void OnPlayerDeath()
+        {
+            ChangeState(afterPlayerDeathState);
+        }
+
+        private void OnNpcDeath()
+        {
+            states[_currentStateIndex].Exit(this);
+            _currentStateIndex = -1;
+        }  
+        
         public void Reset()
         {
             ChangeState(initState);
@@ -112,10 +138,6 @@ namespace NPCs.New.V1
             animator.SetBool(PathBlocked, false);
             animator.SetInteger(StateIndex, 0);
             
-        }
-        private void OnPlayerDeath()
-        {
-            ChangeState(afterPlayerDeathState);
         }
         
         #endregion
