@@ -193,6 +193,7 @@ namespace NPCs.New.V1.States
             _isStopped = false;
             _speedMultiplier = 1;
             npc.animator.SetFloat(Speed, _speedMultiplier);
+            npc.animator.CrossFade("Default", 0.1f, 1);
         }
 
         private void PreviewPath(V1Npc npc)

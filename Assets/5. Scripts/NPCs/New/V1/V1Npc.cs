@@ -95,12 +95,13 @@ namespace NPCs.New.V1
         }
         public void ChangeState(int stateIndex)
         {
+            print("Changing Npc state");
+            if(stateIndex == _currentStateIndex) return;
+            
             if (health)
             {
                 if(health.IsDead) return;
             }
-            
-            if(stateIndex == _currentStateIndex) return;
             
             if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
             

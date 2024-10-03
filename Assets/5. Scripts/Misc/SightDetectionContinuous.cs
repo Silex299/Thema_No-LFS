@@ -11,12 +11,15 @@ namespace Misc
         
         public string[] detectionTags;
         public UnityEvent<Collider> onDetection;
+        [field: SerializeField] public bool IsEnabled { get; set; } = true;
 
 
         private readonly Dictionary<int, HealthBaseClass> _detectedInstanceId = new Dictionary<int, HealthBaseClass>();
         
         private void OnTriggerStay(Collider other)
         {
+            if (!IsEnabled) return;
+            
             if (detectionTags.Length == 0) return;
             
             foreach (var detectionTag in detectionTags)
@@ -38,6 +41,9 @@ namespace Misc
                 }
             }
         }
+        
+        
+        
         
         
     }

@@ -10,6 +10,7 @@ namespace NPCs.New.V1
     {
         public Vector3 actionPosition;
         public bool rotateTowardsTarget;
+        public int animatorStateIndex;
 
 
         private List<int> _path;
@@ -25,7 +26,6 @@ namespace NPCs.New.V1
 
         private void OnDrawGizmos()
         {
-            
             Gizmos.color = Color.magenta;
             Gizmos.DrawSphere(Application.isPlaying ? actionPosition : transform.TransformPoint(actionPosition), 0.2f);
         }
@@ -41,9 +41,11 @@ namespace NPCs.New.V1
             _speedMultiplier = 1;
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
-            npc.animator.SetInteger(StateIndex, 3);
+            npc.animator.Play("Default", 1);
+            npc.animator.SetInteger(StateIndex, animatorStateIndex);
             _pathCoroutine ??= StartCoroutine(GetPath(npc));
         }
+
         public override void Exit(V1Npc npc)
         {
             if (_pathCoroutine != null)
@@ -51,38 +53,41 @@ namespace NPCs.New.V1
                 StopCoroutine(_pathCoroutine);
                 _pathCoroutine = null;
             }
+            
+            npc.animator.Play("Default", 1);
+            npc.animator.SetBool(PathBlocked, false);
         }
+
         public override void UpdateState(V1Npc npc)
         {
-            if (_path != null)
+            if (_isReachable)
             {
-                var desiredPos = npc.pathFinder.GetDesiredPosition(_path[0]);
+                var desiredPos = actionPosition;
 
-                if (_path.Count > 1)
+                if (_path is { Count: > 0 })
                 {
-                    if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
+                    desiredPos = npc.pathFinder.GetDesiredPosition(_path[0]);
+
+                    if (ThemaVector.PlannerDistance(npc.transform.position, desiredPos) < npc.stopDistance)
                     {
-                        desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
+                        _path.RemoveAt(0);
                     }
                 }
-                
+
                 npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime * _speedMultiplier);
             }
-            else if(_isReachable)
+            else if (_isReachable)
             {
                 npc.Rotate(actionPosition, npc.rotationSpeed * Time.deltaTime * _speedMultiplier);
             }
-            else
-            {
-                npc.animator.SetBool(PathBlocked, true);
-            }
+
 
             float distance = ThemaVector.PlannerDistance(npc.transform.position, actionPosition);
-            bool reached = distance<npc.stopDistance;
-            
+            bool reached = distance < npc.stopDistance;
+
             npc.animator.SetBool(PathBlocked, reached);
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            
+
             if (reached)
             {
                 if (_speedMultiplier > 0)
@@ -91,9 +96,12 @@ namespace NPCs.New.V1
                     {
                         StopCoroutine(_speedCoroutine);
                     }
+
                     _speedCoroutine = StartCoroutine(ChangeMovementSpeed(npc, true));
                 }
-                if(rotateTowardsTarget) npc.Rotate(npc.target.position, npc.rotationSpeed * Time.deltaTime);
+
+                npc.animator.SetBool(PathBlocked, true);
+                if (rotateTowardsTarget) npc.Rotate(npc.target.position, npc.rotationSpeed * Time.deltaTime);
             }
             else
             {
@@ -103,6 +111,8 @@ namespace NPCs.New.V1
                     {
                         StopCoroutine(_speedCoroutine);
                     }
+
+                    npc.animator.SetBool(PathBlocked, false);
                     _speedCoroutine = StartCoroutine(ChangeMovementSpeed(npc));
                 }
             }
@@ -119,6 +129,7 @@ namespace NPCs.New.V1
             }
             // ReSharper disable once IteratorNeverReturns
         }
+
         private IEnumerator ChangeMovementSpeed(V1Npc npc, bool stop = false)
         {
             float timeElapsed = 0;
@@ -131,9 +142,9 @@ namespace NPCs.New.V1
                 _speedMultiplier = Mathf.Lerp(startSpeed, endSpeed, timeElapsed / npc.accelerationTime);
                 yield return null;
             }
+
             _speedMultiplier = endSpeed;
             _speedCoroutine = null;
-
         }
     }
 }

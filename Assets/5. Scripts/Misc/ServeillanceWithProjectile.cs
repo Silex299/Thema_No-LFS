@@ -13,7 +13,7 @@ namespace Misc
         public float resetAlignmentTime = 1f;
 
         private bool _aligned;
-
+        private Coroutine _turnOffCoroutine;
 
         public void TargetDetected(Collider other)
         {
@@ -47,6 +47,28 @@ namespace Misc
             yield return visuals.ResetAlignment();
             _aligned = false;
             
+        }
+
+        public void TurnOffMachine(bool turnOff)
+        {
+            if (_turnOffCoroutine != null)
+            {
+                StopCoroutine(_turnOffCoroutine);
+            }
+            _turnOffCoroutine = StartCoroutine(TurnOffEnumerator(turnOff));
+        }
+        private IEnumerator TurnOffEnumerator(bool turnOff)
+        {
+            if (turnOff)
+            {
+                yield return visuals.PowerChange(SurveillanceVisuals.ServeillanceVisualState.PowerDown);
+            }
+            else
+            {
+                yield return visuals.PowerChange(SurveillanceVisuals.ServeillanceVisualState.Default);
+            }
+            
+            _turnOffCoroutine = null;
         }
         
         
