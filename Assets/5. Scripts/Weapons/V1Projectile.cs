@@ -32,7 +32,7 @@ namespace Weapons
             DamageHealth(other.GetContact(0).point);
 
             var otherTag = other.gameObject.tag;
-
+            print(other.gameObject.name);
             if (hitEffects.TryGetValue(otherTag, out var hitEffect1))
             {
                 Instantiate(hitEffect1, other.GetContact(0).point, Quaternion.LookRotation(other.GetContact(0).normal));

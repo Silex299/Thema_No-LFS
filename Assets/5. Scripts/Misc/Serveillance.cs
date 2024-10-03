@@ -161,6 +161,8 @@ namespace Misc
 
                 yield return null;
             }
+            
+            spotlightTransform.rotation = _defaultSpotlightRotation;
         }
 
         public IEnumerator PowerChange(ServeillanceVisualState visualState)

@@ -21,7 +21,6 @@ namespace Weapons
         {
             GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
             
-            
             Vector3 randomError = new Vector3(Random.Range(-fireError.x, fireError.x), Random.Range(-fireError.y, fireError.y), Random.Range(-fireError.z, fireError.z));
             
             projectile.GetComponent<Rigidbody>().velocity = (projectile.transform.forward + randomError) * projectileSpeed;
