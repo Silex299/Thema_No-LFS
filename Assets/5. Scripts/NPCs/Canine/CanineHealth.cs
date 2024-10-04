@@ -40,8 +40,9 @@ namespace NPCs.Canine
             }
             animator.enabled = false;
         }
-        private void Reset()
+        public void Reset()
         {
+            currentHealth = maximumHealth;
             foreach (var col in colliders)
             {
                 col.enabled = false;

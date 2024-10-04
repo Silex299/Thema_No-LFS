@@ -93,19 +93,24 @@ namespace NPCs.New.V1
             Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
         }
+
         public void ChangeState(int stateIndex)
         {
+            ChangeState(stateIndex, false);
+        }
+        
+        public void ChangeState(int stateIndex, bool overrideHealthCheck = false)
+        {
             print("Changing Npc state::" + stateIndex);
-            if(stateIndex == _currentStateIndex) return;
             
-            if (health)
+            if(stateIndex == _currentStateIndex) return;
+
+            if (!overrideHealthCheck && health)
             {
                 if(health.IsDead) return;
             }
             
             if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
-            
-            //TODO: TEST MAY NOT WORK
             if (stateIndex == -1)
             {
                 states[_currentStateIndex].Exit(this);
@@ -125,14 +130,13 @@ namespace NPCs.New.V1
 
         private void OnNpcDeath()
         {
-            states[_currentStateIndex].Exit(this);
+            if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
             _currentStateIndex = -1;
         }  
         
         public void Reset()
         {
-            ChangeState(initState);
-            
+            ChangeState(initState, true);
             //Reset Animator
             animator.SetBool(Attack, false);
             animator.SetFloat(Speed, 0);
