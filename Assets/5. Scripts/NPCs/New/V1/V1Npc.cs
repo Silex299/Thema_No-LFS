@@ -95,7 +95,7 @@ namespace NPCs.New.V1
         }
         public void ChangeState(int stateIndex)
         {
-            print("Changing Npc state");
+            print("Changing Npc state::" + stateIndex);
             if(stateIndex == _currentStateIndex) return;
             
             if (health)

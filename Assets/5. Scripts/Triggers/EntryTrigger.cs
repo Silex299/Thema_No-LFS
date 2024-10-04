@@ -142,10 +142,8 @@ namespace Triggers
             {
                 exitAction?.Invoke();
             }
-
-
         }
-
+        
         #endregion
     }
 

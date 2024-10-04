@@ -9,7 +9,7 @@ namespace Managers.Checkpoints
 {
     public class CheckpointTracker : MonoBehaviour
     {
-        [InfoBox("If threshold is same as the loaded checkpoint, it will call the reset event, or final State Event")]
+        [InfoBox("If threshold is less or equal as the loaded checkpoint, it will call the reset event, or final State Event")]
         [BoxGroup("Misc")] public int checkpointThreshold;
         [BoxGroup("Misc")] public Transform targetTransform;
 
@@ -40,7 +40,7 @@ namespace Managers.Checkpoints
 
         private void OnCheckpointLoaded(int checkpointIndex)
         {
-            StartCoroutine(checkpointIndex <= checkpointThreshold ? ResetState() : FinalState());
+            StartCoroutine((checkpointIndex <= checkpointThreshold || checkpointIndex == -1) ? ResetState() : FinalState());
         }
 
         private IEnumerator ResetState()

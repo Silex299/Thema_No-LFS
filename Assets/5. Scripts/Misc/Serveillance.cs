@@ -204,8 +204,32 @@ namespace Misc
 
                 yield return null;
             }
+            
+            targetLight.intensity = lightIntensity;
+            if (volumetricLightBeam)
+            {
+                volumetricLightBeam.intensityGlobal = beamIntensity;
+            }
         }
 
+        public void InstantPowerChange(ServeillanceVisualState serveillanceVisualState)
+        {
+            switch (serveillanceVisualState)
+            {
+                case ServeillanceVisualState.Default:
+                    targetLight.intensity = defaultIntensity;
+                    if(volumetricLightBeam) volumetricLightBeam.intensityGlobal = defaultLightBeamIntensity;
+                    break;
+                case ServeillanceVisualState.PowerUp:
+                    targetLight.intensity = powerUpIntensity;
+                    if(volumetricLightBeam) volumetricLightBeam.intensityGlobal = powerUpLightBeamIntensity;
+                    break;
+                case ServeillanceVisualState.PowerDown:
+                    targetLight.intensity = 0;
+                    if(volumetricLightBeam) volumetricLightBeam.intensityGlobal = 0;
+                    break;
+            }
+        }
 
         public enum ServeillanceVisualState
         {

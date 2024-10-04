@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
@@ -32,6 +33,12 @@ namespace Triggers
         private bool _triggered;
         private float _lastTriggerTime;
 
+        #region Reset Params
+
+        private bool _initiallyTriggered;
+
+        #endregion
+
         public bool Triggered
         {
             get => _triggered;
@@ -55,6 +62,12 @@ namespace Triggers
             }
         }
 
+
+        private void Start()
+        {
+            _initiallyTriggered = Triggered;
+            UpdateSwitch(Triggered);
+        }
 
         private void Update()
         {
@@ -128,6 +141,13 @@ namespace Triggers
             {
                 source.PlayOneShot(unTriggerClip.clip, unTriggerClip.volume);
             }
+        }
+
+
+        public void Reset()
+        {
+            _triggered = _initiallyTriggered;
+            UpdateSwitch(_triggered);
         }
     }
 }

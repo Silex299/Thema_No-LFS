@@ -83,8 +83,6 @@ namespace Scene_Scripts.Shift_1
             float leftDistance = Vector3.Distance(playerPos, leftPos);
             float rightDistance = Vector3.Distance(playerPos, rightPos);
             
-            print(leftDistance + "::::" + rightDistance);
-            
             bool isPlayerInLeft = leftDistance < rightDistance;
             
             if(isPlayerInLeft != _isPlayerInLeft)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Misc
         public SurveillanceVisuals visuals;
         public Vector3 targetOffset;
         public float resetAlignmentTime = 1f;
+        public bool initiallyTurnedOff = false;
 
         private bool _aligned;
         private Coroutine _turnOffCoroutine;
@@ -48,7 +50,7 @@ namespace Misc
             _aligned = false;
             
         }
-
+        
         public void TurnOffMachine(bool turnOff)
         {
             if (_turnOffCoroutine != null)
@@ -70,8 +72,20 @@ namespace Misc
             
             _turnOffCoroutine = null;
         }
-        
-        
-        
+
+
+        public void Reset()
+        {
+            
+            if (_turnOffCoroutine != null)
+            {
+                StopCoroutine(_turnOffCoroutine);
+                _turnOffCoroutine = null;
+            }
+            
+            _aligned = false;
+            visuals.InstantPowerChange(initiallyTurnedOff? SurveillanceVisuals.ServeillanceVisualState.PowerDown : SurveillanceVisuals.ServeillanceVisualState.Default);
+            
+        }
     }
 }
