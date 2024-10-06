@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Health;
 using Sirenix.OdinInspector;
-using Thema_Type;
 using UnityEngine;
 
 namespace Weapons
@@ -28,7 +26,6 @@ namespace Weapons
         private void OnCollisionEnter(Collision other)
         {
             //stop the projectile
-            hit = true;
             rb.velocity = Vector3.zero;
             rb.isKinematic = true;
             DamageHealth(other.GetContact(0).point);
@@ -40,6 +37,7 @@ namespace Weapons
 
             if (hit) return;
             
+            hit = true;
             //HIT EFFECT
             if (hitEffects.TryGetValue(otherTag, out var hitEffect1))
             {
