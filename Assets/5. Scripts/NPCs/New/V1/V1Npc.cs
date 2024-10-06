@@ -1,3 +1,4 @@
+using System;
 using Health;
 using NPCs.New.Other;
 using Player_Scripts;
@@ -41,6 +42,9 @@ namespace NPCs.New.V1
         [HideInInspector] public Transform target;
 
         public bool CanAttack { get; set; } = true;
+        public Action<int> onStateChange;
+        public Action<int> onNpcDeath;
+        
         
         
         private static readonly int Attack = Animator.StringToHash("Attack");
@@ -111,6 +115,8 @@ namespace NPCs.New.V1
             }
             
             if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
+            
+            onStateChange?.Invoke(stateIndex);
             if (stateIndex == -1)
             {
                 states[_currentStateIndex].Exit(this);
@@ -119,10 +125,12 @@ namespace NPCs.New.V1
             }
             
             _currentStateIndex = stateIndex;
+            
             states[_currentStateIndex].Enter(this);
 
         }
       
+        
         private void OnPlayerDeath()
         {
             ChangeState(afterPlayerDeathState);
@@ -132,6 +140,7 @@ namespace NPCs.New.V1
         {
             if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
             _currentStateIndex = -1;
+            onNpcDeath?.Invoke(_currentStateIndex);
         }  
         
         public void Reset()
