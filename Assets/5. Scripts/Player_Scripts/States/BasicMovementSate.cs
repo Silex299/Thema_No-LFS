@@ -130,7 +130,6 @@ namespace Player_Scripts.States
             #endregion
         }
         
-        
         public override void LateUpdateState(Player player)
         {
             
@@ -189,8 +188,7 @@ namespace Player_Scripts.States
         
 
         #endregion
-
-
+        
         #region Custom Methods
 
         //Reset Jump trigger if jump is not triggered Instantly;

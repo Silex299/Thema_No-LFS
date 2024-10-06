@@ -232,6 +232,7 @@ namespace Player_Scripts
 
         public void PlayJump(int forward)
         {
+            if(player.IsOverridingAnimation) return;
             if (forward == 1)
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
