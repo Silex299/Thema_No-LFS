@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using NPCs.New.V1;
+using NPCs.New.V1.States;
 using UnityEngine;
 
 namespace Triggers
@@ -14,26 +12,25 @@ namespace Triggers
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("NPC"))
+            if (!other.CompareTag("NPC")) return;
+            
+            var chaseState = other.GetComponentInChildren<V1NpcChaseState>();
+            if (chaseState != null)
             {
-
-                if (_triggerCoroutine == null)
-                {
-                    if (other.TryGetComponent(out V1Npc npc))
-                    {
-                        
-                    }
-                }
-                
+                chaseState.UpdatePath = false;
             }
         }
-        
-        private IEnumerator ResetTriggerCoroutine(Collider other)
+
+
+        private void OnTriggerExit(Collider other)
         {
-            yield return new WaitForSeconds(0.5f);
+            if (!other.CompareTag("NPC")) return;
+            
+            var chaseState = other.GetComponentInChildren<V1NpcChaseState>();
+            if (chaseState != null)
+            {
+                chaseState.UpdatePath = true;
+            }
         }
-
-
-
     }
 }

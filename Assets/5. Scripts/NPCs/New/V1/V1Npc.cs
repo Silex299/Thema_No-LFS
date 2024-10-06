@@ -138,7 +138,10 @@ namespace NPCs.New.V1
 
         private void OnNpcDeath()
         {
-            if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
+            if (_currentStateIndex != -1)
+            {
+                states[_currentStateIndex].Exit(this);
+            }
             _currentStateIndex = -1;
             onNpcDeath?.Invoke(_currentStateIndex);
         }  
