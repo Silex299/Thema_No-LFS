@@ -60,6 +60,8 @@ namespace Triggers
         #region Other Variables
         
         [FoldoutGroup("Misc")] public bool canPull = true;
+        [field: SerializeField, FoldoutGroup("Misc")] public bool OneTime { get; set; } = false;
+
         #endregion
         
         #region Other Variables
@@ -94,10 +96,10 @@ namespace Triggers
         {
             if (other.CompareTag("Player_Main"))
             {
+                if(triggerPulled && OneTime) return;
                 _playerIsInTrigger = true;
             }
         }
-
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("Player_Main"))
@@ -105,10 +107,10 @@ namespace Triggers
                 _playerIsInTrigger = false;
             }
         }
-        
         private void Update()
         {
             if (!_playerIsInTrigger) return;
+            if(triggerPulled && OneTime) return;
 
             if (Input.GetButtonDown("e"))
             {
@@ -116,9 +118,6 @@ namespace Triggers
                 _engageCoroutine ??= StartCoroutine(EngageTrigger());
             }
         }
-
-
-
         private void Start()
         {
             //Set Initial State
@@ -181,6 +180,7 @@ namespace Triggers
                     playerController.player.AnimationController.SetTrigger(Trigger1);
 
                     yield return TriggerPushCoroutine();
+                    if(OneTime) break;
 
                 }
                 else if (!triggerPulled && Input.GetAxis("Horizontal") < 0)
@@ -189,6 +189,7 @@ namespace Triggers
                     playerController.player.AnimationController.SetTrigger(Trigger1);
 
                     yield return TriggerPullCoroutine();
+                    if(OneTime) break;
                 }
 
                 yield return null;
@@ -270,10 +271,16 @@ namespace Triggers
             triggerPulled = pulled;
             leverAnimator.Play(pulled ? "Trigger" : "Trigger Inverse");
         }
+        
+        
         public void ResetTrigger()
         {
-            CanPull = true;
             triggerPulled = _defaultPull;
+            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+        }
+        public void SetTrigger()
+        {
+            triggerPulled = !_defaultPull;
             leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
         }
 

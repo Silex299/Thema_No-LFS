@@ -1,4 +1,3 @@
-using System;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Thema_Type;
@@ -94,7 +93,8 @@ namespace Sounds
         {
             Vector3 targetLocalPos = transform.InverseTransformPoint(Target.position);
             float distance = targetLocalPos.z;
-            _fadeFraction = Mathf.Clamp01(1 - (distance / extents.z));
+            print(distance);
+            _fadeFraction = Mathf.Clamp01(1 - (distance / (2*extents.z)));
         }
         private void UpdateSoundSources()
         {
