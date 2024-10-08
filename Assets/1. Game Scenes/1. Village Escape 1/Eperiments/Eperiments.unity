@@ -367,7 +367,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2135874112}
   - {fileID: 730531022}
   - {fileID: 998759663}
   m_Father: {fileID: 0}
@@ -1568,12 +1567,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scenePrefabInstances:
-  - _gameObject: {fileID: 2135874113}
-    _prefab: Assets/2.1. Custom Animation/Shift_Tenticles 1.fbx
   - _gameObject: {fileID: 574992567}
     _prefab: Assets/4. Downloaded Assets/VarietyParticles/Prefabs/Underwater/BubblesUnderwater.prefab
   - _gameObject: {fileID: 1922893782}
     _prefab: Assets/4. Downloaded Assets/VarietyParticles/Prefabs/Underwater/BubblesExplosionUnderwater.prefab
+  - _gameObject: {fileID: 2135874113}
+    _prefab: Assets/2.1. Custom Animation/Shift_Tenticles 1.fbx
 --- !u!4 &348596960
 Transform:
   m_ObjectHideFlags: 11
@@ -9178,6 +9177,7 @@ Transform:
   - {fileID: 1570504794}
   - {fileID: 1142859170}
   - {fileID: 592761975}
+  - {fileID: 2135874112}
   m_Father: {fileID: 48374218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1004793330
@@ -14923,22 +14923,22 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 48374218}
+    m_TransformParent: {fileID: 998759663}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0920c8abe92b91540971f0dba2e9d7ba,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.37911987
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0920c8abe92b91540971f0dba2e9d7ba,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.34942293
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0920c8abe92b91540971f0dba2e9d7ba,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2.3709908
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0920c8abe92b91540971f0dba2e9d7ba,
         type: 3}
@@ -18484,7 +18484,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f595ceaa8e73c9549afc758950531582, type: 3}
   m_Controller: {fileID: 9100000, guid: 049f7ddb2436cfd4ba1066172b2fd262, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
