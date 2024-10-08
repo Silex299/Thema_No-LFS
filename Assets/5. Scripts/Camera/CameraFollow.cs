@@ -22,6 +22,7 @@ namespace Thema_Camera
         }
 
         private Coroutine _transitionOffsetTrigger;
+        public bool DoFollowTarget { get; set; } = true;
 
         [Button("GetOffset")]
         public void GetOffset()
@@ -47,8 +48,7 @@ namespace Thema_Camera
         private void Update()
         {
             if (!followTarget) return;
-
-            FollowTarget();
+            if(DoFollowTarget) FollowTarget();
         }
 
         private void FollowTarget()
