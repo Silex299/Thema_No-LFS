@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace NPCs.New
 {
-    public class NpcCanineSound : SerializedMonoBehaviour
+    public class V1NpcCanineSound : SerializedMonoBehaviour
     {
 
 

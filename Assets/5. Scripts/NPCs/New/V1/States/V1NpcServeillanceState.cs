@@ -124,7 +124,8 @@ namespace NPCs.New.V1
                 {
                     if (ThemaVector.PlannerDistance(desiredPos, npc.transform.position) < npc.stopDistance)
                     {
-                        desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
+                        //desiredPos = npc.pathFinder.GetDesiredPosition(_path[1]);
+                        _path.RemoveAt(0); // IMPORTANT: if it doesn't work, use the first line
                     }
                 }
             }

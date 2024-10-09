@@ -6,7 +6,7 @@ namespace NPCs.New
     /**
      * This script doesn't contain any advanced logic for surface detection or footstep effect
      **/
-    public class NpcSound : MonoBehaviour
+    public class V1NpcSound : MonoBehaviour
     {
         
         public AudioSource audioSource;
