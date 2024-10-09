@@ -76,6 +76,7 @@ namespace Custom_Object_Scripts
         }
 
 
+        //TODO: MAKE SOMETHING BETTER
         private void OnCheckpointLoad(int checkpoint)
         {
             if (checkpoint <= 2) return;

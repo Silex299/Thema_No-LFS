@@ -132,6 +132,20 @@ namespace Triggers
             if(!soundSource) return;
             soundSource.PlayOneShot(triggerSound.clip, triggerSound.volume);
         }
+
+        public void Reset()
+        {
+            _currentMass = 0;
+            _triggered = false;
+            UpdateWeightVisual();
+        }
+
+        public void Set()
+        {
+            _currentMass = requiredMass;
+            _triggered = true;
+            UpdateWeightVisual();
+        }
     
     }
 }

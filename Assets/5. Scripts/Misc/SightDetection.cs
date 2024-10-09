@@ -63,6 +63,7 @@ namespace Misc
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayCastMask))
             {
                 Debug.DrawLine(ray.origin, hit.point, Color.green, 1f);
+                //Debug.Log(hit.collider.gameObject.name);
                 
                 if (hit.collider.CompareTag("Player_Main") || hit.collider.CompareTag("Player"))
                 {
