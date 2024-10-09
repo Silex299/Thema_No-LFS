@@ -93,7 +93,6 @@ namespace Sounds
         {
             Vector3 targetLocalPos = transform.InverseTransformPoint(Target.position);
             float distance = targetLocalPos.z;
-            print(distance);
             _fadeFraction = Mathf.Clamp01(1 - (distance / (2*extents.z)));
         }
         private void UpdateSoundSources()

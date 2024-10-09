@@ -21,9 +21,6 @@ namespace NPCs.New
             parentNpc.onStateChange += OnStateChange;
             parentNpc.onNpcDeath += OnNpcDeath;
         }
-
-       
-
         private void OnDisable()
         {
             parentNpc.onStateChange -= OnStateChange;
@@ -40,7 +37,6 @@ namespace NPCs.New
             audioSource.loop = true;
             audioSource.Play();
         }
-
         public void PlayAnimSound(string key)
         {
             if (!soundClips.TryGetValue(key, out var clips)) return;
@@ -50,9 +46,9 @@ namespace NPCs.New
         }
         
         
-        private void OnNpcDeath(int obj)
+        private void OnNpcDeath()
         {
-            //play from stateclip with index -1
+            //play from state clip with index -1
             if (!stateSound.TryGetValue(-1, out var clip)) return;
             
             var sound = clip[Random.Range(0, clip.Length)];

@@ -1,4 +1,7 @@
+using System;
+using NPCs.New.V1;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace NPCs.New
 {
@@ -13,7 +16,18 @@ namespace NPCs.New
         public float volumeMultiplier;
         public AudioClip[] soundClips;
         public AudioClip[] otherSoundClips;
+
+        [Space(10)] public bool subscribeToStateChange;
         
+        private void OnEnable()
+        {
+            if(subscribeToStateChange)  GetComponent<V1Npc>().onStateChange += PlayOtherSound;
+        }
+        private void OnDisable()
+        {
+            if(subscribeToStateChange)  GetComponent<V1Npc>().onStateChange -= PlayOtherSound;
+        }
+
         public void PlayFootstepSound()
         {
             audioSource.PlayOneShot(soundClips[Random.Range(0, soundClips.Length)], volumeMultiplier);

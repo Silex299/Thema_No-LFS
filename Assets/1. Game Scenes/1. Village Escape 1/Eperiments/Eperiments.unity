@@ -1420,7 +1420,6 @@ GameObject:
   - component: {fileID: 320813274}
   - component: {fileID: 320813276}
   - component: {fileID: 320813275}
-  - component: {fileID: 320813277}
   m_Layer: 1
   m_Name: PathPoint_55
   m_TagString: Untagged
@@ -1479,64 +1478,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.8327827, y: 8.210806, z: 0.8976288}
   m_Center: {x: 0, y: 3.605404, z: 0.051185608}
---- !u!114 &320813277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 320813273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e14e5b107ad1dd499c63a6cba1b2a3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerTag: Player_Main
-  continuousCheck: 1
-  moveDirection: 0
-  threshold: 0
-  entryAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player_Scripts.PlayerMovementController, Assembly-CSharp
-        m_MethodName: ResetAnimator
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player_Scripts.Player, Assembly-CSharp
-        m_MethodName: set_DisabledPlayerMovement
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  exitAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player_Scripts.Player, Assembly-CSharp
-        m_MethodName: set_DisabledPlayerMovement
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &348596958
 GameObject:
   m_ObjectHideFlags: 11

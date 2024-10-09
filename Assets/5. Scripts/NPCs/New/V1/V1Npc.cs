@@ -43,7 +43,7 @@ namespace NPCs.New.V1
 
         public bool CanAttack { get; set; } = true;
         public Action<int> onStateChange;
-        public Action<int> onNpcDeath;
+        public Action onNpcDeath;
         
         
         
@@ -143,7 +143,7 @@ namespace NPCs.New.V1
                 states[_currentStateIndex].Exit(this);
             }
             _currentStateIndex = -1;
-            onNpcDeath?.Invoke(_currentStateIndex);
+            onNpcDeath?.Invoke();
         }  
         
         public void Reset()
