@@ -8706,7 +8706,7 @@ MonoBehaviour:
   serveillanceWaitTime: 1
   attackDistance: 1.5
   returnToServeillanceOnTargetLost: 1
-  returnInterval: 3
+  returnInterval: 5.5
   serveillanceAfterDeath: 0
 --- !u!95 &150588906 stripped
 Animator:
@@ -9144,7 +9144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointThreshold: 0
+  checkpointThreshold: -1
   targetTransform: {fileID: 0}
   loadResetTransform: 1
   resetPosition: {x: 0, y: 0, z: 0}
@@ -9178,7 +9178,7 @@ MonoBehaviour:
         m_CallState: 2
   loadFinalStateTransform: 0
   finalStatePosition: {x: 0, y: 0, z: 0}
-  finalStateRotation: {x: 0, y: 0, z: 0}
+  finalStateRotation: {x: 0, y: 90, z: 0}
   finalStateEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -38000,7 +38000,7 @@ MonoBehaviour:
   finalStateEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1421265498}
+      - m_Target: {fileID: 1963331855}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -55911,7 +55911,7 @@ GameObject:
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1963331856
 Transform:
   m_ObjectHideFlags: 0
@@ -55995,8 +55995,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.020188, y: 1.4450378, z: 5.8710327}
-  m_Center: {x: 0, y: 0.545105, z: 0.2381897}
+  m_Size: {x: 4.1928883, y: 1.4450378, z: 18.9006}
+  m_Center: {x: 0.08635044, y: 0.545105, z: 6.7529736}
 --- !u!114 &1963331859
 MonoBehaviour:
   m_ObjectHideFlags: 0
