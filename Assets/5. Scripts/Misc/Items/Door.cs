@@ -101,10 +101,13 @@ public class Door : MonoBehaviour
         }
     }
 
-    public void InstantToggle(bool open)
+    public void ResetDoor(bool open)
     {
         print("instant");
         transform.localPosition = open ? openPosition : closedPosition;
         isOpen = open;
     }
+    
+    
+    
 }

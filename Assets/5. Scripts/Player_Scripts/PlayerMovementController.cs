@@ -162,8 +162,6 @@ namespace Player_Scripts
         {
             if (player.OverrideFlags) return;
 
-            Debug.Log("Changing StATE" + index + ":: " + player.currentStateIndex);
-
             if (index == player.currentStateIndex) return;
 
             player.previousStateIndex = player.currentStateIndex;

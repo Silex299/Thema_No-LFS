@@ -132,6 +132,8 @@ namespace Triggers
             PlayerMovementController playerController = PlayerMovementController.Instance;
 
 
+            #region Calculate Engage Point
+            
             bool isForwardPoint = Vector3.Distance(playerController.transform.position, forwardPosition.position) < Vector3.Distance(playerController.transform.position, backwardPosition.position);
             Transform engagePoint = isForwardPoint ? forwardPosition : backwardPosition;
 
@@ -144,7 +146,11 @@ namespace Triggers
             {
                 playerController.PlayAnimation(!triggerPulled? trigger_Pull_Enter_Inverse : trigger_Push_Enter_Inverse, 0.2f, 1);
             }
-            
+
+            #endregion
+
+            #region Move Player
+
             playerController.DisablePlayerMovement(true);
             playerController.player.CController.enabled = false;
             playerController.player.CanRotate = false;
@@ -171,30 +177,37 @@ namespace Triggers
 
             engageAction.Invoke();
             _triggerEngaged = true;
-
+            
+            #endregion
+            
             while (Input.GetButton("e"))
             {
+                #region PUSH
                 if (triggerPulled && Input.GetAxis("Horizontal") > 0)
                 {
                     //PUSH
                     playerController.player.AnimationController.SetTrigger(Trigger1);
-
                     yield return TriggerPushCoroutine();
                     if(OneTime) break;
 
                 }
+                #endregion
+                #region PULL
                 else if (!triggerPulled && Input.GetAxis("Horizontal") < 0)
                 {
                     //PULL  
                     playerController.player.AnimationController.SetTrigger(Trigger1);
-
                     yield return TriggerPullCoroutine();
                     if(OneTime) break;
                 }
-
+                #endregion
+                
                 yield return null;
             }
 
+            #region EXIT
+
+            
             if (!canPull)
             {
                 //reset the trigger
@@ -214,6 +227,9 @@ namespace Triggers
             
             _triggerEngaged = false;
             _engageCoroutine = null;
+            
+
+            #endregion
         }
         public void Reset()
         {
@@ -271,7 +287,6 @@ namespace Triggers
             triggerPulled = pulled;
             leverAnimator.Play(pulled ? "Trigger" : "Trigger Inverse");
         }
-        
         
         public void ResetTrigger()
         {

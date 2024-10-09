@@ -149,5 +149,12 @@ namespace Triggers
             _triggered = _initiallyTriggered;
             UpdateSwitch(_triggered);
         }
+
+        public void Set()
+        {
+            _triggered = !_initiallyTriggered;
+            UpdateSwitch(_triggered);
+        }
+        
     }
 }
