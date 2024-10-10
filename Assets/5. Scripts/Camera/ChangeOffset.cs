@@ -40,6 +40,7 @@ namespace Thema_Camera
 
         public void ChangeCameraOffset()
         {
+            //TODO: CONTINUOUSLY CHANGE OFFSET NEED TO CHANGE
             print("Changing offeset");
             CameraFollow.Instance.ChangeOffset(info, transitionTime);
         }

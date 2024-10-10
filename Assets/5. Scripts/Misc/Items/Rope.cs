@@ -8,6 +8,8 @@ namespace Misc.Items
 {
     public class Rope : MonoBehaviour
     {
+        [field: SerializeField] public bool Climbable { get; set; } = true;
+
         #region Rope Properties
 
         [SerializeField, BoxGroup("Rope Properties")]
@@ -47,7 +49,6 @@ namespace Misc.Items
         #endregion
 
         #region Player Movement
-
         [SerializeField, BoxGroup("Movement")] private float climbSpeed = 2f;
         [SerializeField, BoxGroup("Movement")] private float swingForce = 200;
         [SerializeField, BoxGroup("Movement")] private float entryForce = 10;
@@ -63,7 +64,6 @@ namespace Misc.Items
         private float _closestIndex;
         private float _closestDistance = 100f;
         private float _lastAttachedTime;
-        private bool _canAttach = true;
         private bool _broken;
         
         private bool Connected { get; set; }
@@ -202,7 +202,7 @@ namespace Misc.Items
             ropeSegments[breakIndex+1].AddForce(breakForce, ForceMode.Impulse);
             
             _broken = true;
-            _canAttach = false;
+            Climbable = false;
 
             PlayRopeBreakSound();
             if (PlayerMovementController.Instance.VerifyState(PlayerMovementState.Rope))
@@ -341,7 +341,7 @@ namespace Misc.Items
         /// </summary>
         public void AttachPlayer()
         {
-            if(!_canAttach) return;
+            if(!Climbable) return;
             
             // If the last attachment was less than 1.5 seconds ago, do not attach again
             if (Time.time - _lastAttachedTime < 1.5f) return;

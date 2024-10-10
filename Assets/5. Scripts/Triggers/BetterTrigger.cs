@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -48,6 +49,7 @@ namespace Triggers
         {
             if (!base.OnTriggerStayBool(other)) return true;
             
+            if(this.gameObject.name == "OverridePath") print("dede");
             _playerInTriggerCoroutine ??= StartCoroutine(PlayerInTrigger(other));
             
             return true;
@@ -81,7 +83,7 @@ namespace Triggers
             {
                 if(conditions.All(condition => condition.Condition(other)))
                 {
-                    print("action");
+                   // print("action");
                     action.Invoke();
                     break;
                 }
@@ -90,7 +92,14 @@ namespace Triggers
             }
             
             yield return new WaitForSeconds(resetAfterActionDelay);
+            
+            _playerInTriggerCoroutine = null;
         }
 
+
+        private void OnDisable()
+        {
+            _playerInTriggerCoroutine = null;
+        }
     }
 }

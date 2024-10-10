@@ -1,5 +1,6 @@
 using System.Collections;
 using Misc.Items;
+using UnityEditor;
 using UnityEngine;
 
 namespace Player_Scripts.States
@@ -42,8 +43,17 @@ namespace Player_Scripts.States
             if (_isJumped) return;
 
             var input = Input.GetAxis("Vertical");
+
+            if (connectedLadder)
+            {
+                connectedLadder.MoveLadder(input);
+            }
+            else
+            {
+                player.MovementController.RollBack();    
+            }
             
-            connectedLadder.MoveLadder(input);
+            
             player.AnimationController.SetFloat(Speed, input);
             
             if (!Input.GetButtonDown("Jump")) return;

@@ -1,86 +1,57 @@
-using System;
-using System.Collections;
-using Managers.Checkpoints;
-using Misc;
-using Misc.Items;
-using Player_Scripts;
+using System.Collections.Generic;
+using Misc.New;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace Custom_Object_Scripts
+namespace Misc.Custom_Object_Scripts
 {
     public class BoxInExperiments : MonoBehaviour
     {
-        [SerializeField, FoldoutGroup("Properties")]
-        private Animator animator;
 
-        [SerializeField, FoldoutGroup("Properties")]
-        private float initialDelay;
+        public Animator animator;
+        public RopeRenderer[] ropes;
+        public AudioSource audioSource;
+        public List<SoundClip> soundClips;
+        private static readonly int Drop = Animator.StringToHash("Drop");
 
-        [SerializeField, FoldoutGroup("Properties")]
-        private Rigidbody rb;
-
-        [SerializeField, FoldoutGroup("Properties")]
-        private Rope[] connectedRopes;
-
-        [SerializeField, FoldoutGroup("Properties")]
-        private PlayerSceneAnimatonManager sceneAnim;
-
-        [SerializeField, FoldoutGroup("Properties")]
-        private UnityEvent onBoxFall;
-
-        [FoldoutGroup("Checkpoint")] public Vector3 finalPos;
-        [FoldoutGroup("Checkpoint")] public Vector3 finalRot;
-
-        private bool _triggered;
-
-
-        private void OnEnable()
+        [Button]
+        public void DropBox()
         {
-            CheckpointManager.Instance.onCheckpointLoad += OnCheckpointLoad;
+            animator.SetTrigger(Drop);
+        }
+
+        public void BreakFirstRope()
+        {
+            ropes[0].BreakRope(6);
+        }
+        public void BreakSecondRope()
+        {
+            ropes[1].BreakRope(4);
+        }
+        public void PlaySound(int index)
+        {
+            audioSource.PlayOneShot(soundClips[index].clip);
         }
         
-        private void OnDisable()
+        public void Reset()
         {
-            CheckpointManager.Instance.onCheckpointLoad -= OnCheckpointLoad;
-        }
-
-
-        public void FallBox()
-        {
-            StartCoroutine(StartAction());
-        }
-
-        private IEnumerator StartAction()
-        {
-            if (!PlayerMovementController.Instance.VerifyState(PlayerMovementState.BasicMovement))
-            {
-                yield break;
-            }
-
-            _triggered = true;
-            yield return new WaitForSeconds(initialDelay);
-
-            connectedRopes[0].BreakRope();
-            yield return new WaitForSeconds(1.5f);
-            connectedRopes[1].BreakRope();
-            rb.isKinematic = true;
             animator.enabled = true;
-            sceneAnim.PlayPlayerSceneAnimation(0);
+            animator.Play("Idle");
+            foreach (var rope in ropes)
+            {
+                rope.Reset();
+            }
         }
 
-        public void EnableRopeTrigger()
+        public void Set()
         {
-            onBoxFall.Invoke();
+            animator.Play("Box Fall", 0, 1f);
+            ropes[0].BreakRope(6);
+            ropes[1].BreakRope(4);
         }
-
-
-        //TODO: MAKE SOMETHING BETTER
-        private void OnCheckpointLoad(int checkpoint)
-        {
-            if (checkpoint <= 2) return;
-            FallBox();
-        }
+        
+        
     }
+    
 }

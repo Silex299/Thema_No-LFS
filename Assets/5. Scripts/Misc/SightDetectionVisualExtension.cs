@@ -24,11 +24,13 @@ namespace Misc
         public void OnDetection()
         {
             _detectionCoroutine ??= StartCoroutine(DetectionFlicker());
-            audioSource?.PlayOneShot(detectionSound.clip, detectionSound.volume);
         }
 
         private IEnumerator DetectionFlicker()
         {
+            
+            audioSource?.PlayOneShot(detectionSound.clip, detectionSound.volume);
+            
             for (int i = 0; i < flickerCount; i++)
             {
                 visualElement.SetActive(false);

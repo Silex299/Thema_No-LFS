@@ -9,11 +9,14 @@ namespace Path_Scripts
 {
     public class FollowCurvePathOverride : MonoBehaviour
     {
+        [InfoBox("Automatically resets on checkpoint load")]
+        
         public Transform[] waypoints;
-        public float progressSpeed;
-        public float interpolationSpeed;
-        public bool invertRotation;
-
+        public float progressSpeed = 1;
+        public float interpolationSpeed = 6;
+        public bool invertRotation;        
+        public Vector3 rotationOffset;
+        
 
         [SerializeField, OnValueChanged(nameof(Move))]
         private float pathProgress;
@@ -49,6 +52,14 @@ namespace Path_Scripts
             //RED at path point
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(mainPoint, 0.5f);
+            
+            //draw lines for waypoints
+            for (int i = 0; i < waypoints.Length - 1; i++)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
+            }
+            
         }
 #endif
 
@@ -62,19 +73,24 @@ namespace Path_Scripts
         private void OnDisable()
         {
             CheckpointManager.Instance.onCheckpointLoad -= Reset;
+            Reset(0);
         }
 
         private void LateUpdate()
         {
             if (!EngageOverride) return;
             if (_player.OverrideFlags) return;
-
-            float input = (_player.UseHorizontal) ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
-            pathProgress += (input * progressSpeed * Time.deltaTime) / _sectionDistance;
-            pathProgress = Mathf.Clamp(pathProgress, 0, waypoints.Length - 1);
+            
+            MoveProgress();
             Move();
         }
         
+        private void MoveProgress()
+        {
+            float input = (_player.UseHorizontal) ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
+            pathProgress += (input * progressSpeed * Time.deltaTime) / _sectionDistance;
+            pathProgress = Mathf.Clamp(pathProgress, 0, waypoints.Length - 1);
+        }
         private void Move()
         {
             int lowerRoundOff = Mathf.FloorToInt(pathProgress);
@@ -86,6 +102,7 @@ namespace Path_Scripts
             Vector3 direction = waypoints[higherRoundOff].position - waypoints[lowerRoundOff].position;
             Vector3 playerPos = waypoints[lowerRoundOff].position + direction * reminder;
             Vector3 playerForward = (invertRotation ? 1 : -1) * Vector3.Cross(direction, Vector3.up).normalized;
+            playerForward = Quaternion.Euler(rotationOffset) * playerForward;
             
             if (direction.magnitude != 0)
             {
@@ -108,7 +125,26 @@ namespace Path_Scripts
             float endDistance = ThemaVector.PlannerDistance(waypoints[^1].position, _player.transform.position);
             pathProgress = startDistance < endDistance ? 0 : waypoints.Length - 1;
         }
+        public void Engage()
+        {
+            if (_engageOverride) return;
+            _engageOverride = true;
+            
+            //find the closest point to the player
+            float minDistance = Mathf.Infinity;
+            int index = 0;
+            for (int i = 0; i < waypoints.Length; i++)
+            {
+                float distance = ThemaVector.PlannerDistance(waypoints[i].position, _player.transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    index = i;
+                }
+            }
+            pathProgress = index;
 
+        }
         private void Reset(int index)
         {
             _engageOverride = false;
