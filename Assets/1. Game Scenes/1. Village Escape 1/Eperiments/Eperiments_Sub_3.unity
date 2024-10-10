@@ -5310,6 +5310,8 @@ MonoBehaviour:
     _prefab: Assets/4. Downloaded Assets/PolygonApocalypse/Prefabs/Props/SM_Prop_Ladder_01.prefab
   - _gameObject: {fileID: 1921801202}
     _prefab: Assets/4. Downloaded Assets/VarietyParticles/Prefabs/Smoke/Looping/SmokeCloudyLarge.prefab
+  - _gameObject: {fileID: 873491015}
+    _prefab: Assets/2.1. Custom Animation/Box In Experiment Fall.fbx
 --- !u!4 &348596960
 Transform:
   m_ObjectHideFlags: 11
@@ -6992,7 +6994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &557544729
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9172,6 +9174,120 @@ Transform:
   - {fileID: 590918133}
   m_Father: {fileID: 7580029876135765426}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &873491014
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.96
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 19.59
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 144.71
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.49888173
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.86667013
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 4.0832715e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -4.083271e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3645699230140503879, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 31.589104
+      objectReference: {fileID: 0}
+    - target: {fileID: -3645699230140503879, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.0000011480375
+      objectReference: {fileID: 0}
+    - target: {fileID: -3645699230140503879, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0.000006744237
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      propertyPath: m_Name
+      value: Box In Experiment Fall
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6d1500dbc0931146a10e89ac288e35e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 873491016}
+  m_SourcePrefab: {fileID: 100100000, guid: d6d1500dbc0931146a10e89ac288e35e, type: 3}
+--- !u!1 &873491015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d6d1500dbc0931146a10e89ac288e35e,
+    type: 3}
+  m_PrefabInstance: {fileID: 873491014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &873491016
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873491015}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d6d1500dbc0931146a10e89ac288e35e, type: 3}
+  m_Controller: {fileID: 9100000, guid: f5080ad7fe57fc74f95fa242f80aae54, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &883842915
 GameObject:
   m_ObjectHideFlags: 0
@@ -25111,4 +25227,5 @@ SceneRoots:
   - {fileID: 994252904}
   - {fileID: 1157742533}
   - {fileID: 1473264160}
+  - {fileID: 873491014}
   - {fileID: 959303723}
