@@ -63,7 +63,6 @@ namespace Player_Scripts
             if (player.DisabledPlayerMovement) return;
 
             player.currentState.UpdateState(player);
-            player.IsOverridingAnimation = IsAnimationOverriding();
         }
 
         private void LateUpdate()
@@ -230,7 +229,8 @@ namespace Player_Scripts
 
         public void PlayJump(int forward)
         {
-            if(player.IsOverridingAnimation) return;
+            if(player.IsOverridingAnimation || player.DisabledPlayerMovement) return;
+            
             if (forward == 1)
             {
                 Vector3 velocityChange = player.transform.forward * player.JumpForwardVelocity;
@@ -244,12 +244,6 @@ namespace Player_Scripts
         #endregion
 
         #region Animations
-
-        private bool IsAnimationOverriding()
-        {
-            //check if any other animation than "Default" is playing on layer 1
-            return !player.AnimationController.GetCurrentAnimatorStateInfo(1).IsName("Default");
-        }
         
         public void PlayAnimation(string animationName, int animationLayer)
         {

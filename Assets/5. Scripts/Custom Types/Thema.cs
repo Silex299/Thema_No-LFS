@@ -149,6 +149,7 @@ namespace Thema_Type
             Quaternion initialPlayerRot = target.rotation;
 
             float timeElapsed = 0;
+            float normalizedTime = 0;
 
             while (timeElapsed < animationTime)
             {
@@ -160,7 +161,6 @@ namespace Thema_Type
                 var currentClip = animator.GetCurrentAnimatorStateInfo(1);
                 var nextClip = animator.GetNextAnimatorStateInfo(1);
 
-                float normalizedTime = 0;
 
                 if (currentClip.IsName(animationName))
                 {
@@ -197,23 +197,20 @@ namespace Thema_Type
                 }
                 else
                 {
-                    if (normalizedTime != 0)
+                    var repos = triggerPos +
+                                triggerTransform.forward *
+                                (distanceCurve.Evaluate(normalizedTime) *
+                                 animationDistance) +
+                                triggerTransform.up * (heightCurve.Evaluate(normalizedTime) *
+                                                       animationHeight);
+
+                    target.position = repos;
+
+
+                    if (followRotationCurve)
                     {
-                        var repos = triggerPos +
-                                    triggerTransform.forward *
-                                    (distanceCurve.Evaluate(normalizedTime) *
-                                     animationDistance) +
-                                    triggerTransform.up * (heightCurve.Evaluate(normalizedTime) *
-                                                           animationHeight);
-
-                        target.position = repos;
-
-
-                        if (followRotationCurve)
-                        {
-                            var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
-                            target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
-                        }
+                        var rot = Quaternion.Euler(initialPlayerRot.eulerAngles.x, transform.rotation.eulerAngles.y + rotationCurve.Evaluate(normalizedTime) * 180, initialPlayerRot.eulerAngles.z);
+                        target.rotation = Quaternion.Lerp(initialPlayerRot, rot, normalizedTime / transitionTime);
                     }
                 }
 

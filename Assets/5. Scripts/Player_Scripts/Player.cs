@@ -140,8 +140,8 @@ namespace Player_Scripts
         public bool OverrideFlags { get; set; }
         public bool CanPlayAlternateMovement { get; set; } = true;
 
-        public bool IsOverridingAnimation { get; set; } = false;
-        
+        public bool IsOverridingAnimation => !AnimationController.GetCurrentAnimatorStateInfo(1).IsName("Default");
+
         public bool IsGrounded { get; set; }
 
         public bool CanJump
