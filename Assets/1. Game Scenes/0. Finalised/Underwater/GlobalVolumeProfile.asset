@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   skipIterations:
     m_OverrideState: 0
     m_Value: 1
@@ -88,8 +88,8 @@ MonoBehaviour:
   m_Name: GlobalVolumeProfile
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -32820517437979890}
   - {fileID: 2045669812488141672}
+  - {fileID: -32820517437979890}
   - {fileID: 7542137689175841523}
   - {fileID: -4848104805319483875}
 --- !u!114 &2045669812488141672
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
   m_Name: FilmGrain
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   type:
     m_OverrideState: 1
     m_Value: 0
