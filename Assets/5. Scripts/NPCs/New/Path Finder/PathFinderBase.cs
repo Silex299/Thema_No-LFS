@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace NPCs.New
+namespace NPCs.New.Path_Finder
 {
     public class PathFinderBase : MonoBehaviour
     {

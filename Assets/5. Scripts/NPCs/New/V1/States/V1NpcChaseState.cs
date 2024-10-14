@@ -45,7 +45,7 @@ namespace NPCs.New.V1.States
 
         public override void UpdateState(V1Npc npc)
         {
-            Vector3 targetPosition = npc.target.position + npc.target.up * npc.targetOffset;
+            Vector3 targetPosition = npc.Target.position + npc.Target.up * npc.targetOffset;
             Vector3 npcPosition = npc.transform.position + npc.transform.up * npc.npcEyeHeight;
 
             Vector3 desiredPos = targetPosition;
@@ -123,19 +123,19 @@ namespace NPCs.New.V1.States
 
         private bool ShouldAttack(V1Npc npc)
         {
-            var distance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
+            var distance = ThemaVector.PlannerDistance(npc.transform.position, npc.Target.position);
             return distance <= attackDistance;
         }
 
         private void Attack(V1Npc npc)
         {
             weapon?.Fire();
-            npc.aimRigController?.Aim(npc.target);
+            npc.aimRigController?.Aim(npc.Target);
         }
 
         private bool ShouldStop(V1Npc npc)
         {
-            var distance = ThemaVector.PlannerDistance(npc.target.position, npc.transform.position);
+            var distance = ThemaVector.PlannerDistance(npc.Target.position, npc.transform.position);
             return distance < npc.stopDistance;
         }
 
@@ -177,7 +177,7 @@ namespace NPCs.New.V1.States
             {
                 if (UpdatePath)
                 {
-                    _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.target.position + npc.target.up * npc.targetOffset, out _path);
+                    _isReachable = npc.pathFinder.GetPath(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.Target.position + npc.Target.up * npc.targetOffset, out _path);
                     PreviewPath(npc);
                 }
 
@@ -207,7 +207,7 @@ namespace NPCs.New.V1.States
                 Debug.DrawLine(npc.pathFinder.GetDesiredPosition(_path[i]), npc.pathFinder.GetDesiredPosition(_path[i + 1]), Color.white, npc.pathFindingInterval);
             }
 
-            Debug.DrawLine(npc.target.position + npc.target.up * npc.targetOffset, npc.pathFinder.GetDesiredPosition(_path[^1]), Color.white, npc.pathFindingInterval);
+            Debug.DrawLine(npc.Target.position + npc.Target.up * npc.targetOffset, npc.pathFinder.GetDesiredPosition(_path[^1]), Color.white, npc.pathFindingInterval);
         }
     }
 }

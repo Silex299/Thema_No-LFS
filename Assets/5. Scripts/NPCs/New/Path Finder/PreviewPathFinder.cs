@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NPCs.New.Path_Finder;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

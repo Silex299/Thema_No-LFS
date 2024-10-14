@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Mechanics.Npc;
 using NPCs.New.Other;
+using NPCs.New.Path_Finder;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;

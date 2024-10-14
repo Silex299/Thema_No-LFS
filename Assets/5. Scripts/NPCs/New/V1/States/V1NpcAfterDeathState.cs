@@ -58,7 +58,7 @@ namespace NPCs.New.V1
         
         private void ProcessTarget(V1Npc npc)
         {
-            float plannerDistance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
+            float plannerDistance = ThemaVector.PlannerDistance(npc.transform.position, npc.Target.position);
             
             if (plannerDistance < npc.stopDistance)
             {
@@ -72,7 +72,7 @@ namespace NPCs.New.V1
         private void Move(V1Npc npc)
         {
             npc.animator.SetFloat(Speed, _speedMultiplier);
-            npc.Rotate(npc.target.position, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
+            npc.Rotate(npc.Target.position, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
         }
         
         private void StopMoving(V1Npc npc)

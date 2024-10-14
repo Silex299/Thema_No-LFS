@@ -1,9 +1,11 @@
 using System;
 using Health;
 using NPCs.New.Other;
+using NPCs.New.Path_Finder;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NPCs.New.V1
 {
@@ -38,7 +40,7 @@ namespace NPCs.New.V1
         #region Non Exposed Variables
         
         private int _currentStateIndex = -1;
-        [HideInInspector] public Transform target;
+        public Transform Target => PlayerMovementController.Instance.transform; //Was target before, If there is any problem change it back to target and set it in start method;
 
         public bool CanAttack { get; set; } = true;
         public Action<int> onStateChange;
@@ -62,7 +64,6 @@ namespace NPCs.New.V1
         private void Start()
         {
             ChangeState(initState);
-            target = PlayerMovementController.Instance.transform;
         }
         private void OnEnable()
         {
@@ -94,6 +95,18 @@ namespace NPCs.New.V1
             Vector3 forward = desiredPos - transform.position;
             forward.y = 0;
             Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
+        }
+        public void UnRestrictedRotate(Vector3 desiredPos, float speed)
+        {
+            Vector3 forward = desiredPos - transform.position;
+            Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
+        }
+        public void UnRestrictedRotate(Vector3 desiredPos, float speed, Vector3 forcedUp)
+        {
+            Vector3 forward = desiredPos - transform.position;
+            Quaternion desiredRotation = Quaternion.LookRotation(forward.normalized, forcedUp);
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, speed);
         }
 

@@ -65,8 +65,8 @@ namespace Player_Scripts.States
            // player.EffectsManager.PlayInteractionSound(_atSurface ? "Dive In" : "Dive In Muffled");
 
             //disable Surface effect
-            _surfaceEffect.SetActive(_atSurface);
-            _underWaterEffect.SetActive(!_atSurface);
+            _surfaceEffect?.SetActive(_atSurface);
+            _underWaterEffect?.SetActive(!_atSurface);
         }
 
         public override void ExitState(Player player)

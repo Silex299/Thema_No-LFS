@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
-namespace NPCs.New.V1
+namespace NPCs.New.V1.States
 {
     public class V1NpcServeillanceState : V1NpcBaseState
     {

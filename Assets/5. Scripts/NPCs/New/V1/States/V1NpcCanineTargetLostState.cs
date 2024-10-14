@@ -101,7 +101,7 @@ namespace NPCs.New.V1
                 }
 
                 npc.animator.SetBool(PathBlocked, true);
-                if (rotateTowardsTarget) npc.Rotate(npc.target.position, npc.rotationSpeed * Time.deltaTime);
+                if (rotateTowardsTarget) npc.Rotate(npc.Target.position, npc.rotationSpeed * Time.deltaTime);
             }
             else
             {
