@@ -18,8 +18,8 @@ namespace NPCs.New
         {
             throw new System.NotImplementedException();
         }
-        
-        public virtual bool IsDirectPathPossible(Vector3 from, Vector3 to)
+
+        protected virtual bool IsDirectPathPossible(Vector3 from, Vector3 to)
         {
             return !Physics.Linecast(from, to, layerMask);
         }

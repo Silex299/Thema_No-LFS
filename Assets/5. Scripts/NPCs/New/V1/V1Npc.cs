@@ -16,8 +16,7 @@ namespace NPCs.New.V1
         #region Editor Exposed Variables
         
         [FoldoutGroup("References")] public Animator animator;
-        [FoldoutGroup("References")] public ProximityDetection proximityDetection;
-        [FoldoutGroup("References")] public V1NpcAimRigController aimRigController;
+        [FoldoutGroup("References")] public V1NpcAimRigController aimRigController;  //TODO: MOVE AIM RIG CONTROLLER TO ONLY NEEDED BASE AND CREATE A RESET AND ON DEATH METHOD FOR EACH STATE
         [FoldoutGroup("References")] public HealthBaseClass health;
         
         [FoldoutGroup("Npc Movement Properties")] public float stopDistance = 1f;
