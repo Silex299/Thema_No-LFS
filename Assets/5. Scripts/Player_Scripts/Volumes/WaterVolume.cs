@@ -40,6 +40,7 @@ namespace Player_Scripts.Volumes
         private IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.2f);
+            Physics.gravity = new Vector3(0, -9.81f, 0);
             _playerInTrigger = false;
             _triggerCoroutine = null;
         }
@@ -48,6 +49,7 @@ namespace Player_Scripts.Volumes
         {
             if(!enabled) return;
             _playerInTrigger = true;
+            Physics.gravity = new Vector3(0, -1f, 0);
             
             if (PlayerMovementController.Instance.player.currentStateIndex != 2)
             {
@@ -55,6 +57,7 @@ namespace Player_Scripts.Volumes
             }
 
             PlayerMovementController.Instance.player.waterMovement.PlayerWaterVolume = this;
+            
         }
 
         private void OnDrawGizmos()

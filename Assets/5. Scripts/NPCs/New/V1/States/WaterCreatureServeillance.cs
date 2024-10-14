@@ -70,6 +70,7 @@ namespace NPCs.New.V1.States
                 }
             }
         }
+        
         private int GetClosestServeillancePoint(V1Npc npc)
         {
             float minDistance = float.MaxValue;
