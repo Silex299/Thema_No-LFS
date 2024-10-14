@@ -7,59 +7,52 @@ namespace Player_Scripts.Volumes
 {
     public class WaterVolume : MonoBehaviour
     {
-        [BoxGroup("Volume Property")] public float surfaceLevel;
-        [BoxGroup("Volume Property")] public float bottomLevel;
-        [BoxGroup("Volume Property")] public float playerX;
-        [BoxGroup("Volume Property")] public float damageSpeed;
+        [FoldoutGroup("Volume Property")] public float surfaceLevel;
+        [FoldoutGroup("Volume Property")] public float bottomLevel;
+        [FoldoutGroup("Volume Property")] public float playerX;
+        [FoldoutGroup("Volume Property")] public float damageSpeed;
 
-
-        [BoxGroup("Effects")] public ChangeOffset underWaterOffset;
-        [BoxGroup("Effects")] public ChangeOffset surfaceOffset;
-
-        [BoxGroup("Effects")] public SoundVolumeTrigger underWaterSound;
-        [BoxGroup("Effects")] public SoundVolumeTrigger surfaceSound;
+        [FoldoutGroup("Camera Offsets")] public ChangeOffset underwaterCameraOffset;
+        [FoldoutGroup("Camera Offsets")] public ChangeOffset aboveWaterCameraOffset;
 
         private Coroutine _triggerCoroutine;
-        private bool _playerInTrigger;
+        private bool _triggered;
+        private bool _playerOnSurface;
+        private Player Player => PlayerMovementController.Instance.player;
 
         private void OnTriggerStay(Collider other)
         {
-            if(!enabled) return;
-            
-            if(!other.CompareTag("Player_Main")) return;
+            if (!enabled) return;
+
+            if (!other.CompareTag("Player_Main")) return;
+            if (!_triggered) TriggerWaterVolume();
+
             if (_triggerCoroutine != null)
             {
                 StopCoroutine(_triggerCoroutine);
             }
+
             _triggerCoroutine = StartCoroutine(ResetTrigger());
-
-            if (_playerInTrigger) return;
-            TriggerWaterVolume();
         }
-
         private IEnumerator ResetTrigger()
         {
             yield return new WaitForSeconds(0.2f);
+            
             Physics.gravity = new Vector3(0, -9.81f, 0);
-            _playerInTrigger = false;
+            _triggered = false;
             _triggerCoroutine = null;
         }
-
         private void TriggerWaterVolume()
         {
-            if(!enabled) return;
-            _playerInTrigger = true;
-            Physics.gravity = new Vector3(0, -1f, 0);
-            
+            if (!enabled) return;
+            _triggered = true;
+
+            Physics.gravity = new Vector3(0, -0.5f, 0);
             if (PlayerMovementController.Instance.player.currentStateIndex != 2)
             {
                 PlayerMovementController.Instance.ChangeState(2);
             }
-
-            PlayerMovementController.Instance.player.waterMovement.PlayerWaterVolume = this;
-            
         }
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
@@ -71,18 +64,50 @@ namespace Player_Scripts.Volumes
             Gizmos.DrawWireSphere(new Vector3(playerX, bottomLevel, transform.position.z), 0.2f);
         }
 
-        public void UnderWater()
+
+        private void Update()
         {
-            print("Changing");
-            underWaterOffset?.ChangeCameraOffset();
-            underWaterSound?.ApplyAudioVolume();
+            if (!_triggered) return;
+
+            bool onSurface = (Player.transform.position.y + 1.5f) >= surfaceLevel;
+            if (onSurface != _playerOnSurface)
+            {
+                Player.waterMovement.OnSurface = onSurface;
+                _playerOnSurface = onSurface;
+                
+                if (_playerOnSurface)
+                {
+                    aboveWaterCameraOffset.ChangeCameraOffset();
+                }
+                else
+                {
+                    underwaterCameraOffset.ChangeCameraOffset();
+                }
+            }
         }
 
-        public void OnSurface()
+        private void LateUpdate()
         {
-            print("Changing to surface");
-            surfaceOffset?.ChangeCameraOffset();
-            surfaceSound?.ApplyAudioVolume();
+            if(!_triggered) return;
+            
+            #region Player position update
+
+            Vector3 desiredPos = Player.transform.position;
+            desiredPos.x = playerX;
+
+            if (_playerOnSurface)
+            {
+                if (Input.GetAxis("Vertical") >= 0)
+                {
+                    desiredPos.y = surfaceLevel - 1.3f;
+                }
+            }
+
+            Player.transform.position = Vector3.Distance(desiredPos, Player.transform.position) > 0.2f ? 
+                Vector3.Lerp(Player.transform.position, desiredPos, Time.deltaTime * 7) 
+                : desiredPos; //Change the speed maybe
+
+            #endregion
         }
     }
 }
