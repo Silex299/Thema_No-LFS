@@ -30,7 +30,7 @@ namespace Player_Scripts.States
 
         public override void ExitState(Player player)
         {
-            player.CController.height = 1.91f;
+            player.CController.height = 1.7f;
         }
 
         public override void UpdateState(Player player)

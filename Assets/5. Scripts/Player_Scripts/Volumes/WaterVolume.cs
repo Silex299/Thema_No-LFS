@@ -10,6 +10,8 @@ namespace Player_Scripts.Volumes
         [FoldoutGroup("Volume Property")] public float surfaceLevel;
         [FoldoutGroup("Volume Property")] public float bottomLevel;
         [FoldoutGroup("Volume Property")] public float playerX;
+        [FoldoutGroup("Volume Property"), Tooltip("Defines after what y position the player state is changed to water")] 
+        public float triggerYThreshold;
         [FoldoutGroup("Volume Property")] public float damageSpeed;
 
         [FoldoutGroup("Camera Offsets")] public ChangeOffset underwaterCameraOffset;
@@ -26,12 +28,11 @@ namespace Player_Scripts.Volumes
 
             if (!other.CompareTag("Player_Main")) return;
             if (!_triggered) TriggerWaterVolume();
-
+            
             if (_triggerCoroutine != null)
             {
                 StopCoroutine(_triggerCoroutine);
             }
-
             _triggerCoroutine = StartCoroutine(ResetTrigger());
         }
         private IEnumerator ResetTrigger()
@@ -45,6 +46,8 @@ namespace Player_Scripts.Volumes
         private void TriggerWaterVolume()
         {
             if (!enabled) return;
+            if(triggerYThreshold < Player.transform.position.y) return;
+            
             _triggered = true;
 
             Physics.gravity = new Vector3(0, -0.5f, 0);
@@ -62,6 +65,9 @@ namespace Player_Scripts.Volumes
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(new Vector3(playerX, surfaceLevel, transform.position.z), 0.2f);
             Gizmos.DrawWireSphere(new Vector3(playerX, bottomLevel, transform.position.z), 0.2f);
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(new Vector3(playerX, triggerYThreshold, transform.position.z), 0.2f);
         }
 
 
