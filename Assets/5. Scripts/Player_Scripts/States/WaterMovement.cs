@@ -1,4 +1,6 @@
 using System;
+using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -10,7 +12,13 @@ namespace Player_Scripts.States
         [SerializeField] private float swimSpeed = 10;
         [field: SerializeField] public float DamageSpeed { get; set; } = 10f;
 
+        [BoxGroup("RigidBody Flat Settings")] public float flatHeight = 0.34f;
+        [BoxGroup("RigidBody Flat Settings")] public Vector3 flatCenter = new Vector3(0, 0.14f, 0);
+        [BoxGroup("RigidBody normal Settings")] public float normalHeight = 1.7f;
+        [BoxGroup("RigidBody normal Settings")] public Vector3 normalCenter = new Vector3(0, 0.92f, 0);
+        
         public Action<bool> onSurfaceAction;
+        
         
         public bool OnSurface
         {
@@ -25,6 +33,7 @@ namespace Player_Scripts.States
         
     
         private bool _onSurface;
+        private bool _flatPosition;
         private float _speedMultiplier = 1;
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
@@ -37,12 +46,11 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
-            player.CController.height = 0.34f;
         }
 
         public override void ExitState(Player player)
         {
-            player.CController.height = 1.7f;
+            UpdatePlayerRigidBody(player, false);
         }
 
         public override void UpdateState(Player player)
@@ -132,6 +140,8 @@ namespace Player_Scripts.States
             }
 
             #endregion
+            
+            UpdatePlayerRigidBody(player, !_onSurface);
         }
 
         public override void LateUpdateState(Player player)
@@ -159,6 +169,17 @@ namespace Player_Scripts.States
                 Time.deltaTime * player.RotationSmoothness / 4);
         }
 
+
+        private void UpdatePlayerRigidBody(Player player, bool isFlat)
+        {
+            if(isFlat == _flatPosition) return;
+            
+            _flatPosition = isFlat;
+            player.CController.height = isFlat ? flatHeight : normalHeight;
+            player.CController.center = isFlat ? flatCenter : normalCenter;
+            
+        }
+        
         #endregion
     }
 }

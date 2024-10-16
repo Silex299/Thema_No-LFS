@@ -24,11 +24,17 @@ namespace Misc.Custom_Object_Scripts
         private IEnumerator OpenChamberCoroutine()
         {
             animator.Play("OpenChamber");
-
-            yield return new WaitForSeconds(2.3f);
+            PlayerMovementController.Instance.player.DisabledPlayerMovement = true;
+            PlayerMovementController.Instance.ResetAnimator();
+            
+            yield return new WaitForSeconds(1.5f);
             
             _playerMask = Instantiate(playerMaskPrefab);
             _playerMask.GetComponent<UnderwaterPlayerMask>().Equip(true);
+
+            yield return new WaitForSeconds(1f);
+            
+            PlayerMovementController.Instance.player.DisabledPlayerMovement = false;
         }
         
         public void Reset()
