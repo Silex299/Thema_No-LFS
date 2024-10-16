@@ -16,6 +16,7 @@ namespace Player_Scripts.Volumes
 
         [FoldoutGroup("Camera Offsets")] public ChangeOffset underwaterCameraOffset;
         [FoldoutGroup("Camera Offsets")] public ChangeOffset aboveWaterCameraOffset;
+        
 
         private Coroutine _triggerCoroutine;
         private bool _triggered;

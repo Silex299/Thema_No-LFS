@@ -1,4 +1,4 @@
-using Player_Scripts.Volumes;
+using System;
 using UnityEngine;
 
 
@@ -8,12 +8,24 @@ namespace Player_Scripts.States
     public class WaterMovement : PlayerBaseStates
     {
         [SerializeField] private float swimSpeed = 10;
-        public WaterVolume waterVolume;
+        [field: SerializeField] public float DamageSpeed { get; set; } = 10f;
 
-
+        public Action<bool> onSurfaceAction;
+        
+        public bool OnSurface
+        {
+            get => _onSurface;
+            set
+            {
+                onSurfaceAction?.Invoke(value);
+                _onSurface = value;
+            }
+        } 
+        public bool CanDamage { get; set; } = true;
+        
+    
+        private bool _onSurface;
         private float _speedMultiplier = 1;
-        public bool OnSurface { get; set; } = false;
-
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int OnSurface1 = Animator.StringToHash("onSurface");
@@ -60,7 +72,7 @@ namespace Player_Scripts.States
 
             #endregion
 
-            #region Player depth, interaction & health
+            #region interaction & health
 
 
             if (OnSurface)
@@ -111,10 +123,12 @@ namespace Player_Scripts.States
                 }
 
                 #endregion
+                if(CanDamage) player.Health.ResetHealth();
             }
             else
             {
                 _speedMultiplier = 1;
+                if(CanDamage) player.Health.TakeDamage(Time.deltaTime * DamageSpeed);
             }
 
             #endregion
