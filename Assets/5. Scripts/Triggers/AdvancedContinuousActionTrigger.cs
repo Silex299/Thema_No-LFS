@@ -12,17 +12,21 @@ namespace Triggers
 {
     public class AdvancedContinuousActionTrigger : MonoBehaviour
     {
+        
         [FoldoutGroup("Input")] public string engageInput;
         [FoldoutGroup("Input")] public string actionInput;
         [FoldoutGroup("Input")] public float actionTriggerTime;
         [FoldoutGroup("Input")] public List<TriggerCondition> conditions;
 
+        [FoldoutGroup("Animation")] public Transform actionTransform;
         [FoldoutGroup("Animation")] public bool simpleEngage;
         [FoldoutGroup("Animation")] public float engageActionWidth;
         [FoldoutGroup("Animation")] public AdvancedCurvedAnimation engageAnim;
         [FoldoutGroup("Animation")] public string actionAnimName; //MAY BE CHANGE LATER TO MORE DYNAMIC
 
 
+        [FoldoutGroup("Misc")] public Vector3 uiElementOffset = new Vector3(0, 2f, 0f);
+        
         [FoldoutGroup("Events")] public float actionDelay;
         [FoldoutGroup("Events")] public UnityEvent actionEvent;
 
@@ -81,18 +85,18 @@ namespace Triggers
 
             if (simpleEngage)
             {
-                yield return engageAnim.SimpleAnim(player.AnimationController, player.transform, transform, engageActionWidth);
+                yield return engageAnim.SimpleAnim(player.AnimationController, player.transform, actionTransform? actionTransform: transform, engageActionWidth);
             }
             else
             {
-                yield return engageAnim.PlayAnim(player.AnimationController, player.transform, transform, engageActionWidth);
+                yield return engageAnim.PlayAnim(player.AnimationController, player.transform, actionTransform? actionTransform: transform, engageActionWidth);
             }
 
 
             float timeElapsed = 0;
 
             var uiManager = UIManager.Instance;
-            uiManager.UpdateActionFillPos(transform.position, new Vector3(0, 2f, 0f));
+            uiManager.UpdateActionFillPos(transform.position, uiElementOffset);
 
             //Action
             while (!Input.GetButtonUp(engageInput))
