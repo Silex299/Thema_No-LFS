@@ -28,6 +28,7 @@ namespace Triggers
         [FoldoutGroup("Misc")] public Vector3 uiElementOffset = new Vector3(0, 2f, 0f);
         
         [FoldoutGroup("Events")] public float actionDelay;
+        [FoldoutGroup("Events")] public float exitDelay;
         [FoldoutGroup("Events")] public UnityEvent actionEvent;
 
 
@@ -117,6 +118,7 @@ namespace Triggers
                     player.AnimationController.CrossFade(actionAnimName, 0.2f, 1);
                     yield return new WaitForSeconds(actionDelay);
                     actionEvent.Invoke();
+                    yield return new WaitForSeconds(exitDelay);
                     break;
                 }
 

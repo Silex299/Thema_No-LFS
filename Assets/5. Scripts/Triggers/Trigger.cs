@@ -11,13 +11,10 @@ namespace Triggers
     {
         [SerializeField, BoxGroup("Properties"), Space(5)]
         protected string triggerTag;
-
         [SerializeField, BoxGroup("Properties")]
         private bool oneTime;
-
         [SerializeField, BoxGroup("Properties")]
         private bool entryTrigger;
-
         [SerializeField, BoxGroup("Properties")]
         private float secondActionDelay = 1;
 
