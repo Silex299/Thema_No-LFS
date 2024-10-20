@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using Player_Scripts;
@@ -9,6 +10,9 @@ namespace Triggers
 {
     public class SimpleLeverTrigger : MonoBehaviour
     {
+
+        [FoldoutGroup("References")] public Animator leverAnimator;
+        
         [FoldoutGroup("Action")] public string engageInput;
         [FoldoutGroup("Action")] public string actionAxis;
         [FoldoutGroup("Action")] public bool invertActionAxis;
@@ -24,8 +28,9 @@ namespace Triggers
         [FoldoutGroup("Animation")] public string engageAnimName;
         [FoldoutGroup("Animation")] public string reverseEngageAnimName;
         [FoldoutGroup("Animation")] public float engageAnimTime;
-        [FoldoutGroup("Animation")] public float actionTime;
 
+        [FoldoutGroup("Events"), Tooltip("After what time on trigger actions are called")] public float actionTime;
+        [FoldoutGroup("Events"), Tooltip("Time before the player can pull/push the lever again")] public float secondActionDelay = 1;
         [FoldoutGroup("Events")] public UnityEvent onTrigger;
         [FoldoutGroup("Events")] public UnityEvent onUnTrigger;
         
@@ -35,6 +40,7 @@ namespace Triggers
 
         private int _colliderCount;
         private bool _playerInTrigger;
+        private bool _isEngaged;
         private Coroutine _playerEngageCoroutine;
         private static readonly int Trigger1 = Animator.StringToHash("Trigger");
         private Player Player => PlayerMovementController.Instance.player;
@@ -62,10 +68,17 @@ namespace Triggers
             if(oneTime && IsTriggered) return;
 
             if (conditions.Any(condition => !condition.Condition(Player.CController))) return;
-            
-            if (!Input.GetButton(engageInput)) return;
-            _playerEngageCoroutine ??= StartCoroutine(PlayerEngage());
+
+            if (Input.GetButton(engageInput))
+            {
+                _playerEngageCoroutine ??= StartCoroutine(PlayerEngage());
+            }
         }
+        private void LateUpdate()
+        {
+            if(_isEngaged && alignBoneSocket) LockPosition();
+        }
+
         private IEnumerator PlayerEngage()
         {
             Player.DisabledPlayerMovement = true;
@@ -74,7 +87,7 @@ namespace Triggers
 
             while (Input.GetButton(engageInput))
             {
-                if(alignBoneSocket) LockPosition();
+                _isEngaged = true;
                 
                 float actionInput = Input.GetAxis(actionAxis);
 
@@ -88,10 +101,12 @@ namespace Triggers
                 {
                     yield return Action();
                 }
-
+                
                 yield return new WaitForEndOfFrame();
             }
-
+            
+            _isEngaged = false;
+            
             Player.AnimationController.CrossFade("Default", 0.1f, 1);
             Player.DisabledPlayerMovement = false;
             _playerEngageCoroutine = null;
@@ -156,13 +171,15 @@ namespace Triggers
             var playerPos = Player.transform.position;
             Vector3 desiredPos = socketTransform.position + (playerPos - socketPos);
 
-            Player.transform.position = Vector3.Lerp(Player.transform.position, desiredPos, Time.deltaTime * 10);
-
+            Player.transform.position = desiredPos;
+            Player.transform.rotation = actionTransform.rotation;
         }
-        
+
+
         private IEnumerator Action()
         {
             Player.AnimationController.SetTrigger(Trigger1);
+            leverAnimator?.SetTrigger(Trigger1);
             //TODO: Lever visual
             
             yield return new WaitForSeconds(actionTime);
@@ -176,6 +193,9 @@ namespace Triggers
             {
                 onUnTrigger.Invoke();
             }
+            
+            
+            yield return new WaitForSeconds(secondActionDelay);
             
         }
         
