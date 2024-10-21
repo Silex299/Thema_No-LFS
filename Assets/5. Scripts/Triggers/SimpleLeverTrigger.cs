@@ -27,6 +27,10 @@ namespace Triggers
 
         [FoldoutGroup("Animation")] public string engageAnimName;
         [FoldoutGroup("Animation")] public string reverseEngageAnimName;
+
+        [FoldoutGroup("Animation")] public string actionAnimName;
+        [FoldoutGroup("Animation")] public string reverseActionAnimName;
+        
         [FoldoutGroup("Animation")] public float engageAnimTime;
 
         [FoldoutGroup("Events"), Tooltip("After what time on trigger actions are called")] public float actionTime;
@@ -37,7 +41,10 @@ namespace Triggers
         [SerializeField, FoldoutGroup("Misc")] public bool oneTime;
         [field: SerializeField, FoldoutGroup("Misc")]
         public bool IsTriggered { get; set; }
+        [field: SerializeField, FoldoutGroup("Misc")]
+        public bool CanTrigger { get; set; } = true;
 
+        private bool _initiallyTriggered;
         private int _colliderCount;
         private bool _playerInTrigger;
         private bool _isEngaged;
@@ -62,6 +69,11 @@ namespace Triggers
             _playerInTrigger = _colliderCount > 0;
         }
 
+
+        private void Start()
+        {
+            _initiallyTriggered = IsTriggered;
+        }
         private void Update()
         {
             if (!_playerInTrigger) return;
@@ -69,7 +81,7 @@ namespace Triggers
 
             if (conditions.Any(condition => !condition.Condition(Player.CController))) return;
 
-            if (Input.GetButton(engageInput))
+            if (Input.GetButtonDown(engageInput))
             {
                 _playerEngageCoroutine ??= StartCoroutine(PlayerEngage());
             }
@@ -104,10 +116,17 @@ namespace Triggers
                 
                 yield return new WaitForEndOfFrame();
             }
+
+
+            if (!CanTrigger)
+            {
+                LeverAnim(_initiallyTriggered);
+                IsTriggered = _initiallyTriggered;
+            }
+            
             
             _isEngaged = false;
-            
-            Player.AnimationController.CrossFade("Default", 0.1f, 1);
+            Player.AnimationController.CrossFade("Default", 0.25f, 1);
             Player.DisabledPlayerMovement = false;
             _playerEngageCoroutine = null;
         }
@@ -178,27 +197,38 @@ namespace Triggers
 
         private IEnumerator Action()
         {
-            Player.AnimationController.SetTrigger(Trigger1);
-            leverAnimator?.SetTrigger(Trigger1);
-            //TODO: Lever visual
+            
+            PlayerAnim(!IsTriggered);
+            LeverAnim(!IsTriggered);
             
             yield return new WaitForSeconds(actionTime);
             
             IsTriggered = !IsTriggered;
-            if (IsTriggered)
+            if (CanTrigger)
             {
-                onTrigger.Invoke();
+                if (IsTriggered)
+                {
+                    onTrigger.Invoke();
+                }
+                else
+                {
+                    onUnTrigger.Invoke();
+                }
             }
-            else
-            {
-                onUnTrigger.Invoke();
-            }
-            
-            
             yield return new WaitForSeconds(secondActionDelay);
             
         }
+
+        private void PlayerAnim(bool trigger)
+        {
+            Player.AnimationController.CrossFade(trigger ? actionAnimName : reverseActionAnimName, 0.2f, 1);
+        }
         
+        private void LeverAnim(bool trigger)
+        {
+            if(trigger == IsTriggered) return;
+            leverAnimator?.Play(trigger? "Pull" : "Push");
+        }
         
     }
 }
