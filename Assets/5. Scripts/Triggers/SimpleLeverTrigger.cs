@@ -198,12 +198,14 @@ namespace Triggers
         private IEnumerator Action()
         {
             
+            
             PlayerAnim(!IsTriggered);
             LeverAnim(!IsTriggered);
             
             yield return new WaitForSeconds(actionTime);
             
             IsTriggered = !IsTriggered;
+            
             if (CanTrigger)
             {
                 if (IsTriggered)
@@ -227,6 +229,7 @@ namespace Triggers
         private void LeverAnim(bool trigger)
         {
             if(trigger == IsTriggered) return;
+            
             leverAnimator?.Play(trigger? "Pull" : "Push");
         }
         
