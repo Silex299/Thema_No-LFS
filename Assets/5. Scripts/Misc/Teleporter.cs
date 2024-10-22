@@ -1,4 +1,5 @@
 using System.Collections;
+using Player_Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,6 +31,7 @@ namespace Misc
         }
 
 
+        /**
         private void LateUpdate()
         {
             if (_trigger)
@@ -47,24 +49,31 @@ namespace Misc
                 _trigger = false;
             }
         }
-
+**/
 
         private IEnumerator Teleport(Transform target)
         {
 
             Managers.UIManager ui = Managers.UIManager.Instance;
+            var player = PlayerMovementController.Instance.player;
 
             ui.FadeIn();
+            player.CController.enabled = false;
+            player.DisabledPlayerMovement = true;
+            
             _isTriggered = true;
-
+            
             yield return new WaitForSeconds(delay);
-
-            _trigger = true;
+            yield return new WaitForEndOfFrame();
+            
+            player.transform.position = destination.position;
+            teleportAction?.Invoke();
             
             yield return new WaitForSeconds(secondActionDelay);
+            
+            player.CController.enabled = true;
+            player.DisabledPlayerMovement = false;
             ui.FadeOut();
-
-
             _isTriggered = false;
         }
 

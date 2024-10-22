@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Misc.Items
@@ -8,7 +9,12 @@ namespace Misc.Items
         public Animator animator;
 
         [field: SerializeField] public bool IsOpen { get; private set; } = false;
-        
+
+        private void Start()
+        {
+            animator.Play(IsOpen ? "Open" : "Close", 0, 1);
+        }
+
         public void OpenDoor(bool open)
         {
             print(open);

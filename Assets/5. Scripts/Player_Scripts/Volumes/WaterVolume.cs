@@ -12,7 +12,6 @@ namespace Player_Scripts.Volumes
         [FoldoutGroup("Volume Property")] public float playerX;
         [FoldoutGroup("Volume Property"), Tooltip("Defines after what y position the player state is changed to water")] 
         public float triggerYThreshold;
-        [FoldoutGroup("Volume Property")] public float damageSpeed;
         
         [FoldoutGroup("Particle Effects")] public GameObject splashEffect;
         [FoldoutGroup("Particle Effects")] public Vector3 splashEffectOffset;
@@ -112,17 +111,18 @@ namespace Player_Scripts.Volumes
                 
             if (_playerOnSurface)
             {
-                aboveWaterCameraOffset.ChangeCameraOffset();
+                aboveWaterCameraOffset?.ChangeCameraOffset();
             }
             else
             {
-                underwaterCameraOffset.ChangeCameraOffset();
+                underwaterCameraOffset?.ChangeCameraOffset();
             }
         }
 
         private void LateUpdate()
         {
             if(!_triggered) return;
+            if(PlayerMovementController.Instance.player.DisabledPlayerMovement) return;
             
             #region Player position update
 
