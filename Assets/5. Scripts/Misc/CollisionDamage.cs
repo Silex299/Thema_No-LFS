@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Misc
@@ -7,14 +8,15 @@ namespace Misc
     {
 
         [SerializeField] private float maximumDamage;
+        [field: SerializeField] public bool CanDamage { get; set; } = true;
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!enabled) return;
-            print(collision.gameObject.name);
+            if(!CanDamage) return;
             
             if (collision.gameObject.CompareTag("Player_Main") || collision.gameObject.CompareTag("Player"))
             {
+               
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(maximumDamage);
             }
             

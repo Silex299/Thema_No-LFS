@@ -1,6 +1,7 @@
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Misc.Items
 {
@@ -17,6 +18,9 @@ namespace Misc.Items
         [SerializeField, BoxGroup("Sounds")] private AudioSource source;
         [SerializeField, BoxGroup("Sounds")] private AudioClip startSound;
         [SerializeField, BoxGroup("Sounds")] private AudioClip stopSound;
+
+        [SerializeField, BoxGroup("Events")] private UnityEvent onStart;
+        [SerializeField, BoxGroup("Events")] private UnityEvent onStop;
 
         
         private float _currentSpeed;
@@ -65,13 +69,22 @@ namespace Misc.Items
         {
             float timeElapsed = 0;
             float startSpeed = _currentSpeed;
+            
+            if(overrideSpeed != 0) onStart?.Invoke();
 
+           
             while (timeElapsed < accelerationTime)
             {
                 timeElapsed += Time.deltaTime;
                 _currentSpeed = Mathf.Lerp(startSpeed, overrideSpeed, timeElapsed / accelerationTime);
                 yield return null;
             }
+            
+            _currentSpeed = overrideSpeed;
+
+            if(overrideSpeed == 0) onStop?.Invoke();
+            
+            _speedCoroutine = null;
         }
 
 
