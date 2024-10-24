@@ -102,6 +102,7 @@ namespace Player_Scripts.Volumes
 
            
             bool onSurface = (Player.transform.position.y + 1.5f) >= surfaceLevel;
+           
             if (onSurface == _playerOnSurface) return;
             
             
@@ -137,9 +138,7 @@ namespace Player_Scripts.Volumes
                 }
             }
 
-            Player.transform.position = Vector3.Distance(desiredPos, Player.transform.position) > 0.2f ? 
-                Vector3.Lerp(Player.transform.position, desiredPos, Time.deltaTime * 7) 
-                : desiredPos; //Change the speed maybe
+            Player.transform.position = desiredPos;
 
             #endregion
         }
