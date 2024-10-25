@@ -23,7 +23,7 @@ namespace NPCs.New.V1
         [FoldoutGroup("References")] public V1NpcAimRigController aimRigController;  //TODO: MOVE AIM RIG CONTROLLER TO ONLY NEEDED BASE AND CREATE A RESET AND ON DEATH METHOD FOR EACH STATE
         [FoldoutGroup("References")] public HealthBaseClass health;
         
-        [FoldoutGroup("Npc Movement Properties")] public float stopDistance = 1f;
+        [FoldoutGroup("Npc Movement Properties")] public float stopDistance = 1f; //TODO: REMOVE THIS COMPLETELY
         [FoldoutGroup("Npc Movement Properties")] public float rotationSpeed = 10;
         [FoldoutGroup("Npc Movement Properties")] public float accelerationTime = 1;
 

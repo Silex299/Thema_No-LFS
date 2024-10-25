@@ -30,6 +30,7 @@ namespace NPCs.New.V1.States
         private bool _isAttacking;
         private Coroutine _pathCoroutine;
         private Coroutine _speedCoroutine;
+        private Coroutine _targetLostCoroutine;
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Attack1 = Animator.StringToHash("Attack");
@@ -98,7 +99,14 @@ namespace NPCs.New.V1.States
                         _speedCoroutine = null;
                     }
 
-                    _speedCoroutine ??= StartCoroutine(ChangeSpeed(npc, 0));
+                    if (stateIndexOnTargetLost != -1)
+                    {
+                        _targetLostCoroutine ??= StartCoroutine(TargetLostStateChange(npc));
+                    }
+                    else
+                    {
+                        _speedCoroutine ??= StartCoroutine(ChangeSpeed(npc, 0));
+                    }
                 }
             }
 
@@ -112,10 +120,13 @@ namespace NPCs.New.V1.States
             {
                 npc.animator.SetBool(Attack1, true);
                 //TODO: Check On debug
+                Debug.DrawLine(npc.transform.position, npc.Target.position, Color.green);
                 Attack(npc);
             }
             else
             {
+                
+                Debug.DrawLine(npc.transform.position, npc.Target.position, Color.red);
                 npc.animator.SetBool(Attack1, false);
             }
 
@@ -158,6 +169,7 @@ namespace NPCs.New.V1.States
 
         private IEnumerator ChangeSpeed(V1Npc npc, float targetSpeed)
         {
+            
             float currentSpeed = _speedMultiplier;
             _isStopped = (targetSpeed == 0);
 
@@ -171,6 +183,13 @@ namespace NPCs.New.V1.States
 
             _speedMultiplier = targetSpeed;
             _speedCoroutine = null;
+        }
+
+        private IEnumerator TargetLostStateChange(V1Npc npc)
+        {
+            yield return new WaitForSeconds(returnInterval);
+            npc.ChangeState(stateIndexOnTargetLost);
+            _targetLostCoroutine = null;
         }
 
         private IEnumerator GetPath(V1Npc npc)

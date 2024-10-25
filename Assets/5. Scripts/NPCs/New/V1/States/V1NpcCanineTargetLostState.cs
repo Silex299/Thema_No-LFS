@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 
@@ -8,9 +9,11 @@ namespace NPCs.New.V1
     public class V1NpcCanineTargetLostState : V1NpcBaseState
     {
         public Vector3 actionPosition;
-        public bool rotateTowardsTarget;
         public int animatorStateIndex;
-
+        public float stopDistance = 4;
+        public bool canGoBackToChase;
+        [ShowIf(nameof(canGoBackToChase))] public int chaseStateIndex = 2;
+        
 
         private List<int> _path;
         private bool _isReachable;
@@ -23,21 +26,27 @@ namespace NPCs.New.V1
         private static readonly int Speed = Animator.StringToHash("Speed");
 
 
+        #region Editor
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawSphere(Application.isPlaying ? actionPosition : transform.TransformPoint(actionPosition), 0.2f);
+            Gizmos.DrawSphere(actionPosition, 0.2f);
         }
 
-
-        private void Start()
+        [Button]
+        public void GetActionPosition(Transform t)
         {
-            actionPosition = transform.TransformPoint(actionPosition);
+            actionPosition = t.position;
         }
+
+        #endregion
+
+
 
         public override void Enter(V1Npc npc)
         {
-            _speedMultiplier = 1;
+            //_speedMultiplier = 1;
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
             npc.animator.Play("Default", 1);
@@ -59,7 +68,16 @@ namespace NPCs.New.V1
 
         public override void UpdateState(V1Npc npc)
         {
-            if (_isReachable)
+            if( canGoBackToChase && IsPlayerInSight(npc)) npc.ChangeState(chaseStateIndex);
+            
+
+            float distance = ThemaVector.PlannerDistance(npc.transform.position, actionPosition);
+            bool reached = distance < stopDistance;
+
+            npc.animator.SetBool(PathBlocked, reached);
+            npc.animator.SetFloat(Speed, _speedMultiplier);
+            
+            if (_isReachable && !reached)
             {
                 var desiredPos = actionPosition;
 
@@ -74,47 +92,19 @@ namespace NPCs.New.V1
                 }
 
                 npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime * _speedMultiplier);
-            }
-            else if (_isReachable)
-            {
-                npc.Rotate(actionPosition, npc.rotationSpeed * Time.deltaTime * _speedMultiplier);
-            }
-
-
-            float distance = ThemaVector.PlannerDistance(npc.transform.position, actionPosition);
-            bool reached = distance < npc.stopDistance;
-
-            npc.animator.SetBool(PathBlocked, reached);
-            npc.animator.SetFloat(Speed, _speedMultiplier);
-
-            if (reached)
-            {
-                if (_speedMultiplier > 0)
+                
+                if (Mathf.Approximately(_speedMultiplier, 0))
                 {
-                    if (_speedCoroutine != null)
-                    {
-                        StopCoroutine(_speedCoroutine);
-                    }
-
-                    _speedCoroutine = StartCoroutine(ChangeMovementSpeed(npc, true));
+                    _speedCoroutine ??= StartCoroutine(ChangeMovementSpeed(npc));
                 }
-
-                npc.animator.SetBool(PathBlocked, true);
-                if (rotateTowardsTarget) npc.Rotate(npc.Target.position, npc.rotationSpeed * Time.deltaTime);
+                
             }
             else
             {
-                if (Mathf.Approximately(_speedMultiplier, 0))
-                {
-                    if (_speedCoroutine != null)
-                    {
-                        StopCoroutine(_speedCoroutine);
-                    }
-
-                    npc.animator.SetBool(PathBlocked, false);
-                    _speedCoroutine = StartCoroutine(ChangeMovementSpeed(npc));
-                }
+                _speedCoroutine ??= StartCoroutine(ChangeMovementSpeed(npc, true));
+                npc.Rotate(npc.Target.position, npc.rotationSpeed * Time.deltaTime * _speedMultiplier);
             }
+
         }
 
 
@@ -144,6 +134,11 @@ namespace NPCs.New.V1
 
             _speedMultiplier = endSpeed;
             _speedCoroutine = null;
+        }
+
+        private bool IsPlayerInSight(V1Npc npc)
+        {
+            return !Physics.Linecast(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.Target.position + npc.Target.up * npc.targetOffset, npc.pathFinder.layerMask);
         }
     }
 }
