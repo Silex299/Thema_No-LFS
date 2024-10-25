@@ -7,6 +7,7 @@ namespace NPCs.New.V1
     {
         
         public string entryAnim;
+        public float transitionDuration = 0.25f;
         public int animatorLayer = 0;
         
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
@@ -20,7 +21,7 @@ namespace NPCs.New.V1
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
             npc.animator.SetFloat(Speed, 0);
-            npc.animator.CrossFade(entryAnim, 0.25f, animatorLayer);
+            npc.animator.CrossFade(entryAnim, transitionDuration, animatorLayer);
         }
     }
 }

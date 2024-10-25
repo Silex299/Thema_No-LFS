@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Health;
 using NPCs.New.Other;
 using NPCs.New.Path_Finder;
@@ -9,7 +11,7 @@ using UnityEngine.Serialization;
 
 namespace NPCs.New.V1
 {
-    public class V1Npc : MonoBehaviour
+    public class V1Npc : SerializedMonoBehaviour
     {
 
         #region Variables
@@ -32,8 +34,10 @@ namespace NPCs.New.V1
         [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
         [FoldoutGroup("States")] public int initState;
+        [FoldoutGroup("States")] public float afterPlayerDeathDelay;
         [FoldoutGroup("States")] public int afterPlayerDeathState;
         [FoldoutGroup("States")] public V1NpcBaseState[] states;
+        [FoldoutGroup("States")] public Dictionary<int, V1NpcBaseState[]> subStates;
         
         #endregion
 
@@ -81,8 +85,47 @@ namespace NPCs.New.V1
             {
                 if(health.IsDead) return;
             }
+
+            if (_currentStateIndex != -1)
+            {
+                states[_currentStateIndex].UpdateState(this);
+                
+                if (subStates.TryGetValue(_currentStateIndex, out var currentSubStates))
+                {
+                    if (currentSubStates.Length > 0)
+                    {
+                        foreach (var subState in currentSubStates)
+                        {
+                            subState.UpdateState(this);
+                        }
+                    }
+                }
+            }
             
-            if(_currentStateIndex!=-1) states[_currentStateIndex].UpdateState(this);
+        }
+
+        private void LateUpdate()
+        {
+            if (health )
+            {
+                if(health.IsDead) return;
+            }
+
+            if (_currentStateIndex != -1)
+            {
+                states[_currentStateIndex].LateUpdateState(this);
+                
+                if (subStates.TryGetValue(_currentStateIndex, out var currentSubStates))
+                {
+                    if (currentSubStates.Length > 0)
+                    {
+                        foreach (var subState in currentSubStates)
+                        {
+                            subState.LateUpdateState(this);
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -144,6 +187,13 @@ namespace NPCs.New.V1
         
         private void OnPlayerDeath()
         {
+            print("FUCK THE PLAYERS DEAD");
+            StartCoroutine(OnPlayerDeath(afterPlayerDeathDelay));
+        }
+
+        private IEnumerator OnPlayerDeath(float delay)
+        {
+            yield return new WaitForSeconds(delay);
             ChangeState(afterPlayerDeathState);
         }
 

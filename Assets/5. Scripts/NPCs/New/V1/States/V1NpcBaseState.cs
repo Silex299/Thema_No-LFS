@@ -16,5 +16,10 @@ namespace NPCs.New.V1
         public virtual void Exit(V1Npc npc)
         {
         }
+
+        public virtual void LateUpdateState(V1Npc npc)
+        {
+            
+        }
     }
 }

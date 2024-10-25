@@ -107,9 +107,11 @@ namespace NPCs.New.V1.States
             
             #region Attack
 
+            
             if (ShouldAttack(npc) && npc.CanAttack)
             {
                 npc.animator.SetBool(Attack1, true);
+                //TODO: Check On debug
                 Attack(npc);
             }
             else

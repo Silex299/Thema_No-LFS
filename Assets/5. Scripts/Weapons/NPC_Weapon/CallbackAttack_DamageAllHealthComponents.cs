@@ -1,3 +1,4 @@
+using System;
 using Health;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,6 +10,13 @@ namespace Weapons.NPC_Weapon
     {
         [BoxGroup("Weapon Action Params")] public int maximumCollider = 6;
         [BoxGroup("Weapon Action Params")] public LayerMask layerMask;
+        [BoxGroup("Weapon Action Params")] public bool alwaysOn;
+
+
+        private void FixedUpdate()
+        {
+            if(alwaysOn) AttackCallback();
+        }
 
         protected override void AttackCallback()
         {
