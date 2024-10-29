@@ -11,6 +11,7 @@ namespace Misc.Items
         [Space(10)] public int ropeResolution;
         public float ropeThickness;
         public Material ropeMaterial;
+        public float ropeLength;
 
         [Space(10)] public bool useSpring;
         public float spring;
@@ -29,7 +30,6 @@ namespace Misc.Items
                 DestroyImmediate(segment.gameObject);
             }
 
-            float ropeLength = 0;
             
             ropeSegments = new Rigidbody[ropeResolution];
             lineRenderers = new LineRenderer[ropeResolution];
