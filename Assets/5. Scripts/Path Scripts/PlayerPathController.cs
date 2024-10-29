@@ -75,14 +75,16 @@ namespace Path_Scripts
             nextDestination = index;
         }
 
-        public Vector3 GetNextPosition()
+        public Vector3 GetNextPosition(float input, float otherInput)
         {
-            return overridePath ? overridePath.NextPoint : PathPoints[nextDestination].position;
-        }
-
-        public Vector3 GetPreviousPosition()
-        {
-            return overridePath ? overridePath.PreviousPoint : pathPoints[previousDestination].position;
+            if (overridePath)
+            {
+                return overridePath.GetNextPosition(input, otherInput);
+            }
+            else
+            {
+                return input > 0 ? pathPoints[nextDestination].position : pathPoints[previousDestination].position;
+            }
         }
 
     }

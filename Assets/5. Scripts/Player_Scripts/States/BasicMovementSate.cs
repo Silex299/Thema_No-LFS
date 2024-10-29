@@ -1,6 +1,7 @@
 using System.Collections;
 using Path_Scripts;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -28,7 +29,6 @@ namespace Player_Scripts.States
         {
         }
 
-
         #endregion
 
         #region Overriden Methods
@@ -43,30 +43,27 @@ namespace Player_Scripts.States
         {
             //Input
             var input = player.UseHorizontal ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
+            var otherInput = player.UseHorizontal ? Input.GetAxis("Vertical") : Input.GetAxis("Horizontal");
 
             #region PLAYER DIRECTIONS
 
             if (player.oneWayRotation)
             {
-                if (input >= 0)
-                {
-                    SideRotation(player, PlayerPathController.Instance.GetNextPosition(), true);
-                }
-                else
-                {
-                    SideRotation(player, PlayerPathController.Instance.GetPreviousPosition(), false);
-                }
+                //Rotate player to next or previous destination
+                SideRotation(player, PlayerPathController.Instance.GetNextPosition(input, otherInput), input >= 0);
             }
             else
             {
-                //Rotate player to next or previous destination
-                if (input < -0.3f)
+                if (PlayerPathController.Instance.overridePath?.useBothAxes ?? false)
                 {
-                    Rotate(player, PlayerPathController.Instance.GetPreviousPosition());
+                    if (Mathf.Abs(input) > 0.2f || Mathf.Abs(otherInput) > 0.2f)
+                    {
+                        Rotate(player, PlayerPathController.Instance.GetNextPosition(input, otherInput));
+                    }
                 }
-                else if (input > 0.3f)
+                else if (Mathf.Abs(input) > 0.2f)
                 {
-                    Rotate(player, PlayerPathController.Instance.GetNextPosition());
+                    Rotate(player, PlayerPathController.Instance.GetNextPosition(input, otherInput));
                 }
             }
 
@@ -84,7 +81,9 @@ namespace Player_Scripts.States
             {
                 multiplier = player.CanBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
             }
+
             input = (player.enabledDirectionInput ? input : Mathf.Abs(input)) * multiplier;
+            otherInput = (player.enabledDirectionInput? otherInput : Mathf.Abs(otherInput)) * multiplier;
 
             //Apply gravity and ground check
             player.MovementController.GroundCheck();
@@ -108,13 +107,14 @@ namespace Player_Scripts.States
                     CrouchPlayer(player, false);
                 }
             }
+
             //Don't keep crouching if force boost
             if (player.ForceBoost)
             {
                 player.currentStateIndex = 0;
                 CrouchPlayer(player, false);
             }
-            
+
             //Jump
             if (Input.GetButtonDown("Jump"))
             {
@@ -125,16 +125,23 @@ namespace Player_Scripts.States
             }
 
             //Update Speed in animator
-            player.AnimationController.SetFloat(Speed, input);
+            if (PlayerPathController.Instance.overridePath?.useBothAxes ?? false)
+            {
+                var combinedInput = Mathf.Sqrt(Mathf.Pow(input, 2) + Mathf.Pow(otherInput, 2));
+                player.AnimationController.SetFloat(Speed, combinedInput);
+            }
+            else
+            {
+                player.AnimationController.SetFloat(Speed, input);
+            }
 
             #endregion
         }
-        
+
         public override void LateUpdateState(Player player)
         {
-            
             var input = player.UseHorizontal ? Input.GetAxis("Horizontal") : Input.GetAxis("Vertical");
-            
+
             #region PLAYER INTERACTION
 
             //Interact
@@ -182,13 +189,11 @@ namespace Player_Scripts.States
                 }
             }
 
-
             #endregion
         }
-        
 
         #endregion
-        
+
         #region Custom Methods
 
         //Reset Jump trigger if jump is not triggered Instantly;
@@ -240,7 +245,6 @@ namespace Player_Scripts.States
 
         private void CrouchPlayer(Player player, bool crouch)
         {
-            
             if (crouch)
             {
                 player.AnimationController.SetInteger(StateIndex, -6);

@@ -53,7 +53,6 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("Player Movement")]
         private bool canBoost;
         
-        
         /// <summary>
         /// Used for sprint and other boosting mechanisms
         /// </summary>

@@ -1,28 +1,28 @@
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Path_Scripts
 {
     public class OverridePath : MonoBehaviour
     {
-        public Transform nextTransform;
-        public Transform prevTransform;
+        [SerializeField, FoldoutGroup("Base"), InfoBox("Ignore For Two way override Path")] private Transform nextTransform;
+        [SerializeField, FoldoutGroup("Base")] private Transform prevTransform;
+        [FoldoutGroup("Base")] public bool useBothAxes;
 
 
         private Coroutine _triggerCoroutine;
-        protected bool triggered;
-
-
-        public virtual Vector3 NextPoint => nextTransform.position;
-        public virtual Vector3 PreviousPoint => prevTransform.position;
+        private bool _triggered;
+        
 
         private void OnTriggerStay(Collider other)
         {
             if (other.CompareTag("Player_Main"))
             {
-                if (!triggered)
+                print("Player In Trigger");
+                if (!_triggered)
                 {
-                    triggered = true;
+                    _triggered = true;
                     PlayerPathController.Instance.overridePath = this;
                 } 
                 
@@ -35,11 +35,16 @@ namespace Path_Scripts
         {
             yield return new WaitForSeconds(0.2f);
             
-            triggered = false;
+            _triggered = false;
             if (PlayerPathController.Instance.overridePath == this)
             {
                 PlayerPathController.Instance.overridePath = null;
             }
+        }
+
+        public virtual Vector3 GetNextPosition(float input, float otherInput)
+        {
+            return input > 0 ? nextTransform.position : prevTransform.position;
         }
     }
 }
