@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -9,6 +10,8 @@ namespace Triggers
     {
         public MoveDirection moveDirection;
         public float threshold = 0;
+        public bool buffer;
+        [ShowIf(nameof(buffer))]public float bufferThreshold;
 
         public UnityEvent entryAction;
         public UnityEvent exitAction;
@@ -31,6 +34,25 @@ namespace Triggers
         {
             if (playerInTrigger)
             {
+
+                if (buffer)
+                {
+                    float lower = threshold - bufferThreshold;
+                    float upper = threshold + bufferThreshold;
+                    
+                    bool result1 = moveDirection switch
+                    {
+                        MoveDirection.Right => Input.GetAxis("Horizontal") > lower && Input.GetAxis("Horizontal") < upper,
+                        MoveDirection.Left => Input.GetAxis("Horizontal") > lower && Input.GetAxis("Horizontal") < upper,
+                        MoveDirection.Down => Input.GetAxis("Vertical") > lower && Input.GetAxis("Vertical") < upper,
+                        MoveDirection.Up => Input.GetAxis("Vertical") > lower && Input.GetAxis("Vertical") < upper,
+                        _ => false
+                    };
+                    
+                    if (result1) return;
+                }
+                
+                
                 bool result = moveDirection switch
                 {
                     MoveDirection.Right => Input.GetAxis("Horizontal") > threshold,

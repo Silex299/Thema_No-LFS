@@ -10,7 +10,7 @@ namespace Path_Scripts
 
 
         private Coroutine _triggerCoroutine;
-        private bool _triggered;
+        protected bool triggered;
 
 
         public virtual Vector3 NextPoint => nextTransform.position;
@@ -20,9 +20,9 @@ namespace Path_Scripts
         {
             if (other.CompareTag("Player_Main"))
             {
-                if (!_triggered)
+                if (!triggered)
                 {
-                    _triggered = true;
+                    triggered = true;
                     PlayerPathController.Instance.overridePath = this;
                 } 
                 
@@ -35,7 +35,7 @@ namespace Path_Scripts
         {
             yield return new WaitForSeconds(0.2f);
             
-            _triggered = false;
+            triggered = false;
             if (PlayerPathController.Instance.overridePath == this)
             {
                 PlayerPathController.Instance.overridePath = null;

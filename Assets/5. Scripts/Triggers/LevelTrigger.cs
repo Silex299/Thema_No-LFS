@@ -25,6 +25,9 @@ namespace Triggers
         #region Trigger Params
 
         [SerializeField, FoldoutGroup("Trigger Params")]
+        private bool invertedAction;
+        
+        [SerializeField, FoldoutGroup("Trigger Params")]
         private bool triggerPulled;
 
         [SerializeField, FoldoutGroup("Trigger Params")]
@@ -121,7 +124,7 @@ namespace Triggers
         private void Start()
         {
             //Set Initial State
-            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse");
+            leverAnimator.Play(triggerPulled ? "Trigger" : "Trigger Inverse", 0, 1f);
             _defaultPull = triggerPulled;
         }
 
@@ -183,7 +186,8 @@ namespace Triggers
             while (Input.GetButton("e"))
             {
                 #region PUSH
-                if (triggerPulled && Input.GetAxis("Horizontal") > 0)
+                
+                if (triggerPulled && (invertedAction? Input.GetAxis("Horizontal") < 0 : Input.GetAxis("Horizontal") > 0))
                 {
                     //PUSH
                     playerController.player.AnimationController.SetTrigger(Trigger1);
@@ -193,7 +197,7 @@ namespace Triggers
                 }
                 #endregion
                 #region PULL
-                else if (!triggerPulled && Input.GetAxis("Horizontal") < 0)
+                else if (!triggerPulled && (invertedAction? Input.GetAxis("Horizontal") > 0 : Input.GetAxis("Horizontal") < 0))
                 {
                     //PULL  
                     playerController.player.AnimationController.SetTrigger(Trigger1);
