@@ -14,7 +14,7 @@ namespace Triggers
         [SerializeField, BoxGroup("Trigger"), Tooltip("Delay before the second action can be triggered.")]
         private float secondActionDelay;
 
-        [SerializeField, BoxGroup("Visual")] private MeshRenderer meshRenderer;
+        [SerializeField, BoxGroup("Visual")] private Renderer meshRenderer;
         [SerializeField, BoxGroup("Visual")] private int materialIndex;
         [SerializeField, BoxGroup("Visual")] private Material triggeredMaterial;
         [SerializeField, BoxGroup("Visual")] private Material defaultMaterial;

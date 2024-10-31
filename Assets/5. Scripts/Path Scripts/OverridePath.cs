@@ -19,7 +19,6 @@ namespace Path_Scripts
         {
             if (other.CompareTag("Player_Main"))
             {
-                print("Player In Trigger");
                 if (!_triggered)
                 {
                     _triggered = true;

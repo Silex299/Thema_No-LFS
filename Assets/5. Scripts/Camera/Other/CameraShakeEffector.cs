@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Thema_Camera
@@ -12,6 +13,7 @@ namespace Thema_Camera
         [SerializeField] private float shakeMultiplier = 1;
 
         private CameraManager _cameraManager;
+        private Coroutine _changeCameraShakeCoroutine;
 
 
         #region Editor
@@ -52,7 +54,8 @@ namespace Thema_Camera
         {
             float distance = Vector3.Distance(transform.position, _cameraManager.GetCurrentTarget(out bool canShake).position);
             
-            if (!canShake) return;
+            if (!canShake || Mathf.Approximately(shakeMultiplier, 0)) return;
+            
             if (!(distance < maximumEffectingDistance)) return;
             
             var fraction = (maximumEffectingDistance - distance) / (maximumEffectingDistance - minimumEffectingDistance);
@@ -63,6 +66,28 @@ namespace Thema_Camera
             shakeParams.damping *= fraction;
 
             _cameraManager.ShakeCamera(shakeParams);
+        }
+
+        public void TransitionCameraShake(float targetMultiplier, float time)
+        {
+            
+            if(_changeCameraShakeCoroutine!=null) StopCoroutine(_changeCameraShakeCoroutine);
+            _changeCameraShakeCoroutine = StartCoroutine(ChangeCameraShake(targetMultiplier, time));
+            
+        }
+
+        private IEnumerator ChangeCameraShake(float targetMultiplier, float time)
+        {
+            float start = shakeMultiplier;
+            float end = targetMultiplier;
+            
+            float t = 0;
+            while (t < 1)
+            {
+                t += Time.deltaTime / time;
+                shakeMultiplier = Mathf.Lerp(start, end, t);
+                yield return null;
+            }
         }
     }
 
