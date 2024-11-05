@@ -115,6 +115,7 @@ namespace NPCs.New.V1
             {
                 states[_currentStateIndex].LateUpdateState(this);
                 
+                //Check if contains any value
                 if (subStates.TryGetValue(_currentStateIndex, out var currentSubStates))
                 {
                     if (currentSubStates.Length > 0)
