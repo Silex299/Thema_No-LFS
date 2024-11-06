@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
 using System.Linq;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -32,6 +32,10 @@ namespace Triggers
         [FoldoutGroup("Animation")] public string reverseActionAnimName;
         
         [FoldoutGroup("Animation")] public float engageAnimTime;
+
+        [FoldoutGroup("Sound")] public AudioSource source;
+        [FoldoutGroup("Sound")] public SoundClip triggerSound;
+        [FoldoutGroup("Sound")] public SoundClip unTriggerSound;
 
         [FoldoutGroup("Events"), Tooltip("After what time on trigger actions are called")] public float actionTime;
         [FoldoutGroup("Events"), Tooltip("Time before the player can pull/push the lever again")] public float secondActionDelay = 1;
@@ -198,7 +202,6 @@ namespace Triggers
         private IEnumerator Action()
         {
             
-            
             PlayerAnim(!IsTriggered);
             LeverAnim(!IsTriggered);
             
@@ -216,6 +219,7 @@ namespace Triggers
                 {
                     onUnTrigger.Invoke();
                 }
+                PlaySound(IsTriggered);
             }
             yield return new WaitForSeconds(secondActionDelay);
             
@@ -231,6 +235,14 @@ namespace Triggers
             if(trigger == IsTriggered) return;
             
             leverAnimator?.Play(trigger? "Pull" : "Push");
+        }
+
+        private void PlaySound(bool trigger)
+        {
+            if (source)
+            {
+                source.PlayOneShot(trigger ? triggerSound.clip : unTriggerSound.clip, trigger? triggerSound.volume : unTriggerSound.volume);
+            }
         }
         
     }

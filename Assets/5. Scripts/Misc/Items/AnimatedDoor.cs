@@ -1,4 +1,4 @@
-using System;
+using Thema_Type;
 using UnityEngine;
 
 namespace Misc.Items
@@ -7,6 +7,10 @@ namespace Misc.Items
     {
         
         public Animator animator;
+
+        public AudioSource source;
+        public SoundClip openSoundClip;
+        public SoundClip closeSoundClip;
 
         [field: SerializeField] public bool IsOpen { get; private set; } = false;
 
@@ -21,9 +25,19 @@ namespace Misc.Items
             if(open == IsOpen) return;
 
             animator.Play(open ? "Open" : "Close");
+            PlaySound(open);
             IsOpen = open;
         }
-        
+
+
+        private void PlaySound(bool open)
+        {
+            if (source)
+            {
+                source.PlayOneShot(open ? openSoundClip.clip : closeSoundClip.clip, open ? openSoundClip.volume : closeSoundClip.volume);
+
+            }
+        }
         
     }
 }
