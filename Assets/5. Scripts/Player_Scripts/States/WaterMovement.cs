@@ -46,6 +46,7 @@ namespace Player_Scripts.States
         public override void EnterState(Player player)
         {
             player.AnimationController.CrossFade("Fall in Water", 0.1f);
+            player.GroundTag = "Water";
         }
 
         public override void ExitState(Player player)

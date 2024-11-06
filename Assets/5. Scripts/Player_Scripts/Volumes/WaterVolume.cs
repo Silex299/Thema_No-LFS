@@ -107,10 +107,7 @@ namespace Player_Scripts.Volumes
             
             
             Player.waterMovement.OnSurface = onSurface;
-            _playerOnSurface = onSurface;
-            SpawnEffects(onSurface);
-                
-            if (_playerOnSurface)
+            if (onSurface)
             {
                 aboveWaterCameraOffset?.ChangeCameraOffset();
             }
@@ -118,6 +115,9 @@ namespace Player_Scripts.Volumes
             {
                 underwaterCameraOffset?.ChangeCameraOffset();
             }
+            
+            _playerOnSurface = onSurface;
+            SpawnEffects(onSurface);
         }
 
         private void LateUpdate()

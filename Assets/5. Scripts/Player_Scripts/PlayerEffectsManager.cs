@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Scriptable;
 using Sirenix.OdinInspector;
@@ -34,7 +33,6 @@ namespace Player_Scripts
             }
         }
         
-
         private void Start()
         {
             if (!player)

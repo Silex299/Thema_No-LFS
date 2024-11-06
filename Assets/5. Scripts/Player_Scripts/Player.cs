@@ -104,13 +104,13 @@ namespace Player_Scripts
         /// <summary>
         /// ENUM for current movement state
         /// </summary>
-        [SerializeField, BoxGroup] internal PlayerMovementState eCurrentState = PlayerMovementState.BasicMovement;
+        [SerializeField, FoldoutGroup("Other")] internal PlayerMovementState eCurrentState = PlayerMovementState.BasicMovement;
 
-        [SerializeField, BoxGroup] internal int previousStateIndex = -1;
-        [SerializeField, BoxGroup] internal int currentStateIndex = -1;
+        [SerializeField, FoldoutGroup("Other")] internal int previousStateIndex = -1;
+        [SerializeField, FoldoutGroup("Other")] internal int currentStateIndex = -1;
 
 
-        [SerializeField] private bool disablePlayerMovement;
+        [SerializeField, FoldoutGroup("Other")] private bool disablePlayerMovement;
 
         internal Interactable interactable;
         internal bool isInteracting;
@@ -132,7 +132,7 @@ namespace Player_Scripts
         public float JumpForwardVelocity => jumpingForwardVelocity;
         public float RotationSmoothness => rotationSmoothness;
         
-        public string GroundTag { get; set; }
+        [field: SerializeField, FoldoutGroup("Other")]public string GroundTag { get; set; }
 
         #region Flags
         

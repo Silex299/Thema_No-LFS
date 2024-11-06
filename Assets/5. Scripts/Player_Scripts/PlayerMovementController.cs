@@ -123,6 +123,7 @@ namespace Player_Scripts
 
         public void GroundCheck()
         {
+            //TODO: Test for half water, if it's working
             Ray ray = new Ray(transform.position + Vector3.up * player.sphereCastOffset, Vector3.down);
             if (Physics.SphereCast(ray, player.sphereCastRadius, out RaycastHit hit, 2f, player.groundMask))
             {

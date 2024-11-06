@@ -9,6 +9,7 @@ namespace Misc.Custom_Object_Scripts
     {
 
         [AssetsOnly] public GameObject playerMaskPrefab;
+        public AudioSource audioSource;
         
         public Animator animator;
         private GameObject _playerMask;
@@ -24,10 +25,11 @@ namespace Misc.Custom_Object_Scripts
         private IEnumerator OpenChamberCoroutine()
         {
             animator.Play("OpenChamber");
+            audioSource.Play();
             PlayerMovementController.Instance.player.DisabledPlayerMovement = true;
             PlayerMovementController.Instance.ResetAnimator();
             
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1f);
             
             _playerMask = Instantiate(playerMaskPrefab);
             _playerMask.GetComponent<UnderwaterPlayerMask>().Equip(true);

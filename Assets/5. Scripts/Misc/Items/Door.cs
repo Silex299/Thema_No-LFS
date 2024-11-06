@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Door : MonoBehaviour
 {
@@ -71,7 +70,6 @@ public class Door : MonoBehaviour
 
             isOpen = open;
             PlaySound(open);
-
             while (timeElapsed < transitionTime)
             {
                 timeElapsed += Time.deltaTime;
