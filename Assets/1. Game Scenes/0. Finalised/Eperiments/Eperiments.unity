@@ -10776,7 +10776,11 @@ MonoBehaviour:
     connectedLadder: {fileID: 0}
   waterMovement:
     swimSpeed: 3
-    waterVolume: {fileID: 0}
+    <DamageSpeed>k__BackingField: 10
+    flatHeight: 0.34
+    flatCenter: {x: 0, y: 0.14, z: 0}
+    normalHeight: 1.7
+    normalCenter: {x: 0, y: 0.92, z: 0}
   ropeMovement:
     attachedRope: {fileID: 0}
     handSocket: {fileID: 543450652237868005}
@@ -10789,6 +10793,7 @@ MonoBehaviour:
   previousStateIndex: -1
   currentStateIndex: 0
   disablePlayerMovement: 0
+  <GroundTag>k__BackingField: 
 --- !u!114 &1495976979
 MonoBehaviour:
   m_ObjectHideFlags: 0
