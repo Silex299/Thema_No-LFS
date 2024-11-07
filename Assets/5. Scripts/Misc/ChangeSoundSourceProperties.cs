@@ -1,18 +1,63 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeSoundSourceProperties : MonoBehaviour
+namespace Misc
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ChangeSoundSourceProperties : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
+        public AudioSource source;
+        public float defaultTransitionTime;
+
+        [field: SerializeField] public bool IsPlaying { get; set; }
+        private Coroutine _soundCoroutine;
+        
+        public void StopSource()
+        {
+            if (_soundCoroutine != null)
+            {
+                StopCoroutine(_soundCoroutine);
+            }
+
+            _soundCoroutine = StartCoroutine(ChangeSourceProperties(0, defaultTransitionTime));
+        }
+        public void PlaySource()
+        {
+            if (_soundCoroutine != null)
+            {
+                StopCoroutine(_soundCoroutine);
+            }
+
+            _soundCoroutine = StartCoroutine(ChangeSourceProperties(1, defaultTransitionTime));
+        }
+        
+        private IEnumerator ChangeSourceProperties(float targetVolume, float transitionTime = 1f)
+        {
+            
+            if (!IsPlaying)
+            {
+                source.Play();
+            }
+            
+            float initialVolume = source.volume;
+            float elapsedTime = 0f;
+            while (elapsedTime < transitionTime)
+            {
+                elapsedTime += Time.deltaTime;
+                source.volume = Mathf.Lerp(initialVolume, targetVolume, elapsedTime / transitionTime);
+                yield return null;
+            }
+            
+            source.volume = targetVolume;
+            IsPlaying = !Mathf.Approximately(targetVolume, 0);
+            if (!IsPlaying)
+            {
+                source.Stop();
+            }
+
+            _soundCoroutine = null;
+
+        }
         
     }
 }
