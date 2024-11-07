@@ -4,8 +4,13 @@ namespace Sounds
 {
     public class InverseSoundVolume : SoundVolume
     {
+        
+        public bool createCollider = true;
+        
         protected override void CreateBoxCollider()
         {
+            if(!createCollider) return;
+            
             //create a box collider with the bounds
             BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
             boxCollider.center = bounds.center;
