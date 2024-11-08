@@ -28,10 +28,8 @@ namespace Triggers
         [BoxGroup("Events")] public UnityEvent triggeredEvents;
         [BoxGroup("Events")] public UnityEvent unTriggeredEvents;
 
-        
-
         private bool _playerIsInTrigger;
-        private bool _triggered;
+        [field: SerializeField] public bool Triggered { get; set; }
         private float _lastTriggerTime;
 
         #region Reset Params
@@ -40,12 +38,7 @@ namespace Triggers
 
         #endregion
         
-        public bool Triggered
-        {
-            get => _triggered;
-            set => _triggered = value;
-        }
-
+      
         private void OnTriggerEnter(Collider other)
         {
             if (!enabled) return;
@@ -92,7 +85,8 @@ namespace Triggers
 
             Triggered = triggered;
 
-            if (_triggered)
+            
+            if (triggered)
             {
                 triggeredEvents.Invoke();
             }
@@ -100,7 +94,7 @@ namespace Triggers
             {
                 unTriggeredEvents.Invoke();
             }
-
+            
             UpdateSwitch(Triggered);
             TriggerSound();
 
@@ -147,14 +141,14 @@ namespace Triggers
 
         public void Reset()
         {
-            _triggered = _initiallyTriggered;
-            UpdateSwitch(_triggered);
+            Triggered = _initiallyTriggered;
+            UpdateSwitch(Triggered);
         }
 
         public void Set()
         {
-            _triggered = !_initiallyTriggered;
-            UpdateSwitch(_triggered);
+            Triggered = !_initiallyTriggered;
+            UpdateSwitch(Triggered);
         }
         
     }

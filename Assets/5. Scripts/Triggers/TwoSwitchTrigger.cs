@@ -1,14 +1,21 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Triggers
 {
     public class TwoSwitchTrigger : MonoBehaviour
     {
 
-        [Required] public SimpleSwitch simpleSwitch1;
-        [Required] public SimpleSwitch simpleSwitch2;
+        [Required, FoldoutGroup("References")] public SimpleSwitch simpleSwitch1;
+        [Required, FoldoutGroup("References")] public SimpleSwitch simpleSwitch2;
 
+
+        [FoldoutGroup("Events"), InfoBox("true if first switch is triggered, false if second one")] public UnityEvent<bool> oneTriggeredEvents;
+        [FoldoutGroup("Events")] public UnityEvent bothTriggeredEvents;
+        [FoldoutGroup("Events")] public UnityEvent noneTriggeredEvents;
+        
+        
 
         #region Built-in Method
         
@@ -32,39 +39,27 @@ namespace Triggers
         }
 
         #endregion
-
-
+        
 
         private void UpdateSwitches()
         {
-            
-        }
-        
-        
-        #region Switch 1
+            bool isSwitch1Triggered = simpleSwitch1.Triggered;
+            bool isSwitch2Triggered = simpleSwitch2.Triggered;
 
-        private void SetSwitch1()
-        {
+            if (isSwitch1Triggered && isSwitch2Triggered)
+            {
+                bothTriggeredEvents.Invoke();
+            }
+            else if (isSwitch1Triggered || isSwitch2Triggered)
+            {
+                oneTriggeredEvents.Invoke(isSwitch1Triggered);
+            }
+            else
+            {
+                noneTriggeredEvents.Invoke();
+            }
             
         }
-        private void ResetSwitch1()
-        {
-            
-        }
-
-        #endregion
         
-        #region Switch 2
-        
-        private void SetSwitch2()
-        {
-            
-        }
-        private void ResetSwitch2()
-        {
-            
-        }
-
-        #endregion
     }
 }

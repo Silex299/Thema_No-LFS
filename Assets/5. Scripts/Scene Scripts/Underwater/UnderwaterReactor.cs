@@ -83,9 +83,28 @@ namespace Scene_Scripts.Underwater
                 _fillMaterialCoroutine = StartCoroutine(ChangeFillMaterial(rightFillMaterial, 0.133f));
             }
             
+        }
+
+
+        /// <summary>
+        /// Called when only one switch is triggered
+        /// </summary>
+        public void TriggerIndependentEffects()
+        {
             triggeredMaterialProperty.ChangeMaterialProperty(reactorBarMaterial);
             cameraShakeEffector.TransitionCameraShake(triggeredShakeMultiplier, 2f);
         }
+        
+        /// <summary>
+        /// Called when both switches are off
+        /// </summary>
+        public void UnTriggerIndependentEffects()
+        {
+            activatedMaterialProperty.ChangeMaterialProperty(reactorBarMaterial);
+            cameraShakeEffector.TransitionCameraShake(activatedShakeMultiplier, 2f);
+        }
+        
+        
         
         public void UnTriggerReactor(bool leftTrigger)
         {
@@ -105,8 +124,6 @@ namespace Scene_Scripts.Underwater
                 if(_fillMaterialCoroutine!= null) StopCoroutine(_fillMaterialCoroutine);
                 _fillMaterialCoroutine = StartCoroutine(ChangeFillMaterial(rightFillMaterial, 1f));
             }
-            
-            cameraShakeEffector.TransitionCameraShake(activatedShakeMultiplier, 2f);
         }
 
 
