@@ -28,6 +28,7 @@ namespace Triggers
         [BoxGroup("Events")] public UnityEvent triggeredEvents;
         [BoxGroup("Events")] public UnityEvent unTriggeredEvents;
 
+        
 
         private bool _playerIsInTrigger;
         private bool _triggered;
@@ -38,7 +39,7 @@ namespace Triggers
         private bool _initiallyTriggered;
 
         #endregion
-
+        
         public bool Triggered
         {
             get => _triggered;

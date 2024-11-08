@@ -30,6 +30,16 @@ namespace Misc
 
             _soundCoroutine = StartCoroutine(ChangeSourceProperties(1, defaultTransitionTime));
         }
+
+        public void ChangeSourceVolume(float volume)
+        {
+            if (_soundCoroutine != null)
+            {
+                StopCoroutine(_soundCoroutine);
+            }
+
+            _soundCoroutine = StartCoroutine(ChangeSourceProperties(volume, defaultTransitionTime));
+        }
         
         private IEnumerator ChangeSourceProperties(float targetVolume, float transitionTime = 1f)
         {

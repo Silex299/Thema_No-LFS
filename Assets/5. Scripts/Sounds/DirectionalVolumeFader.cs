@@ -10,7 +10,7 @@ namespace Sounds
     {
         
         
-        [FormerlySerializedAs("exents")] public Vector3 extents;
+        [InfoBox("Fades out as players moves away from its position")]public Vector3 extents;
         public SoundSource[] soundSources;
         
 
@@ -44,7 +44,7 @@ namespace Sounds
             
             
             //draw a wire cube with the bounds and left center at the transform position
-            Gizmos.color = new Color(0.1f, 1, 0.1f);
+            Gizmos.color = new Color(1f, 1, 0.5f);
             Gizmos.DrawWireCube( transform.position + (transform.forward * extents.z), 2 * extents);
             
         }
