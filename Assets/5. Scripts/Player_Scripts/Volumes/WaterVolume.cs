@@ -28,8 +28,8 @@ namespace Player_Scripts.Volumes
         
 
         private Coroutine _triggerCoroutine;
-        private bool _triggered;
-        private bool _playerOnSurface;
+        public bool Triggered { get; set; }
+        public bool PlayerOnSurface { get; set; }
         private GameObject _spawnedDragEffect;
         private GameObject _spawnedUnderwaterEffect;
         
@@ -47,7 +47,7 @@ namespace Player_Scripts.Volumes
             if (!enabled) return;
 
             if (!other.CompareTag("Player_Main")) return;
-            if (!_triggered) TriggerWaterVolume();
+            if (!Triggered) TriggerWaterVolume();
             
             if (_triggerCoroutine != null)
             {
@@ -61,7 +61,7 @@ namespace Player_Scripts.Volumes
             
             DestroySpawnedEffects();
             Physics.gravity = new Vector3(0, -9.81f, 0);
-            _triggered = false;
+            Triggered = false;
             _triggerCoroutine = null;
             
         }
@@ -71,7 +71,7 @@ namespace Player_Scripts.Volumes
             
             if(triggerYThreshold < Player.transform.position.y) return;
             
-            _triggered = true;
+            Triggered = true;
             SpawnEffects(false);
         
             Physics.gravity = new Vector3(0, -0.5f, 0);
@@ -98,15 +98,23 @@ namespace Player_Scripts.Volumes
 
         private void Update()
         {
-            if (!_triggered) return;
+            if (!Triggered) return;
 
            
             bool onSurface = (Player.transform.position.y + 1.5f) >= surfaceLevel;
            
-            if (onSurface == _playerOnSurface) return;
+            if (onSurface == PlayerOnSurface) return;
             
             
             Player.waterMovement.OnSurface = onSurface;
+            ChangeCameraOffset(onSurface);
+            PlayerOnSurface = onSurface;
+            SpawnEffects(onSurface);
+        }
+
+
+        public void ChangeCameraOffset(bool onSurface)
+        {
             if (onSurface)
             {
                 aboveWaterCameraOffset?.ChangeCameraOffset();
@@ -115,14 +123,12 @@ namespace Player_Scripts.Volumes
             {
                 underwaterCameraOffset?.ChangeCameraOffset();
             }
-            
-            _playerOnSurface = onSurface;
-            SpawnEffects(onSurface);
         }
+        
 
         private void LateUpdate()
         {
-            if(!_triggered) return;
+            if(!Triggered) return;
             if(PlayerMovementController.Instance.player.DisabledPlayerMovement) return;
             
             #region Player position update
@@ -130,7 +136,7 @@ namespace Player_Scripts.Volumes
             Vector3 desiredPos = Player.transform.position;
             desiredPos.x = playerX;
 
-            if (_playerOnSurface)
+            if (PlayerOnSurface)
             {
                 if (Input.GetAxis("Vertical") >= 0)
                 {
