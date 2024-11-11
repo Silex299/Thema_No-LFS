@@ -15,8 +15,6 @@ namespace Path_Scripts
             Vector3 right = transform.right * otherInput;
             
             Vector3 direction = (forward + right).normalized;
-            
-            print(transform.position + (direction * distance));
             return transform.position + (direction * distance);
         }
     }
