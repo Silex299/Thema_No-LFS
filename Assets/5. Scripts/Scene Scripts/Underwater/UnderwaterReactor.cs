@@ -1,4 +1,6 @@
 using System.Collections;
+using Misc;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using Thema_Camera;
 using UnityEngine;
@@ -85,7 +87,6 @@ namespace Scene_Scripts.Underwater
             
         }
 
-
         /// <summary>
         /// Called when only one switch is triggered
         /// </summary>
@@ -103,8 +104,6 @@ namespace Scene_Scripts.Underwater
             activatedMaterialProperty.ChangeMaterialProperty(reactorBarMaterial);
             cameraShakeEffector.TransitionCameraShake(activatedShakeMultiplier, 2f);
         }
-        
-        
         
         public void UnTriggerReactor(bool leftTrigger)
         {
@@ -127,6 +126,13 @@ namespace Scene_Scripts.Underwater
         }
 
 
+        public void Exit()
+        {
+            PlayerMovementController.Instance.player.DisabledPlayerMovement = true;
+            CutsceneManager.Instance.PlayClip(0);
+        }
+        
+        
         private IEnumerator ChangePulseMaterial(Material material, float finalValue)
         {
 
