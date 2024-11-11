@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Net.NetworkInformation;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -90,6 +91,7 @@ namespace Thema_Camera
             _transitionOffsetTrigger = StartCoroutine(TransitionOffset(info, transitionTime));
         }
 
+        
 
         private IEnumerator TransitionOffset(CameraFollowInfo info, float transitionTime)
         {
@@ -132,5 +134,71 @@ namespace Thema_Camera
 
             _transitionOffsetTrigger = null;
         }
+
+
+
+        public void ChangeOffsetWithSpeed(CameraFollowInfo info, float speed, bool accelerateOnItsCourse = false)
+        {
+            if (_transitionOffsetTrigger != null)
+            {
+                StopCoroutine(_transitionOffsetTrigger);
+            }
+
+            _transitionOffsetTrigger = StartCoroutine(TransitionOffsetWithSpeed(info, speed, accelerateOnItsCourse));
+        }
+
+        private IEnumerator TransitionOffsetWithSpeed(CameraFollowInfo info, float speed, bool accelerateOnItsCourse = false)
+        {
+            
+            float currentSpeed = accelerateOnItsCourse? 0 : speed;
+            
+            while (true)
+            {
+                
+                if (accelerateOnItsCourse)
+                {
+                    currentSpeed += Time.deltaTime * speed;
+                    if (Mathf.Approximately(currentSpeed, speed)) accelerateOnItsCourse = false;
+                }
+                
+                m_Offset = Vector3.Lerp(m_Offset, info.offset, Time.deltaTime * currentSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(info.rotation),Time.deltaTime * currentSpeed);
+                myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, info.FOV, Time.deltaTime * currentSpeed);
+                myCamera.lensShift = Vector2.Lerp(myCamera.lensShift, info.lenseShift, Time.deltaTime * currentSpeed);
+                
+                if (m_AudioListener)
+                {
+                    m_AudioListener.transform.localPosition = Vector3.Lerp(m_AudioListener.transform.localPosition, info.audioListenerLocalPosition, Time.deltaTime * currentSpeed);
+                }
+                
+                
+                //create exit condition with some threshold
+                if (Vector3.Distance(m_Offset, info.offset) < 0.1f && 
+                    Quaternion.Angle(transform.rotation, Quaternion.Euler(info.rotation)) < 0.1f 
+                    && Mathf.Abs(myCamera.fieldOfView - info.FOV) < 0.1f && 
+                    Vector2.Distance(myCamera.lensShift, info.lenseShift) < 0.1f)
+                {
+                    break;
+                }
+                
+                yield return null;
+            }
+
+
+            m_Offset = info.offset;
+            transform.rotation = Quaternion.Euler(info.rotation);
+            myCamera.fieldOfView = info.FOV;
+            myCamera.lensShift = info.lenseShift;
+            if (m_AudioListener)
+            {
+                m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
+            }
+            
+            
+            _transitionOffsetTrigger = null;
+            
+            
+        }
+        
     }
 }
