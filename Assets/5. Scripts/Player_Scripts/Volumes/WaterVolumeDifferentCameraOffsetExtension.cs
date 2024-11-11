@@ -54,6 +54,7 @@ namespace Player_Scripts.Volumes
 
         private void ChangeRegionOffset(int index)
         {
+            if(index == -1) return;
             if (aboveWaterCameraOffset)
             {
                 waterVolume.aboveWaterCameraOffset = regionalCameraOffsets[index].cameraOffset;
