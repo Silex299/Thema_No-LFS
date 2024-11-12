@@ -59,6 +59,7 @@ namespace Player_Scripts.Interactions
         private Coroutine _suctionSpeedCoroutine;
         private bool _playerIsInTrigger;
         private float _currentSuction;
+        private bool _initialSuck;
 
         private static PlayerMovementController PlayerController => PlayerMovementController.Instance;
 
@@ -95,6 +96,7 @@ namespace Player_Scripts.Interactions
 
         private void Start()
         {
+            _initialSuck = Suck;
             if(Suck) _currentSuction = maximumSuction;
         }
 
@@ -156,6 +158,31 @@ namespace Player_Scripts.Interactions
             _suctionSpeedCoroutine = null;
             
             Suck = targetSuction != 0;
+        }
+
+        public void Reset()
+        {
+            if (_suctionSpeedCoroutine != null)
+            {
+                StopCoroutine(_suctionSpeedCoroutine);
+                _suctionSpeedCoroutine = null;
+            }
+
+            Suck = _initialSuck;
+            _currentSuction = Suck ? maximumSuction : 0;
+
+        }
+
+        public void Set()
+        {
+            if (_suctionSpeedCoroutine != null)
+            {
+                StopCoroutine(_suctionSpeedCoroutine);
+                _suctionSpeedCoroutine = null;
+            }
+
+            Suck = !_initialSuck;
+            _currentSuction = Suck ? maximumSuction : 0;
         }
         
     }

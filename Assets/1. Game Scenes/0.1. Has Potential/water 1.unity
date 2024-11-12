@@ -4290,6 +4290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 729322507}
   - component: {fileID: 729322506}
+  - component: {fileID: 729322508}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -4327,6 +4328,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &729322508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729322505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1 &729650497
 GameObject:
   m_ObjectHideFlags: 0
@@ -5527,6 +5548,81 @@ Transform:
   - {fileID: 1043235706}
   m_Father: {fileID: 576727221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1128843483
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1128843486}
+  - component: {fileID: 1128843484}
+  - component: {fileID: 1128843485}
+  m_Layer: 1
+  m_Name: checkpoint_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1128843484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128843483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c599afdb15d6a4480e7067d1b4520a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreThisCheckpoint: 0
+  playerStateIndex: 2
+  nextPathPointIndex: 1
+  prevPathPointIndex: 0
+  canRotate: 1
+  canJump: 1
+  canBoost: 1
+  canPlayAlternateMovement: 1
+  checkpointIndex: 1
+--- !u!65 &1128843485
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128843483}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 24.417557, y: 57.57889, z: 2.016386}
+  m_Center: {x: -9.202453e-14, y: 0, z: -0.50819296}
+--- !u!4 &1128843486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128843483}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029802318}
+  m_LocalPosition: {x: -3.5, y: -15.8, z: -54.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1621117737}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1137997869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6795,6 +6891,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1243455014}
+  - {fileID: 1128843486}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1621117738
@@ -6813,6 +6910,7 @@ MonoBehaviour:
   currentLevelIndex: 0
   checkpoints:
   - {fileID: 1243455015}
+  - {fileID: 1128843484}
   playerTracker: {fileID: 47518303}
 --- !u!1 &1622431181
 GameObject:

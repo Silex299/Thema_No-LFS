@@ -38,6 +38,13 @@ namespace Misc.Items
 
             }
         }
+
+
+        public void ResetDoor(bool reset)
+        {
+            animator.Play(reset ? "Close" : "Open", 0, 1);
+            IsOpen = !reset;
+        }
         
     }
 }

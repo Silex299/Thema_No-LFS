@@ -50,6 +50,14 @@ namespace Misc.Custom_Object_Scripts
             _glowCoroutine = null;
 
         }
+        
+        
+        //reset)
+        public void ResetGlow(bool reset =  false)
+        {
+            pulseWireMaterial.SetFloat(Slider, !reset ? targetSliderValue : defaultSliderValue);  
+            _isGlowing = !reset;
+        }
 
 
     }

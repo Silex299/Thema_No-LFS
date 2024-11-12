@@ -244,6 +244,38 @@ namespace Triggers
                 source.PlayOneShot(trigger ? triggerSound.clip : unTriggerSound.clip, trigger? triggerSound.volume : unTriggerSound.volume);
             }
         }
+
+
+        public void Reset()
+        {
+            _colliderCount = 0;
+            _playerInTrigger = false;
+            _isEngaged = false;
+            _playerEngageCoroutine = null;
+            Invoke(nameof(DelayedReset), 0.5f);
+        }
+
+        private void DelayedReset()
+        {
+            IsTriggered = _initiallyTriggered;
+            leverAnimator?.Play(IsTriggered ? "Pull" : "Push", 0, 1f);
+        }
+
+
+        public void Set()
+        {
+            _colliderCount = 0;
+            _playerInTrigger = false;
+            _isEngaged = false;
+            _playerEngageCoroutine = null;
+            Invoke(nameof(DelayedSet), 0.5f);
+        }
+
+        public void DelayedSet()
+        {
+            IsTriggered = !_initiallyTriggered;
+            leverAnimator?.Play(IsTriggered ? "Pull" : "Push", 0, 1f);
+        }
         
     }
 }

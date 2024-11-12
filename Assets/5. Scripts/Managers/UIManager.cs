@@ -186,7 +186,7 @@ namespace Managers
 
             _isLcpViewOpen = false;
             animator.Play("EXIT_LCP_VIEW");
-            FadeOut();
+            FadeOut(0.5f);
         }
 
         private void TakeDamage(float fraction)

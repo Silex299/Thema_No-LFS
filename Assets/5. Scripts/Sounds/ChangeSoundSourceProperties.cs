@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -67,6 +68,13 @@ namespace Sounds
 
             _soundCoroutine = null;
 
+        }
+
+
+        public void ResetSource(bool reset)
+        {
+            source.volume = !reset? 1 : 0; 
+            IsPlaying = !reset;
         }
         
     }
