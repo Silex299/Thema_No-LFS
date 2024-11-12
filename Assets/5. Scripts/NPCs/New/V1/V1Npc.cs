@@ -42,8 +42,8 @@ namespace NPCs.New.V1
         #endregion
 
         #region Non Exposed Variables
-        
-        private int _currentStateIndex = -1;
+
+        public int CurrentStateIndex { get; private set; } = -1;
         public Transform Target => PlayerMovementController.Instance.transform; //Was target before, If there is any problem change it back to target and set it in start method;
 
         public bool CanAttack { get; set; } = true;
@@ -86,11 +86,11 @@ namespace NPCs.New.V1
                 if(health.IsDead) return;
             }
 
-            if (_currentStateIndex != -1)
+            if (CurrentStateIndex != -1)
             {
-                states[_currentStateIndex].UpdateState(this);
+                states[CurrentStateIndex].UpdateState(this);
                 
-                if (subStates.TryGetValue(_currentStateIndex, out var currentSubStates))
+                if (subStates.TryGetValue(CurrentStateIndex, out var currentSubStates))
                 {
                     if (currentSubStates.Length > 0)
                     {
@@ -111,12 +111,12 @@ namespace NPCs.New.V1
                 if(health.IsDead) return;
             }
 
-            if (_currentStateIndex != -1)
+            if (CurrentStateIndex != -1)
             {
-                states[_currentStateIndex].LateUpdateState(this);
+                states[CurrentStateIndex].LateUpdateState(this);
                 
                 //Check if contains any value
-                if (subStates.TryGetValue(_currentStateIndex, out var currentSubStates))
+                if (subStates.TryGetValue(CurrentStateIndex, out var currentSubStates))
                 {
                     if (currentSubStates.Length > 0)
                     {
@@ -164,26 +164,26 @@ namespace NPCs.New.V1
             
             Debug.LogWarning("Requested State::" + stateIndex);
             
-            if(stateIndex == _currentStateIndex) return;
+            if(stateIndex == CurrentStateIndex) return;
             if (!overrideHealthCheck && health)
             {
                 if(health.IsDead) return;
             }
             
-            if(_currentStateIndex!=-1) states[_currentStateIndex].Exit(this);
+            if(CurrentStateIndex!=-1) states[CurrentStateIndex].Exit(this);
             
-            onStateChange?.Invoke(stateIndex);
             print("Changing Npc state::" + stateIndex);
             
             if (stateIndex == -1)
             {
-                states[_currentStateIndex].Exit(this);
+                states[CurrentStateIndex].Exit(this);
                 enabled = false;
                 return;
             }
-            _currentStateIndex = stateIndex;
+            CurrentStateIndex = stateIndex;
             
-            states[_currentStateIndex].Enter(this);
+            onStateChange?.Invoke(stateIndex);
+            states[CurrentStateIndex].Enter(this);
             
             
             Debug.LogWarning("Completed State::" + stateIndex);
@@ -205,11 +205,11 @@ namespace NPCs.New.V1
 
         private void OnNpcDeath()
         {
-            if (_currentStateIndex != -1)
+            if (CurrentStateIndex != -1)
             {
-                states[_currentStateIndex].Exit(this);
+                states[CurrentStateIndex].Exit(this);
             }
-            _currentStateIndex = -1;
+            CurrentStateIndex = -1;
             onNpcDeath?.Invoke();
         }  
         

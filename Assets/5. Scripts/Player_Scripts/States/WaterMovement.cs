@@ -52,6 +52,7 @@ namespace Player_Scripts.States
         public override void ExitState(Player player)
         {
             UpdatePlayerRigidBody(player, false);
+            _speedMultiplier = 1;
         }
 
         public override void UpdateState(Player player)

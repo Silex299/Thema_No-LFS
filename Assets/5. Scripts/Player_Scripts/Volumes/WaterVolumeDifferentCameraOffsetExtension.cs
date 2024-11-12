@@ -39,7 +39,7 @@ namespace Player_Scripts.Volumes
 
             float defaultZ = transform.position.z;
             int i = 0;
-            for (i = 0; i <= regionalCameraOffsets.Length; i++)
+            for (i = 0; i < regionalCameraOffsets.Length; i++)
             {
                 if (PlayerPosition.z > defaultZ + regionalCameraOffsets[i].zRange.x && PlayerPosition.z <  defaultZ + regionalCameraOffsets[i].zRange.y)
                 {
