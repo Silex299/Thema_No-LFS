@@ -16,6 +16,8 @@ namespace Managers.Checkpoints
             player.CController.enabled = false;
             
             Transform checkpointTransform = checkPoint.transform;
+            
+            print("Reseting position");
             player.transform.position = checkpointTransform.position;
             player.transform.rotation = checkpointTransform.rotation;
 

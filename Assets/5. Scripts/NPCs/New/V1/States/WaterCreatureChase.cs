@@ -1,4 +1,3 @@
-using Player_Scripts;
 using UnityEngine;
 
 namespace NPCs.New.V1.States
@@ -64,6 +63,11 @@ namespace NPCs.New.V1.States
                 npc.animator.SetBool(Attack1, false);
             }
             
+        }
+        
+        public override void Exit(V1Npc npc)
+        {
+            npc.animator.SetBool(Attack1, false);
         }
 
 
