@@ -15,6 +15,8 @@ namespace Managers.Checkpoints
         [BoxGroup("Player Info")] public int nextPathPointIndex;
         [BoxGroup("Player Info")] public int prevPathPointIndex;
 
+        [BoxGroup("Player Info")] public bool overrideAnimation;
+        [BoxGroup("Player Info"), ShowIf(nameof(overrideAnimation))] public string overrideAnimationName;
         [BoxGroup("Player Movement")] public bool canRotate = true;
         [BoxGroup("Player Movement")] public bool canJump;
         [BoxGroup("Player Movement")] public bool canBoost;
@@ -44,6 +46,7 @@ namespace Managers.Checkpoints
             player.CanPlayAlternateMovement = canPlayAlternateMovement;
             
             PlayerMovementController.Instance.ChangeState(playerStateIndex);
+            if(overrideAnimation) PlayerMovementController.Instance.player.AnimationController.Play(overrideAnimationName, 0);
             
             
             PlayerPathController path = PlayerPathController.Instance;

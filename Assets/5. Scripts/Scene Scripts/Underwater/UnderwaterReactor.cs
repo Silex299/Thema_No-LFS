@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Misc;
 using Player_Scripts;
@@ -166,6 +167,29 @@ namespace Scene_Scripts.Underwater
             _pulseMaterialCoroutine = null;
         }
         
+        public void Reset()
+        {
+            //Stop all coroutines
+            
+            //Reset animator
+            reactorAnimator.Play("Default");
+            reactorWireAnimator.Play("Default");
+            
+            //Turn off camera shake
+            cameraShakeEffector.TransitionCameraShake(0, 0.1f);
+            
+            
+            //Reset fill materials
+            leftFillMaterial.SetFloat(Erosion, 1f);
+            rightFillMaterial.SetFloat(Erosion, 1f);
+            
+            //Reset Wire Materials
+            leftPulseWire.SetFloat(Slider, leftDeactivatedValue);
+            rightPulseWire.SetFloat(Slider, rightDeactivatedValue);
+            
+            //Reset bar material
+            deactivatedMaterialProperty.ChangeMaterialProperty(reactorBarMaterial);
+        }
 
         [System.Serializable]
         public class ReactorBarMaterialProperty
@@ -181,5 +205,6 @@ namespace Scene_Scripts.Underwater
         }
 
 
+        
     }
 }

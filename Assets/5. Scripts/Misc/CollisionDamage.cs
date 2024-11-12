@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using Thema_Type;
 using UnityEngine;
 
 namespace Misc
@@ -8,6 +8,8 @@ namespace Misc
     {
 
         [SerializeField] private float maximumDamage;
+        [SerializeField] private AudioSource source;
+        [SerializeField] private SoundClip hitClip;
         [field: SerializeField] public bool CanDamage { get; set; } = true;
 
         private void OnCollisionEnter(Collision collision)
@@ -18,10 +20,14 @@ namespace Misc
             {
                
                 Player_Scripts.PlayerMovementController.Instance.player.Health.TakeDamage(maximumDamage);
+                PlaySound();
             }
             
         }
 
+        
+        private void PlaySound() => source.PlayOneShot(hitClip.clip, hitClip.volume);
+        
        
     }
 

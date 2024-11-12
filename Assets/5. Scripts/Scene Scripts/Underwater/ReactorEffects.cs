@@ -59,7 +59,15 @@ namespace Scene_Scripts.Underwater
         {
             beamMaterial.SetFloat(FresnelSub, -1);
         }
-        
+
+
+
+        public void Reset()
+        {
+            _isOn = false;
+            windParticle.Stop(true);
+            beamMaterial.SetFloat(FresnelSub, -1);
+        }
         
         
         

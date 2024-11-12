@@ -23,6 +23,7 @@ namespace Misc
             
             Player.waterMovement.onSurfaceAction += SurfaceUpdate;
             Player.waterMovement.CanDamage = false;
+            Player.Health.ResetHealth();
         }
         private void OnDisable()
         {

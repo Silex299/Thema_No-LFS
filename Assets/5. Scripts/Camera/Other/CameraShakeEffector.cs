@@ -88,6 +88,9 @@ namespace Thema_Camera
                 shakeMultiplier = Mathf.Lerp(start, end, t);
                 yield return null;
             }
+
+            shakeMultiplier = end;
+            _changeCameraShakeCoroutine = null;
         }
     }
 
