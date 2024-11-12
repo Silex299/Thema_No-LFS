@@ -162,6 +162,8 @@ namespace NPCs.New.V1
         public void ChangeState(int stateIndex, bool overrideHealthCheck = false)
         {
             
+            Debug.LogWarning("Requested State::" + stateIndex);
+            
             if(stateIndex == _currentStateIndex) return;
             if (!overrideHealthCheck && health)
             {
@@ -182,6 +184,9 @@ namespace NPCs.New.V1
             _currentStateIndex = stateIndex;
             
             states[_currentStateIndex].Enter(this);
+            
+            
+            Debug.LogWarning("Completed State::" + stateIndex);
 
         }
       

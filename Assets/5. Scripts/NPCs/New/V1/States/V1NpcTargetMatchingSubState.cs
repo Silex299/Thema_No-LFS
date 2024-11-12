@@ -8,11 +8,13 @@ namespace NPCs.New.V1.States
 {
     public class V1NpcTargetMatchingSubState : V1NpcBaseState
     {
+        [InfoBox("Matches the socket position to targetPlayer bone if certain animations are playing (based on its normalized time)")]
         public Transform socket;
         public HumanBodyBones targetPlayerBone;
-        public float distanceThreshold = 4;
+        [Tooltip("Maximum distance at which position is matched")]public float distanceThreshold = 4;
         public Vector3 matchingOffset;
         public float matchSpeed;
+        [Space(10)] public int animationLayer = 1;
         public string[] animationName;
         [MinMaxSlider(0, 1, true)] public Vector2 normalizedTime;
 
@@ -27,7 +29,7 @@ namespace NPCs.New.V1.States
 
             if(ThemaVector.PlannerDistance(npcPos, targetPos) > distanceThreshold) return;
             
-            AnimatorStateInfo stateInfo = npc.animator.GetCurrentAnimatorStateInfo(1);
+            AnimatorStateInfo stateInfo = npc.animator.GetCurrentAnimatorStateInfo(animationLayer);
 
             if (animationName.Any(anim => stateInfo.IsName(anim)))
             {
