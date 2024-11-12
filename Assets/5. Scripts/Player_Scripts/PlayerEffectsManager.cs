@@ -97,8 +97,23 @@ namespace Player_Scripts
             if (!groundInteractions.clips.TryGetValue(playerInteraction.interactionKey, out var clips)) return;
 
             playerInteractionSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)], playerInteraction.volume * PlayerVolumeMultiplier);
+            
+        }
 
+        public void PlayPlayerInteractionGroundOverride(Object interaction)
+        {
+            var playerInteraction = interaction as PlayerInteractionGroundOverride;
+            if(playerInteraction == null) return;
+            
+            var groundKey = playerInteraction.ground;
+            
+            if(!interactions.ContainsKey(groundKey)) return;
+            if (!interactions.TryGetValue(groundKey, out var groundInteractions)) return;
+            
+            if (!groundInteractions.clips.ContainsKey(playerInteraction.interactionKey)) return;
+            if (!groundInteractions.clips.TryGetValue(playerInteraction.interactionKey, out var clips)) return;
 
+            playerInteractionSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)], playerInteraction.volume * PlayerVolumeMultiplier);
         }
         
         public void PlayPlayerSound(string soundKey)

@@ -1,3 +1,4 @@
+using Scriptable;
 using UnityEngine;
 
 namespace Player_Scripts.Interactions
@@ -9,6 +10,11 @@ namespace Player_Scripts.Interactions
         public void PlayPlayerInteraction(Object interaction)
         {
             PlayerEffects.PlayPlayerInteraction(interaction);
+        }
+
+        public void PlayPlayerInteractionOverrideGround(Object interaction)
+        {
+            PlayerEffects.PlayPlayerInteractionGroundOverride(interaction);
         }
 
         public void PlayPlayerSound(string soundKey)

@@ -10,6 +10,7 @@ namespace Managers.Checkpoints
     {
         
         public bool ignoreThisCheckpoint;
+        public int checkpointIndex;
         
         [BoxGroup("Player Info")] public int playerStateIndex;
         [BoxGroup("Player Info")] public int nextPathPointIndex;
@@ -17,13 +18,14 @@ namespace Managers.Checkpoints
 
         [BoxGroup("Player Info")] public bool overrideAnimation;
         [BoxGroup("Player Info"), ShowIf(nameof(overrideAnimation))] public string overrideAnimationName;
+        
+        
         [BoxGroup("Player Movement")] public bool canRotate = true;
         [BoxGroup("Player Movement")] public bool canJump;
         [BoxGroup("Player Movement")] public bool canBoost;
         [BoxGroup("Player Movement")] public bool canPlayAlternateMovement;
         
 
-        public int checkpointIndex;
 
 
         private void OnTriggerEnter(Collider other)
@@ -37,7 +39,6 @@ namespace Managers.Checkpoints
         public void LoadThisCheckpoint()
         {
             if(ignoreThisCheckpoint) return;
-
             //Player
             Player player = PlayerMovementController.Instance.player;
             player.CanBoost = canBoost;

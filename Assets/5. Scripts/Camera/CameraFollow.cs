@@ -15,15 +15,11 @@ namespace Thema_Camera
         [SerializeField] internal bool lookAtTarget;
 
         [SerializeField] internal Camera myCamera;
-        private static CameraFollow instance;
 
-        public static CameraFollow Instance
-        {
-            get => instance;
-        }
+        public static CameraFollow Instance { get; private set; }
 
         private Coroutine _transitionOffsetTrigger;
-        public bool DoFollowTarget { get; set; } = true;
+        public bool DoFollowTarget { get; set; } = true; // TODO: Merge follow target and DO follow target if there is no catch
 
         [Button("GetOffset")]
         public void GetOffset()
@@ -42,7 +38,7 @@ namespace Thema_Camera
             }
             else
             {
-                CameraFollow.instance = this;
+                CameraFollow.Instance = this;
             }
         }
 

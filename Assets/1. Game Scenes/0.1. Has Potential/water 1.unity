@@ -1485,6 +1485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 2
   playerStateIndex: 2
   nextPathPointIndex: 1
   prevPathPointIndex: 0
@@ -1494,7 +1495,6 @@ MonoBehaviour:
   canJump: 1
   canBoost: 1
   canPlayAlternateMovement: 1
-  checkpointIndex: 2
 --- !u!1 &77370409
 GameObject:
   m_ObjectHideFlags: 0
@@ -2756,7 +2756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5297,6 +5297,50 @@ Transform:
   - {fileID: 1079036594}
   m_Father: {fileID: 47518301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1025361937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1025361938}
+  - component: {fileID: 1025361939}
+  m_Layer: 0
+  m_Name: Scene Script
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1025361938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025361937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1025361939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025361937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d6f6b01d798404fb17f25108c0baec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1043235705
 GameObject:
   m_ObjectHideFlags: 0
@@ -5656,6 +5700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 1
   playerStateIndex: 2
   nextPathPointIndex: 1
   prevPathPointIndex: 0
@@ -5665,7 +5710,6 @@ MonoBehaviour:
   canJump: 1
   canBoost: 1
   canPlayAlternateMovement: 1
-  checkpointIndex: 1
 --- !u!65 &1128843485
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6080,6 +6124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 0
   playerStateIndex: 2
   nextPathPointIndex: 1
   prevPathPointIndex: 0
@@ -6089,7 +6134,6 @@ MonoBehaviour:
   canJump: 1
   canBoost: 1
   canPlayAlternateMovement: 1
-  checkpointIndex: 0
 --- !u!1 &1253378884
 GameObject:
   m_ObjectHideFlags: 0
@@ -7307,6 +7351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 3
   playerStateIndex: 0
   nextPathPointIndex: 12
   prevPathPointIndex: 10
@@ -7316,7 +7361,6 @@ MonoBehaviour:
   canJump: 1
   canBoost: 1
   canPlayAlternateMovement: 1
-  checkpointIndex: 3
 --- !u!65 &1679525497
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7346,13 +7390,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679525495}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029802318}
-  m_LocalPosition: {x: -2.49, y: 138.08, z: -340.62}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: -0, y: 0.999998, z: -0, w: 0.002038511}
+  m_LocalPosition: {x: -2.561438, y: 137.60849, z: -340.4094}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1621117737}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180.076, z: 0}
 --- !u!1 &1682832635
 GameObject:
   m_ObjectHideFlags: 0
@@ -10470,3 +10514,4 @@ SceneRoots:
   - {fileID: 661721676}
   - {fileID: 1621117737}
   - {fileID: 729322507}
+  - {fileID: 1025361938}
