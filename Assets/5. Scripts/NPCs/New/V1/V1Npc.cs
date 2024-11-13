@@ -29,7 +29,7 @@ namespace NPCs.New.V1
 
 
         [FoldoutGroup("Path Finder")] public PathFinderBase pathFinder;
-        [FoldoutGroup("Path Finder")] public float targetOffset;
+        [FoldoutGroup("Path Finder"), Tooltip("Target Y offset")] public float targetOffset;
         [FoldoutGroup("Path Finder")] public float npcEyeHeight = 1.5f;
         [FoldoutGroup("Path Finder")] public float pathFindingInterval = 0.5f;
         
@@ -116,14 +116,13 @@ namespace NPCs.New.V1
                 states[CurrentStateIndex].LateUpdateState(this);
                 
                 //Check if contains any value
-                if (subStates.TryGetValue(CurrentStateIndex, out var currentSubStates))
+                if (!subStates.ContainsKey(CurrentStateIndex)) return;
+                subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
+                if (currentSubStates?.Length > 0)
                 {
-                    if (currentSubStates.Length > 0)
+                    foreach (var subState in currentSubStates)
                     {
-                        foreach (var subState in currentSubStates)
-                        {
-                            subState.LateUpdateState(this);
-                        }
+                        subState.LateUpdateState(this);
                     }
                 }
             }

@@ -8,6 +8,7 @@ using Weapons.NPC_Weapon;
 // ReSharper disable once CheckNamespace
 public class GuardNpc : MonoBehaviour
 {
+
     [BoxGroup("References")] public Animator animator;
     [BoxGroup("References")] public NpcPathFinder pathFinder;
     [BoxGroup("References")] public HealthBaseClass health;
