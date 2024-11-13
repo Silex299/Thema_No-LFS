@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,7 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField] private bool disablePlayerMovment = true;
 
         public float exitActionDelay = 2f;
+        public float entryDelay = 2f;
         [SerializeField, Space(10)] private UnityEvent entryAction;
         [SerializeField] private UnityEvent exitAction;
         private bool _playerEngaged;
@@ -50,7 +52,7 @@ namespace Player_Scripts.Interactions.Animation
                 PlayerMovementController.Instance.DisablePlayerMovement(true);
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(entryDelay);
             
             _playerEngaged = true;
         }
@@ -62,6 +64,12 @@ namespace Player_Scripts.Interactions.Animation
             exitAction?.Invoke();
             yield return new WaitForSeconds(1f);
             PlayerMovementController.Instance.DisablePlayerMovement(false);
+        }
+
+        public void Reset()
+        {
+            _playerEngaged = false;
+            _enabled = true;
         }
     }
     
