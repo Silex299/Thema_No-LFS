@@ -1,78 +1,50 @@
+using System;
 using Player_Scripts;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Triggers
 {
-    public class InteractionEffectVolume : MonoBehaviour
+    public class InteractionEffectVolume : BetterTriggerBase
     {
-        public GameObject splashPrefab;
-        public GameObject dragPrefab;
+        [FoldoutGroup("Properties")] public GameObject dragPrefab;
+        [FoldoutGroup("Properties")] public Vector3 offset;
 
-        public float playerVelocityThreshold = -2f;
-        public Vector3 offset;
-        public bool varyingTerrain;
-        public float surfaceHeight = 0.7f;
+        [FoldoutGroup("References")] public FollowCurve followCurve;
 
-        public float destroyEffectDelay = 1f;
-        private bool _playerInTrigger;
         private GameObject _spawnedEffect;
+        private Transform PlayerTransform => PlayerMovementController.Instance.transform;
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player_Main"))
-            {
-                if (_playerInTrigger) return;
-
-                if (splashPrefab)
-                {
-                    if (PlayerVelocityCalculator.Instance.velocity.y < playerVelocityThreshold)
-                    {
-                        GameObject splash = Instantiate(splashPrefab, transform, true);
-                        var playerTransform = PlayerMovementController.Instance.transform;
-                        var newPos = playerTransform.position;
-                        newPos.y = surfaceHeight;
-                        splash.transform.position = newPos;
-                    
-                    }
-                }
-
-                if (!_spawnedEffect)
-                {
-                    _spawnedEffect = Instantiate(dragPrefab, transform, true);
-                }
-
-                _playerInTrigger = true;
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Player_Main"))
-            {
-                _playerInTrigger = false;
-                if (_spawnedEffect)
-                {
-                    Destroy(_spawnedEffect, destroyEffectDelay);
-                }
-            }
-        }
 
         private void Update()
         {
-            if (_playerInTrigger)
+            if (playerInTrigger)
             {
                 if (_spawnedEffect)
                 {
-                    var playerTransform = PlayerMovementController.Instance.transform;
-                    Vector3 playerPos = playerTransform.position;
-                    if (!varyingTerrain)
-                    {
-                        playerPos.y = surfaceHeight;
-                    }
-                    _spawnedEffect.transform.position = playerPos + offset.z * playerTransform.forward +
-                                                        offset.y * playerTransform.up + offset.x * playerTransform.right;
+                    _spawnedEffect.transform.position = PlayerTransform.TransformPoint(offset);
+                }
+                else
+                {
+                    SpawnEffect();
                 }
             }
+            else if (_spawnedEffect)
+            {
+                Destroy(_spawnedEffect);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (!playerInTrigger) return;
+
+            followCurve.UpdatePosition(PlayerTransform);
+        }
+
+        private void SpawnEffect()
+        {
+            _spawnedEffect = Instantiate(dragPrefab);
         }
     }
 }

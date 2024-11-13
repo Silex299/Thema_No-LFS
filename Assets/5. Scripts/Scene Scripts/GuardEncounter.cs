@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using Managers;
+using Managers.Checkpoints;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Rendering;
 
 namespace Scene_Scripts
@@ -9,7 +12,33 @@ namespace Scene_Scripts
     {
         public float initialSceneNameDelay = 9f;
         public string sceneName;
+        public PlayableDirector initSceneTimeline;
 
+
+        private void OnEnable()
+        {
+            CheckpointManager.Instance.onCheckpointLoad += OnCheckpointLoad;
+        }
+
+        private void OnDisable()
+        {
+            CheckpointManager.Instance.onCheckpointLoad -= OnCheckpointLoad;
+        }
+
+
+        private void OnCheckpointLoad(int checkpoint)
+        {
+            if (checkpoint == 0)
+            {
+                initSceneTimeline.Play();
+            }
+            else
+            {
+                UIManager.Instance.FadeOut(3);
+            }
+        }
+        
+        
         private void Start()
         {
             StartCoroutine(StarScene());
@@ -43,6 +72,8 @@ namespace Scene_Scripts
                 yield return new WaitForSeconds(0.03f);
             }
         }
+        
+        
 
         public void FadeOutPpVolume(Volume renderingVolume)
         {
@@ -68,9 +99,5 @@ namespace Scene_Scripts
             yield return null;
         }
 
-        public void FadeOutBlack()
-        {
-            UIManager.Instance.FadeOut();
-        }
     }
 }
