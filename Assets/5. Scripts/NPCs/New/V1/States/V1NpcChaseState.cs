@@ -113,6 +113,11 @@ namespace NPCs.New.V1.States
             npc.animator.SetFloat(Speed, _speedMultiplier);
             npc.Rotate(desiredPos, npc.rotationSpeed * Time.deltaTime);
             
+            
+        }
+
+        public override void LateUpdateState(V1Npc npc)
+        {
             #region Attack
 
             

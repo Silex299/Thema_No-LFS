@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NPCs.New;
@@ -57,13 +58,13 @@ namespace Weapons.NPC_Weapon
                 return;
             }
 
-            Vector3 direction = (PlayerMovementController.Instance.transform.position + new Vector3(0, 1f, 0)) - muzzle.transform.position;
-            direction = direction.normalized;
-
             if (bulletPrefab)
             {
-                Transform muzzleSocket = muzzle.transform;
-                GameObject obj = Instantiate(bulletPrefab, muzzleSocket.position, muzzleSocket.rotation);
+                Vector3 muzzleSocket = muzzle.transform.position;
+                Vector3 direction = (PlayerMovementController.Instance.transform.position + Vector3.up - muzzleSocket);
+                direction = direction.normalized;
+                GameObject obj = Instantiate(bulletPrefab, muzzleSocket, Quaternion.identity);
+                
                 StartCoroutine(MoveTracer(obj, direction));
             }
             
@@ -71,6 +72,9 @@ namespace Weapons.NPC_Weapon
             source.PlayOneShot(firingSound);
             _lastFireTime = Time.time;
         }
+        
+        
+
         IEnumerator MoveTracer(GameObject tracer, Vector3 direction)
         {
             float startTime = Time.time;

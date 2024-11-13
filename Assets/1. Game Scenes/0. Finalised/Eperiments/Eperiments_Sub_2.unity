@@ -3006,6 +3006,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 0
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -12152,6 +12154,8 @@ MonoBehaviour:
   continuousCheck: 1
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -30227,6 +30231,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -30734,7 +30740,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 2
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 2
 --- !u!114 &1760720189
 MonoBehaviour:
   m_ObjectHideFlags: 0
