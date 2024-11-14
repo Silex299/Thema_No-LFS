@@ -83,6 +83,33 @@ namespace Thema_Type
             b.y = 0;
             return Vector3.Distance(a, b);
         }
+
+
+        public static int ClosestPoint(IEnumerable<Vector3> points, Vector3 point, out Vector3 closestPoint)
+        {
+            float distance = float.MaxValue;
+            int closestPointIndex = 0;
+            closestPoint = Vector3.zero;
+            
+            int i = 0;
+            
+            foreach (var pt in points)
+            {
+                float currentIndexDistance = PlannerDistance(point, pt);
+                if (distance > currentIndexDistance)
+                {
+                    closestPointIndex = i;
+                    distance = currentIndexDistance;
+                    closestPoint = pt;
+                }
+
+                i++;
+            }
+            
+            return closestPointIndex;
+
+        }
+        
     }
     
     [System.Serializable]
@@ -299,6 +326,10 @@ namespace Thema_Type
         /// <param name="priority">Priority of the Item</param>
         public void Enqueue(float priority, T item)
         {
+            if (_list.ContainsKey(priority))
+            {
+                Debug.Log(item);
+            }
             _list.Add(priority, item); // Add a new item with the given priority
         }
 

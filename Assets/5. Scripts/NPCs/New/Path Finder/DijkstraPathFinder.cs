@@ -52,7 +52,7 @@ namespace NPCs.New.Path_Finder
                     previousPathIndex[i] = -1;
                 }
 
-                PriorityQueue<int> priorityQueue = new PriorityQueue<int>(); //(weight, index)
+                var priorityQueue = new PriorityQueue<int>(); //(weight, index)
 
 
                 //implementing Dijkstra's algorithm

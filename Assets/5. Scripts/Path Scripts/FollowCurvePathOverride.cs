@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Managers.Checkpoints;
 using Player_Scripts;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using Thema_Type;
 using UnityEngine;
 
@@ -41,6 +43,7 @@ namespace Path_Scripts
 
 #if UNITY_EDITOR
 
+        [Header("Debug")]
         public Vector3 forwardPoint;
         public Vector3 mainPoint;
 
@@ -121,9 +124,69 @@ namespace Path_Scripts
         }
         private void InitialProgress()
         {
-            float startDistance = ThemaVector.PlannerDistance(waypoints[0].position, _player.transform.position);
-            float endDistance = ThemaVector.PlannerDistance(waypoints[^1].position, _player.transform.position);
-            pathProgress = startDistance < endDistance ? 0 : waypoints.Length - 1;
+            var playerPos = PlayerMovementController.Instance.transform.position;
+
+
+            if (waypoints.Length > 2)
+            {
+                 var points = waypoints.Select(point => point.position);
+                 var closetPointIndex = ThemaVector.ClosestPoint(points, playerPos, out var closestPoint);
+
+                 if (closetPointIndex == 0)
+                 {
+                     var point1 = waypoints[0].position;
+                     var point2 = waypoints[1].position;
+
+                     Vector3 point = ThemaVector.GetClosestPointToLine(point1, point2, playerPos);
+                     float fraction = ThemaVector.PlannerDistance(point1, point) / ThemaVector.PlannerDistance(point1, point2);
+                     pathProgress = fraction;
+
+                 }
+                 else if (closetPointIndex == (waypoints.Length - 1))
+                 {
+                     var point1 = waypoints[^2].position;
+                     var point2 = waypoints[^1].position;
+
+                     Vector3 point = ThemaVector.GetClosestPointToLine(point1, point2, playerPos);
+                     float fraction = ThemaVector.PlannerDistance(point1, point) / ThemaVector.PlannerDistance(point1, point2);
+                     pathProgress = (waypoints.Length - 2) + fraction;
+                 }
+                 else
+                 {
+                     Vector3 point1 = waypoints[closetPointIndex - 1].position;
+                     Vector3 point2 = waypoints[closetPointIndex].position;
+                     Vector3 point3 = waypoints[closetPointIndex + 1].position;
+
+                     Vector3 closestPoint1 = ThemaVector.GetClosestPointToLine(point1, point2, playerPos);
+                     Vector3 closestPoint2 = ThemaVector.GetClosestPointToLine(point2, point3, playerPos);
+
+                     float distance1 = ThemaVector.PlannerDistance(closestPoint1, playerPos);
+                     float distance2 = ThemaVector.PlannerDistance(closestPoint2, playerPos);
+
+                     if (distance1 < distance2)
+                     {
+                         float fraction = ThemaVector.PlannerDistance(point2, closestPoint1) / ThemaVector.PlannerDistance(point1, point2);
+                         pathProgress = closetPointIndex - fraction;
+                     }
+                     else
+                     {
+                         float fraction = ThemaVector.PlannerDistance(point2, closestPoint2) / ThemaVector.PlannerDistance(point2, point3);
+                         pathProgress = closetPointIndex + fraction;
+                     }
+
+                 }
+                 
+            }
+            else
+            {
+                var point1 = waypoints[0].position;
+                var point2 = waypoints[1].position;
+                Vector3 closestPoint = ThemaVector.GetClosestPointToLine(point1, point2, playerPos);
+                float fraction = ThemaVector.PlannerDistance(point1, closestPoint) / ThemaVector.PlannerDistance(point1, point2);
+                pathProgress = fraction;
+            }
+            
+            
         }
         public void Engage()
         {

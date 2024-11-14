@@ -70,7 +70,7 @@ namespace Player_Scripts.Volumes
         {
             if(_triggered) return;
             if (conditions.Any(condition => !condition.Condition(other))) return;
-                        
+            
             print(gameObject.name);
             entryState?.ChangeState();
             _triggered = true;
@@ -86,7 +86,6 @@ namespace Player_Scripts.Volumes
                 if (conditions.Any(condition => !condition.Condition(other))) return;
             }
             
-            print("DAFAK");
             exitState?.ChangeState();
             _triggered = false;
             exitAction?.Invoke();
