@@ -224,13 +224,23 @@ namespace NPCs.New.V1.States
 
         private void PreviewPath(V1Npc npc)
         {
-            if (_path == null) return;
+
+
+            if (_path == null)
+            {
+                if (_isReachable)
+                {
+                    Debug.DrawLine(npc.Target.position + npc.Target.up * npc.targetOffset, npc.transform.position + npc.transform.up * npc.npcEyeHeight, Color.green, npc.pathFindingInterval);
+                }
+                return;
+            }
+            
 
             Debug.DrawLine(npc.transform.position + npc.transform.up * npc.npcEyeHeight, npc.pathFinder.GetDesiredPosition(_path[0]), Color.white, npc.pathFindingInterval);
 
             for (int i = 0; i < _path.Count - 1; i++)
             {
-                Debug.DrawLine(npc.pathFinder.GetDesiredPosition(_path[i]), npc.pathFinder.GetDesiredPosition(_path[i + 1]), Color.white, npc.pathFindingInterval);
+                Debug.DrawLine(npc.pathFinder.GetDesiredPosition(_path[i]), npc.pathFinder.GetDesiredPosition(_path[i + 1]), Color.yellow, npc.pathFindingInterval);
             }
 
             Debug.DrawLine(npc.Target.position + npc.Target.up * npc.targetOffset, npc.pathFinder.GetDesiredPosition(_path[^1]), Color.white, npc.pathFindingInterval);

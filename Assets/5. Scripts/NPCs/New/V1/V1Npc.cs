@@ -37,7 +37,7 @@ namespace NPCs.New.V1
         [FoldoutGroup("States")] public float afterPlayerDeathDelay;
         [FoldoutGroup("States")] public int afterPlayerDeathState;
         [FoldoutGroup("States")] public V1NpcBaseState[] states;
-        [FoldoutGroup("States")] public Dictionary<int, V1NpcBaseState[]> subStates;
+        [FoldoutGroup("States")] public Dictionary<int, V1NpcBaseState[]> subStates = new Dictionary<int, V1NpcBaseState[]>();
         
         #endregion
 
@@ -90,9 +90,11 @@ namespace NPCs.New.V1
             {
                 states[CurrentStateIndex].UpdateState(this);
                 
-                if (subStates.TryGetValue(CurrentStateIndex, out var currentSubStates))
+                //Check if contains any value
+                if (subStates.ContainsKey(CurrentStateIndex))
                 {
-                    if (currentSubStates.Length > 0)
+                    subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
+                    if (currentSubStates?.Length > 0)
                     {
                         foreach (var subState in currentSubStates)
                         {
@@ -116,13 +118,15 @@ namespace NPCs.New.V1
                 states[CurrentStateIndex].LateUpdateState(this);
                 
                 //Check if contains any value
-                if (!subStates.ContainsKey(CurrentStateIndex)) return;
-                subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
-                if (currentSubStates?.Length > 0)
+                if (subStates.ContainsKey(CurrentStateIndex))
                 {
-                    foreach (var subState in currentSubStates)
+                    subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
+                    if (currentSubStates?.Length > 0)
                     {
-                        subState.LateUpdateState(this);
+                        foreach (var subState in currentSubStates)
+                        {
+                            subState.LateUpdateState(this);
+                        }
                     }
                 }
             }

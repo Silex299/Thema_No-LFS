@@ -83,6 +83,7 @@ namespace Health
         protected override void Death(string message = "")
         { 
             base.Death(message);
+            player.EffectsManager.PlayPlayerSound("Moan");
             IsDead = true;
         }
 

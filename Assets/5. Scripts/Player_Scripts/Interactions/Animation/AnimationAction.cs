@@ -66,6 +66,7 @@ namespace Player_Scripts.Interactions.Animation
             PlayerMovementController.Instance.DisablePlayerMovement(false);
         }
 
+        [ContextMenu("Reset")]
         public void Reset()
         {
             _playerEngaged = false;

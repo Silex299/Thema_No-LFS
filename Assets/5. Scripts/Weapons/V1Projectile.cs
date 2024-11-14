@@ -10,6 +10,8 @@ namespace Weapons
         public Rigidbody rb;
         public float damageRadius = 1;
         public LayerMask damageLayers;
+        public bool completeStopAtHit = true;
+        public Vector3 angularVelocity;
 
         public AudioSource source;
         public Dictionary<string, GameObject> hitEffects;
@@ -21,13 +23,21 @@ namespace Weapons
 
         private void FixedUpdate()
         {
-            if (!hit) transform.forward = rb.velocity.normalized;
+            if (!hit)
+            {
+                transform.forward = rb.velocity.normalized;
+                transform.Rotate(angularVelocity * Time.fixedDeltaTime);
+            }
         }
         private void OnCollisionEnter(Collision other)
         {
             //stop the projectile
-            rb.velocity = Vector3.zero;
-            rb.isKinematic = true;
+            if (completeStopAtHit)
+            {
+                rb.velocity = Vector3.zero;
+                rb.isKinematic = true;
+            }
+            
             DamageHealth(other.GetContact(0).point);
 
             var otherTag = other.gameObject.tag;

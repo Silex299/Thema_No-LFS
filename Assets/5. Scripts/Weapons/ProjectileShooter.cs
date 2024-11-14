@@ -1,4 +1,5 @@
 using System.Collections;
+using Player_Scripts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace Weapons
         public float projectileLifeTime = 2f;
         public Vector3 rotationOffset;
         public Vector3 fireError;
+
+        private Coroutine _alignmentCoroutine;
 
 
 
@@ -29,6 +32,47 @@ namespace Weapons
             
             Destroy(projectile, projectileLifeTime);
         }
-        
+
+
+        public void AlignAndShoot(float alignmentTime = 0)
+        {
+            if(!enabled) return;
+            if (_alignmentCoroutine != null)
+            {
+                StopCoroutine(_alignmentCoroutine);
+            }
+
+            _alignmentCoroutine = StartCoroutine(Align(PlayerMovementController.Instance.transform.position, alignmentTime));
+        }
+
+        public void AlignAndShoot(Transform target, float alignmentTime = 0)
+        {
+            if(!enabled) return;
+            if (_alignmentCoroutine != null)
+            {
+                StopCoroutine(_alignmentCoroutine);
+            }
+
+            _alignmentCoroutine = StartCoroutine(Align(target.position, alignmentTime));
+        }
+
+        private IEnumerator Align(Vector3 targetPos, float alignmentTime)
+        {
+
+            Vector3 intiForward = transform.forward;
+            Vector3 direction = targetPos - transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            float elapsedTime = 0f;
+            
+            while (elapsedTime < alignmentTime)
+            {
+                elapsedTime += Time.deltaTime;
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsedTime / alignmentTime);
+                yield return null;
+            }
+            
+            transform.rotation = targetRotation;
+            Shoot();
+        }
     }
 }
