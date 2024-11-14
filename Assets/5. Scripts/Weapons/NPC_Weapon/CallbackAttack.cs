@@ -30,6 +30,7 @@ namespace Weapons.NPC_Weapon
 
         public virtual void StartAttack()
         {
+            print("Staring Attack");
             if (attackCoroutine != null)
             {
                 StopCoroutine(attackCoroutine);
@@ -66,6 +67,7 @@ namespace Weapons.NPC_Weapon
         protected virtual void AttackCallback()
         {
             
+            print("Staring Attack 111");
             Vector3 socketPosition = overrideSocket ? overrideSocket.position : transform.position;
             
             //find distance between player and npc

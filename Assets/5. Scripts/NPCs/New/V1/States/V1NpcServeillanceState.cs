@@ -80,7 +80,8 @@ namespace NPCs.New.V1.States
             if (CheckForWaypointThreshold(npc))
             {
                 _changeWaypointCoroutine ??= StartCoroutine(ChangeWaypoint(npc));
-            } //Change waypoint
+            }
+            //Change waypoint
         }
 
         public override void Exit(V1Npc npc)
@@ -90,13 +91,7 @@ namespace NPCs.New.V1.States
                 StopCoroutine(_pathCoroutine);
                 _pathCoroutine = null;
             }
-
-            if (_changeWaypointCoroutine != null)
-            {
-                StopCoroutine(_changeWaypointCoroutine);
-                _changeWaypointCoroutine = null;
-            }
-
+            
             if (_speedCoroutine != null)
             {
                 StopCoroutine(_speedCoroutine);
@@ -129,6 +124,11 @@ namespace NPCs.New.V1.States
                     }
                 }
             }
+            else if (!_isReachable)
+            {
+                _changeWaypointCoroutine ??= StartCoroutine(ChangeWaypoint(npc));
+            }
+            
 
             Debug.DrawLine(npc.transform.position, desiredPos, Color.cyan);
             if(_canRotate) npc.Rotate(desiredPos, _speedMultiplier * npc.rotationSpeed * Time.deltaTime);
@@ -184,7 +184,6 @@ namespace NPCs.New.V1.States
             npc.animator.SetInteger(StateIndex, 0);
             npc.animator.SetBool(Attack, false);
             npc.animator.SetBool(PathBlocked, false);
-            _speedMultiplier = 0;
             if (serveillancePoints.Length != 0)
             {
                 _speedCoroutine = npc.StartCoroutine(Accelerate(npc, 1));
