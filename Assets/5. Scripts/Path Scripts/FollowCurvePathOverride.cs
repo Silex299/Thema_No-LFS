@@ -16,6 +16,7 @@ namespace Path_Scripts
         public Transform[] waypoints;
         public float progressSpeed = 1;
         public float interpolationSpeed = 6;
+        public float interpolationRotationSpeed = 12;
         public bool invertRotation;        
         public Vector3 rotationOffset;
         
@@ -26,6 +27,7 @@ namespace Path_Scripts
         private Player _player;
         private float _sectionDistance = 1;
         private bool _engageOverride;
+        private Vector3 _playerForward;
         public bool EngageOverride
         {
             get=>_engageOverride;
@@ -104,8 +106,10 @@ namespace Path_Scripts
 
             Vector3 direction = waypoints[higherRoundOff].position - waypoints[lowerRoundOff].position;
             Vector3 playerPos = waypoints[lowerRoundOff].position + direction * reminder;
-            Vector3 playerForward = (invertRotation ? 1 : -1) * Vector3.Cross(direction, Vector3.up).normalized;
-            playerForward = Quaternion.Euler(rotationOffset) * playerForward;
+            
+            
+            Vector3 newPlayerForward = (invertRotation ? 1 : -1) * Vector3.Cross(direction, Vector3.up).normalized;
+            newPlayerForward = Quaternion.Euler(rotationOffset) * newPlayerForward;
             
             if (direction.magnitude != 0)
             {
@@ -115,12 +119,14 @@ namespace Path_Scripts
 
 #if UNITY_EDITOR
             mainPoint = playerPos;
-            forwardPoint = playerPos + playerForward;
+            forwardPoint = playerPos + _playerForward;
             //if(!_player) return;
 #endif
             playerPos.y = _player.transform.position.y;
+            _playerForward = Vector3.Lerp(_playerForward, newPlayerForward, interpolationRotationSpeed * Time.deltaTime);
+            
             _player.transform.position = Vector3.Lerp(_player.transform.position, playerPos, interpolationSpeed * Time.deltaTime);
-            _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, Quaternion.LookRotation(playerForward, Vector3.up), interpolationSpeed * Time.deltaTime);
+            _player.transform.rotation = Quaternion.LookRotation(_playerForward);
         }
         private void InitialProgress()
         {
@@ -185,8 +191,9 @@ namespace Path_Scripts
                 float fraction = ThemaVector.PlannerDistance(point1, closestPoint) / ThemaVector.PlannerDistance(point1, point2);
                 pathProgress = fraction;
             }
-            
-            
+
+            _playerForward = PlayerMovementController.Instance.transform.forward;
+
         }
         public void Engage()
         {
