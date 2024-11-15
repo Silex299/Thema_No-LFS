@@ -1,111 +1,80 @@
-using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using System.Collections;
 
 namespace Player_Scripts
 {
     public class PlayerRigController : MonoBehaviour
     {
-        public Rig lookLeft;
-        public Rig lookRight;
-        public float weightChangeSpeed = 10f;
+        [SerializeField] private Rig rig;
+        [SerializeField] private Transform source;
+        [SerializeField] private float transitionTime = 1f;
+        [SerializeField] private float targetChangeSpeed = 5f;
 
-        private Coroutine _directionCoroutine;
-        private Coroutine _resetCoroutine;
+        private Coroutine _currentCoroutine;
+        private Transform _target;
+        private bool _aim;
 
-        public void LookLeft(float value)
+        private void LateUpdate()
         {
-            if (_directionCoroutine != null)
-                StopCoroutine(_directionCoroutine);
-            else
-                _directionCoroutine = StartCoroutine(LookLeftCoroutine(value));
-        }
-
-        public void LookRight(float value)
-        {
-            if (_directionCoroutine != null)
-                StopCoroutine(_directionCoroutine);
-            else
-                _directionCoroutine = StartCoroutine(LookRightCoroutine(value));
-        }
-
-        public void ResetAll()
-        {
-            _resetCoroutine ??= StartCoroutine(ResetAllCoroutine());
-        }
-
-        private IEnumerator LookLeftCoroutine(float value)
-        {
-            float rightWeight = lookRight.weight;
-
-            if (rightWeight > 0)
+            if (_aim && _target)
             {
-                while (rightWeight > 0)
-                {
-                    rightWeight -= Time.deltaTime * weightChangeSpeed;
-                    lookRight.weight = Mathf.Clamp01(rightWeight);
-                    yield return null;
-                }
+                source.position = _target.position;
             }
-
-            float leftWeight = lookLeft.weight;
-            while (leftWeight < value)
-            {
-                leftWeight += Time.deltaTime * weightChangeSpeed;
-                lookLeft.weight = Mathf.Clamp01(leftWeight);
-                yield return null;
-            }
-
-            _directionCoroutine = null;
-        }
-
-        private IEnumerator LookRightCoroutine(float value)
-        {
-            float leftWeight = lookLeft.weight;
-
-            if (leftWeight > 0)
-            {
-                while (leftWeight > 0)
-                {
-                    leftWeight -= Time.deltaTime * weightChangeSpeed;
-                    lookLeft.weight = Mathf.Clamp01(leftWeight);
-                    yield return null;
-                }
-            }
-
-            float rightWeight = lookRight.weight;
-            while (rightWeight < value)
-            {
-                rightWeight += Time.deltaTime * weightChangeSpeed;
-                lookRight.weight = Mathf.Clamp01(rightWeight);
-                yield return null;
-            }
-
-            _directionCoroutine = null;
         }
 
 
-        private IEnumerator ResetAllCoroutine()
+        public void SetAim(Transform newTarget)
         {
-            float leftWeight = lookLeft.weight;
-            float rightWeight = lookRight.weight;
-
-            if (leftWeight == 0 && rightWeight == 0)
+            SetAim(newTarget, transitionTime);
+        }
+        public void SetAim(Transform newTarget, float timeToTransit)
+        {
+            _target = newTarget;
+            _aim = true;
+            if (_currentCoroutine != null)
             {
-                _resetCoroutine = null;
-                yield break;
+                StopCoroutine(_currentCoroutine);
             }
+            _currentCoroutine = StartCoroutine(SmoothTransition(1f, timeToTransit));
+        }
+
+
+        public void ResetAim()
+        {
+            ResetAim(transitionTime);
+        }
         
-            while (leftWeight > 0 || rightWeight > 0)
+        public void ResetAim(float timeToTransit)
+        {
+            _aim = false;
+            if (_currentCoroutine != null)
             {
-                leftWeight -= Time.deltaTime * weightChangeSpeed;
-                rightWeight -= Time.deltaTime * weightChangeSpeed;
-                lookLeft.weight = Mathf.Clamp01(leftWeight);
-                lookRight.weight = Mathf.Clamp01(rightWeight);
+                StopCoroutine(_currentCoroutine);
+            }
+            _currentCoroutine = StartCoroutine(SmoothTransition(0f, timeToTransit));
+        }
+
+        private IEnumerator SmoothTransition(float targetWeight, float timeToTransit)
+        {
+            float initialWeight = rig.weight;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < timeToTransit)
+            {
+                elapsedTime += Time.deltaTime;
+                rig.weight = Mathf.Lerp(initialWeight, targetWeight, elapsedTime / timeToTransit);
                 yield return null;
             }
-        
-            _resetCoroutine = null;
+
+            rig.weight = targetWeight;
+        }
+
+        public void Reset()
+        {
+            rig.weight = 0;
+            _target = null;
         }
     }
 }

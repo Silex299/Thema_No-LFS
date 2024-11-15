@@ -27,6 +27,11 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("References")]
         private PlayerHealth health;
 
+        [field: SerializeField, BoxGroup("References")]
+        public PlayerRigController RigController { get; private set; }
+
+
+
         [SerializeField, BoxGroup("Player Movement")]
         private bool useHorizontal = true;
 
