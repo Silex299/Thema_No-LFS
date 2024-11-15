@@ -31,11 +31,15 @@ namespace Triggers
             {
                 _isTriggered = false;
             }
-            if(checkpoint <= checkpointThreshold) _isTriggered = false;
+            else
+            {
+                _isTriggered = checkpoint > checkpointThreshold;
+            }
         }
 
         public void Trigger()
         {
+            if(!enabled) return;
             StartCoroutine(TriggerEnumerator());
         }
         

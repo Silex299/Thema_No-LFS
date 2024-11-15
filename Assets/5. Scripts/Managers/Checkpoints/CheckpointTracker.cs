@@ -14,6 +14,7 @@ namespace Managers.Checkpoints
         [BoxGroup("Misc")] public int checkpointThreshold;
         [BoxGroup("Misc")] public bool isExclusive;
         [BoxGroup("Misc")] public Transform targetTransform;
+        [BoxGroup("Misc")] public float wait;
 
         [TabGroup("State", "Reset")] public bool loadResetTransform;
         [TabGroup("State", "Reset"), ShowIf(nameof(loadResetTransform))]
@@ -54,6 +55,8 @@ namespace Managers.Checkpoints
 
         private IEnumerator ResetState()
         {
+            yield return new WaitForSeconds(wait);
+            
             yield return new WaitForEndOfFrame();
             resetEvent.Invoke();
             if (!loadResetTransform) yield break;

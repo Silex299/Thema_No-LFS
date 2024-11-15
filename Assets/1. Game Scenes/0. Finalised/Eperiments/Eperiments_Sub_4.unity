@@ -629,6 +629,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maximumDamage: 101
+  source: {fileID: 0}
+  hitClip:
+    clip: {fileID: 0}
+    volume: 0
+  <CanDamage>k__BackingField: 1
 --- !u!54 &98003877
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -787,7 +792,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 2
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 1
   resetPosition: {x: 14.06699, y: 1.651381, z: 16.17}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -3668,7 +3675,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 85
     lenseShift: {x: 0, y: 0}
-  transitionTime: 5
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 5
 --- !u!114 &1069061992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3740,6 +3749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a10e63d89e5fa40b8dc49a8db76dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 0
   playerInteractionVolumeMultiplier: 0.3
   playerVolumeMultiplier: 1
 --- !u!43 &1069373280
@@ -4651,6 +4661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bea719f5f5c623141a54a292f136e8c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
   visualisationMesh: {fileID: -5495902117074765545, guid: d8e7a3f02be582842bdba5853b953f5b,
     type: 3}
   visualisationScale: {x: 12, y: 12, z: 12}

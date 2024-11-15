@@ -8843,6 +8843,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8200
+  alwaysOn: 0
 --- !u!114 &150588912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9114,7 +9115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: -1
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 1
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 90, z: 0}
@@ -10630,6 +10633,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  <Triggered>k__BackingField: 0
 --- !u!65 &310557332
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10760,7 +10764,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -23811,7 +23817,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 1358720306}
+  wait: 0
   loadResetTransform: 1
   resetPosition: {x: 20.45, y: -16.12, z: -151.18}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -36261,7 +36269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -36387,7 +36397,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: -1.197, y: -1.51, z: 6.05}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 0
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 0
 --- !u!65 &1228386991
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37248,7 +37260,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -37355,7 +37369,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -42499,7 +42515,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 2
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 2
 --- !u!114 &1458986087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42512,6 +42530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a10e63d89e5fa40b8dc49a8db76dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 0
   playerInteractionVolumeMultiplier: 0.65
   playerVolumeMultiplier: 1
 --- !u!1 &1462952196
@@ -53464,7 +53483,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -55016,7 +55037,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -56441,7 +56464,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 0
+  isExclusive: 0
   targetTransform: {fileID: 0}
+  wait: 0
   loadResetTransform: 0
   resetPosition: {x: 2.37, y: 0.05, z: 9.129627}
   resetRotation: {x: 0, y: -90, z: 0}
@@ -56555,7 +56580,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 1
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 1
 --- !u!114 &2085948935
 MonoBehaviour:
   m_ObjectHideFlags: 0

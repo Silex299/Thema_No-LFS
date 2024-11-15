@@ -87,7 +87,7 @@ namespace NPCs.New.V1
                 states[CurrentStateIndex].UpdateState(this);
                 
                 //Check if contains any value
-                if (subStates.ContainsKey(CurrentStateIndex))
+                try
                 {
                     subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
                     if (currentSubStates?.Length > 0)
@@ -97,6 +97,10 @@ namespace NPCs.New.V1
                             subState.UpdateState(this);
                         }
                     }
+                }
+                catch
+                {
+                    //Ignore
                 }
             }
             
@@ -114,7 +118,7 @@ namespace NPCs.New.V1
                 states[CurrentStateIndex].LateUpdateState(this);
                 
                 //Check if contains any value
-                if (subStates.ContainsKey(CurrentStateIndex))
+                try
                 {
                     subStates.TryGetValue(CurrentStateIndex, out var currentSubStates);
                     if (currentSubStates?.Length > 0)
@@ -124,6 +128,10 @@ namespace NPCs.New.V1
                             subState.LateUpdateState(this);
                         }
                     }
+                }
+                catch
+                {
+                    //Ignore
                 }
             }
         }

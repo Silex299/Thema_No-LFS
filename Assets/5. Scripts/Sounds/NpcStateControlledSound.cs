@@ -19,6 +19,7 @@ namespace Sounds
             foreach (var npc in npcs)
             {
                 npc.onStateChange += OnNpcStateChange;
+                npc.onNpcDeath += OnNpcDeath;
             }
         }
 
@@ -27,6 +28,7 @@ namespace Sounds
             foreach (var npc in npcs)
             {
                 npc.onStateChange -= OnNpcStateChange;
+                npc.onNpcDeath += OnNpcDeath;
             }
         }
 
@@ -37,7 +39,7 @@ namespace Sounds
             
             foreach (var npc in npcs)
             {
-                if (npc.CurrentStateIndex == chaseStateIndex)
+                if (npc.CurrentStateIndex == chaseStateIndex && !npc.health.IsDead)
                 {
                     isAnyoneChasing = true;
                     break;
@@ -52,7 +54,11 @@ namespace Sounds
                 _isSourcesPlaying = isAnyoneChasing;
             }
             
-            
+        }
+        
+        private void OnNpcDeath()
+        {
+            OnNpcStateChange(chaseStateIndex);
         }
 
 
