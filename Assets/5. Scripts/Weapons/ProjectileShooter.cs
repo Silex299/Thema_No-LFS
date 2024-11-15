@@ -16,12 +16,15 @@ namespace Weapons
         public Vector3 fireError;
 
         private Coroutine _alignmentCoroutine;
+        [field: SerializeField] public bool CanShoot { get; set; } = true;
 
 
 
         [Button]
         public void Shoot()
         {
+            if(!CanShoot) return;
+            
             GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
             
             Vector3 randomError = new Vector3(Random.Range(-fireError.x, fireError.x), Random.Range(-fireError.y, fireError.y), Random.Range(-fireError.z, fireError.z));
@@ -36,7 +39,7 @@ namespace Weapons
 
         public void AlignAndShoot(float alignmentTime = 0)
         {
-            if(!enabled) return;
+            if(!CanShoot) return;
             if (_alignmentCoroutine != null)
             {
                 StopCoroutine(_alignmentCoroutine);
@@ -47,7 +50,7 @@ namespace Weapons
 
         public void AlignAndShoot(Transform target, float alignmentTime = 0)
         {
-            if(!enabled) return;
+            if(!CanShoot) return;
             if (_alignmentCoroutine != null)
             {
                 StopCoroutine(_alignmentCoroutine);
