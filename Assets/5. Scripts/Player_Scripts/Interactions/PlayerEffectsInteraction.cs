@@ -22,7 +22,5 @@ namespace Player_Scripts.Interactions
             PlayerEffects.PlayPlayerSound(soundKey);
         }
         
-        
-        
     }
 }

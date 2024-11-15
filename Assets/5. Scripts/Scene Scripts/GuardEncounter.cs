@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Managers;
 using Managers.Checkpoints;
+using Player_Scripts;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
@@ -31,17 +32,12 @@ namespace Scene_Scripts
             if (checkpoint == 0)
             {
                 initSceneTimeline.Play();
+                StartCoroutine(StarScene());
             }
             else
             {
                 UIManager.Instance.FadeOut(3);
             }
-        }
-        
-        
-        private void Start()
-        {
-            StartCoroutine(StarScene());
         }
 
         private IEnumerator StarScene()
@@ -73,7 +69,6 @@ namespace Scene_Scripts
             }
         }
         
-        
 
         public void FadeOutPpVolume(Volume renderingVolume)
         {
@@ -98,6 +93,33 @@ namespace Scene_Scripts
             
             yield return null;
         }
+
+        public void Exit()
+        {
+            PlayerMovementController.Instance.DisablePlayerMovement(true);
+            StartCoroutine(ExitScene());
+        }
+        private IEnumerator ExitScene()
+        {
+            UIManager.Instance.FadeIn(0.5f);
+            
+            //Set Scene name
+            var sceneTitle = UIManager.Instance.sceneTitle;
+            string title =  "DEMO: SKIPPING LEVELS";
+            sceneTitle.text = "";
+
+            //fade ina
+
+            //Set scene title text to scene name, with one letter at a time using for 
+            //loop and yield return new WaitForSeconds(0.1f)
+            for (int i = 0; i < sceneName.Length; i++)
+            {
+                sceneTitle.text = title.Substring(0, i + 1);
+                yield return new WaitForSeconds(0.01f);
+            }
+
+        }
+
 
     }
 }

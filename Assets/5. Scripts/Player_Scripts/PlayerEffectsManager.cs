@@ -127,7 +127,24 @@ namespace Player_Scripts
 
             playerSource.PlayOneShot(clip, audioClip.volume * PlayerVolumeMultiplier);
         }
-        
+
+
+        public void PlayLoopedSound(string soundKey)
+        {
+            if (!playerSounds.ContainsKey(soundKey)) return;
+            if (!playerSounds.TryGetValue(soundKey, out var audioClip)) return;
+            int randomIndex = UnityEngine.Random.Range(0, audioClip.clips.Length);
+            var clip = audioClip.clips[randomIndex];
+            
+            playerSfxSource.clip = clip;
+            playerSfxSource.loop = true;
+            playerSfxSource.Play();
+        }
+
+        public void StopLoopedSound()
+        {
+            playerSfxSource.Stop();
+        }
         
 
     }

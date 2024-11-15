@@ -62,7 +62,7 @@ namespace Player_Scripts.Interactions.Animation
             PlayerMovementController.Instance.PlayAnimation(exitAnimation, 0.4f, 1);
             yield return new WaitForSeconds(exitActionDelay);
             exitAction?.Invoke();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             PlayerMovementController.Instance.DisablePlayerMovement(false);
         }
 
