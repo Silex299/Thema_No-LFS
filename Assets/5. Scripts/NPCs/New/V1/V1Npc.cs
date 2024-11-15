@@ -64,15 +64,11 @@ namespace NPCs.New.V1
 
         #region Built in methods
         
-        
-        private void Start()
-        {
-            ChangeState(initState);
-        }
         private void OnEnable()
         {
             PlayerMovementController.Instance.player.Health.onDeath += OnPlayerDeath;
             if(health) health.onDeath += OnNpcDeath;
+            ChangeState(initState);
         }
         private void OnDisable()
         {
@@ -212,7 +208,10 @@ namespace NPCs.New.V1
         
         public void Reset()
         {
-            ChangeState(initState, true);
+            if (gameObject.activeInHierarchy)
+            {
+                ChangeState(initState, true);
+            }
             //Reset Animator
             animator.SetBool(Attack, false);
             animator.SetFloat(Speed, 0);

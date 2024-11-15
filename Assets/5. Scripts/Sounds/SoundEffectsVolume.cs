@@ -5,11 +5,23 @@ namespace Sounds
 {
     public class SoundEffectsVolume : MonoBehaviour
     {
-        
+
+
+
+        public bool isGlobal; 
         public float playerInteractionVolumeMultiplier = 1;
         public float playerVolumeMultiplier = 1;
-        
-        
+
+
+        private void Start()
+        {
+            if (isGlobal)
+            {
+                SetPlayerVolumeMultiplier();
+            }
+        }
+
+
         public void SetPlayerVolumeMultiplier()
         {
             PlayerMovementController.Instance.player.EffectsManager.PlayerVolumeMultiplier = playerVolumeMultiplier;
