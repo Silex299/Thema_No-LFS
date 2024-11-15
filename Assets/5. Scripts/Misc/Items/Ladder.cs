@@ -29,7 +29,7 @@ namespace Misc.Items
 
         private float _playerAt;
         private Vector3 _playerPosition;
-        [HideInInspector] public bool engaged;
+        public bool engaged;
 
 
         public bool Engaged

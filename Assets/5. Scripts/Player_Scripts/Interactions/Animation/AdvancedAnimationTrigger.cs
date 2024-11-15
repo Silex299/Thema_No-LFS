@@ -41,6 +41,7 @@ namespace Player_Scripts.Interactions.Animation
                 transform.position + transform.right * animationWidth);
         }
 
+        [ContextMenu("Play")]
         public void Trigger()
         {
             _triggerActionCoroutine ??= StartCoroutine(TriggerAnimation());

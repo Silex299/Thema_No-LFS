@@ -2982,6 +2982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 5
+  isExclusive: 0
   targetTransform: {fileID: 0}
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
@@ -6043,7 +6044,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 77
     lenseShift: {x: 0, y: 0}
-  transitionTime: 3
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 3
 --- !u!43 &623079085
 Mesh:
   m_ObjectHideFlags: 0
@@ -6809,6 +6812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 5
+  isExclusive: 0
   targetTransform: {fileID: 0}
   loadResetTransform: 0
   resetPosition: {x: 0, y: 0, z: 0}
@@ -7558,6 +7562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 5
+  isExclusive: 0
   targetTransform: {fileID: 0}
   loadResetTransform: 1
   resetPosition: {x: 0.5649424, y: 14.06982, z: 459.0386}
@@ -8304,6 +8309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a06338ede4a3535469a33033b9328e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Climbable>k__BackingField: 1
   ropeResolution: 10
   ropeLength: 18
   ropeThickness: 0.4
@@ -9209,7 +9215,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 77
     lenseShift: {x: 0, y: 0}
-  transitionTime: 3
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 3
 --- !u!114 &1157511057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9222,6 +9230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a10e63d89e5fa40b8dc49a8db76dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 0
   playerInteractionVolumeMultiplier: 0.1
   playerVolumeMultiplier: 1
 --- !u!1 &1157742532
@@ -9597,7 +9606,7 @@ GameObject:
   - component: {fileID: 1260227403}
   - component: {fileID: 1260227402}
   - component: {fileID: 1260227404}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube.043
   m_TagString: Stone
   m_Icon: {fileID: 0}
@@ -10575,7 +10584,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 0, y: 0, z: 0}
     FOV: 77
     lenseShift: {x: 0, y: 0}
-  transitionTime: 3
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 3
 --- !u!1 &1417541890
 GameObject:
   m_ObjectHideFlags: 0
@@ -10800,6 +10811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointThreshold: 5
+  isExclusive: 0
   targetTransform: {fileID: 0}
   loadResetTransform: 1
   resetPosition: {x: 0.844, y: 14.268, z: 459.925}

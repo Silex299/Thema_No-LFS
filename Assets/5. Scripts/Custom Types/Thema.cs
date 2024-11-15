@@ -241,7 +241,7 @@ namespace Thema_Type
                     }
                 }
 
-                if (!followRotationCurve)
+                if (!followRotationCurve && normalizedTime < transitionTime) //MAY NEED CHANGE INITIALLY IT WAS ONLY !followRotationCurve
                 {
                     target.rotation = Quaternion.Lerp(initialPlayerRot, triggerTransform.rotation,
                         timeElapsed / transitionTime);

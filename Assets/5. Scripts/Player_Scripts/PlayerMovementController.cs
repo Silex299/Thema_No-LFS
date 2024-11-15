@@ -289,7 +289,7 @@ namespace Player_Scripts
             player.AnimationController.Play("Default", 1);
             player.CController.enabled = true;
             player.DisabledPlayerMovement = false;
-            player.RigController.Reset();
+            player.RigController?.Reset();
             player.OverrideFlags = false;
             player.ForceBoost = false;
         }

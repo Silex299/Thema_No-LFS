@@ -172,7 +172,7 @@ namespace Misc.Items
         private void Update()
         {
             //for each line render segment set the 2nd position to the previous segment position and 1st position to current segment position
-            for (int i = 1; i < ropeResolution; i++)
+            for (int i = 1; i < lineRenderers.Length; i++)
             {
                 if (_broken && i == breakIndex)
                 {
@@ -225,12 +225,12 @@ namespace Misc.Items
             // If the player is moving upwards along the rope
             if (input > 0.2f)
             {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex - 1, Time.fixedDeltaTime * climbSpeed);
+                _closestIndex = Mathf.Lerp(_closestIndex, _closestIndex - 1, Time.deltaTime * climbSpeed);
             }
             // If the player is moving downwards along the rope
             else if (input < -0.2f)
             {
-                _closestIndex = Mathf.MoveTowards(_closestIndex, _closestIndex + 1, Time.fixedDeltaTime * climbSpeed);
+                _closestIndex = Mathf.Lerp(_closestIndex, _closestIndex + 1, Time.deltaTime * climbSpeed);
             }
 
             // Ensure the closest index is within the bounds of the rope resolution
