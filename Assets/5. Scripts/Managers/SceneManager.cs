@@ -17,6 +17,7 @@ namespace Managers
         
         private static string SavePath => Path.Combine(Application.persistentDataPath, "Checkpoint.data");
         public static SceneManager Instance { get; private set; }
+        public bool AllLoaded { get; private set; }
 
         private void Start()
         {
@@ -55,9 +56,9 @@ namespace Managers
 
         public bool CanSaveCheckpoint(CheckpointManager.CheckpointInfo info)
         {
+            
             if(info.level > savedCheckpointInfo.level) return true;
-
-            if (info.checkpoint > savedCheckpointInfo.level) return true;
+            if (info.checkpoint > savedCheckpointInfo.checkpoint) return true;
 
             return false;
         }
@@ -164,6 +165,9 @@ namespace Managers
         // Coroutine to load main scene and sub-scenes asynchronously
         private IEnumerator LoadMainAndSubScenesAsync(int mainScene, int[] subScenes)
         {
+
+            AllLoaded = false;
+            
             _loadingOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(mainScene);
             _loadingOperation.allowSceneActivation = false;
             _sceneToLoadIndex = mainScene;
@@ -181,6 +185,8 @@ namespace Managers
             {
                 yield return null;
             }
+
+            AllLoaded = true;
 
         }
 

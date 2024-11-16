@@ -11,7 +11,7 @@ namespace Managers
 
         public void UpdateSubScenes()
         {
-            
+            LocalSceneManager.Instance.LoadSubScenes(requiredSubScenes, optionalSubScenes);
         }
 
     }

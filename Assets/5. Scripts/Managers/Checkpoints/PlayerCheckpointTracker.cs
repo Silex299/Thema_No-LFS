@@ -20,17 +20,19 @@ namespace Managers.Checkpoints
             
             player.transform.position = checkpointTransform.position;
             player.transform.rotation = checkpointTransform.rotation;
-
-            Invoke(nameof(ResetPlayer), 1.5f);//TODO: REMOVE THIS SHIT
+            StartCoroutine(WaitForAllSceneToBeLoaded());
 
         }
 
-        public void ResetPlayer()
+
+        private IEnumerator WaitForAllSceneToBeLoaded()
         {
+            yield return new WaitUntil(() => SceneManager.Instance.AllLoaded && LocalSceneManager.Instance.AllSceneLoaded);
             player.Health.ResetHealth();
             player.Health.ResetPlayer();
             player.MovementController.Reset();
         }
+        
 
         public void InitialSetup(CheckPoint checkPoint)
         {

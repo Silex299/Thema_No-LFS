@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -69,17 +71,30 @@ namespace Managers.Checkpoints
         {
             checkpointInfo = SceneManager.Instance.savedCheckpointInfo;
             checkpointInfo.level = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
-            LoadCheckpoint();
+            LoadCheckpoint(true);
         }
 
 
-        public void LoadCheckpoint()
+        public void LoadCheckpoint(bool isInitialLoad = false)
         {
             playerTracker.ResetItem(checkpoints[checkpointInfo.checkpoint]);
             checkpoints[checkpointInfo.checkpoint].LoadThisCheckpoint();
             onCheckpointLoad?.Invoke(checkpointInfo.checkpoint);
+            
+            if(!isInitialLoad) LoadScenes();
         }
-        
+        private void LoadScenes()
+        {
+            SceneManager sceneManager = SceneManager.Instance;
+            var sceneData = sceneManager.sceneData;
+            var checkpoint = sceneManager.savedCheckpointInfo;
+            
+            var requiredScenes = sceneData.sceneCheckpointData[checkpointInfo.level][checkpointInfo.checkpoint].requiredSubScenes.ToList();
+            var optionScenes = new List<int>();
+
+            LocalSceneManager.Instance.LoadSubScenes(requiredScenes, optionScenes);
+
+        }
         public void SaveCheckpoint(int index)
         {
             checkpointInfo.checkpoint = index;
@@ -90,6 +105,7 @@ namespace Managers.Checkpoints
             }
             
         }
+        
         
         
         [System.Serializable]

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -11,7 +12,8 @@ namespace Managers
 
         
         public static LocalSceneManager Instance { get; private set; }
-        
+        public bool AllSceneLoaded { get; private set; } = true;
+
         private void OnEnable()
         {
             if (LocalSceneManager.Instance == null)
@@ -66,32 +68,39 @@ namespace Managers
                 loadedScenes.Remove(unload);
             }
 
-            return default;
+            return (toBeLoaded, toBeUnloaded);
         }
         
 
         public void LoadSubScenes(List<int> requiredScenes, List<int> optionalScenes)
         {
             var (toBeLoaded, toBeUnloaded) = ProcessSceneIndecies(requiredScenes, optionalScenes);
-            
-            foreach (var load in toBeLoaded)
-            {
-                LoadSceneAdditively(load);
-            }
+
+
+            StartCoroutine(LoadScene(toBeLoaded));
 
             foreach (var unload in toBeUnloaded)
             {
                 UnloadScene(unload);
             }
         }
-        
-        private void LoadSceneAdditively(int sceneIndex)
+
+        private IEnumerator LoadScene(List<int> scenes)
         {
-            if (sceneIndex >= 0 && sceneIndex < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
+            AllSceneLoaded = false;
+            // Start loading sub-scenes as additive
+            AsyncOperation[] subSceneLoadingOperations = new AsyncOperation[scenes.Count];
+            for (int i = 0; i < scenes.Count; i++)
             {
-                UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+                subSceneLoadingOperations[i] = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenes[i], LoadSceneMode.Additive);
             }
+
+
+            yield return new WaitUntil(() => subSceneLoadingOperations.All(scene => scene.isDone));
+            AllSceneLoaded = true;
+
         }
+        
         private void UnloadScene(int sceneIndex)
         {
             Scene scene = UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(sceneIndex);
@@ -100,6 +109,7 @@ namespace Managers
                 UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneIndex);
             }
         }
+
         
         
     }
