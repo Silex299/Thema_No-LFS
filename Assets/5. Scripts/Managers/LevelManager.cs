@@ -1,44 +1,51 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
+namespace Managers
 {
-
-
-    [SerializeField] private int currentLevelIndex;
-
-    private static LevelManager instance;
-
-    public static LevelManager Instance
+    public class LevelManager : MonoBehaviour
     {
-        get => instance;
-    }
+        private int _sceneToLoadIndex = -1;
+        private AsyncOperation _loadingOperation;
 
-    private void Awake()
-    { 
-
-        if(LevelManager.Instance == null)
+        // Function to load a scene in the background using the scene index
+        public void LoadSceneInBackground(int sceneIndex)
         {
-            instance = this;
-        }
-        else if(LevelManager.Instance != this)
-        {
-            Destroy(this);
+            if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings)
+            {
+                StartCoroutine(LoadSceneAsync(sceneIndex));
+            }
+            else
+            {
+                Debug.LogError("Invalid scene index");
+            }
         }
 
+        // Coroutine to handle the loading process asynchronously
+        private IEnumerator LoadSceneAsync(int sceneIndex)
+        {
+            _loadingOperation = SceneManager.LoadSceneAsync(sceneIndex);
+            _loadingOperation.allowSceneActivation = false;
+            _sceneToLoadIndex = sceneIndex;
+
+            while (!_loadingOperation.isDone)
+            {
+                yield return null;
+            }
+        }
+
+        // Function to change to the loaded scene when called
+        public void ActivateLoadedScene()
+        {
+            if (_loadingOperation != null && _sceneToLoadIndex >= 0)
+            {
+                _loadingOperation.allowSceneActivation = true;
+            }
+            else
+            {
+                Debug.LogError("No scene loaded to activate");
+            }
+        }
     }
-
-
-    /// <summary>
-    /// Normal Scene Change 
-    /// </summary>
-    /// <param name="index"> scene index to load </param>
-    public void ChangeLevel(int index)
-    {
-        currentLevelIndex = index;
-        SceneManager.LoadScene(index);
-    }
-
-
-
 }

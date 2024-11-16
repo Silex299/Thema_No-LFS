@@ -180,11 +180,6 @@ MonoBehaviour:
   - {fileID: 4864641115680705124}
   - {fileID: 2214567642414839290}
   playerTracker: {fileID: 7759847531581314442}
-  trackers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &346201645195957562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,6 +1199,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -2342,9 +2339,9 @@ MonoBehaviour:
   animator: {fileID: 8878605462816613245}
   movementController: {fileID: 5357214971130896784}
   characterController: {fileID: 617123774418370276}
-  rigController: {fileID: 0}
   effectsManager: {fileID: 7722266717462616510}
   health: {fileID: 712535393924927292}
+  <RigController>k__BackingField: {fileID: 0}
   useHorizontal: 1
   rotationSmoothness: 20
   jumpVelocity: 4
@@ -2367,7 +2364,11 @@ MonoBehaviour:
     connectedLadder: {fileID: 0}
   waterMovement:
     swimSpeed: 3
-    waterVolume: {fileID: 0}
+    <DamageSpeed>k__BackingField: 10
+    flatHeight: 0.34
+    flatCenter: {x: 0, y: 0.14, z: 0}
+    normalHeight: 1.7
+    normalCenter: {x: 0, y: 0.92, z: 0}
   ropeMovement:
     attachedRope: {fileID: 0}
     handSocket: {fileID: 7393617433255950401}
@@ -2380,6 +2381,7 @@ MonoBehaviour:
   previousStateIndex: -7
   currentStateIndex: 0
   disablePlayerMovement: 0
+  <GroundTag>k__BackingField: 
 --- !u!114 &5357214971130896784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2427,448 +2429,25 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 2062570858156317134, guid: 361dcf53c0e43ad40a4bb9113224594e, type: 3}
-    - {fileID: 3395923901204193843, guid: d80b6e85c2b33b34a9dd6d69d32a307e, type: 3}
-    - {fileID: 6960161962951702265, guid: d65d15f183069fd44a06709a9b41313c, type: 3}
-    - {fileID: 9048904873178782047, guid: 81d7302ff572bcf44859d4c2507d8f7d, type: 3}
-    - {fileID: 8300000, guid: 5461cae585b64f64089805f0d313bc84, type: 3}
-    - {fileID: 8300000, guid: 9f96c8d3fef6ab440bdc9bd4ad3d08fe, type: 3}
-    - {fileID: 8300000, guid: 61abfb7bb17151f458862ef823ac0932, type: 3}
-    - {fileID: 8300000, guid: 2e14b3cc9c6906b42885675f3572d4b3, type: 3}
-    - {fileID: 8300000, guid: 846819fd62ca22b478d33e537cd61c8c, type: 3}
-    - {fileID: 8300000, guid: 6eee7f295d5ff8b4f934dec7f44eaf97, type: 3}
-    - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
-    - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
-    - {fileID: 8300000, guid: 0909de896e9029541b92ae05fe15e4b6, type: 3}
-    - {fileID: 8300000, guid: 6ad0cf00f050bee41a2dee098475dc78, type: 3}
-    - {fileID: 8300000, guid: 7ca5a9710db4327439c9f8cb8204615e, type: 3}
-    - {fileID: 8300000, guid: 14ae706fef2303e4cb71112dbd5d250b, type: 3}
-    - {fileID: 8300000, guid: b995bc1775ea83b4b8f861763e9a1424, type: 3}
-    - {fileID: 8300000, guid: d15f7338d693f0343843a6b9096d27f6, type: 3}
-    - {fileID: 8300000, guid: b9a5f4a46006d6f429a02ea0fadc4809, type: 3}
-    - {fileID: 8300000, guid: 6755e20b5c79018438c8aed7439dcfed, type: 3}
-    - {fileID: 8300000, guid: caf48be4d869fe24f85866b95cdbe017, type: 3}
-    - {fileID: 8300000, guid: a843d0038d0930149b2a4a6002937a10, type: 3}
-    - {fileID: 8300000, guid: eb25cc7f1bf9dbb43aa0833fe823843e, type: 3}
-    - {fileID: 8300000, guid: e6f87af77d097a84ca825ab2c2ce7e87, type: 3}
-    - {fileID: 8300000, guid: b682207ff9ac8db4695704cd57fb59a7, type: 3}
-    - {fileID: 8300000, guid: 938df53f74d50544b83b2cd1b17069f9, type: 3}
-    - {fileID: 8300000, guid: ea53a688169f735458a5fd72032a96eb, type: 3}
-    - {fileID: 8300000, guid: f2e9fc39ee7221b4a8e4b9d2f8975eed, type: 3}
-    - {fileID: 8300000, guid: 5e265270fb85126479eef52d8fce3b08, type: 3}
-    - {fileID: 8300000, guid: 3701a5fdf99882f40bc00eb9053eec92, type: 3}
-    - {fileID: 8300000, guid: 2f949b40b7283404099a802630fb2077, type: 3}
-    - {fileID: 8300000, guid: dfff2b3c7dfb43c419592789f0a6ab81, type: 3}
-    - {fileID: 8300000, guid: 812100e3982e56842adb6ba5be867b7a, type: 3}
-    - {fileID: 8300000, guid: a6b9f97a365257f48b19c7ae1d409b59, type: 3}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: stepEffects
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.GameObject,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 4
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Water
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: UnderWater
-    - Name: $v
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: SurfaceWater
-    - Name: $v
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: stepSounds
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 6
-    - Name: 
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 10
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 6
-    - Name: 
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Concrete
-    - Name: $v
-      Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 10
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 12
-    - Name: 
-      Entry: 10
-      Data: 13
-    - Name: 
-      Entry: 10
-      Data: 14
-    - Name: 
-      Entry: 10
-      Data: 15
-    - Name: 
-      Entry: 10
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 17
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Water
-    - Name: $v
-      Entry: 7
-      Data: 6|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 18
-    - Name: 
-      Entry: 10
-      Data: 19
-    - Name: 
-      Entry: 10
-      Data: 20
-    - Name: 
-      Entry: 10
-      Data: 21
-    - Name: 
-      Entry: 10
-      Data: 22
-    - Name: 
-      Entry: 10
-      Data: 23
-    - Name: 
-      Entry: 10
-      Data: 24
-    - Name: 
-      Entry: 10
-      Data: 25
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Ladder
-    - Name: $v
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 10
-      Data: 27
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Metal
-    - Name: $v
-      Entry: 7
-      Data: 8|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 28
-    - Name: 
-      Entry: 10
-      Data: 29
-    - Name: 
-      Entry: 10
-      Data: 30
-    - Name: 
-      Entry: 10
-      Data: 31
-    - Name: 
-      Entry: 10
-      Data: 32
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: interactionSounds
-      Entry: 7
-      Data: 9|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
-        mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 10|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: de
-    - Name: $v
+    - Name: steps
       Entry: 6
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
+    - Name: interactions
+      Entry: 6
       Data: 
     - Name: playerSounds
-      Entry: 7
-      Data: 11|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 12|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: dsd
-    - Name: $v
-      Entry: 7
-      Data: 13|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: otherSounds
-      Entry: 7
-      Data: 14|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 15|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: heartbeat
-    - Name: $v
-      Entry: 10
-      Data: 33
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
   player: {fileID: 6843109632185308764}
-  interactionSource: {fileID: 5267434753876602693}
-  playerSoundSource: {fileID: 2918569654481878589}
-  otherSoundSource: {fileID: 7289584500549148215}
-  leftFootSocket: {fileID: 5253653136068276302}
-  rightFootSocket: {fileID: 2926678173358322024}
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 128
-  currentEffectVolume: 
+  playerInteractionSource: {fileID: 0}
+  playerSource: {fileID: 0}
+  playerSfxSource: {fileID: 0}
 --- !u!114 &6424092187691872761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4311,6 +3890,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 0
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -5671,6 +5252,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -8605,6 +8188,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -9300,6 +8885,8 @@ MonoBehaviour:
   continuousCheck: 0
   moveDirection: 2
   threshold: 0
+  buffer: 0
+  bufferThreshold: 0
   entryAction:
     m_PersistentCalls:
       m_Calls:
@@ -9585,9 +9172,9 @@ MonoBehaviour:
   animator: {fileID: 8502209247087740883}
   movementController: {fileID: 3609276450062096035}
   characterController: {fileID: 1391780483896308142}
-  rigController: {fileID: 4932304416262613370}
   effectsManager: {fileID: 1410932785068075131}
   health: {fileID: 152333756513624170}
+  <RigController>k__BackingField: {fileID: 0}
   useHorizontal: 1
   rotationSmoothness: 20
   jumpVelocity: 4
@@ -9610,7 +9197,11 @@ MonoBehaviour:
     connectedLadder: {fileID: 0}
   waterMovement:
     swimSpeed: 3
-    waterVolume: {fileID: 0}
+    <DamageSpeed>k__BackingField: 10
+    flatHeight: 0.34
+    flatCenter: {x: 0, y: 0.14, z: 0}
+    normalHeight: 1.7
+    normalCenter: {x: 0, y: 0.92, z: 0}
   ropeMovement:
     attachedRope: {fileID: 0}
     handSocket: {fileID: 7393617433255950401}
@@ -9623,6 +9214,7 @@ MonoBehaviour:
   previousStateIndex: -1
   currentStateIndex: 0
   disablePlayerMovement: 0
+  <GroundTag>k__BackingField: 
 --- !u!114 &3609276450062096035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9670,764 +9262,25 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 2062570858156317134, guid: 361dcf53c0e43ad40a4bb9113224594e, type: 3}
-    - {fileID: 3395923901204193843, guid: d80b6e85c2b33b34a9dd6d69d32a307e, type: 3}
-    - {fileID: 6960161962951702265, guid: d65d15f183069fd44a06709a9b41313c, type: 3}
-    - {fileID: 9048904873178782047, guid: 81d7302ff572bcf44859d4c2507d8f7d, type: 3}
-    - {fileID: 8300000, guid: 5461cae585b64f64089805f0d313bc84, type: 3}
-    - {fileID: 8300000, guid: 9f96c8d3fef6ab440bdc9bd4ad3d08fe, type: 3}
-    - {fileID: 8300000, guid: 61abfb7bb17151f458862ef823ac0932, type: 3}
-    - {fileID: 8300000, guid: 2e14b3cc9c6906b42885675f3572d4b3, type: 3}
-    - {fileID: 8300000, guid: 846819fd62ca22b478d33e537cd61c8c, type: 3}
-    - {fileID: 8300000, guid: 6eee7f295d5ff8b4f934dec7f44eaf97, type: 3}
-    - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
-    - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
-    - {fileID: 8300000, guid: 0909de896e9029541b92ae05fe15e4b6, type: 3}
-    - {fileID: 8300000, guid: 6ad0cf00f050bee41a2dee098475dc78, type: 3}
-    - {fileID: 8300000, guid: 7ca5a9710db4327439c9f8cb8204615e, type: 3}
-    - {fileID: 8300000, guid: 14ae706fef2303e4cb71112dbd5d250b, type: 3}
-    - {fileID: 8300000, guid: b995bc1775ea83b4b8f861763e9a1424, type: 3}
-    - {fileID: 8300000, guid: d15f7338d693f0343843a6b9096d27f6, type: 3}
-    - {fileID: 8300000, guid: b9a5f4a46006d6f429a02ea0fadc4809, type: 3}
-    - {fileID: 8300000, guid: 6755e20b5c79018438c8aed7439dcfed, type: 3}
-    - {fileID: 8300000, guid: caf48be4d869fe24f85866b95cdbe017, type: 3}
-    - {fileID: 8300000, guid: a843d0038d0930149b2a4a6002937a10, type: 3}
-    - {fileID: 8300000, guid: eb25cc7f1bf9dbb43aa0833fe823843e, type: 3}
-    - {fileID: 8300000, guid: e6f87af77d097a84ca825ab2c2ce7e87, type: 3}
-    - {fileID: 8300000, guid: b682207ff9ac8db4695704cd57fb59a7, type: 3}
-    - {fileID: 8300000, guid: 938df53f74d50544b83b2cd1b17069f9, type: 3}
-    - {fileID: 8300000, guid: ea53a688169f735458a5fd72032a96eb, type: 3}
-    - {fileID: 8300000, guid: f2e9fc39ee7221b4a8e4b9d2f8975eed, type: 3}
-    - {fileID: 8300000, guid: 5e265270fb85126479eef52d8fce3b08, type: 3}
-    - {fileID: 8300000, guid: 3701a5fdf99882f40bc00eb9053eec92, type: 3}
-    - {fileID: 8300000, guid: 2f949b40b7283404099a802630fb2077, type: 3}
-    - {fileID: 8300000, guid: dfff2b3c7dfb43c419592789f0a6ab81, type: 3}
-    - {fileID: 8300000, guid: 812100e3982e56842adb6ba5be867b7a, type: 3}
-    - {fileID: 8300000, guid: baf90d315c62c1648ba2901ff92db065, type: 3}
-    - {fileID: 8300000, guid: 3e10d68c7f7aa854694549c916e8ba46, type: 3}
-    - {fileID: 8300000, guid: 70bfbaaebebfb0d4ba87a5e9947d5ad3, type: 3}
-    - {fileID: 8300000, guid: f7d6941d3b847874686c2b6a80ab8a1b, type: 3}
-    - {fileID: 8300000, guid: f85e18b3e969dac4bbfc7f6b18139932, type: 3}
-    - {fileID: 8300000, guid: caceea3cf407e1b47a4024a755887675, type: 3}
-    - {fileID: 8300000, guid: 8420cf17e21d6354a98e6ef6d19dc9cc, type: 3}
-    - {fileID: 8300000, guid: 27a5f175be2ed96409d9d802310e3c67, type: 3}
-    - {fileID: 8300000, guid: c7202e4e9e391e04ebededd990b78619, type: 3}
-    - {fileID: 8300000, guid: b511f72eb1d4d754cb828d24db388ba5, type: 3}
-    - {fileID: 8300000, guid: 8f88920100ba001438c984498c467f5f, type: 3}
-    - {fileID: 8300000, guid: f1ada3506afc83042b4ac8d23e3631a1, type: 3}
-    - {fileID: 8300000, guid: 48d258673d8a8ff4a98b256f4bdaa237, type: 3}
-    - {fileID: 8300000, guid: a6b9f97a365257f48b19c7ae1d409b59, type: 3}
-    - {fileID: 8300000, guid: 298b1669f5f56f746833b3f36e2e2d99, type: 3}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: stepEffects
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.GameObject,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 4
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Water
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: UnderWater
-    - Name: $v
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: SurfaceWater
-    - Name: $v
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: stepSounds
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 6
-    - Name: 
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 10
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 6
-    - Name: 
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Concrete
-    - Name: $v
-      Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 10
-      Data: 11
-    - Name: 
-      Entry: 10
-      Data: 12
-    - Name: 
-      Entry: 10
-      Data: 13
-    - Name: 
-      Entry: 10
-      Data: 14
-    - Name: 
-      Entry: 10
-      Data: 15
-    - Name: 
-      Entry: 10
-      Data: 16
-    - Name: 
-      Entry: 10
-      Data: 17
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Water
-    - Name: $v
-      Entry: 7
-      Data: 6|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 8
-    - Name: 
-      Entry: 10
-      Data: 18
-    - Name: 
-      Entry: 10
-      Data: 19
-    - Name: 
-      Entry: 10
-      Data: 20
-    - Name: 
-      Entry: 10
-      Data: 21
-    - Name: 
-      Entry: 10
-      Data: 22
-    - Name: 
-      Entry: 10
-      Data: 23
-    - Name: 
-      Entry: 10
-      Data: 24
-    - Name: 
-      Entry: 10
-      Data: 25
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Ladder
-    - Name: $v
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 26
-    - Name: 
-      Entry: 10
-      Data: 27
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Metal
-    - Name: $v
-      Entry: 7
-      Data: 8|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 28
-    - Name: 
-      Entry: 10
-      Data: 29
-    - Name: 
-      Entry: 10
-      Data: 30
-    - Name: 
-      Entry: 10
-      Data: 31
-    - Name: 
-      Entry: 10
-      Data: 32
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: interactionSounds
-      Entry: 7
-      Data: 9|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.Dictionary`2[[System.String,
-        mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 10|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Gravel
-    - Name: $v
-      Entry: 7
-      Data: 11|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 12|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Land
-    - Name: $v
-      Entry: 7
-      Data: 13|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 33
-    - Name: 
-      Entry: 10
-      Data: 34
-    - Name: 
-      Entry: 10
-      Data: 35
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Jump
-    - Name: $v
-      Entry: 7
-      Data: 14|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 36
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Concrete
-    - Name: $v
-      Entry: 7
-      Data: 15|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 16|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Jump
-    - Name: $v
-      Entry: 7
-      Data: 17|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 37
-    - Name: 
-      Entry: 10
-      Data: 38
-    - Name: 
-      Entry: 10
-      Data: 39
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Water
-    - Name: $v
-      Entry: 7
-      Data: 18|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 19|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Dive In
-    - Name: $v
-      Entry: 7
-      Data: 20|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 40
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Dive Out
-    - Name: $v
-      Entry: 7
-      Data: 21|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 41
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Dive In Muffled
-    - Name: $v
-      Entry: 7
-      Data: 22|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 42
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
+    - Name: steps
+      Entry: 6
+      Data: 
+    - Name: interactions
+      Entry: 6
       Data: 
     - Name: playerSounds
-      Entry: 7
-      Data: 23|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 24|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Jump
-    - Name: $v
-      Entry: 7
-      Data: 25|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 43
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Land
-    - Name: $v
-      Entry: 7
-      Data: 26|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 44
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: HeavyBreath
-    - Name: $v
-      Entry: 7
-      Data: 27|System.Collections.Generic.List`1[[UnityEngine.AudioClip, UnityEngine.AudioModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 45
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: otherSounds
-      Entry: 7
-      Data: 28|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.AudioClip,
-        UnityEngine.AudioModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 29|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: heartbeat
-    - Name: $v
-      Entry: 10
-      Data: 46
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Death
-    - Name: $v
-      Entry: 10
-      Data: 47
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
   player: {fileID: 8737177208379308741}
-  interactionSource: {fileID: 9211481786726332324}
-  playerSoundSource: {fileID: 7233558088881406270}
-  otherSoundSource: {fileID: 8477114925078615414}
-  leftFootSocket: {fileID: 5615770112387843058}
-  rightFootSocket: {fileID: 7449909005027213523}
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 128
-  currentEffectVolume: 
+  playerInteractionSource: {fileID: 0}
+  playerSource: {fileID: 0}
+  playerSfxSource: {fileID: 0}
 --- !u!114 &1480608930824292337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10481,9 +9334,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c3483c9487e684c8c17991abdfc6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookLeft: {fileID: 2489189631273656237}
-  lookRight: {fileID: 2490836024899991997}
-  weightChangeSpeed: 2
+  rig: {fileID: 0}
+  source: {fileID: 0}
+  transitionTime: 1
+  targetChangeSpeed: 5
 --- !u!114 &126029389077075145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11781,14 +10635,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 0
   playerStateIndex: 0
   nextPathPointIndex: 1
   prevPathPointIndex: 0
+  overrideAnimation: 0
+  overrideAnimationName: 
   canRotate: 1
   canJump: 1
   canBoost: 1
-  cameraOffsetInfo: {fileID: 2339577565931566284}
-  checkpointIndex: 0
+  canPlayAlternateMovement: 0
 --- !u!1 &6108465774538345774
 GameObject:
   m_ObjectHideFlags: 0
@@ -13224,7 +12080,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: 1.271, y: -2.141, z: 8.546}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 1
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 1
 --- !u!114 &4578354352947782965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13432,7 +12290,9 @@ MonoBehaviour:
     audioListenerLocalPosition: {x: -2.906, y: -1.714, z: 8.731}
     FOV: 66.61023
     lenseShift: {x: 0, y: 0}
-  transitionTime: 1
+  preferTime: 1
+  accelerateOnCourse: 0
+  transitionTimeOrSpeed: 1
 --- !u!114 &9084845045033633489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14307,7 +13167,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4098588523132451177}
-  - component: {fileID: 7271255277731140939}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -14333,18 +13192,6 @@ Transform:
   - {fileID: 3318029211398893420}
   m_Father: {fileID: 1258449140156524341}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7271255277731140939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7515571590615584800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9554c62fc1cf2794b942341eb13f69af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7546509111065298040
 GameObject:
   m_ObjectHideFlags: 0
@@ -15243,14 +14090,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreThisCheckpoint: 0
+  checkpointIndex: 1
   playerStateIndex: 0
   nextPathPointIndex: 11
   prevPathPointIndex: 10
+  overrideAnimation: 0
+  overrideAnimationName: 
   canRotate: 1
   canJump: 1
   canBoost: 1
-  cameraOffsetInfo: {fileID: 2724053176034325251}
-  checkpointIndex: 1
+  canPlayAlternateMovement: 0
 --- !u!65 &4502283219466706264
 BoxCollider:
   m_ObjectHideFlags: 0
