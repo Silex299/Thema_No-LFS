@@ -44,7 +44,7 @@ namespace Path_Scripts
 
         #endregion
 
-        private void Awake()
+        private void OnEnable()
         {
             if (PlayerPathController.Instance == null)
             {

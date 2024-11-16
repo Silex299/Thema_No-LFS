@@ -13,7 +13,7 @@ namespace Misc
         //Create singleton instance
         public static CutsceneManager Instance { get; private set; }
 
-        private void Awake()
+        private void OnEnable()
         {
             if (Instance == null)
             {
@@ -21,7 +21,7 @@ namespace Misc
             }
             else if (Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(Instance);
             }
         }
 

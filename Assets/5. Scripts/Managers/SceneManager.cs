@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Managers
 {
-    public class LevelManager : MonoBehaviour
+    public class SceneManager : MonoBehaviour
     {
         private int _sceneToLoadIndex = -1;
         private AsyncOperation _loadingOperation;
@@ -13,7 +13,7 @@ namespace Managers
         // Function to load a scene in the background using the scene index
         public void LoadSceneInBackground(int sceneIndex)
         {
-            if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings)
+            if (sceneIndex >= 0 && sceneIndex < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
             {
                 StartCoroutine(LoadSceneAsync(sceneIndex));
             }
@@ -26,7 +26,7 @@ namespace Managers
         // Coroutine to handle the loading process asynchronously
         private IEnumerator LoadSceneAsync(int sceneIndex)
         {
-            _loadingOperation = SceneManager.LoadSceneAsync(sceneIndex);
+            _loadingOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneIndex);
             _loadingOperation.allowSceneActivation = false;
             _sceneToLoadIndex = sceneIndex;
 
@@ -63,7 +63,7 @@ namespace Managers
         // New function to load main scene and sub-scenes in the background
         public void LoadMainAndSubScenesInBackground(int mainScene, int[] subScenes)
         {
-            if (mainScene < 0 || mainScene >= SceneManager.sceneCountInBuildSettings)
+            if (mainScene < 0 || mainScene >= UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
             {
                 Debug.LogError("Invalid main scene index");
                 return;
@@ -71,7 +71,7 @@ namespace Managers
 
             foreach (int subSceneIndex in subScenes)
             {
-                if (subSceneIndex < 0 || subSceneIndex >= SceneManager.sceneCountInBuildSettings)
+                if (subSceneIndex < 0 || subSceneIndex >= UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
                 {
                     Debug.LogError("Invalid sub-scene index: " + subSceneIndex);
                     return;
@@ -84,7 +84,7 @@ namespace Managers
         // Coroutine to load main scene and sub-scenes asynchronously
         private IEnumerator LoadMainAndSubScenesAsync(int mainScene, int[] subScenes)
         {
-            _loadingOperation = SceneManager.LoadSceneAsync(mainScene);
+            _loadingOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(mainScene);
             _loadingOperation.allowSceneActivation = false;
             _sceneToLoadIndex = mainScene;
 
@@ -92,7 +92,7 @@ namespace Managers
             _subSceneLoadingOperations = new AsyncOperation[subScenes.Length];
             for (int i = 0; i < subScenes.Length; i++)
             {
-                _subSceneLoadingOperations[i] = SceneManager.LoadSceneAsync(subScenes[i], LoadSceneMode.Additive);
+                _subSceneLoadingOperations[i] = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(subScenes[i], LoadSceneMode.Additive);
                 _subSceneLoadingOperations[i].allowSceneActivation = false;
             }
 

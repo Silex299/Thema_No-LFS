@@ -38,22 +38,21 @@ namespace Managers
         private bool _isLcpViewOpen;
 
 
-        private static UIManager _instance;
-        public static UIManager Instance => _instance;
+        public static UIManager Instance { get; private set; }
 
 
-        private void Awake()
+        private void OnEnable()
         {
             if (UIManager.Instance)
             {
                 if (UIManager.Instance != this)
                 {
-                    Destroy(this);
+                    Destroy(Instance);
                 }
             }
             else
             {
-                UIManager._instance = this;
+                UIManager.Instance = this;
             }
         }
 

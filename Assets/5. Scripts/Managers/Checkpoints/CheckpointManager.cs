@@ -63,14 +63,14 @@ namespace Managers.Checkpoints
             }
             else if (CheckpointManager.Instance != this)
             {
-                Destroy(this);
+                Destroy(CheckpointManager.Instance);
             }
         }
 
         private void OnEnable()
         {
             //LOAD CHECKPOINT FIRST
-            currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
+            currentLevelIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
             LoadCheckpointData();
             LoadCheckpoint(true);
         }

@@ -21,7 +21,7 @@ namespace Managers.Checkpoints
             player.transform.position = checkpointTransform.position;
             player.transform.rotation = checkpointTransform.rotation;
 
-            Invoke(nameof(ResetPlayer), 1.5f);
+            Invoke(nameof(ResetPlayer), 1.5f);//TODO: REMOVE THIS SHIT
 
         }
 

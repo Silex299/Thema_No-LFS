@@ -27,20 +27,19 @@ namespace Thema_Camera
         private Vector3 _shakeInitialPosition;
         private Quaternion _startRotation;
 
-        private static CameraManager instance;
 
-        public static CameraManager Instance => instance;
+        public static CameraManager Instance { get; private set; }
 
 
-        private void Awake()
+        private void OnEnable()
         {
             if (CameraManager.Instance == null)
             {
-                instance = this;
+                CameraManager.Instance = this;
             }
             else if (CameraManager.Instance != this)
             {
-                Destroy(this);
+                Destroy(CameraManager.Instance);
             }
 
         }

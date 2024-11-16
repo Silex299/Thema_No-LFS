@@ -10,23 +10,19 @@ namespace Player_Scripts
         [SerializeField, BoxGroup("References")]
         internal Player player;
 
-        private static PlayerMovementController _instance;
-        public static PlayerMovementController Instance
-        {
-            get => _instance;
-        }
+        public static PlayerMovementController Instance { get; private set; }
 
         private static readonly int StateIndex = Animator.StringToHash("StateIndex");
 
-        private void Awake()
+        private void OnEnable()
         {
             if (PlayerMovementController.Instance != null)
             {
-                Destroy(PlayerMovementController.Instance);
+                if(PlayerMovementController.Instance != this) Destroy(PlayerMovementController.Instance);
             }
             else
             {
-                PlayerMovementController._instance = this;
+                PlayerMovementController.Instance = this;
             }
 
             player.AnimationController.SetInteger(StateIndex, player.currentStateIndex);

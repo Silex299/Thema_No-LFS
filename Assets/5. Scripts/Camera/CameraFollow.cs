@@ -30,22 +30,22 @@ namespace Thema_Camera
         }
 
 
-        private void Awake()
+        private void OnEnable()
         {
-            if (CameraFollow.Instance != null)
-            {
-                Destroy(this);
-            }
-            else
+            if (CameraFollow.Instance == null)
             {
                 CameraFollow.Instance = this;
+            }
+            else if (CameraFollow.Instance != this)
+            {
+                Destroy(CameraFollow.Instance);
             }
         }
 
         private void Update()
         {
             if (!followTarget) return;
-            if(DoFollowTarget) FollowTarget();
+            if (DoFollowTarget) FollowTarget();
         }
 
         private void FollowTarget()
@@ -78,7 +78,6 @@ namespace Thema_Camera
 
         public void ChangeOffset(CameraFollowInfo info, float transitionTime)
         {
-
             if (_transitionOffsetTrigger != null)
             {
                 StopCoroutine(_transitionOffsetTrigger);
@@ -87,7 +86,6 @@ namespace Thema_Camera
             _transitionOffsetTrigger = StartCoroutine(TransitionOffset(info, transitionTime));
         }
 
-        
 
         private IEnumerator TransitionOffset(CameraFollowInfo info, float transitionTime)
         {
@@ -98,7 +96,7 @@ namespace Thema_Camera
             Quaternion initialRot = transform.rotation;
             float initialFOV = myCamera.fieldOfView;
             Vector2 initialLensShift = myCamera.lensShift;
-            
+
             Vector3 audioListenerPos = Vector3.zero;
             if (m_AudioListener)
             {
@@ -111,12 +109,12 @@ namespace Thema_Camera
                 timeElapsed += Time.deltaTime;
 
                 m_Offset = Vector3.Lerp(initialOffset, info.offset, timeElapsed / transitionTime);
-                
+
                 transform.rotation = Quaternion.Lerp(initialRot, Quaternion.Euler(info.rotation),
                     timeElapsed / transitionTime);
-                
+
                 myCamera.fieldOfView = Mathf.Lerp(initialFOV, info.FOV, timeElapsed / transitionTime);
-                
+
                 myCamera.lensShift = Vector2.Lerp(initialLensShift, info.lenseShift, timeElapsed / transitionTime);
 
                 if (m_AudioListener)
@@ -132,7 +130,6 @@ namespace Thema_Camera
         }
 
 
-
         public void ChangeOffsetWithSpeed(CameraFollowInfo info, float speed, bool accelerateOnItsCourse = false)
         {
             if (_transitionOffsetTrigger != null)
@@ -145,38 +142,36 @@ namespace Thema_Camera
 
         private IEnumerator TransitionOffsetWithSpeed(CameraFollowInfo info, float speed, bool accelerateOnItsCourse = false)
         {
-            
-            float currentSpeed = accelerateOnItsCourse? 0 : speed;
-            
+            float currentSpeed = accelerateOnItsCourse ? 0 : speed;
+
             while (true)
             {
-                
                 if (accelerateOnItsCourse)
                 {
                     currentSpeed += Time.deltaTime * speed;
                     if (Mathf.Approximately(currentSpeed, speed)) accelerateOnItsCourse = false;
                 }
-                
+
                 m_Offset = Vector3.Lerp(m_Offset, info.offset, Time.deltaTime * currentSpeed);
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(info.rotation),Time.deltaTime * currentSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(info.rotation), Time.deltaTime * currentSpeed);
                 myCamera.fieldOfView = Mathf.Lerp(myCamera.fieldOfView, info.FOV, Time.deltaTime * currentSpeed);
                 myCamera.lensShift = Vector2.Lerp(myCamera.lensShift, info.lenseShift, Time.deltaTime * currentSpeed);
-                
+
                 if (m_AudioListener)
                 {
                     m_AudioListener.transform.localPosition = Vector3.Lerp(m_AudioListener.transform.localPosition, info.audioListenerLocalPosition, Time.deltaTime * currentSpeed);
                 }
-                
-                
+
+
                 //create exit condition with some threshold
-                if (Vector3.Distance(m_Offset, info.offset) < 0.1f && 
-                    Quaternion.Angle(transform.rotation, Quaternion.Euler(info.rotation)) < 0.1f 
-                    && Mathf.Abs(myCamera.fieldOfView - info.FOV) < 0.1f && 
+                if (Vector3.Distance(m_Offset, info.offset) < 0.1f &&
+                    Quaternion.Angle(transform.rotation, Quaternion.Euler(info.rotation)) < 0.1f
+                    && Mathf.Abs(myCamera.fieldOfView - info.FOV) < 0.1f &&
                     Vector2.Distance(myCamera.lensShift, info.lenseShift) < 0.1f)
                 {
                     break;
                 }
-                
+
                 yield return null;
             }
 
@@ -189,12 +184,9 @@ namespace Thema_Camera
             {
                 m_AudioListener.transform.localPosition = info.audioListenerLocalPosition;
             }
-            
-            
+
+
             _transitionOffsetTrigger = null;
-            
-            
         }
-        
     }
 }
