@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Scriptable
@@ -5,18 +7,17 @@ namespace Scriptable
     
     [CreateAssetMenu(fileName = "NewSceneData", menuName = "Scriptable/Thema/SceneData", order = 1)]
     
-    public class SceneData : ScriptableObject
+    public class SceneData : SerializedScriptableObject
     {
-        // Start is called before the first frame update
-        void Start()
-        {
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
+        public Dictionary<int, CheckpointData[]> sceneCheckpointData = new Dictionary<int, CheckpointData[]>();
         
+        public struct CheckpointData
+        {
+            public int checkpoint;
+            public int[] requiredSubScenes;
         }
+        
+        
     }
 }

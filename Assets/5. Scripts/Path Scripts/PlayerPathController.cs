@@ -53,6 +53,7 @@ namespace Path_Scripts
             else if (PlayerPathController.Instance != this)
             {
                 Destroy(PlayerPathController.Instance);
+                PlayerPathController.Instance = this;
             }
         }
 

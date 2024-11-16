@@ -39,6 +39,7 @@ namespace Thema_Camera
             else if (CameraFollow.Instance != this)
             {
                 Destroy(CameraFollow.Instance);
+                CameraFollow.Instance = this;
             }
         }
 

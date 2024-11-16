@@ -22,6 +22,7 @@ namespace Misc
             else if (Instance != this)
             {
                 Destroy(Instance);
+                Instance = this;
             }
         }
 

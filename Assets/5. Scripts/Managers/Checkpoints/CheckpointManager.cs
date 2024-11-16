@@ -3,7 +3,6 @@ using Sirenix.OdinInspector;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Managers.Checkpoints
 {
@@ -12,9 +11,7 @@ namespace Managers.Checkpoints
     {
 
 
-        [SerializeField] private int currentCheckpoint;
-        [SerializeField] private int currentLevelIndex;
-
+        [SerializeField] private CheckpointInfo checkpointInfo;
 
         [SerializeField, BoxGroup("Checkpoints")] private CheckPoint[] checkpoints;
 
@@ -49,7 +46,7 @@ namespace Managers.Checkpoints
         #endregion
 
 
-        public int CurrentCheckpoint => currentCheckpoint;
+        public int CurrentCheckpoint => checkpointInfo.checkpoint;
         
         public static CheckpointManager Instance { get; private set; }
         public Action<int> onCheckpointLoad;
@@ -64,66 +61,37 @@ namespace Managers.Checkpoints
             else if (CheckpointManager.Instance != this)
             {
                 Destroy(CheckpointManager.Instance);
+                CheckpointManager.Instance = this;
             }
         }
 
         private void OnEnable()
         {
-            //LOAD CHECKPOINT FIRST
-            currentLevelIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
-            LoadCheckpointData();
-            LoadCheckpoint(true);
+            checkpointInfo = SceneManager.Instance.savedCheckpointInfo;
+            checkpointInfo.level = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+            LoadCheckpoint();
         }
 
 
-        public void LoadCheckpoint(bool initialSetup = false)
+        public void LoadCheckpoint()
         {
-            playerTracker.ResetItem(checkpoints[currentCheckpoint]);
-            checkpoints[currentCheckpoint].LoadThisCheckpoint();
-            onCheckpointLoad?.Invoke(currentCheckpoint);
+            playerTracker.ResetItem(checkpoints[checkpointInfo.checkpoint]);
+            checkpoints[checkpointInfo.checkpoint].LoadThisCheckpoint();
+            onCheckpointLoad?.Invoke(checkpointInfo.checkpoint);
         }
         
         public void SaveCheckpoint(int index)
         {
-            currentCheckpoint = index;
-            if (currentCheckpoint >= index)
+            checkpointInfo.checkpoint = index;
+
+            if (SceneManager.Instance.CanSaveCheckpoint(checkpointInfo))
             {
-                SaveCheckpointData();
+                SceneManager.Instance.SaveCheckpointData(checkpointInfo);
             }
+            
         }
-
-        private static string SavePath => Path.Combine(Application.persistentDataPath, "Checkpoint.data");
-        private void SaveCheckpointData()
-        {
-            CheckpointInfo data = new CheckpointInfo()
-            {
-                level = currentLevelIndex,
-                checkpoint = currentCheckpoint
-            };
-            BinaryFormatter formatter = new BinaryFormatter();
-
-            using FileStream stream = new FileStream(SavePath, FileMode.Create);
-            formatter.Serialize(stream, data);
-        }
-
-        private void LoadCheckpointData()
-        {
-            if (File.Exists(SavePath))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                using FileStream stream = new FileStream(SavePath, FileMode.Open);
-                CheckpointInfo data = (CheckpointInfo)formatter.Deserialize(stream);
-
-                currentCheckpoint = currentLevelIndex!= data.level ? 0 : data.checkpoint;
-            }
-            else
-            {
-                Debug.LogError("No saved file" + SavePath);
-                currentCheckpoint = 0;
-            }
-        }
-
-
+        
+        
         [System.Serializable]
         public struct CheckpointInfo
         {

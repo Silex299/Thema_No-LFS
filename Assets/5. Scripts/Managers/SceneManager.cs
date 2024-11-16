@@ -1,4 +1,9 @@
+using System;
 using System.Collections;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Managers.Checkpoints;
+using Scriptable;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +11,91 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
+
+        public CheckpointManager.CheckpointInfo savedCheckpointInfo;
+        public SceneData sceneData;
+        
+        private static string SavePath => Path.Combine(Application.persistentDataPath, "Checkpoint.data");
+        public static SceneManager Instance { get; private set; }
+
+        private void Start()
+        {
+            if (SceneManager.Instance == null)
+            {
+                SceneManager.Instance = this;
+            }
+            else if (SceneManager.Instance != this)
+            {
+                Destroy(SceneManager.Instance);
+            }
+            
+            LoadCheckpointData();
+            DontDestroyOnLoad(gameObject);
+        }
+
+        private void LoadCheckpointData()
+        {
+            if (File.Exists(SavePath))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using FileStream stream = new FileStream(SavePath, FileMode.Open);
+                savedCheckpointInfo = (CheckpointManager.CheckpointInfo)formatter.Deserialize(stream);
+
+            }
+        }
+        
+        public void SaveCheckpointData(CheckpointManager.CheckpointInfo newCheckpointInfo)
+        {
+            savedCheckpointInfo= newCheckpointInfo;
+            BinaryFormatter formatter = new BinaryFormatter();
+
+            using FileStream stream = new FileStream(SavePath, FileMode.Create);
+            formatter.Serialize(stream, savedCheckpointInfo);
+        }
+
+        public bool CanSaveCheckpoint(CheckpointManager.CheckpointInfo info)
+        {
+            if(info.level > savedCheckpointInfo.level) return true;
+
+            if (info.checkpoint > savedCheckpointInfo.level) return true;
+
+            return false;
+        }
+
+
+
+        public void LoadFromSavedData()
+        {
+            if (sceneData.sceneCheckpointData.TryGetValue(savedCheckpointInfo.level, out var value))
+            {
+                int[] requiredSubScenes =  value[savedCheckpointInfo.checkpoint].requiredSubScenes;
+                LoadMainAndSubScenesInBackground(savedCheckpointInfo.level, requiredSubScenes);
+            }
+            
+        }
+
+        public void LoadNewGame()
+        {
+            savedCheckpointInfo = new CheckpointManager.CheckpointInfo() { level = 1, checkpoint = 0 }; //THIS IS DEFAULT VALUE
+            SaveCheckpointData(savedCheckpointInfo);
+            LoadFromSavedData();
+        }
+
+        public void LoadNewLevel(int levelBuildIndex)
+        {
+            CheckpointManager.CheckpointInfo newData = new CheckpointManager.CheckpointInfo() { level = levelBuildIndex, checkpoint = 0 }; //THIS IS DEFAULT VALUE
+            SaveCheckpointData(newData);
+            LoadFromSavedData();
+        }
+        
+        
+        
+        
+        
+        /*--  LOAD SCENE --*/
+        
+        
+        
         private int _sceneToLoadIndex = -1;
         private AsyncOperation _loadingOperation;
         private AsyncOperation[] _subSceneLoadingOperations;
@@ -48,16 +138,6 @@ namespace Managers
                 Debug.LogError("No scene loaded to activate");
             }
         }
-
-
-        public void TestSceneLoad()
-        {
-            int mainScene = 2;
-            int[] subScenes = new int[] { 3, 4, 5 };
-
-            LoadMainAndSubScenesInBackground(mainScene, subScenes);
-        }
-        
         
         
         // New function to load main scene and sub-scenes in the background
@@ -101,8 +181,11 @@ namespace Managers
             {
                 yield return null;
             }
+
         }
 
+        
+        
         // Function to activate all scenes when ready
         public void ActivateLoadedMainAndSubScenes()
         {
@@ -123,8 +206,9 @@ namespace Managers
             }
         }
 
-        // Helper function to check if all sub-scenes are loaded
+
         private bool AllSubScenesLoaded()
+
         {
             foreach (var subSceneOperation in _subSceneLoadingOperations)
             {
@@ -135,5 +219,6 @@ namespace Managers
             }
             return true;
         }
+
     }
 }

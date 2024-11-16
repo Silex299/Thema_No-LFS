@@ -40,6 +40,7 @@ namespace Thema_Camera
             else if (CameraManager.Instance != this)
             {
                 Destroy(CameraManager.Instance);
+                CameraManager.Instance = this;
             }
 
         }
