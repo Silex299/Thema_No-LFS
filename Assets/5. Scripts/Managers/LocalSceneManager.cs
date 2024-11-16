@@ -108,6 +108,10 @@ namespace Managers
             }
         }
         
+        
+        
+        
+        
         public void LoadFromSavedData()
         {
             StartCoroutine(LoadFromSaveDataIEnumerator());
@@ -123,7 +127,6 @@ namespace Managers
         }
 
         
-
         public void LoadNextScene(int index)
         {
             SceneManager.Instance.LoadNewLevel(index);
@@ -133,6 +136,12 @@ namespace Managers
         {
             SceneManager.Instance.ActivateLoadedMainAndSubScenes();
         }
+
+        public void LoadMainMenu()
+        {
+            SceneManager.Instance.LoadMainMenu();
+        }
+        
         
 
         

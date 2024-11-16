@@ -19,7 +19,7 @@ namespace Managers
         public static SceneManager Instance { get; private set; }
         public bool AllLoaded { get; private set; }
 
-        private void Start()
+        private void Awake()
         {
             if (SceneManager.Instance == null)
             {
@@ -27,11 +27,14 @@ namespace Managers
             }
             else if (SceneManager.Instance != this)
             {
-                Destroy(SceneManager.Instance);
+                Destroy(SceneManager.Instance.gameObject);
             }
             
             LoadCheckpointData();
             DontDestroyOnLoad(gameObject);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
 
         private void LoadCheckpointData()
@@ -89,6 +92,11 @@ namespace Managers
             LoadFromSavedData();
         }
 
+        public void LoadMainMenu()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            Destroy(this.gameObject);
+        }
      
         
         /*--  LOAD SCENE --*/

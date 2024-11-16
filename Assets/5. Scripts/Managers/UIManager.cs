@@ -36,6 +36,7 @@ namespace Managers
 
 
         private bool _isLcpViewOpen;
+        public bool Interactable { get; set; } = true;
 
 
         public static UIManager Instance { get; private set; }
@@ -54,8 +55,10 @@ namespace Managers
             {
                 UIManager.Instance = this;
             }
+            
         }
 
+      
 
         private void Start()
         {
@@ -64,6 +67,10 @@ namespace Managers
             controller.player.Health.onDeath += RestartOrExitView;
             controller.player.Health.onRevive += CloseRestartOrExitView;
             controller.player.Health.onTakingDamage += TakeDamage;
+            
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
         }
 
         private void OnDisable()
@@ -170,19 +177,25 @@ namespace Managers
         {
             if (_isLcpViewOpen) return;
 
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
+            
             void Action()
             {
                 animator.Play("LCP_View");
                 _isLcpViewOpen = true;
             }
 
-            FadeIn(Action, 2);
+            FadeIn(Action, fadeTransitionTime);
         }
 
         private void CloseRestartOrExitView()
         {
             if (!_isLcpViewOpen) return;
-
+            
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            
             _isLcpViewOpen = false;
             animator.Play("EXIT_LCP_VIEW");
             FadeOut(fadeTransitionTime);
@@ -217,7 +230,31 @@ namespace Managers
             animator.Play(load ? "LoadUnreachableMenu" : "UnLoadUnreachableMenu");
         }
 
+        
         #endregion
+
+
+        public void ExitToMainMenu()
+        {
+            LocalSceneManager.Instance.LoadMainMenu();
+        }
+        
+        private void Update()
+        {
+            if(PlayerMovementController.Instance.player.Health.IsDead || !Interactable) return;
+            if (Input.GetButtonDown("esc"))
+            {
+                if (_isLcpViewOpen)
+                {
+                    CloseRestartOrExitView();
+                }
+                else
+                {
+                    RestartOrExitView();
+                }
+            }
+        }
+
 
         #region Button Methods
 

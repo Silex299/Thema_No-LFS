@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Managers;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -38,6 +39,11 @@ namespace UIScripts
         {
             menuState = MenuState.Main;
             _mainMenuUpdateCoroutine ??= StartCoroutine(MainMenuUpdate());
+
+            if (SceneManager.Instance.savedCheckpointInfo.level == 1 && SceneManager.Instance.savedCheckpointInfo.checkpoint == 0)
+            {
+                menuButtons[0].Enabled = false;
+            }
         }
         
         private IEnumerator MainMenuUpdate(bool start = false)
