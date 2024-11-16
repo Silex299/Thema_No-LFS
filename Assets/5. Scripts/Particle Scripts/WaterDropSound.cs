@@ -14,7 +14,6 @@ namespace Particle_Scripts
 
         private void OnParticleCollision(GameObject other)
         {
-            print("Hello");
             PlayDropSound();
         }
 

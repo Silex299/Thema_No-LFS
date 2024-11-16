@@ -42,7 +42,6 @@ namespace Weapons.NPC_Weapon
         private void OnEnable()
         {
             npc.onAttack += Fire;
-            print("FireArm Started");
         }
         private void OnDisable()
         {

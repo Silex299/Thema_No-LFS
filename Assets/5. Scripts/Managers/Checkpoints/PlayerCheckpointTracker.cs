@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Player_Scripts;
 
@@ -17,15 +18,18 @@ namespace Managers.Checkpoints
             
             Transform checkpointTransform = checkPoint.transform;
             
-            print("Reseting position");
             player.transform.position = checkpointTransform.position;
             player.transform.rotation = checkpointTransform.rotation;
 
-            player.Health.Reset();
+            Invoke(nameof(ResetPlayer), 1.5f);
+
+        }
+
+        public void ResetPlayer()
+        {
             player.Health.ResetHealth();
+            player.Health.ResetPlayer();
             player.MovementController.Reset();
-
-
         }
 
         public void InitialSetup(CheckPoint checkPoint)

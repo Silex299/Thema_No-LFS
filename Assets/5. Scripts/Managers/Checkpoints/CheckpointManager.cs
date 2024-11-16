@@ -67,7 +67,7 @@ namespace Managers.Checkpoints
             }
         }
 
-        private void Start()
+        private void OnEnable()
         {
             //LOAD CHECKPOINT FIRST
             currentLevelIndex = SceneManager.GetActiveScene().buildIndex;

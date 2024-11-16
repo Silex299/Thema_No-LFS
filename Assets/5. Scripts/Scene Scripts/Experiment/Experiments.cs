@@ -10,6 +10,7 @@ namespace Scene_Scripts
         private void OnEnable()
         {
             CheckpointManager.Instance.onCheckpointLoad += OnCheckpointLoad;
+            StartCoroutine(UiUpdateOnCheckpointLoad());
         }
 
         private void OnDisable()
@@ -19,7 +20,7 @@ namespace Scene_Scripts
         
         private void OnCheckpointLoad(int checkpoint)
         {
-            if (checkpoint > 0)
+            if (checkpoint >= 0)
             {
                 StartCoroutine(UiUpdateOnCheckpointLoad());
             }
@@ -27,7 +28,7 @@ namespace Scene_Scripts
 
         private IEnumerator UiUpdateOnCheckpointLoad()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
             UIManager.Instance.FadeOut(1f);
         }
         

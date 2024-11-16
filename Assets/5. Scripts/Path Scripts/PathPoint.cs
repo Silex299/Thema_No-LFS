@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -45,6 +47,22 @@ namespace Path_Scripts
                 //Set next and previous destination
                 PlayerPathController.Instance.previousDestination = prevPointIndex;
                 PlayerPathController.Instance.nextDestination = nextPointIndex;
+            }
+        }
+
+
+        public bool continuousDetection = false;
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (continuousDetection)
+            {
+                if (other.CompareTag("Player_Main"))
+                {
+                    //Set next and previous destination
+                    PlayerPathController.Instance.previousDestination = prevPointIndex;
+                    PlayerPathController.Instance.nextDestination = nextPointIndex;
+                }
             }
         }
 

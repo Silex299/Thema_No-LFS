@@ -31,9 +31,18 @@ namespace Managers.Checkpoints
         [TabGroup("State", "Final")] public UnityEvent finalStateEvent;
 
 
+
+        private bool _loaded;
+        
         private void OnEnable()
         {
             CheckpointManager.Instance.onCheckpointLoad += OnCheckpointLoaded;
+            
+            if (!_loaded)
+            {
+                int currentIndex = CheckpointManager.Instance.CurrentCheckpoint;
+                OnCheckpointLoaded(currentIndex);
+            }
         }
 
         private void OnDisable()
@@ -43,6 +52,7 @@ namespace Managers.Checkpoints
 
         private void OnCheckpointLoaded(int checkpointIndex)
         {
+            _loaded = true;
             if (isExclusive)
             {
                 StartCoroutine(checkpointIndex == checkpointThreshold ? ResetState() : FinalState());

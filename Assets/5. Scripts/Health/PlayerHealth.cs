@@ -27,7 +27,7 @@ namespace Health
         private float _dissolveTimeElapsed = 0;
         private static readonly int VerticalAcceleration = Animator.StringToHash("VerticalAcceleration");
 
-        private void Start()
+        protected override void Start()
         {
             dissolveMaterial.SetFloat(Dissolve1, -1);
             currentHealth = maximumHealth;
@@ -159,14 +159,14 @@ namespace Health
         }
 
 
-        public void Reset()
+        //TODO: SOME STUPID TWO RESET PLAYER FIX IT
+        public void ResetPlayer()
         {
 
             player.CController.enabled = true;
             player.MovementController.enabled = true;
             player.EffectsManager.enabled = true;
             player.AnimationController.enabled = true;
-
             player.AnimationController.SetFloat(VerticalAcceleration, 0);
             onRevive?.Invoke();
             Start();

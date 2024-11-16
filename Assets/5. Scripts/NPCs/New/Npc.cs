@@ -151,7 +151,6 @@ namespace NPCs.New
 
         private void ChangeState(NpcStates state)
         {
-            print("Changing guard state to " + state + " from " + _currentStateType);
 
             if (state == _currentStateType) return;
 

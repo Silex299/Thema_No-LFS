@@ -16,9 +16,15 @@ namespace Triggers
         public UnityEvent trigger;
         private bool _isTriggered;
 
-        private void Start()
+        private bool _loaded;
+
+        private void OnEnable()
         {
             CheckpointManager.Instance.onCheckpointLoad += ResetTrigger;
+            
+            if (_loaded) return;
+            int currentIndex = CheckpointManager.Instance.CurrentCheckpoint;
+            ResetTrigger(currentIndex);
         }
         private void OnDisable()
         {
@@ -27,6 +33,7 @@ namespace Triggers
 
         private void ResetTrigger(int checkpoint)
         {
+            _loaded = true;
             if (checkpointThreshold == -1)
             {
                 _isTriggered = false;
