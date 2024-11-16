@@ -9,7 +9,6 @@ namespace Managers
 {
     public class LocalSceneManager : MonoBehaviour
     {
-
         
         public static LocalSceneManager Instance { get; private set; }
         public bool AllSceneLoaded { get; private set; } = true;
@@ -71,7 +70,6 @@ namespace Managers
             return (toBeLoaded, toBeUnloaded);
         }
         
-
         public void LoadSubScenes(List<int> requiredScenes, List<int> optionalScenes)
         {
             var (toBeLoaded, toBeUnloaded) = ProcessSceneIndecies(requiredScenes, optionalScenes);
@@ -109,6 +107,33 @@ namespace Managers
                 UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneIndex);
             }
         }
+        
+        public void LoadFromSavedData()
+        {
+            StartCoroutine(LoadFromSaveDataIEnumerator());
+        }
+        
+        private  IEnumerator LoadFromSaveDataIEnumerator()
+        {
+            SceneManager.Instance.LoadFromSavedData();
+
+            yield return new WaitForSeconds(1.5f);
+            
+            SceneManager.Instance.ActivateLoadedMainAndSubScenes();
+        }
+
+        
+
+        public void LoadNextScene(int index)
+        {
+            SceneManager.Instance.LoadNewLevel(index);
+        }
+        
+        public void ActivateNextScene()
+        {
+            SceneManager.Instance.ActivateLoadedMainAndSubScenes();
+        }
+        
 
         
         

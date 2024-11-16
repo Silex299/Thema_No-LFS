@@ -8226,59 +8226,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &687627591
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 687627592}
-  - component: {fileID: 687627593}
-  m_Layer: 0
-  m_Name: InitCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &687627592
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 687627591}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.77, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 923600351}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &687627593
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 687627591}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.9361596, y: 0.09991288, z: 6.3606443}
-  m_Center: {x: 0, y: 1.2268778, z: -2.6803217}
 --- !u!1 &730531021
 GameObject:
   m_ObjectHideFlags: 0
@@ -8696,6 +8643,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: fce64986c4369c14dadb2c818ce3157e, type: 2}
     - {fileID: 11400000, guid: 1e3eb17a115ab3241b9e0a801f558a1d, type: 2}
     - {fileID: 11400000, guid: f4eb7bad26e150049a69ae87dff5ef69, type: 2}
+    - {fileID: 11400000, guid: 8efefd1205cd4bc47922a6e676dc8155, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -8743,6 +8691,32 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Thema_Camera.CameraFollow, Assembly-CSharp
           m_MethodName: set_DoFollowTarget
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 923600353}
+          m_TargetAssemblyTypeName: Managers.LocalSceneManager, Assembly-CSharp
+          m_MethodName: LoadNextScene
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 11
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 923600353}
+          m_TargetAssemblyTypeName: Managers.LocalSceneManager, Assembly-CSharp
+          m_MethodName: ActivateNextScene
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9090,7 +9064,6 @@ Transform:
   - {fileID: 7415020759999584073}
   - {fileID: 1160234427}
   - {fileID: 452077663}
-  - {fileID: 687627592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &923600352
@@ -19558,7 +19531,12 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:RightFoot'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform
+    'mixamorig:LeftHand'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:Spine1'\n\tTransform
+    'mixamorig:Spine2'\n\tTransform 'mixamorig:LeftHandThumb1'\n\tTransform 'mixamorig:LeftHandThumb2'\n\tTransform
+    'mixamorig:RightUpLeg'\n\tTransform 'mixamorig:LeftHandIndex3'\n\tand more ..."
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

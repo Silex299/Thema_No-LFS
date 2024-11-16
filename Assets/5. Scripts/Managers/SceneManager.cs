@@ -74,12 +74,12 @@ namespace Managers
             }
             
         }
-
         public void LoadNewGame()
         {
             savedCheckpointInfo = new CheckpointManager.CheckpointInfo() { level = 1, checkpoint = 0 }; //THIS IS DEFAULT VALUE
             SaveCheckpointData(savedCheckpointInfo);
             LoadFromSavedData();
+            
         }
 
         public void LoadNewLevel(int levelBuildIndex)
@@ -88,13 +88,10 @@ namespace Managers
             SaveCheckpointData(newData);
             LoadFromSavedData();
         }
-        
-        
-        
-        
+
+     
         
         /*--  LOAD SCENE --*/
-        
         
         
         private int _sceneToLoadIndex = -1;
@@ -142,11 +139,10 @@ namespace Managers
         
         
         // New function to load main scene and sub-scenes in the background
-        public void LoadMainAndSubScenesInBackground(int mainScene, int[] subScenes)
+        private void LoadMainAndSubScenesInBackground(int mainScene, int[] subScenes)
         {
             if (mainScene < 0 || mainScene >= UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
             {
-                Debug.LogError("Invalid main scene index");
                 return;
             }
 
@@ -154,7 +150,6 @@ namespace Managers
             {
                 if (subSceneIndex < 0 || subSceneIndex >= UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings)
                 {
-                    Debug.LogError("Invalid sub-scene index: " + subSceneIndex);
                     return;
                 }
             }
@@ -192,6 +187,7 @@ namespace Managers
 
         
         
+        [ContextMenu("Load")]
         // Function to activate all scenes when ready
         public void ActivateLoadedMainAndSubScenes()
         {
@@ -205,10 +201,6 @@ namespace Managers
                         subSceneOperation.allowSceneActivation = true;
                     }
                 }
-            }
-            else
-            {
-                Debug.LogError("No scenes loaded to activate");
             }
         }
 

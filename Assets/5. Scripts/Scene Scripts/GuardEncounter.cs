@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Managers;
 using Managers.Checkpoints;
@@ -15,10 +14,15 @@ namespace Scene_Scripts
         public string sceneName;
         public PlayableDirector initSceneTimeline;
 
+        private bool _initiallyLoaded = false;
 
         private void OnEnable()
         {
             CheckpointManager.Instance.onCheckpointLoad += OnCheckpointLoad;
+            if (!_initiallyLoaded)
+            {
+                OnCheckpointLoad(CheckpointManager.Instance.CurrentCheckpoint);
+            }
         }
 
         private void OnDisable()
@@ -29,6 +33,7 @@ namespace Scene_Scripts
 
         private void OnCheckpointLoad(int checkpoint)
         {
+            _initiallyLoaded = true;
             if (checkpoint == 0)
             {
                 initSceneTimeline.Play();
@@ -101,6 +106,8 @@ namespace Scene_Scripts
         }
         private IEnumerator ExitScene()
         {
+
+            LocalSceneManager.Instance.LoadNextScene(2);
             UIManager.Instance.FadeIn(0.5f);
             
             //Set Scene name
@@ -112,11 +119,14 @@ namespace Scene_Scripts
 
             //Set scene title text to scene name, with one letter at a time using for 
             //loop and yield return new WaitForSeconds(0.1f)
-            for (int i = 0; i < sceneName.Length; i++)
+            for (int i = 0; i < title.Length; i++)
             {
                 sceneTitle.text = title.Substring(0, i + 1);
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.1f);
             }
+
+            print("EXIT");
+            LocalSceneManager.Instance.ActivateNextScene();
 
         }
 

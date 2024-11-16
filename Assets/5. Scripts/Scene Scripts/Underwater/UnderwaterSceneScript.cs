@@ -1,4 +1,5 @@
-using System;
+
+using System.Collections;
 using Managers;
 using UnityEngine;
 
@@ -6,24 +7,11 @@ namespace Scene_Scripts.Underwater
 {
     public class UnderwaterSceneScript : MonoBehaviour
     {
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static UnderwaterSceneScript Instance { get; private set; }
-
-        public void Awake()
+        private IEnumerator Start()
         {
-            if (UnderwaterSceneScript.Instance != null)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                Instance = this;
-            }
-        }
-
-        private void Start()
-        {
-            UIManager.Instance.FadeOut(1f);
+            yield return new WaitForSeconds(1f);
+            UIManager.Instance.FadeOut(2f);
+            print("Hello");
         }
     }
 }

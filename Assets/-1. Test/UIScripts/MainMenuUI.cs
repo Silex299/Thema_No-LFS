@@ -19,12 +19,14 @@ namespace UIScripts
         [FoldoutGroup("Misc")] public int selectedEpisodeIndex;
         [FoldoutGroup("Misc")] public int selectChapterIndex;
         [FoldoutGroup("Misc")] public MenuState menuState;
+        [FoldoutGroup("Misc")] public Image image;
         
         
         private Coroutine _lastCoroutine;
         private Coroutine _mainMenuUpdateCoroutine;
         private Coroutine _episodeMenuUpdateCoroutine;
         private Coroutine _chapterMenuUpdateCoroutine;
+        private Coroutine _fadeCoroutine;
 
         #region Flags
 
@@ -367,8 +369,6 @@ namespace UIScripts
             #endregion
             
         }
-        
-
         public void ChangeMenu(int index)
         {
             ChangeMenu((MenuState) index);
@@ -395,8 +395,42 @@ namespace UIScripts
             }
 
         }
-        
-        
+
+        public void FadeIn(float transitionTime =1)
+        {
+            if (_fadeCoroutine != null)
+            {
+                StopCoroutine(_fadeCoroutine);
+            }
+
+            _fadeCoroutine = StartCoroutine(Fade(1, transitionTime));
+        }
+        public void FadeOut(float transitionTime =1)
+        {
+            if (_fadeCoroutine != null)
+            {
+                StopCoroutine(_fadeCoroutine);
+            }
+
+            _fadeCoroutine = StartCoroutine(Fade(0, transitionTime));
+        }
+
+        private IEnumerator Fade(float targetAlpha, float transitionTime)
+        {
+            float time = 0;
+            float initAlpha = image.color.a;
+            
+            while (time < transitionTime)
+            {
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(initAlpha, targetAlpha, time / transitionTime);
+                image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
+                yield return null;
+            }
+            
+            image.color = new Color(image.color.r, image.color.g, image.color.b, targetAlpha);
+            
+        }
         
         [Serializable]
         public class MenuButton
