@@ -125,6 +125,8 @@ namespace Scene_Scripts
                 yield return new WaitForSeconds(0.1f);
             }
 
+            yield return new WaitForSeconds(1f);
+            
             print("EXIT");
             LocalSceneManager.Instance.ActivateNextScene();
 

@@ -11,7 +11,6 @@ namespace Scene_Scripts.Underwater
         {
             yield return new WaitForSeconds(1f);
             UIManager.Instance.FadeOut(2f);
-            print("Hello");
         }
         
           
@@ -26,7 +25,7 @@ namespace Scene_Scripts.Underwater
             UIManager.Instance.Interactable = false;
             //Set Scene name
             var sceneTitle = UIManager.Instance.sceneTitle;
-            string title =  "DEMO: SKIPPING LEVELS";
+            string title =  "END OF DEMO . . . . .";
             sceneTitle.text = "";
 
             //fade ina
@@ -39,6 +38,8 @@ namespace Scene_Scripts.Underwater
                 yield return new WaitForSeconds(0.1f);
             }
 
+            
+            
         }
     }
 }

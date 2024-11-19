@@ -59,7 +59,7 @@ namespace Managers.Checkpoints
             }
             else
             {
-                StartCoroutine((checkpointIndex <= checkpointThreshold || checkpointIndex == -1) ? ResetState() : FinalState());
+                StartCoroutine((checkpointIndex <= checkpointThreshold || checkpointThreshold == -1) ? ResetState() : FinalState());
             }
         }
 
