@@ -13,8 +13,9 @@ namespace Triggers
     public class AdvancedContinuousActionTrigger : MonoBehaviour
     {
         
-        [FoldoutGroup("Input")] public string engageInput;
+        [FoldoutGroup("Input")] public string engageInput; //get one Thema input type for this also
         [FoldoutGroup("Input")] public string actionInput;
+        [FoldoutGroup("Input")] public ThemaInput actionInputType = new ThemaInput(){inputType = KeyInputType.Key_Axis}; 
         [FoldoutGroup("Input")] public float actionTriggerTime;
         [FoldoutGroup("Input")] public List<TriggerCondition> conditions;
 
@@ -26,6 +27,7 @@ namespace Triggers
 
 
         [FoldoutGroup("Misc")] public Vector3 uiElementOffset = new Vector3(0, 2f, 0f);
+        [FoldoutGroup("Misc")] public string actionInputVisualText;
         
         [FoldoutGroup("Events")] public float actionDelay;
         [FoldoutGroup("Events")] public float exitDelay;
@@ -102,7 +104,7 @@ namespace Triggers
             //Action
             while (!Input.GetButtonUp(engageInput))
             {
-                if (Input.GetButton(actionInput))
+                if (actionInputType.GetInput(actionInput))
                 {
                     timeElapsed += Time.deltaTime;
                 }
@@ -111,7 +113,7 @@ namespace Triggers
                     timeElapsed = 0;
                 }
 
-                uiManager.UpdateActionFill(Mathf.Clamp01(timeElapsed / actionTriggerTime), actionInput);
+                uiManager.UpdateActionFill(Mathf.Clamp01(timeElapsed / actionTriggerTime), actionInputVisualText);
 
                 if (timeElapsed >= actionTriggerTime)
                 {

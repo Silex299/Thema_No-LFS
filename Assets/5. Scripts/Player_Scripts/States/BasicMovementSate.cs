@@ -79,7 +79,7 @@ namespace Player_Scripts.States
             }
             else
             {
-                multiplier = player.CanBoost ? (Input.GetButton("Sprint") ? 2 : 1) : 1;
+                multiplier = player.CanBoost ? (Mathf.Abs(Input.GetAxis("Sprint")) > 0.2f ? 2 : 1) : 1;
             }
 
             input = (player.enabledDirectionInput ? input : Mathf.Abs(input)) * multiplier;

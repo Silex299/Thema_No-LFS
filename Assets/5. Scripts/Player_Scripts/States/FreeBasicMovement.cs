@@ -66,9 +66,8 @@ namespace Player_Scripts.States
             #endregion
 
             #region Boost
-            if (player.CanBoost && Input.GetButton("Sprint"))
+            if (player.CanBoost && Mathf.Abs(Input.GetAxis("Sprint")) > 0.2f)
             {
-                Debug.Log("Sprint");
                 vertical *= 2;
                 horizontal *= 2;
             }

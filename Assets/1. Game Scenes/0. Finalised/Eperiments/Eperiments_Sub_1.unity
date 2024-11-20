@@ -36065,9 +36065,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   engageInput: Jump
-  actionInput: S
+  actionInput: Vertical
+  actionInputType:
+    inputType: 3
+    threshold: -0.5
+    invertedAxis: 1
   actionTriggerTime: 1
   conditions:
+  - {fileID: 1212714387}
   - {fileID: 1212714388}
   actionTransform: {fileID: 0}
   simpleEngage: 0
@@ -36174,6 +36179,7 @@ MonoBehaviour:
     normalisedTime: 1
   actionAnimName: HANG_PULL
   uiElementOffset: {x: 0, y: 2, z: 0}
+  actionInputVisualText: v
   actionDelay: 1.2
   exitDelay: 0
   actionEvent:

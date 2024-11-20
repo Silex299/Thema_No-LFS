@@ -30,7 +30,7 @@ namespace Path_Scripts
             if(!GetPlayerInput) return;
             
             
-            bool isSprinting = Input.GetButton("Sprint") && Player.CanBoost;
+            bool isSprinting = Mathf.Abs(Input.GetAxis("Sprint")) > 0.2f && Player.CanBoost;
 
             if (!Player.IsGrounded)
             {

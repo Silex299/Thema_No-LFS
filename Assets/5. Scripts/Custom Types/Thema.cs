@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExternPropertyAttributes;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -19,7 +19,8 @@ namespace Thema_Type
     {
         Key_Press,
         Key_Hold,
-        Key_Release
+        Key_Release,
+        Key_Axis
     }
 
     [System.Serializable]
@@ -118,13 +119,13 @@ namespace Thema_Type
         public string animationName;
         public float animationTime;
         public float transitionTime;
-        [OnValueChanged(nameof(Preview))] public float animationHeight;
-        [OnValueChanged(nameof(Preview))] public float animationDistance;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
+        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public float animationHeight;
+        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public float animationDistance;
+        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
+        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
         public bool followRotationCurve;
 
-        [OnValueChanged(nameof(Preview)), ShowIf(nameof(followRotationCurve))]
+        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview)), Sirenix.OdinInspector.ShowIf(nameof(followRotationCurve))]
         public AnimationCurve rotationCurve;
 
 
@@ -137,7 +138,7 @@ namespace Thema_Type
         public Animator previewAAnimator;
         public Transform transform;
 
-        [Range(0, 1), OnValueChanged(nameof(Preview))]
+        [Range(0, 1), Sirenix.OdinInspector.OnValueChanged(nameof(Preview))]
         public float normalisedTime;
 
         public void Preview()
@@ -349,6 +350,35 @@ namespace Thema_Type
         public bool IsEmpty => _list.Count == 0;
         
         public int Count => _list.Count;
+    }
+
+    [System.Serializable]
+    public class ThemaInput
+    {
+        public KeyInputType inputType;
+
+        [ShowIf("@inputType == KeyInputType.Key_Axis")]
+        public float threshold;
+
+        [ShowIf("@inputType == KeyInputType.Key_Axis")]
+        public bool invertedAxis;
+
+        public bool GetInput(string inputString)
+        {
+            switch (inputType)
+            {
+                case KeyInputType.Key_Press:
+                    return Input.GetButtonDown(inputString);
+                case KeyInputType.Key_Hold:
+                    return Input.GetButton(inputString);
+                case KeyInputType.Key_Release:
+                    return Input.GetButtonUp(inputString);
+                case KeyInputType.Key_Axis:
+                    return !invertedAxis ? Input.GetAxis(inputString) > threshold : Input.GetAxis(inputString) < threshold;
+                default:
+                    return false;
+            }
+        }
     }
 
     #endregion

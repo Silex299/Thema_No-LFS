@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
+using ExternPropertyAttributes;
+using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Player_Scripts.Interactions.Animation
@@ -11,7 +14,8 @@ namespace Player_Scripts.Interactions.Animation
         [SerializeField] private string entryAnimation;
         [SerializeField] private string exitAnimation;
         [SerializeField] private string input;
-        [SerializeField] private bool disablePlayerMovment = true;
+        [SerializeField] private ThemaInput inputType = new ThemaInput{ inputType = KeyInputType.Key_Press };
+        [FormerlySerializedAs("disablePlayerMovement")] [SerializeField] private bool disablePlayerMovement = true;
 
         public float exitActionDelay = 2f;
         public float entryDelay = 2f;
@@ -33,7 +37,7 @@ namespace Player_Scripts.Interactions.Animation
         {
             if (!_playerEngaged) return;
 
-            if (Input.GetButton(input))
+            if (inputType.GetInput(input))
             {
                 _playerEngaged = false;
                 _enabled = false;
@@ -46,7 +50,7 @@ namespace Player_Scripts.Interactions.Animation
             entryAction?.Invoke();
             PlayerMovementController.Instance.PlayAnimation(entryAnimation, 0.1f, 1);
 
-            if (disablePlayerMovment)
+            if (disablePlayerMovement)
             {
                 yield return new WaitForSeconds(0.3f);
                 PlayerMovementController.Instance.DisablePlayerMovement(true);
