@@ -110,7 +110,7 @@ namespace Player_Scripts.States
             float adjustedInput = (attachedRope.initialRotation.y is > 90 or < -90) ? -input : input;
             player.AnimationController.SetFloat(Speed, invertedAxis ? -adjustedInput : adjustedInput);
 
-            if (Mathf.Abs(input) > 0.2f)
+            if (Mathf.Abs(input) > 0.5f)
             {
                 attachedRope.SwingRope((invertedAxis ? -1 : 1) * Input.GetAxis("Horizontal"));
 

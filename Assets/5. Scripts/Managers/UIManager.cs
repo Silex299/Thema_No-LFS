@@ -194,16 +194,11 @@ namespace Managers
             onCheckpointMenuLoaded?.Invoke(false);
             
             _isLoadCheckpointMenuOpen = false;
-            FadeOut(0.4f);
+            animator.Play("EXIT_LCP_VIEW");
             
-            Invoke(nameof(Action), 0.8f);
-            void Action()
-            {
-                animator.Play("EXIT_LCP_VIEW");
-            }
-            
+            Invoke(nameof(CloseLcp), 0.8f);
         }
-        
+        void CloseLcp() => FadeOut(0.4f);
         
 
         private void TakeDamage(float fraction)

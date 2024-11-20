@@ -96,15 +96,15 @@ namespace Scene_Scripts.Shift_1
                 float pushedTime = 0;
                 _uiManager.UpdateActionFill(0, "D");
                 
-                while (Input.GetButton("d"))
+                while (Input.GetAxis("Horizontal") > 0.2f)
                 {
                     pushedTime += Time.deltaTime;
-                    _uiManager.UpdateActionFill(pushedTime/pushTime, "D");
+                    _uiManager.UpdateActionFill(pushedTime/pushTime);
                     
                     if (pushedTime >= pushTime)
                     {
                         PushAction();
-                        _uiManager.UpdateActionFill(1, "D");
+                        _uiManager.UpdateActionFill(1);
                         yield break;
                     }
                     yield return null;
@@ -115,7 +115,7 @@ namespace Scene_Scripts.Shift_1
             }
             
             
-            _uiManager.UpdateActionFill(0, "D");
+            _uiManager.UpdateActionFill(0);
             DisEngageAction();
             
         }
