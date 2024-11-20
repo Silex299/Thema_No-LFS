@@ -98,11 +98,11 @@ namespace Player_Scripts.States
 
             if (player.CanPlayAlternateMovement)
             {
-                if (Input.GetButtonDown("Crouch"))
+                if (Mathf.Abs(Input.GetAxis("Crouch")) > 0.5f || Input.GetButtonDown("Crouch"))
                 {
                     CrouchPlayer(player, true);
                 }
-                else if (Input.GetButtonUp("Crouch"))
+                else if (Mathf.Abs(Input.GetAxis("Crouch")) < 0.5f || Input.GetButtonUp("Crouch"))
                 {
                     CrouchPlayer(player, false);
                 }
@@ -132,7 +132,7 @@ namespace Player_Scripts.States
             }
             else
             {
-                player.AnimationController.SetFloat(Speed, input);
+                player.AnimationController.SetFloat(Speed, input, 0.05f, Time.deltaTime);
             }
 
             #endregion

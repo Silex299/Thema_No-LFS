@@ -1,7 +1,9 @@
 
+using System;
 using System.Collections;
 using Managers;
 using UnityEngine;
+using UnityEngine.InputSystem.iOS;
 
 namespace Scene_Scripts.Underwater
 {
@@ -39,13 +41,12 @@ namespace Scene_Scripts.Underwater
             }
 
 
-            yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(15);
             
             LocalSceneManager.Instance.LoadMainMenu();
 
 
         }
-        
         
     }
 }

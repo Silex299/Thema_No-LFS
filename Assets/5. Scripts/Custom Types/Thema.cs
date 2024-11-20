@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ExternPropertyAttributes;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -359,10 +359,12 @@ namespace Thema_Type
 
         [ShowIf("@inputType == KeyInputType.Key_Axis")]
         public float threshold;
-
+        
         [ShowIf("@inputType == KeyInputType.Key_Axis")]
         public bool invertedAxis;
 
+        
+        
         public bool GetInput(string inputString)
         {
             switch (inputType)

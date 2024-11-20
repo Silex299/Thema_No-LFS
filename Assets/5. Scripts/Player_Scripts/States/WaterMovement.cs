@@ -75,7 +75,7 @@ namespace Player_Scripts.States
 
             #region Animation Upadate
 
-            player.AnimationController.SetFloat(Speed, player.enabledDirectionInput ? horizontalInput : Mathf.Abs(horizontalInput));
+            player.AnimationController.SetFloat(Speed, player.enabledDirectionInput ? horizontalInput : Mathf.Abs(horizontalInput), 0.3f, Time.deltaTime);
             player.AnimationController.SetFloat(Direction, verticalInput, 0.3f, Time.deltaTime);
             player.AnimationController.SetBool(OnSurface1, OnSurface);
             
