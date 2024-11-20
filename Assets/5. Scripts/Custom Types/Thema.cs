@@ -20,7 +20,8 @@ namespace Thema_Type
         Key_Press,
         Key_Hold,
         Key_Release,
-        Key_Axis
+        Key_Axis,
+        Axis_Press
     }
 
     [System.Serializable]
@@ -357,10 +358,10 @@ namespace Thema_Type
     {
         public KeyInputType inputType;
 
-        [ShowIf("@inputType == KeyInputType.Key_Axis")]
+        [ShowIf("@inputType == KeyInputType.Key_Axis || inputType == KeyInputType.Axis_Press")]
         public float threshold;
         
-        [ShowIf("@inputType == KeyInputType.Key_Axis")]
+        [ShowIf("@inputType == KeyInputType.Key_Axis || inputType == KeyInputType.Axis_Press")]
         public bool invertedAxis;
 
         
@@ -377,6 +378,8 @@ namespace Thema_Type
                     return Input.GetButtonUp(inputString);
                 case KeyInputType.Key_Axis:
                     return !invertedAxis ? Input.GetAxis(inputString) > threshold : Input.GetAxis(inputString) < threshold;
+                case KeyInputType.Axis_Press:
+                    return !invertedAxis ? Mathf.Abs(Input.GetAxis(inputString)) > threshold : Mathf.Abs(Input.GetAxis(inputString)) < threshold;
                 default:
                     return false;
             }

@@ -7,6 +7,7 @@ using System.Collections;
 using Managers.Checkpoints;
 using Thema_Camera;
 using TMPro;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
@@ -24,22 +25,21 @@ namespace Managers
 
         [SerializeField, BoxGroup("Player Health"), Space(10)]
         private GameObject healthBar;
-
         [SerializeField, BoxGroup("Player Health")]
         private Image healthFill;
-
         [SerializeField, BoxGroup("Player Health")]
         private Image damageImage;
-
 
         [BoxGroup("Fields")] public TextMeshProUGUI sceneTitle;
 
 
-        private bool _isLcpViewOpen;
-        public bool Interactable { get; set; } = true;
-
-
         public static UIManager Instance { get; private set; }
+
+
+        private bool _isLoadCheckpointMenuOpen;
+        public bool Interactable { get; set; } = true;
+        public Action<bool> onCheckpointMenuLoaded;
+
 
 
         private void OnEnable()
@@ -175,31 +175,36 @@ namespace Managers
 
         private void RestartOrExitView()
         {
-            if (_isLcpViewOpen) return;
+            if (_isLoadCheckpointMenuOpen) return;
 
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            onCheckpointMenuLoaded?.Invoke(true);
             
             void Action()
             {
                 animator.Play("LCP_View");
-                _isLcpViewOpen = true;
+                _isLoadCheckpointMenuOpen = true;
             }
-
-            FadeIn(Action, fadeTransitionTime);
+            FadeIn(Action, 0.4f);
         }
 
         private void CloseRestartOrExitView()
         {
-            if (!_isLcpViewOpen) return;
+            if (!_isLoadCheckpointMenuOpen) return;
             
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Locked;
+            onCheckpointMenuLoaded?.Invoke(false);
             
-            _isLcpViewOpen = false;
-            animator.Play("EXIT_LCP_VIEW");
-            FadeOut(fadeTransitionTime);
+            _isLoadCheckpointMenuOpen = false;
+            FadeOut(0.4f);
+            
+            Invoke(nameof(Action), 0.8f);
+            void Action()
+            {
+                animator.Play("EXIT_LCP_VIEW");
+            }
+            
         }
+        
+        
 
         private void TakeDamage(float fraction)
         {
@@ -223,8 +228,6 @@ namespace Managers
 
             damageImage.color = color;
         }
-
-
         public void LoadUnReachableMenu(bool load)
         {
             animator.Play(load ? "LoadUnreachableMenu" : "UnLoadUnreachableMenu");
@@ -232,19 +235,15 @@ namespace Managers
 
         
         #endregion
-
-
-        public void ExitToMainMenu()
-        {
-            LocalSceneManager.Instance.LoadMainMenu();
-        }
+        
         
         private void Update()
         {
             if(PlayerMovementController.Instance.player.Health.IsDead || !Interactable) return;
+           
             if (Input.GetButtonDown("esc"))
             {
-                if (_isLcpViewOpen)
+                if (_isLoadCheckpointMenuOpen)
                 {
                     CloseRestartOrExitView();
                 }
@@ -263,7 +262,11 @@ namespace Managers
             print("Load Checkpoint");
             CheckpointManager.Instance?.LoadCheckpoint();
         }
-
+        
+        public void ExitToMainMenu()
+        {
+            LocalSceneManager.Instance.LoadMainMenu();
+        }
         public void LoadLastCheckpointWithTransition()
         {
         }

@@ -39,7 +39,7 @@ namespace NPCs.New
 
             //play one random from sound clips
             var sound = soundClips[Random.Range(0, soundClips.Length)];
-            audioSource.PlayOneShot(sound.clip, sound.volume);
+            audioSource?.PlayOneShot(sound.clip, sound.volume);
         }
 
         /// <summary>
