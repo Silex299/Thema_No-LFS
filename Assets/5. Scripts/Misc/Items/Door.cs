@@ -102,6 +102,12 @@ public class Door : MonoBehaviour
     public void ResetDoor(bool open)
     {
         print("instant");
+        if (_toggleDoor != null)
+        {
+            StopCoroutine(_toggleDoor);
+            _toggleDoor = null;
+        }
+        
         transform.localPosition = open ? openPosition : closedPosition;
         isOpen = open;
     }

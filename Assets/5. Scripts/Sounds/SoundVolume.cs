@@ -1,12 +1,13 @@
 using Player_Scripts;
 using Thema_Type;
+using UnityEditor;
 using UnityEngine;
 
 namespace Sounds
 {
     public class SoundVolume : MonoBehaviour
     {
-        
+        public bool muteOnInitiation;
         public Bounds bounds;
         public float fadeDistance;
         public SoundSource[] soundSources;
@@ -31,6 +32,7 @@ namespace Sounds
                 _objectCount++;
             }
         }
+
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("Player"))
@@ -43,24 +45,34 @@ namespace Sounds
                 }
             }
         }
+
         private void OnDrawGizmos()
         {
             if (Application.isPlaying) return;
+            //if object is not selected return
+            if (!Selection.Contains(gameObject)) return;
+            
             //draw a wire cube with the bounds 
             Gizmos.color = new Color(0.1f, 1, 0.1f);
-            Gizmos.DrawWireCube( transform.TransformPoint(bounds.center), 2* bounds.extents);
-            
+            Gizmos.DrawWireCube(transform.TransformPoint(bounds.center), 2 * bounds.extents);
+
             //Draw another wire cube with the bounds + fade distance
             Gizmos.color = new Color(0.8f, 1, 0.7f);
             Gizmos.DrawWireCube(transform.TransformPoint(bounds.center), 2 * (bounds.extents + Vector3.one * fadeDistance));
-            
-            
         }
-        
+
         protected void Start()
         {
             CreateBoxCollider();
-            UpdateVolumeFraction();
+            if (!muteOnInitiation)
+            {
+                UpdateVolumeFraction();
+            }
+            else
+            {
+                fadeFraction = 0;
+            }
+
             UpdateSoundSources();
         }
 
@@ -87,11 +99,11 @@ namespace Sounds
             Vector3 closestPoint = bounds.ClosestPoint(objectLocalPosition);
             Vector3 closedPointWorld = transform.TransformPoint(closestPoint);
             float distance = Vector3.Distance(Target.position, closedPointWorld);
-            
+
             Debug.DrawLine(closedPointWorld, Target.position, Color.red);
             fadeFraction = 1 - Mathf.Clamp01(distance / fadeDistance);
         }
-        
+
         protected virtual void CreateBoxCollider()
         {
             //create a box collider with the bounds
@@ -99,7 +111,6 @@ namespace Sounds
             boxCollider.center = bounds.center;
             boxCollider.size = bounds.size + (Vector3.one * 2 * fadeDistance);
             boxCollider.isTrigger = true;
-            
         }
     }
 }
