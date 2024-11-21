@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 11655020}
   - component: {fileID: 11655023}
   - component: {fileID: 11655024}
+  - component: {fileID: 11655025}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -204,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 11655019}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.94575, y: 4.04, z: 14.736969}
+  m_LocalPosition: {x: 13.94575, y: -0.1136494, z: 14.736969}
   m_LocalScale: {x: 2.8580546, y: 2.0223982, z: 0.21610826}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -327,6 +328,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &11655025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11655019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: 2
+  isExclusive: 0
+  targetTransform: {fileID: 0}
+  wait: 0.3
+  loadResetTransform: 1
+  resetPosition: {x: 13.94575, y: -0.1136494, z: 14.73697}
+  resetRotation: {x: 0, y: 0, z: 0}
+  resetEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  loadFinalStateTransform: 1
+  finalStatePosition: {x: 13.94575, y: 4.04, z: 14.73697}
+  finalStateRotation: {x: 0, y: 0, z: 0}
+  finalStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &25144128
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,7 +823,7 @@ MonoBehaviour:
   checkpointThreshold: 2
   isExclusive: 0
   targetTransform: {fileID: 0}
-  wait: 0
+  wait: 0.3
   loadResetTransform: 1
   resetPosition: {x: 14.06699, y: 1.651381, z: 16.17}
   resetRotation: {x: 0, y: 0, z: 0}
@@ -3194,6 +3223,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 481892585}
     m_Modifications:
+    - target: {fileID: 9740173714773172, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.022
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173714773172, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.672
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173714773172, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.354
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173714773172, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173714773172, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173788156581, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.093
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173788156581, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.686
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740173788156581, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.206
+      objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: oneTime
       value: 1
@@ -3205,6 +3266,10 @@ PrefabInstance:
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: triggerSound.volume
       value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
+      propertyPath: engageTransitionTime
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 9740174029404388, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
       propertyPath: engageAction.m_PersistentCalls.m_Calls.Array.size
@@ -3357,11 +3422,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9740174029404390, guid: 72dac7bd627f0f747a5009b464509d15,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1673716314}
+      addedObject: {fileID: 1673716315}
     - targetCorrespondingSourceObject: {fileID: 9740174029404390, guid: 72dac7bd627f0f747a5009b464509d15,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1673716315}
+      addedObject: {fileID: 1673716316}
   m_SourcePrefab: {fileID: 100100000, guid: 72dac7bd627f0f747a5009b464509d15, type: 3}
 --- !u!1 &887609838 stripped
 GameObject:
@@ -4261,6 +4326,7 @@ GameObject:
   - component: {fileID: 1176247569}
   - component: {fileID: 1176247568}
   - component: {fileID: 1176247570}
+  - component: {fileID: 1176247571}
   m_Layer: 0
   m_Name: Scene Anim
   m_TagString: Untagged
@@ -4346,6 +4412,46 @@ MonoBehaviour:
   m_director: {fileID: 1176247569}
   m_sceneAnimations:
   - {fileID: 11400000, guid: 02aad8c362e6dce46bb4e92572d0ebbe, type: 2}
+--- !u!114 &1176247571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176247566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: 2
+  isExclusive: 0
+  targetTransform: {fileID: 0}
+  wait: 0
+  loadResetTransform: 0
+  resetPosition: {x: 0, y: 0, z: 0}
+  resetRotation: {x: 0, y: 0, z: 0}
+  resetEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1176247569}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  loadFinalStateTransform: 0
+  finalStatePosition: {x: 0, y: 0, z: 0}
+  finalStateRotation: {x: 0, y: 0, z: 0}
+  finalStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1249999892
 GameObject:
   m_ObjectHideFlags: 0
@@ -5176,23 +5282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607191d54c597b24ebb607fa64a6b55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1673716314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887609839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd9e8b364b330b448848350929a7896e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkpointThreshold: -1
-  initialDelay: 0
-  trigger:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1673716315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5226,8 +5315,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1673716311}
-          m_TargetAssemblyTypeName: Triggers.LevelTrigger, Assembly-CSharp
-          m_MethodName: set_CanPull
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5238,6 +5327,82 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     time: 0
+--- !u!114 &1673716316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887609839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530766ff45051984e86e170dec875b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointThreshold: 2
+  isExclusive: 0
+  targetTransform: {fileID: 0}
+  wait: 0
+  loadResetTransform: 0
+  resetPosition: {x: 0, y: 0, z: 0}
+  resetRotation: {x: 0, y: 0, z: 0}
+  resetEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1673716311}
+        m_TargetAssemblyTypeName: Triggers.LevelTrigger, Assembly-CSharp
+        m_MethodName: ResetTrigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1673716311}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  loadFinalStateTransform: 0
+  finalStatePosition: {x: 0, y: 0, z: 0}
+  finalStateRotation: {x: 0, y: 0, z: 0}
+  finalStateEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1673716311}
+        m_TargetAssemblyTypeName: Triggers.LevelTrigger, Assembly-CSharp
+        m_MethodName: SetTrigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1673716311}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &1768401525
 GameObject:
   m_ObjectHideFlags: 0
