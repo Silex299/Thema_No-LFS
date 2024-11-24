@@ -45,7 +45,6 @@ namespace Managers.Checkpoints
             player.CanJump = canJump;
             player.CanRotate = canRotate;
             player.CanPlayAlternateMovement = canPlayAlternateMovement;
-            
             PlayerMovementController.Instance.ChangeState(playerStateIndex);
             if(overrideAnimation) PlayerMovementController.Instance.player.AnimationController.Play(overrideAnimationName, 0);
             
@@ -53,6 +52,12 @@ namespace Managers.Checkpoints
             PlayerPathController path = PlayerPathController.Instance;
             path.nextDestination = nextPathPointIndex;
             path.previousDestination = prevPathPointIndex;
+        }
+
+
+        private void ResetPlayer()
+        {
+            
         }
 
     }

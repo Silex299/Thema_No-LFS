@@ -113,7 +113,7 @@ namespace Triggers
                     timeElapsed = 0;
                 }
 
-                uiManager.UpdateActionFill(Mathf.Clamp01(timeElapsed / actionTriggerTime), actionInputVisualText);
+                uiManager.UpdateActionFill(Mathf.Clamp01((timeElapsed + 0.01f) / actionTriggerTime), actionInputVisualText);
 
                 if (timeElapsed >= actionTriggerTime)
                 {
@@ -126,8 +126,9 @@ namespace Triggers
 
                 yield return null;
             }
-
-
+            
+            
+            uiManager.UpdateActionFill(0,  actionInputVisualText);
             player.AnimationController.CrossFade("Default", 0.1f, 1);
             player.DisabledPlayerMovement = false;
             player.CController.enabled = true;

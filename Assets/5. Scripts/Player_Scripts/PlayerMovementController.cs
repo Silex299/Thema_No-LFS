@@ -226,7 +226,7 @@ namespace Player_Scripts
 
         public void PlayJump(int forward)
         {
-            if(player.IsOverridingAnimation || player.DisabledPlayerMovement) return;
+            if(player.IsOverridingAnimation || player.DisabledPlayerMovement || !player.CanJump) return;
             
             if (forward == 1)
             {

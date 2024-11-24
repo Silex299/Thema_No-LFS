@@ -34,12 +34,13 @@ namespace NPCs.New
         /// </summary>
         public void PlayFootstepSound()
         {
+            if (!gameObject.activeInHierarchy) return;
             if (!actionClips.TryGetValue("Step", out var soundClips)) return;
             if (soundClips.Length <= 0) return;
 
             //play one random from sound clips
             var sound = soundClips[Random.Range(0, soundClips.Length)];
-            audioSource?.PlayOneShot(sound.clip, sound.volume);
+            audioSource.PlayOneShot(sound.clip, sound.volume);
         }
 
         /// <summary>

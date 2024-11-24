@@ -130,14 +130,12 @@ namespace Managers
 
         private void FadeIn(Action action, float transitionTime = 0.2f)
         {
+            if (_fadingCoroutine != null)
             {
-                if (_fadingCoroutine != null)
-                {
-                    StopCoroutine(_fadingCoroutine);
-                }
-
-                _fadingCoroutine = StartCoroutine(FadeEnumerator(1, transitionTime, action));
+                StopCoroutine(_fadingCoroutine);
             }
+
+            _fadingCoroutine = StartCoroutine(FadeEnumerator(1, transitionTime, action));
         }
 
         private IEnumerator FadeEnumerator(float endAlpha, float transitionTime = 0.2f, Action action = null)
@@ -184,6 +182,7 @@ namespace Managers
                 animator.Play("LCP_View");
                 _isLoadCheckpointMenuOpen = true;
             }
+            
             FadeIn(Action, 0.4f);
         }
 

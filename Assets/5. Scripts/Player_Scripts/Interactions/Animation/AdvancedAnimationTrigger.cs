@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using Thema_Type;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Player_Scripts.Interactions.Animation
 {
@@ -11,6 +12,7 @@ namespace Player_Scripts.Interactions.Animation
         
         [FoldoutGroup("Animation")] public AdvancedCurvedAnimation animationInfo;
         [FoldoutGroup("Animation")] public float animationWidth;
+        [FoldoutGroup("Animation")] public float resetJumpDelay = 1;
         
 
         [FoldoutGroup("State")] public bool changeState;
@@ -52,12 +54,16 @@ namespace Player_Scripts.Interactions.Animation
             onActionStart.Invoke();
 
             Player player = PlayerMovementController.Instance.player;
+            
 
             #region Player Movement
 
             player.DisabledPlayerMovement = true;
             player.CController.enabled = false;
             player.MovementController.ResetAnimator();
+            
+            
+            
             #endregion
 
             TimedAction timedAction = null; 
@@ -81,8 +87,6 @@ namespace Player_Scripts.Interactions.Animation
                 timedAction);
 
             #region Player Movement
-
-            yield return new WaitForSeconds(0.2f);
             
             player.MovementController.ResetAnimator();
             player.DisabledPlayerMovement = false;
@@ -93,7 +97,13 @@ namespace Player_Scripts.Interactions.Animation
             onActionEnd.Invoke();
             _triggerActionCoroutine = null;
             StopAllCoroutines();
+
+
+
+            yield return new WaitForSeconds(resetJumpDelay);
             
+
+
         }
     }
 }

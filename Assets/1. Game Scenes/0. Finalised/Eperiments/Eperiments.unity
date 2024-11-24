@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: 067caa0e360351e4d9f96da074a24114,
+  m_LightingDataAsset: {fileID: 112000002, guid: 855e7e1b3ac053649b1689251e19843f,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 235b913a6b4359b46b7db1673395e6a5,
     type: 2}
@@ -2415,7 +2415,7 @@ MonoBehaviour:
   nextPointIndex: 28
   currentIndex: 27
   prevPointIndex: 26
-  continuousDetection: 0
+  continuousDetection: 1
 --- !u!65 &467009915
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12171,6 +12171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1495976978}
+  playerResetDelay: 0.5
 --- !u!114 &1495976984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13399,7 +13400,7 @@ MonoBehaviour:
   checkpointIndex: 4
   playerStateIndex: 0
   nextPathPointIndex: 41
-  prevPathPointIndex: 39
+  prevPathPointIndex: 38
   overrideAnimation: 0
   overrideAnimationName: 
   canRotate: 1
@@ -16552,7 +16553,7 @@ Transform:
   m_GameObject: {fileID: 2100413535}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.41, y: 17, z: 178.21}
+  m_LocalPosition: {x: -2.41, y: 17, z: 175.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

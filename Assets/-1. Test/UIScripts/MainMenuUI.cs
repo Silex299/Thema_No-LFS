@@ -58,11 +58,11 @@ namespace UIScripts
                 
                 #region Scroll through the menu buttons
 
-                if (Input.GetAxis("Vertical") > 0)
+                if (Input.GetAxis("Vertical") > 0.2f)
                 {
                     PrevMenuButton();
                 }
-                else if (Input.GetAxis("Vertical") < 0)
+                else if (Input.GetAxis("Vertical") < -0.2f)
                 {
                     NextMenuButton();
                 }
