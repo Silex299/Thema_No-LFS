@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Thema_Camera
 {
@@ -11,9 +12,11 @@ namespace Thema_Camera
         [SerializeField] private float minimumEffectingDistance;
         [SerializeField] private float maximumEffectingDistance;
         [SerializeField] private float shakeMultiplier = 1;
+        [SerializeField] private float controllerShakeMultiplier = 0.5f;
 
         private CameraManager _cameraManager;
         private Coroutine _changeCameraShakeCoroutine;
+        private Coroutine _resetControllerShaker;
 
 
         #region Editor
@@ -49,6 +52,10 @@ namespace Thema_Camera
         {
             _cameraManager = CameraManager.Instance;
         }
+        private void OnDisable()
+        {
+            if(Gamepad.current != null) Gamepad.current.SetMotorSpeeds(0, 0);
+        }
 
         private void Update()
         {
@@ -66,6 +73,21 @@ namespace Thema_Camera
             shakeParams.damping *= fraction;
 
             _cameraManager.ShakeCamera(shakeParams);
+
+
+            if (Gamepad.current != null)
+            {
+                if (_resetControllerShaker != null) StopCoroutine(_resetControllerShaker);
+                Gamepad.current.SetMotorSpeeds(fraction * controllerShakeMultiplier, fraction * controllerShakeMultiplier);
+                _resetControllerShaker = StartCoroutine(ResetControllerShaker());
+            }
+            
+        }
+
+        private IEnumerator ResetControllerShaker()
+        {
+            yield return new WaitForSeconds(0.2f);
+            Gamepad.current.SetMotorSpeeds(0, 0);
         }
 
         public void TransitionCameraShake(float targetMultiplier, float time)

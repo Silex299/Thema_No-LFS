@@ -141,7 +141,6 @@ namespace Thema_Camera
             if (this.shake)
             {
                 _shakeInitialPosition = transform.position;
-
             }
         }
         public void ShakeCamera(Shake shakeParams)
