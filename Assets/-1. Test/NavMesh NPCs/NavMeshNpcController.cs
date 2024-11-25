@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using JetBrains.Annotations;
 using Player_Scripts;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.Drawers;
 using UnityEngine;
 using UnityEngine.AI;
 using Weapons.NPC_Weapon;

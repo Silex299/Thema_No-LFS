@@ -120,13 +120,13 @@ namespace Thema_Type
         public string animationName;
         public float animationTime;
         public float transitionTime;
-        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public float animationHeight;
-        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public float animationDistance;
-        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
-        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
+        [Sirenix.OdinInspector.OnValueChanged("Preview")] public float animationHeight;
+        [Sirenix.OdinInspector.OnValueChanged("Preview")] public float animationDistance;
+        [Sirenix.OdinInspector.OnValueChanged("Preview")] public AnimationCurve heightCurve;
+        [Sirenix.OdinInspector.OnValueChanged("Preview")] public AnimationCurve distanceCurve;
         public bool followRotationCurve;
 
-        [Sirenix.OdinInspector.OnValueChanged(nameof(Preview)), Sirenix.OdinInspector.ShowIf(nameof(followRotationCurve))]
+        [Sirenix.OdinInspector.OnValueChanged("Preview"), Sirenix.OdinInspector.ShowIf(nameof(followRotationCurve))]
         public AnimationCurve rotationCurve;
 
 
@@ -137,7 +137,6 @@ namespace Thema_Type
         //REMOVED: EVERYTHING IMPORTANT
 
         public Animator previewAAnimator;
-        public Transform transform;
 
         [Range(0, 1), Sirenix.OdinInspector.OnValueChanged(nameof(Preview))]
         public float normalisedTime;
@@ -158,6 +157,8 @@ namespace Thema_Type
 
 #endif
 
+        public Transform transform;
+        
         #endregion
 
         /// <summary>

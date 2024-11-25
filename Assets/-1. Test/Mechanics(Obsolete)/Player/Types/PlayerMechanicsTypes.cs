@@ -12,10 +12,10 @@ namespace Mechanics.Player.Types
         public string animationName;
         public float animationTime;
         public float transitionTime;
-        [OnValueChanged(nameof(Preview))] public float animationHeight;
-        [OnValueChanged(nameof(Preview))] public float animationDistance;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve heightCurve;
-        [OnValueChanged(nameof(Preview))] public AnimationCurve distanceCurve;
+        public float animationHeight;
+        public float animationDistance;
+        public AnimationCurve heightCurve;
+        public AnimationCurve distanceCurve;
 
 
         #region EDITOR

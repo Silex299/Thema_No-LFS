@@ -11,6 +11,8 @@ public class ProceduaralSpiderLeg : MonoBehaviour
     [SerializeField] private float stepHeight;
 
 
+#if UNITY_EDITOR
+    
 
     private void OnDrawGizmos()
     {
@@ -24,6 +26,8 @@ public class ProceduaralSpiderLeg : MonoBehaviour
         UnityEditor.Handles.DrawSolidDisc(transform.position + offset.x * parent.right + offset.y * parent.up + offset.z * parent.forward, Vector3.up, stepDistance);
     }
 
+    
+#endif
 
     private Vector3 newPosition;
     private Vector3 currentPosition;

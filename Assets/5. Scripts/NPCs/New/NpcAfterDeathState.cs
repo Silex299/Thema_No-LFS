@@ -1,6 +1,6 @@
 using System.Collections;
 using Mechanics.Npc;
-using Mechanics.Types;
+using Thema_Type;
 using UnityEngine;
 
 namespace NPCs.New
@@ -66,7 +66,7 @@ namespace NPCs.New
         }
         private void ProcessTarget()
         {
-            float plannerDistance = GameVector.PlanarDistance(npc.transform.position, npc.target.position);
+            float plannerDistance = ThemaVector.PlannerDistance(npc.transform.position, npc.target.position);
             
             if (plannerDistance < npc.stopDistance)
             {

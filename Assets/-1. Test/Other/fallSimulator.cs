@@ -10,7 +10,7 @@ public class FallSimulator : MonoBehaviour
     [FoldoutGroup("Baked Info")] public List<Vector3> positions = new List<Vector3>();
     [FoldoutGroup("Baked Info")] public List<Quaternion> rotations = new List<Quaternion>();
 
-    [OnValueChanged(nameof(SetTransform)), Range(0, 1), FoldoutGroup("Params")]
+    [Range(0, 1), FoldoutGroup("Params")]
     public float setTransform;
 
     #region Editor

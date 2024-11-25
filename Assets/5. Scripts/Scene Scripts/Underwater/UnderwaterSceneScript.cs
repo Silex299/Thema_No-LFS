@@ -1,9 +1,6 @@
-
-using System;
 using System.Collections;
 using Managers;
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 
 namespace Scene_Scripts.Underwater
 {

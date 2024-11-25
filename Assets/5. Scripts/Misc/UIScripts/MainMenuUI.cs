@@ -441,10 +441,10 @@ namespace UIScripts
         [Serializable]
         public class MenuButton
         {
-            [SerializeField, OnValueChanged(nameof(UpdateButton))]
+            [SerializeField, OnValueChanged("UpdateButton")]
             private bool enabled;
 
-            [SerializeField, OnValueChanged(nameof(UpdateButton))]
+            [SerializeField, OnValueChanged("UpdateButton")]
             private bool selected;
 
             public Image fillImage;

@@ -46,6 +46,10 @@ namespace Sounds
             }
         }
 
+
+
+#if UNITY_EDITOR
+        
         private void OnDrawGizmos()
         {
             if (Application.isPlaying) return;
@@ -60,6 +64,8 @@ namespace Sounds
             Gizmos.color = new Color(0.8f, 1, 0.7f);
             Gizmos.DrawWireCube(transform.TransformPoint(bounds.center), 2 * (bounds.extents + Vector3.one * fadeDistance));
         }
+        
+#endif
 
         protected void Start()
         {

@@ -9,8 +9,6 @@ namespace Mechanics.Player.Controllers
     {
         #region DEBUG
 
-#if UNITY_EDITOR
-
 
         [FoldoutGroup("Rope Properties")] public int ropeResolution;
         [FoldoutGroup("Rope Properties")] public float ropeLength;
@@ -98,8 +96,6 @@ namespace Mechanics.Player.Controllers
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(desiredPos, 0.2f);
         }
-
-#endif
 
         #endregion
 
