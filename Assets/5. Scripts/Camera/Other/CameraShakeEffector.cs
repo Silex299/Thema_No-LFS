@@ -78,7 +78,7 @@ namespace Thema_Camera
             if (Gamepad.current != null)
             {
                 if (_resetControllerShaker != null) StopCoroutine(_resetControllerShaker);
-                Gamepad.current.SetMotorSpeeds(fraction * controllerShakeMultiplier, fraction * controllerShakeMultiplier);
+                Gamepad.current.SetMotorSpeeds(fraction * controllerShakeMultiplier * shakeMultiplier, fraction * controllerShakeMultiplier * shakeMultiplier);
                 _resetControllerShaker = StartCoroutine(ResetControllerShaker());
             }
             
