@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using Weapons.NPC_Weapon;
 

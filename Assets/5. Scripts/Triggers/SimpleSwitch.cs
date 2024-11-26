@@ -1,6 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using UnityEngine.Events;
 

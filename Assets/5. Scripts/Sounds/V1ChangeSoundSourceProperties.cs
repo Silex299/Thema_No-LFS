@@ -1,5 +1,5 @@
 using System.Collections;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Sounds

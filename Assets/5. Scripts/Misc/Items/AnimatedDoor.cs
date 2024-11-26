@@ -1,4 +1,4 @@
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Misc.Items

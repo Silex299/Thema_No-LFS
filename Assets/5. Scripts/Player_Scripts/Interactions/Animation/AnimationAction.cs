@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using ExternPropertyAttributes;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;

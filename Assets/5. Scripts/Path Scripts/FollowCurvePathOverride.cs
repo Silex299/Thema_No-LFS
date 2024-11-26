@@ -4,7 +4,7 @@ using Managers.Checkpoints;
 using Player_Scripts;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Path_Scripts

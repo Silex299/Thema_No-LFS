@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Mechanics.Types;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using UnityEngine.Rendering;
 

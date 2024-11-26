@@ -1,5 +1,5 @@
 using UnityEngine;
-using Thema_Type;
+using Thema;
 using Sirenix.OdinInspector;
 using System.Collections;
 

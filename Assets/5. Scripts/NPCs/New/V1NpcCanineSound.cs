@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NPCs.New.V1;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

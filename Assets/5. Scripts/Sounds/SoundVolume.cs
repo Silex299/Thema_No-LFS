@@ -1,5 +1,5 @@
 using Player_Scripts;
-using Thema_Type;
+using Thema;
 using UnityEditor;
 using UnityEngine;
 

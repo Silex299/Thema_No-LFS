@@ -1,6 +1,6 @@
 using Player_Scripts;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace

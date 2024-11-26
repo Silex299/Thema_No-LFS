@@ -1,6 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Misc

@@ -1,7 +1,7 @@
 using System.Linq;
 using Player_Scripts;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace NPCs.New.V1.States

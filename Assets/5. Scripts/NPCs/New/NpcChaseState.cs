@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NPCs.New.Other;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Mechanics.Npc

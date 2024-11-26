@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Scriptable;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

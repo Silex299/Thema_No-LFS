@@ -1,7 +1,7 @@
 using System.Collections;
 using System.ComponentModel.Design;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Misc.Items

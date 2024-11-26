@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Misc.New;
 using Sirenix.OdinInspector;
-using Thema_Type;
+using Thema;
 using UnityEngine;
 
 namespace Misc.Custom_Object_Scripts

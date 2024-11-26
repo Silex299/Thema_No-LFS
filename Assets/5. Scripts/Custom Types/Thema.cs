@@ -7,7 +7,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
-namespace Thema_Type
+namespace Thema
 {
     #region Types
 
